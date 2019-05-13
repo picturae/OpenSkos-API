@@ -1,0 +1,9 @@
+#TODO: Think about moving this configuration file into src/Healthcheck/config so it will be close to the related code
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\Healthcheck\PingController:
+        tags: ['controller.service_arguments']

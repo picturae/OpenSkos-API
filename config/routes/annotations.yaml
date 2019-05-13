@@ -1,0 +1,5 @@
+#TODO: Move this configuration into package level.
+#TODO: For example into config/packages/healthcheck.yaml
+controllers:
+    resource: ../../src/Healthcheck/
+    type: annotation
