@@ -1,0 +1,20 @@
+version: "3.5"
+
+services:
+  fpm:
+    build:
+      context: ..
+      dockerfile: docker/fpm/Dockerfile
+    env_file:
+      - fpm/symfony.env
+    volumes:
+      - ../:/app
+
+  nginx:
+    build: nginx
+    env_file:
+      - nginx/default.env
+    ports:
+      - 9020:80
+    volumes:
+      - ./nginx:/app:ro
