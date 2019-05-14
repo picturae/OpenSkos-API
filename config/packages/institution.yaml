@@ -7,3 +7,8 @@ services:
     App\Institution\Controller\:
         resource: '../../src/Institution/Controller/*'
         tags: ['controller.service_arguments']
+
+    App\Institution\InMemoryRepository: ~
+
+    App\Institution\InstitutionRepository: '@App\Institution\InMemoryRepository'
+
