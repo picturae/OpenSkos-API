@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Rest;
 
-use Symfony\Component\HttpFoundation\Response;
-
-final class ListResponse {
+final class ListResponse
+{
     /**
      * @var array
      */
@@ -24,42 +25,9 @@ final class ListResponse {
         array $docs,
         int $total,
         int $offset
-    )
-    {
+    ) {
         $this->docs = $docs;
         $this->total = $total;
-        $this->offset = $offset;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTotal(): int
-    {
-        return $this->total;
-    }
-
-    /**
-     * @param int $total
-     */
-    public function setTotal(int $total)
-    {
-        $this->total = $total;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOffset(): int
-    {
-        return $this->offset;
-    }
-
-    /**
-     * @param int $offset
-     */
-    public function setOffset(int $offset)
-    {
         $this->offset = $offset;
     }
 
@@ -72,23 +40,18 @@ final class ListResponse {
     }
 
     /**
-     * @param array $docs
+     * @return int
      */
-    public function setDocs(array $docs)
+    public function getTotal(): int
     {
-        $this->docs = $docs;
+        return $this->total;
     }
 
     /**
-     * TODO: Replace with Transformers for specific formats
-     * TODO: Look at https://symfony.com/doc/current/components/serializer.html
-     * @return array
+     * @return int
      */
-    public function toArray() : array {
-        return [
-            'docs' => $this->docs,
-            'total' => $this->total,
-            'offset' => $this->offset,
-        ];
+    public function getOffset(): int
+    {
+        return $this->offset;
     }
 }

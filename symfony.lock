@@ -1,4 +1,10 @@
 {
+    "amphp/amp": {
+        "version": "v2.1.1"
+    },
+    "amphp/byte-stream": {
+        "version": "v1.5.1"
+    },
     "composer/ca-bundle": {
         "version": "1.1.4"
     },
@@ -35,6 +41,9 @@
     "doctrine/event-manager": {
         "version": "v1.0.0"
     },
+    "doctrine/instantiator": {
+        "version": "1.2.0"
+    },
     "doctrine/lexer": {
         "version": "v1.0.1"
     },
@@ -43,6 +52,15 @@
     },
     "doctrine/reflection": {
         "version": "v1.0.0"
+    },
+    "easyrdf/easyrdf": {
+        "version": "0.9.1"
+    },
+    "felixfbecker/advanced-json-rpc": {
+        "version": "v3.0.3"
+    },
+    "felixfbecker/language-server-protocol": {
+        "version": "v1.2.0"
     },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
@@ -67,6 +85,12 @@
     },
     "monolog/monolog": {
         "version": "1.24.0"
+    },
+    "muglug/package-versions-56": {
+        "version": "1.2.4"
+    },
+    "netresearch/jsonmapper": {
+        "version": "v1.4.0"
     },
     "nette/bootstrap": {
         "version": "v3.0.0"
@@ -98,11 +122,35 @@
     "ocramius/package-versions": {
         "version": "1.4.0"
     },
+    "openlss/lib-array2xml": {
+        "version": "0.5.1"
+    },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
     },
+    "phpdocumentor/reflection-common": {
+        "version": "1.0.1"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "4.3.1"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "0.4.0"
+    },
+    "phpmyadmin/sql-parser": {
+        "version": "v4.3.1"
+    },
     "phpro/grumphp": {
         "version": "v0.15.0"
+    },
+    "phpspec/php-diff": {
+        "version": "v1.1.0"
+    },
+    "phpspec/phpspec": {
+        "version": "5.1.0"
+    },
+    "phpspec/prophecy": {
+        "version": "1.8.0"
     },
     "phpstan/phpdoc-parser": {
         "version": "0.3.3"
@@ -121,6 +169,18 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "sebastian/comparator": {
+        "version": "3.0.2"
+    },
+    "sebastian/diff": {
+        "version": "3.0.2"
+    },
+    "sebastian/exporter": {
+        "version": "3.1.0"
+    },
+    "sebastian/recursion-context": {
+        "version": "3.0.0"
     },
     "seld/jsonlint": {
         "version": "1.7.1"
@@ -256,6 +316,9 @@
             "config/routes.yaml"
         ]
     },
+    "symfony/serializer": {
+        "version": "v4.2.8"
+    },
     "symfony/stopwatch": {
         "version": "v4.2.8"
     },
@@ -264,5 +327,17 @@
     },
     "symfony/yaml": {
         "version": "v4.2.8"
+    },
+    "vimeo/psalm": {
+        "version": "3.2.12"
+    },
+    "webmozart/assert": {
+        "version": "1.4.0"
+    },
+    "webmozart/glob": {
+        "version": "4.1.0"
+    },
+    "webmozart/path-util": {
+        "version": "2.3.0"
     }
 }

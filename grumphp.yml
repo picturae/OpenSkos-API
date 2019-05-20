@@ -1,4 +1,11 @@
 parameters:
+    git_dir: .
+    bin_dir: vendor/bin
     tasks:
-        phpstan: ~
         phpcsfixer: ~
+        psalm:
+            ignore_patterns:
+                - '/spec/' #Ignore PHPSpec
+        phpspec: ~
+
+

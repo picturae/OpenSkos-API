@@ -1,51 +1,81 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Rdf;
 
-final class Triple {
+final class Triple
+{
     /**
-     * @var string
+     * @var Iri
      */
     private $subject;
     /**
-     * @var string
+     * @var Iri
      */
     private $predicate;
     /**
-     * @var string
+     * @var RdfTerm
      */
     private $object;
 
-    public function __construct(string $subject, string $predicate, string $object)
-    {
+    public function __construct(
+        Iri $subject,
+        Iri $predicate,
+        RdfTerm $object
+    ) {
         $this->subject = $subject;
         $this->predicate = $predicate;
         $this->object = $object;
+
+        if (!($object instanceof Iri || $object instanceof Literal)) {
+            throw new \InvalidArgumentException('Object must be Iri|Literal got: '.get_class($object));
+        }
     }
 
     /**
-     * @return string
+     * @return Iri
      */
-    public function getSubject(): string
+    public function getSubject(): Iri
     {
         return $this->subject;
     }
 
     /**
-     * @return string
+     * @return Iri
      */
-    public function getPredicate(): string
+    public function getPredicate(): Iri
     {
         return $this->predicate;
     }
 
     /**
-     * @return string
+     * @return RdfTerm
      */
-    public function getObject(): string
+    public function getObject(): RdfTerm
     {
         return $this->object;
     }
 
+    public function __toString(): string
+    {
+        if ($this->object instanceof Iri) {
+            return sprintf(
+                '<%s> <%s> <%s>',
+                $this->subject->getUri(),
+                $this->predicate->getUri(),
+                $this->object->getUri()
+            );
+        } elseif ($this->object instanceof Literal) {
+            return sprintf(
+                '<%s> <%s> "%s"@%s',
+                $this->subject->getUri(),
+                $this->predicate->getUri(),
+                $this->object->getValue(),
+                $this->object->getLanguage()
+            );
+        }
 
+        throw new \LogicException('Object must be either Iri or Literal');
+    }
 }
