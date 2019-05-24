@@ -8,7 +8,7 @@ services:
         resource: '../../src/Institution/Controller/*'
         tags: ['controller.service_arguments']
 
-    App\Institution\InMemoryRepository: ~
+    App\Institution\Sparql\SparqlInstitutionRepository: ~
 
-    App\Institution\InstitutionRepository: '@App\Institution\InMemoryRepository'
+    App\Institution\InstitutionRepository: '@App\Institution\Sparql\SparqlInstitutionRepository'
 

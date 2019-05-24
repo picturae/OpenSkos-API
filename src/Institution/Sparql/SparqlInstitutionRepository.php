@@ -11,7 +11,7 @@ use App\Rdf\Client;
 use App\Rdf\Iri;
 use App\Rdf\SparqlQueryBuilder;
 
-final class SparqlRepository implements InstitutionRepository
+final class SparqlInstitutionRepository implements InstitutionRepository
 {
     /**
      * @var Client

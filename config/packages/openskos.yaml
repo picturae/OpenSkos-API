@@ -1,0 +1,20 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+
+    EasyRdf_Sparql_Client:
+      class:  EasyRdf_Sparql_Client
+      arguments:
+          $queryUri: '%query_uri%'
+          $updateUri: '%update_uri%'
+
+
+    MyEasyRdfClient:
+        class: App\EasyRdf\EasyRdfClient
+        arguments: ['@EasyRdf_Sparql_Client']
+
+    App\Institution\Sparql\SparqlInstitutionRepository:
+        arguments: ['@MyEasyRdfClient']

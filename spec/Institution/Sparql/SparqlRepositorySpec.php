@@ -12,7 +12,7 @@ use App\Rdf\Triple;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class SparqlRepositorySpec extends ObjectBehavior
+class SparqlInstitutionRepositorySpec extends ObjectBehavior
 {
     public function let(Client $rdfClient)
     {

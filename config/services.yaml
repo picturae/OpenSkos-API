@@ -5,5 +5,17 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
 
+
+imports:
+  - { resource: './packages/databases.yaml' }
+
 services:
     # default configuration for services in *this* file
+
+  \App\Rdf\RdfClient: '@App\Institution\Sparql\SparqlInstitutionRepository'
+
+
+  \App\Serialize\ListResponseNormalizer:
+      class: App\Serializer\ListResponseNormalizer
+      tags: ['serializer.normalizer']
+      arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
