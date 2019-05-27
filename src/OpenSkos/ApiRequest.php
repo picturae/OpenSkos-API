@@ -4,8 +4,19 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
-final class Pagination
+final class ApiRequest
 {
+    /*
+     * Supported Formats
+     */
+    const FORMAT_JSONLD = 'json-ld';
+
+
+    /**
+     * @var string
+     */
+    private $format;
+
     /**
      * @var int
      */
@@ -22,16 +33,18 @@ final class Pagination
     private $limit;
 
     public function __construct(
+        string $format = self::FORMAT_JSONLD,
         int $level = 1,
         int $limit = 100,
         int $offset = 0
     ) {
+        $this->format = $format;
         $this->level = $level;
         $this->offset = $offset;
         $this->limit = $limit;
 
         if ($level < 1 || $level > 4) {
-            throw new InvalidPaginationLevel($level);
+            throw new InvalidApiRequestLevel($level);
         }
         if ($limit < 0 || $offset < 0) {
             throw new \InvalidArgumentException(
@@ -62,5 +75,10 @@ final class Pagination
     public function getLimit(): int
     {
         return $this->limit;
+    }
+
+    public function getFormat()
+    {
+        return $this->format;
     }
 }

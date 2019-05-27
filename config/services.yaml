@@ -19,5 +19,5 @@ services:
       tags: ['serializer.normalizer']
       arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
 
-  App\Rest\ArgumentResolver\PaginationResolver:
+  App\Rest\ArgumentResolver\ApiRequestResolver:
       tags: ['controller.argument_value_resolver']

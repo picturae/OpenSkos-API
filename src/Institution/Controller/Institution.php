@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Institution\Controller;
 
 use App\Institution\InstitutionRepository;
-use App\OpenSkos\Pagination;
+use App\OpenSkos\ApiRequest;
 use App\Rest\ListResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +34,7 @@ final class Institution
      *
      * @return JsonResponse
      */
-    public function institutions(Pagination $pagination, InstitutionRepository $repository): JsonResponse
+    public function institutions(ApiRequest $apiRequest, InstitutionRepository $repository): JsonResponse
     {
         $institutions = $repository->all();
         $list = new ListResponse($institutions, 0, count($institutions));

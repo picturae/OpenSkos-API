@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
-final class InvalidPaginationLevel extends \InvalidArgumentException
+final class InvalidApiRequestLevel extends \InvalidArgumentException
 {
     public function __construct($level = '')
     {
