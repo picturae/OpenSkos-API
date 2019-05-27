@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Institution\Controller;
 
 use App\Institution\InstitutionRepository;
+use App\OpenSkos\Pagination;
 use App\Rest\ListResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -27,11 +29,12 @@ final class Institution
     /**
      * @Route(path="/institutions", methods={"GET"})
      *
+     * @param Request               $request
      * @param InstitutionRepository $repository
      *
      * @return JsonResponse
      */
-    public function institutions(InstitutionRepository $repository): JsonResponse
+    public function institutions(Pagination $pagination, InstitutionRepository $repository): JsonResponse
     {
         $institutions = $repository->all();
         $list = new ListResponse($institutions, 0, count($institutions));

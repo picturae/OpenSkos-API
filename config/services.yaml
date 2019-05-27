@@ -15,7 +15,9 @@ services:
   \App\Rdf\RdfClient: '@App\Institution\Sparql\SparqlInstitutionRepository'
 
 
-  \App\Serialize\ListResponseNormalizer:
-      class: App\Serializer\ListResponseNormalizer
+  App\Serializer\ListResponseNormalizer:
       tags: ['serializer.normalizer']
       arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
+
+  App\Rest\ArgumentResolver\PaginationResolver:
+      tags: ['controller.argument_value_resolver']
