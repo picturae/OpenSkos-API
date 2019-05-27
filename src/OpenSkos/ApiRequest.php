@@ -11,7 +11,6 @@ final class ApiRequest
      */
     const FORMAT_JSONLD = 'json-ld';
 
-
     /**
      * @var string
      */
