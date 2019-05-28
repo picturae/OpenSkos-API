@@ -56,6 +56,14 @@ final class Institution
         $this->subject = $subject;
     }
 
+    /**
+     * @return string[]
+     */
+    public static function getMapping(): array
+    {
+        return self::$mapping;
+    }
+
     //TODO: Generate getters.
 
     /**
@@ -80,6 +88,11 @@ final class Institution
     public function getWebsite(): ?Literal
     {
         return $this->literals[self::website] ?? null;
+    }
+
+    public function count(): int
+    {
+        return count($this->literals);
     }
 
     /**
@@ -123,5 +136,13 @@ final class Institution
         $obj->literals = $literals;
 
         return $obj;
+    }
+
+    /**
+     * @return Literal[]
+     */
+    public function getLiterals(): array
+    {
+        return $this->literals;
     }
 }

@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Serializer;
 
 use App\Rest\ListResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use EasyRdf_Graph;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class ListResponseNormalizer implements NormalizerInterface
 {
+    /**
+     * EasyRdf is used an an intermediate format between the TripleStore and its serialised formats.
+     */
+
     /**
      * @var ObjectNormalizer
      */
@@ -31,25 +35,28 @@ class ListResponseNormalizer implements NormalizerInterface
      */
     public function normalize($list_object, $format = null, array $context = [])
     {
-        //$objectNormalizer = new ObjectNormalizer();
+        // A listing of artist
+        //$uri = sprintf("%s%s", self::RKD_RECORDSEARCH, $searchQuery);
 
-        $data = $this->normalizer->normalize($list_object, $format, $context);
+        $graph = new EasyRdf_Graph('http://openskos.org');
 
-        /*
-                // Here, add, edit, or delete some data:
-                $data['href']['self'] = $this->router->generate('topic_show', [
-                    'id' => $topic->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL);
+        $OSEntityCollection = $list_object->getDocs();
 
-                return $data;
-        */
-        return $data;
+        foreach ($OSEntityCollection as $osEntity) {
+            $subject = $osEntity->getSubject()->getUri();
 
-        /*
-        return json_encode($data);
+            $entity = $graph->resource($subject, 'rdf:Description');
 
-        return var_export($list_object);
-        */
+            $mapping = $osEntity->getMapping();
+            $literals = $osEntity->getLiterals();
+            foreach ($mapping as $key => $property) {
+                if (isset($literals[$key])) {
+                    $entity->addLiteral($property, $literals[$key]->getValue(), $literals[$key]->getLanguage());
+                }
+            }
+        }
+
+        return $graph;
     }
 
     /**

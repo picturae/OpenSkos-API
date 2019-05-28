@@ -7,9 +7,7 @@ namespace App\Institution\Controller;
 use App\Institution\InstitutionRepository;
 use App\OpenSkos\ApiRequest;
 use App\Rest\ListResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -29,18 +27,24 @@ final class Institution
     /**
      * @Route(path="/institutions", methods={"GET"})
      *
-     * @param Request               $request
+     * @param ApiRequest            $apiRequest
      * @param InstitutionRepository $repository
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function institutions(ApiRequest $apiRequest, InstitutionRepository $repository): JsonResponse
+    public function institutions(ApiRequest $apiRequest, InstitutionRepository $repository): Response
     {
-        $institutions = $repository->all();
-        $list = new ListResponse($institutions, 0, count($institutions));
+        $institutions = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
 
-        $res = $this->serializer->serialize($list, 'json');
+        $list = new ListResponse($institutions, count($institutions), $apiRequest->getOffset());
 
-        return new JsonResponse($res, Response::HTTP_OK, [], true);
+        $res = $this->serializer->serialize($list, $apiRequest->getFormat());
+
+        $formatOut = $apiRequest->getReturnContentType();
+
+        $response = new Response($res, Response::HTTP_OK, []);
+        $response->headers->set('Content-Type', $formatOut);
+
+        return $response;
     }
 }

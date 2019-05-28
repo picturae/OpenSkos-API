@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
+use App\Rdf\RdfHeaders;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 final class ApiRequest
 {
-    /*
-     * Supported Formats
-     */
-    const FORMAT_JSONLD = 'json-ld';
-
     /**
      * @var string
      */
@@ -31,8 +29,16 @@ final class ApiRequest
      */
     private $limit;
 
+    /**
+     * ApiRequest constructor.
+     *
+     * @param string $format
+     * @param int    $level
+     * @param int    $limit
+     * @param int    $offset
+     */
     public function __construct(
-        string $format = self::FORMAT_JSONLD,
+        string $format = RdfHeaders::FORMAT_JSON_LD,
         int $level = 1,
         int $limit = 100,
         int $offset = 0
@@ -41,6 +47,13 @@ final class ApiRequest
         $this->level = $level;
         $this->offset = $offset;
         $this->limit = $limit;
+
+        if (!in_array($format, [RdfHeaders::FORMAT_JSON_LD, RdfHeaders::FORMAT_RDF_XML])) {
+            throw new HttpException(
+                406,
+                "'$format' is not an accepted format"
+            );
+        }
 
         if ($level < 1 || $level > 4) {
             throw new InvalidApiRequestLevel($level);
@@ -76,8 +89,30 @@ final class ApiRequest
         return $this->limit;
     }
 
-    public function getFormat()
+    /**
+     * @return string
+     */
+    public function getFormat(): string
     {
         return $this->format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReturnContentType(): string
+    {
+        $formatOut = RdfHeaders::CONTENT_TYPE_HEADER_HTML;
+
+        switch ($this->format) {
+            case RdfHeaders::FORMAT_JSON_LD:
+                $formatOut = RdfHeaders::CONTENT_TYPE_HEADER_JSON_LD;
+                break;
+            case RdfHeaders::FORMAT_RDF_XML:
+                $formatOut = RdfHeaders::CONTENT_TYPE_HEADER_RDF_XML;
+                break;
+        }
+
+        return $formatOut;
     }
 }

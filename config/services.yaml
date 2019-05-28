@@ -19,5 +19,12 @@ services:
       tags: ['serializer.normalizer']
       arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
 
+
+  App\Serializer\JsonLdEncoder:
+    tags: ['serializer.encoder']
+
+  App\Serializer\RdfXmlEncoder:
+    tags: ['serializer.encoder']
+
   App\Rest\ArgumentResolver\ApiRequestResolver:
       tags: ['controller.argument_value_resolver']
