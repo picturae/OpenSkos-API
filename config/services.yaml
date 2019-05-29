@@ -20,10 +20,7 @@ services:
       arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
 
 
-  App\Serializer\JsonLdEncoder:
-    tags: ['serializer.encoder']
-
-  App\Serializer\RdfXmlEncoder:
+  App\Serializer\RdfEncoder:
     tags: ['serializer.encoder']
 
   App\Rest\ArgumentResolver\ApiRequestResolver:

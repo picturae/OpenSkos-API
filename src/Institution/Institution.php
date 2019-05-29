@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Institution;
 
 use App\Ontology\OpenSkos;
+use App\Ontology\Rdf;
 use App\Ontology\VCard;
 use App\Rdf\Iri;
 use App\Rdf\Literal;
 use App\Rdf\Triple;
+use App\Rdf\TripleSet;
 
-final class Institution
+final class Institution implements TripleSet
 {
     const code = 'code';
     const name = 'name';
@@ -23,6 +25,8 @@ final class Institution
     const countryName = 'countryName';
     const enableStatusesSystem = 'enableStatusesSystem';
     const enableSkosXl = 'enableSkosXl';
+    const type = 'type';
+    const disableSearchInOtherTenants = 'disableSearchInOtherTenants';
 
     /**
      * @var string[]
@@ -30,6 +34,7 @@ final class Institution
     private static $mapping = [
         self::code => OpenSkos::CODE,
         self::name => OpenSkos::NAME,
+        self::disableSearchInOtherTenants => OpenSkos::DISABLESEARCHINOTERTENANTS,
         self::organisationUnit => VCard::ORGUNIT,
         self::email => VCard::EMAIL,
         self::website => OpenSkos::WEBPAGE,
@@ -39,6 +44,7 @@ final class Institution
         self::countryName => VCard::COUNTRY,
         self::enableStatusesSystem => OpenSkos::ENABLESTATUSSESSYSTEMS,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
+        self::type => Rdf::TYPE,
     ];
 
     /**
@@ -47,9 +53,14 @@ final class Institution
     private $subject;
 
     /**
+     * @var Triple[]
+     */
+    private $triples = [];
+
+    /**
      * @var Literal[]
      */
-    private $literals = [];
+    private $properties = [];
 
     public function __construct(Iri $subject)
     {
@@ -79,7 +90,7 @@ final class Institution
      */
     public function getCode(): ?Literal
     {
-        return $this->literals[self::code] ?? null;
+        return $this->properties[self::code] ?? null;
     }
 
     /**
@@ -87,12 +98,12 @@ final class Institution
      */
     public function getWebsite(): ?Literal
     {
-        return $this->literals[self::website] ?? null;
+        return $this->properties[self::website] ?? null;
     }
 
     public function count(): int
     {
-        return count($this->literals);
+        return count($this->properties);
     }
 
     /**
@@ -104,7 +115,7 @@ final class Institution
     public static function fromTriples(Iri $subject, array $triples): Institution
     {
         $invMapping = array_flip(self::$mapping);
-        $literals = [];
+        $properties = [];
         foreach ($triples as $triple) {
             // Skip unrelated triples
             if ($triple->getSubject()->getUri() !== $subject->getUri()) {
@@ -118,22 +129,17 @@ final class Institution
             }
 
             $object = $triple->getObject();
-            // Skip non-literals. TODO: throw an exception?
+            /*
+            // Skip non-properties. TODO: throw an exception?
             if (!$object instanceof Literal) {
                 continue;
             }
-            $literals[$property] = $object;
-
-            /* TODO: Add Resource when needed
-                if (!$object instanceof Iri) {
-                    continue;
-                }
-                $resources[$property] = $object;
-             */
+            */
+            $properties[$property] = $object;
         }
 
         $obj = new self($subject);
-        $obj->literals = $literals;
+        $obj->properties = $properties;
 
         return $obj;
     }
@@ -141,8 +147,16 @@ final class Institution
     /**
      * @return Literal[]
      */
-    public function getLiterals(): array
+    public function getProperties(): array
     {
-        return $this->literals;
+        return $this->properties;
+    }
+
+    /**
+     * @return Triple[]
+     */
+    public function triples(): array
+    {
+        return $this->triples;
     }
 }

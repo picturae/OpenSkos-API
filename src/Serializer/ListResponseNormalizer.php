@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
+use App\Ontology\OpenSkos;
+use App\Rdf\Literal;
+use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use EasyRdf_Graph;
+use EasyRdf_Literal_Boolean;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
@@ -32,31 +36,11 @@ class ListResponseNormalizer implements NormalizerInterface
 
     /**
      * {@inheritdoc}
+     * @param ListResponse $object
      */
-    public function normalize($list_object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = [])
     {
-        // A listing of artist
-        //$uri = sprintf("%s%s", self::RKD_RECORDSEARCH, $searchQuery);
-
-        $graph = new EasyRdf_Graph('http://openskos.org');
-
-        $OSEntityCollection = $list_object->getDocs();
-
-        foreach ($OSEntityCollection as $osEntity) {
-            $subject = $osEntity->getSubject()->getUri();
-
-            $entity = $graph->resource($subject, 'rdf:Description');
-
-            $mapping = $osEntity->getMapping();
-            $literals = $osEntity->getLiterals();
-            foreach ($mapping as $key => $property) {
-                if (isset($literals[$key])) {
-                    $entity->addLiteral($property, $literals[$key]->getValue(), $literals[$key]->getLanguage());
-                }
-            }
-        }
-
-        return $graph;
+        return $object->getDocs();
     }
 
     /**

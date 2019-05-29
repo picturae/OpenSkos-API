@@ -19,24 +19,29 @@ class TripleFactorySpec extends ObjectBehavior
 
         $this::triplesFromGraph($graph)->shouldBeTriples([
             new Triple(
-                new Iri('http://memorix.io/skos/#russian'),
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-                new Iri('http://www.w3.org/2004/02/skos/core#Concept')
+                new Iri('http://www.w3.org/ns/org#FormalOrganization')
             ),
             new Triple(
-                new Iri('http://memorix.io/skos/#russian'),
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://openskos.org/xmlns#code'),
+                new Literal('pic')
+            ),
+            new Triple(
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://www.w3.org/2004/02/skos/core#prefLabel'),
-                new Literal('Russian')
+                new Literal('Doe, John', 'nl')
             ),
             new Triple(
-                new Iri('http://memorix.io/skos/#dutch'),
-                new Iri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-                new Iri('http://www.w3.org/2004/02/skos/core#Concept')
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://openskos.org/xmlns#disableSearchInOtherTenants'),
+                new Literal('false', null, Literal::TYPE_BOOL)
             ),
             new Triple(
-                new Iri('http://memorix.io/skos/#dutch'),
-                new Iri('http://www.w3.org/2004/02/skos/core#prefLabel'),
-                new Literal('Dutch')
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://purl.org/dc/terms/dateSubmitted'),
+                new Literal('2019-02-05T15:25:05+00:00', null, Literal::TYPE_DATETIME)
             ),
         ]);
     }

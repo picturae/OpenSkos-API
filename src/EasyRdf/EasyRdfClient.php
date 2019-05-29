@@ -39,12 +39,4 @@ class EasyRdfClient implements Client
         return TripleFactory::triplesFromGraph($graph);
     }
 
-//    public function replace($uri, $data)
-//    {
-//        $query = 'DELETE WHERE {<' . $uri . '> ?predicate ?object};';
-//        $query .= PHP_EOL;
-//        $query .= 'INSERT DATA {' . $this->convertToTriples($data) . '}';
-//
-//        $this->update($query);
-//    }
 }
