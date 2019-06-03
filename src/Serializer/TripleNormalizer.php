@@ -8,14 +8,13 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Rdf\Literal;
 use App\Rdf\Iri;
-use App\Rdf\TripleSet;
-use App\Rest\ListResponse;
+use App\Rdf\Triple;
 use EasyRdf_Graph;
 use EasyRdf_Literal_Boolean;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-class TripleSetNormalizer implements NormalizerInterface
+class TripleNormalizer implements NormalizerInterface
 {
     /**
      * EasyRdf is used an an intermediate format between the TripleStore and its serialised formats.
@@ -38,11 +37,12 @@ class TripleSetNormalizer implements NormalizerInterface
 
     /**
      * {@inheritdoc}
-     * @param TripleSet $object
+     *
+     * @param Triple $object
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        return $object->triples();
+        return [$object->getSubject()->getUri(), $object->getPredicate()->getUri(), (string) $object->getObject()];
 
         // A listing of artist
         //$uri = sprintf("%s%s", self::RKD_RECORDSEARCH, $searchQuery);
@@ -93,6 +93,6 @@ class TripleSetNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $data instanceof TripleSet;
+        return $data instanceof Triple;
     }
 }

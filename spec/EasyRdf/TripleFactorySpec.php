@@ -17,7 +17,9 @@ class TripleFactorySpec extends ObjectBehavior
         $graph = new EasyRdf_Graph();
         $graph->parse($graphString, 'turtle');
 
-        $this::triplesFromGraph($graph)->shouldBeTriples([
+        $testData = $this::triplesFromGraph($graph);
+
+        $testData->shouldBeTriples([
             new Triple(
                 new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),

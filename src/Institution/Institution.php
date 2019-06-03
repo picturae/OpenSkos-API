@@ -12,7 +12,7 @@ use App\Rdf\Literal;
 use App\Rdf\Triple;
 use App\Rdf\TripleSet;
 
-final class Institution implements TripleSet
+final class Institution extends TripleSet
 {
     const code = 'code';
     const name = 'name';
@@ -47,20 +47,6 @@ final class Institution implements TripleSet
         self::type => Rdf::TYPE,
     ];
 
-    /**
-     * @var Iri
-     */
-    private $subject;
-
-    /**
-     * @var Triple[]
-     */
-    private $triples = [];
-
-    /**
-     * @var Literal[]
-     */
-    private $properties = [];
 
     public function __construct(Iri $subject)
     {
@@ -75,15 +61,7 @@ final class Institution implements TripleSet
         return self::$mapping;
     }
 
-    //TODO: Generate getters.
 
-    /**
-     * @return Iri
-     */
-    public function getSubject(): Iri
-    {
-        return $this->subject;
-    }
 
     /**
      * @return Literal|null
@@ -101,62 +79,5 @@ final class Institution implements TripleSet
         return $this->properties[self::website] ?? null;
     }
 
-    public function count(): int
-    {
-        return count($this->properties);
-    }
 
-    /**
-     * @param Iri      $subject
-     * @param Triple[] $triples
-     *
-     * @return Institution
-     */
-    public static function fromTriples(Iri $subject, array $triples): Institution
-    {
-        $invMapping = array_flip(self::$mapping);
-        $properties = [];
-        foreach ($triples as $triple) {
-            // Skip unrelated triples
-            if ($triple->getSubject()->getUri() !== $subject->getUri()) {
-                continue;
-            }
-
-            $property = $invMapping[$triple->getPredicate()->getUri()] ?? null;
-            // Skip unknown properties
-            if (null === $property) {
-                continue;
-            }
-
-            $object = $triple->getObject();
-            /*
-            // Skip non-properties. TODO: throw an exception?
-            if (!$object instanceof Literal) {
-                continue;
-            }
-            */
-            $properties[$property] = $object;
-        }
-
-        $obj = new self($subject);
-        $obj->properties = $properties;
-
-        return $obj;
-    }
-
-    /**
-     * @return Literal[]
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->triples;
-    }
 }

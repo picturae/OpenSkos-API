@@ -36,7 +36,6 @@ class ListResponseNormalizer implements NormalizerInterface
 
     /**
      * {@inheritdoc}
-     * @param ListResponse $object
      */
     public function normalize($object, $format = null, array $context = [])
     {
