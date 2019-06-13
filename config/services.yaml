@@ -12,13 +12,14 @@ imports:
 services:
     # default configuration for services in *this* file
 
-  \App\Rdf\RdfClient: '@App\Institution\Sparql\SparqlInstitutionRepository'
-
 
   App\Serializer\ListResponseNormalizer:
       tags: ['serializer.normalizer']
       arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
 
+  App\Serializer\ScalarResponseNormalizer:
+    tags: ['serializer.normalizer']
+    arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
 
   App\Serializer\RdfEncoder:
     tags: ['serializer.encoder']

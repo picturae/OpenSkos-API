@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Institution\Controller;
+namespace App\Set\Controller;
 
-use App\Institution\InstitutionRepository;
+use App\Set\SetRepository;
 use App\Ontology\OpenSkos;
 use App\Ontology\Org;
 use App\OpenSkos\ApiRequest;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class Institution
+final class Set
 {
     /**
      * @var SerializerInterface
@@ -30,18 +30,18 @@ final class Institution
     }
 
     /**
-     * @Route(path="/institutions", methods={"GET"})
+     * @Route(path="/sets", methods={"GET"})
      *
-     * @param ApiRequest            $apiRequest
-     * @param InstitutionRepository $repository
+     * @param ApiRequest    $apiRequest
+     * @param SetRepository $repository
      *
      * @return Response
      */
-    public function institutions(ApiRequest $apiRequest, InstitutionRepository $repository): Response
+    public function sets(ApiRequest $apiRequest, SetRepository $repository): Response
     {
-        $institutions = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
+        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
 
-        $list = new ListResponse($institutions, count($institutions), $apiRequest->getOffset());
+        $list = new ListResponse($sets, count($sets), $apiRequest->getOffset());
 
         $res = $this->serializer->serialize($list, $apiRequest->getFormat());
 
@@ -54,24 +54,24 @@ final class Institution
     }
 
     /**
-     * @Route(path="/institution/{id}", methods={"GET"})
+     * @Route(path="/set/{id}", methods={"GET"})
      *
-     * @param ApiRequest            $apiRequest
-     * @param InstitutionRepository $repository
+     * @param ApiRequest    $apiRequest
+     * @param SetRepository $repository
      *
      * @return Response
      */
-    public function institution(Request $request, ApiRequest $apiRequest, InstitutionRepository $repository): Response
+    public function set(Request $request, ApiRequest $apiRequest, SetRepository $repository): Response
     {
         $id = $request->get('id');
 
-        $institution = $repository->findBy(
+        $set = $repository->findBy(
             new Iri(Org::FORMALORG),
             new Iri(OpenSkos::CODE),
             $id
         );
 
-        $list = new ScalarResponse($institution);
+        $list = new ScalarResponse($set);
 
         $res = $this->serializer->serialize($list, $apiRequest->getFormat());
 
