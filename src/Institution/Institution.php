@@ -62,6 +62,14 @@ final class Institution extends TripleSet
     }
 
 
+    /**
+     * @return string[]
+     */
+    public function getLevel2Predicate()
+    {
+        //Institutions have no level 2
+        return '';
+    }
 
     /**
      * @return Literal|null

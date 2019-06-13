@@ -13,6 +13,7 @@ use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -65,11 +66,16 @@ final class Institution
     {
         $id = $request->get('id');
 
-        $institution = $repository->findBy(
+        $institution = $repository->findOneBy(
             new Iri(Org::FORMALORG),
             new Iri(OpenSkos::CODE),
             $id
         );
+
+
+        if (!$institution) {
+            throw new NotFoundHttpException("The institution $id could not be retreived.");
+        }
 
         $list = new ScalarResponse($institution);
 

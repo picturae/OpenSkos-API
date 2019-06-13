@@ -6,7 +6,6 @@ namespace App\Set\Controller;
 
 use App\Set\SetRepository;
 use App\Ontology\OpenSkos;
-use App\Ontology\Org;
 use App\OpenSkos\ApiRequest;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
@@ -15,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class Set
 {
@@ -65,11 +65,16 @@ final class Set
     {
         $id = $request->get('id');
 
-        $set = $repository->findBy(
-            new Iri(Org::FORMALORG),
+        $set = $repository->findOneBy(
+            new Iri(OpenSkos::SET),
             new Iri(OpenSkos::CODE),
             $id
         );
+
+        if (!$set) {
+            throw new NotFoundHttpException("The set $id could not be retreived.");
+        }
+        $l2Object = $set->getLevel2Object();
 
         $list = new ScalarResponse($set);
 

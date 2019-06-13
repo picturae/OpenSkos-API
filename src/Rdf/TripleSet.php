@@ -6,7 +6,6 @@ namespace App\Rdf;
 
 abstract class TripleSet
 {
-
     /**
      * @var Iri
      */
@@ -22,9 +21,6 @@ abstract class TripleSet
      */
     protected $properties = [];
 
-
-
-
     /**
      * @return Iri
      */
@@ -38,10 +34,23 @@ abstract class TripleSet
         return count($this->properties);
     }
 
+    abstract public function getLevel2Predicate();
+
     /**
      * @return Triple[]
      */
     abstract public static function getMapping(): array;
+
+    public function getLevel2Object(): ?Literal
+    {
+        $object = null;
+        $mappingKey = $this->getLevel2Predicate();
+        if ($mappingKey) {
+            $object = $this->properties[$mappingKey];
+        }
+
+        return $object;
+    }
 
     /**
      * @param Iri      $subject
@@ -51,7 +60,6 @@ abstract class TripleSet
      */
     public static function fromTriples(Iri $subject, array $triples): TripleSet
     {
-
         $class = get_called_class();
 
         $invMapping = array_flip($class::getMapping());
@@ -83,7 +91,6 @@ abstract class TripleSet
         return $obj;
     }
 
-
     /**
      * @return Literal[]
      */
@@ -99,5 +106,4 @@ abstract class TripleSet
     {
         return $this->triples;
     }
-
 }

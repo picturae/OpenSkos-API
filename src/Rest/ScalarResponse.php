@@ -17,12 +17,12 @@ final class ScalarResponse
     /**
      * ScalarResponse constructor.
      *
-     * @param array $docs
+     * @param $doc
      */
     public function __construct(
-        array $docs
+        $doc
     ) {
-        $this->docs = $docs;
+        $this->docs = [$doc];
     }
 
     /**

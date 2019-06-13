@@ -28,11 +28,11 @@ final class Set extends TripleSet
      * @var string[]
      */
     private static $mapping = [
-        self::allow_oai => OpenSkos::ALLOW_OAI,
+        self::tenant => OpenSkos::TENANT,
         self::code => OpenSkos::CODE,
+        self::allow_oai => OpenSkos::ALLOW_OAI,
         self::conceptBaseUri => OpenSkos::CONCEPTBASEURI,
         self::oai_baseURL => OpenSkos::OAI_BASEURL,
-        self::tenant => OpenSkos::TENANT,
         self::webpage => OpenSkos::WEBPAGE,
         self::description => DcTerms::DESCRIPTION,
         self::license => DcTerms::LICENSE,
@@ -52,6 +52,15 @@ final class Set extends TripleSet
     {
         return self::$mapping;
     }
+
+    /**
+     * @return string
+     */
+    public function getLevel2Predicate()
+    {
+        return self::tenant;
+    }
+
 
     /**
      * @return Literal|null

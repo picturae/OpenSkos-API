@@ -26,7 +26,15 @@ interface SetRepository
     /**
      * @param Iri $iri
      *
-     * @return Set|null
+     * @return array
      */
     public function findBy(Iri $rdfType, Iri $predicate, string $object): array;
+
+
+    /**
+     * @param Iri $iri
+     *
+     * @return Set|null
+     */
+    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Set;
 }

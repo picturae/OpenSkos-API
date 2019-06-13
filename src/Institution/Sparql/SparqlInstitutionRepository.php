@@ -80,4 +80,21 @@ final class SparqlInstitutionRepository implements InstitutionRepository
 
         return $res;
     }
+
+    /**
+     * @param Iri $rdfType
+     * @param Iri $predicate
+     * @param string $object
+     * @return Institution|null
+     */
+    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Institution
+    {
+        $objects = $this->findBy($rdfType, $predicate, $object);
+        if ($objects) {
+            return $objects[0];
+        }
+
+        return null;
+    }
+
 }

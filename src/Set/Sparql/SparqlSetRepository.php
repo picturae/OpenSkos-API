@@ -80,4 +80,20 @@ final class SparqlSetRepository implements SetRepository
 
         return $res;
     }
+
+    /**
+     * @param Iri $rdfType
+     * @param Iri $predicate
+     * @param string $object
+     * @return Set|null
+     */
+    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Set
+    {
+        $objects = $this->findBy($rdfType, $predicate, $object);
+        if ($objects) {
+            return $objects[0];
+        }
+
+        return null;
+    }
 }
