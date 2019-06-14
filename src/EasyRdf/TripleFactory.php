@@ -26,8 +26,14 @@ final class TripleFactory
         }
 
         switch ($type) {
-            case 'uri': return new Iri($value);
-            case 'literal': return new Literal($value, $arr['lang'] ?? 'en');
+            case 'uri':
+                return new Iri($value);
+            case 'literal':
+                return new Literal(
+                    $value,
+                    $arr['lang'] ?? null,
+                    $arr['datatype'] ?? null
+                );
         }
 
         return null;

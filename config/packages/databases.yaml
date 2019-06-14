@@ -1,3 +1,5 @@
 parameters:
-  query_uri: 'http://192.168.56.10:3030/beg-openskos-production/query'
-  update_uri: 'http://192.168.56.10:3030/beg-openskos-production/update'
+  #query_uri: 'http://192.168.56.10:3030/beg-openskos-production/query'
+  #update_uri: 'http://192.168.56.10:3030/beg-openskos-production/update'
+  query_uri: 'http://jena-01.pictura-hosting.nl:3030/openskos-beg-test/query'
+  update_uri: 'http://jena-01.pictura-hosting.nl:3030/openskos-beg-test/update'

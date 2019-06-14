@@ -8,3 +8,7 @@ healthcheck:
 institution:
     resource: ../../src/Institution/Controller
     type: annotation
+
+set:
+    resource: ../../src/Set/Controller
+    type: annotation

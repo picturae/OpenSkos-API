@@ -4,9 +4,10 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    App\Institution\Controller\:
-        resource: '../../src/Institution/Controller/*'
+    App\Set\Controller\:
+        resource: '../../src/Set/Controller/*'
         tags: ['controller.service_arguments']
 
-    App\Institution\InstitutionRepository: '@App\Institution\Sparql\SparqlInstitutionRepository'
+    App\Set\SetRepository: '@App\Set\Sparql\SparqlSetRepository'
+
 

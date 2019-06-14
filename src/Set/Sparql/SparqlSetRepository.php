@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Institution\Sparql;
+namespace App\Set\Sparql;
 
-use App\Institution\Institution;
-use App\Institution\InstitutionRepository;
-use App\Ontology\Org;
+use App\Set\Set;
+use App\Set\SetRepository;
+use App\Ontology\OpenSkos;
 use App\Rdf\Client;
 use App\Rdf\Iri;
 use App\Rdf\SparqlQueryBuilder;
 
-final class SparqlInstitutionRepository implements InstitutionRepository
+final class SparqlSetRepository implements SetRepository
 {
     /**
      * @var Client
@@ -28,12 +28,12 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      * @param int $offset
      * @param int $limit
      *
-     * @return Institution[]
+     * @return Set[]
      */
     public function all(int $offset = 0, int $limit = 100): array
     {
         $sparql = SparqlQueryBuilder::describeAllOfType(
-            new Iri(Org::FORMALORG),
+            new Iri(Openskos::SET),
             $offset,
             $limit
         );
@@ -47,13 +47,13 @@ final class SparqlInstitutionRepository implements InstitutionRepository
 
         $res = [];
         foreach ($groups as $iriString => $group) {
-            $res[] = Institution::fromTriples(new Iri($iriString), $group);
+            $res[] = Set::fromTriples(new Iri($iriString), $group);
         }
 
         return $res;
     }
 
-    public function find(Iri $iri): ?Institution
+    public function find(Iri $iri): ?Set
     {
         throw new \RuntimeException('Not implemented');
     }
@@ -75,7 +75,7 @@ final class SparqlInstitutionRepository implements InstitutionRepository
 
         $res = [];
         foreach ($groups as $iriString => $group) {
-            $res[] = Institution::fromTriples(new Iri($iriString), $group);
+            $res[] = Set::fromTriples(new Iri($iriString), $group);
         }
 
         return $res;
@@ -85,9 +85,9 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      * @param Iri $rdfType
      * @param Iri $predicate
      * @param string $object
-     * @return Institution|null
+     * @return Set|null
      */
-    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Institution
+    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Set
     {
         $objects = $this->findBy($rdfType, $predicate, $object);
         if ($objects) {
@@ -96,5 +96,4 @@ final class SparqlInstitutionRepository implements InstitutionRepository
 
         return null;
     }
-
 }

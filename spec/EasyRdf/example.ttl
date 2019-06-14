@@ -1,12 +1,21 @@
-@base <http://memorix.io/skos/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+<http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a>
 
-<#russian>
-    a skos:Concept ;
-    skos:prefLabel "Russian"@en .
+    #Resource
+    a       <http://www.w3.org/ns/org#FormalOrganization> ;
 
-<#dutch>
-    a skos:Concept ;
-    skos:prefLabel "Dutch"@en .
+    #Language independent string
+    <http://openskos.org/xmlns#code>
+            "pic" ;
+
+    #Language dependent string
+    <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Doe, John"@nl ;
+
+    #Boolean
+    <http://openskos.org/xmlns#disableSearchInOtherTenants>
+            "false"^^<http://www.w3.org/2001/XMLSchema#bool> ;
+
+
+    #DateTime
+    <http://purl.org/dc/terms/dateSubmitted>
+            "2019-02-05T15:25:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

@@ -5,7 +5,7 @@ namespace App\Rdf;
 class Literal implements RdfTerm
 {
     const TYPE_DATETIME = 'http://www.w3.org/2001/XMLSchema#dateTime';
-    const TYPE_BOOL = 'http://www.w3.org/2001/XMLSchema#boolean';
+    const TYPE_BOOL = 'http://www.w3.org/2001/XMLSchema#bool';
     const TYPE_STRING = 'http://www.w3.org/2001/XMLSchema#string';
 
     /**
@@ -30,10 +30,10 @@ class Literal implements RdfTerm
      * TODO: Or make Typed Literals. Such as StringLiteral, DateTypeLiteral
      *
      * @param string $value
-     * @param string $language
-     * @param string $type
+     * @param mixed $language
+     * @param mixed $type
      */
-    public function __construct(string $value, string $language = 'en', string $type = self::TYPE_STRING)
+    public function __construct(string $value, $language = null, $type = null)
     {
         $this->value = $value;
         $this->language = $language;

@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
-use App\Ontology\OpenSkos;
-use App\Rdf\Literal;
-use App\Rdf\Iri;
-use App\Rest\ListResponse;
-use EasyRdf_Graph;
-use EasyRdf_Literal_Boolean;
+use App\Rest\ScalarResponse;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-class ListResponseNormalizer implements NormalizerInterface
+class ScalarResponseNormalizer implements NormalizerInterface
 {
     /**
      * EasyRdf is used an an intermediate format between the TripleStore and its serialised formats.
@@ -25,7 +20,7 @@ class ListResponseNormalizer implements NormalizerInterface
     private $normalizer;
 
     /**
-     * ListResponseNormalizer constructor.
+     * ScalarResponseNormalizer constructor.
      *
      * @param ObjectNormalizer $normalizer
      */
@@ -47,6 +42,6 @@ class ListResponseNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $data instanceof ListResponse;
+        return $data instanceof ScalarResponse;
     }
 }
