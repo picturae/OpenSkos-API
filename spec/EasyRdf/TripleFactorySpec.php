@@ -3,7 +3,9 @@
 namespace spec\App\EasyRdf;
 
 use App\Rdf\Iri;
-use App\Rdf\Literal;
+use App\Rdf\Literal\BooleanLiteral;
+use App\Rdf\Literal\DatetimeLiteral;
+use App\Rdf\Literal\StringLiteral;
 use App\Rdf\Triple;
 use EasyRdf_Graph;
 use PhpSpec\Exception\Example\FailureException;
@@ -28,22 +30,22 @@ class TripleFactorySpec extends ObjectBehavior
             new Triple(
                 new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://openskos.org/xmlns#code'),
-                new Literal('pic')
+                new StringLiteral('pic')
             ),
             new Triple(
                 new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://www.w3.org/2004/02/skos/core#prefLabel'),
-                new Literal('Doe, John', 'nl')
+                new StringLiteral('Doe, John', 'nl')
             ),
             new Triple(
                 new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://openskos.org/xmlns#disableSearchInOtherTenants'),
-                new Literal('false', null, Literal::TYPE_BOOL)
+                new BooleanLiteral(false)
             ),
             new Triple(
                 new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://purl.org/dc/terms/dateSubmitted'),
-                new Literal('2019-02-05T15:25:05+00:00', null, Literal::TYPE_DATETIME)
+                new DatetimeLiteral(new \DateTime('2019-02-05T15:25:05+00:00'))
             ),
         ]);
     }

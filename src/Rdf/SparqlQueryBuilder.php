@@ -8,6 +8,15 @@ use App\Ontology\Rdf;
 
 final class SparqlQueryBuilder
 {
+    /**
+     * FIXME: Make it not static.
+     *
+     * @param Iri $type
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return SparqlQuery
+     */
     public static function describeAllOfType(
         Iri $type,
         int $offset,
@@ -17,30 +26,20 @@ final class SparqlQueryBuilder
             sprintf(
                 'DESCRIBE ?x WHERE { ?x <%s> <%s> } LIMIT %d OFFSET %d',
                 Rdf::TYPE,
-                $type,
+                $type->getUri(),
                 $limit,
                 $offset
             )
         );
     }
 
-    public static function describeByTypeAndPredicate(
-        Iri $rdfType,
-        Iri $predicate,
-        string $object
+    public static function describeResource(
+        Iri $subject
     ): SparqlQuery {
-        $queryString = <<<QUERY_BY_TYPE_AND_PREDICATE
-DESCRIBE ?subject 
-    WHERE {
-      ?subject <%s> <%s>;
-        <%s> "%s"
-    }
-QUERY_BY_TYPE_AND_PREDICATE;
-
-        $queryString = sprintf($queryString, Rdf::TYPE, $rdfType, $predicate, $object);
-
-        $retVal = new SparqlQuery($queryString);
-
-        return $retVal;
+        return new SparqlQuery(
+            sprintf(
+                'DESCRIBE <%s>', $subject->getUri()
+            )
+        );
     }
 }

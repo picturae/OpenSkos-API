@@ -2,7 +2,9 @@ parameters:
     git_dir: .
     bin_dir: vendor/bin
     tasks:
-        phpcsfixer: ~
+        phpcsfixer2:
+            allow_risky: true
+            config: .php_cs
         psalm:
             ignore_patterns:
                 - '/spec/' #Ignore PHPSpec

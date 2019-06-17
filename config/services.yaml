@@ -12,17 +12,19 @@ imports:
 services:
     # default configuration for services in *this* file
 
-
-  App\Serializer\ListResponseNormalizer:
-      tags: ['serializer.normalizer']
-      arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
-
-  App\Serializer\ScalarResponseNormalizer:
-    tags: ['serializer.normalizer']
-    arguments: ['@Symfony\Component\Serializer\Normalizer\ObjectNormalizer']
+  App\Rest\ControllerResponseListener:
+    autowire: true
+    tags:
+      - { name: 'kernel.event_listener', event: 'kernel.view' }
 
   App\Serializer\RdfEncoder:
+    autowire: true
     tags: ['serializer.encoder']
 
   App\Rest\ArgumentResolver\ApiRequestResolver:
+      autowire: true
       tags: ['controller.argument_value_resolver']
+
+  App\Rest\ArgumentResolver\InternalResourceIdResolver:
+    tags:
+      - { name: controller.argument_value_resolver, priority: 100 }

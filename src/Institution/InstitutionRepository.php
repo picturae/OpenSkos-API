@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Institution;
 
+use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 
 interface InstitutionRepository
@@ -21,12 +22,12 @@ interface InstitutionRepository
      *
      * @return Institution|null
      */
-    public function find(Iri $iri): ?Institution;
+    public function findByIri(Iri $iri): ?Institution;
 
     /**
-     * @param Iri $iri
+     * @param InternalResourceId $id
      *
      * @return Institution|null
      */
-    public function findBy(Iri $rdfType, Iri $predicate, string $object): array;
+    public function find(InternalResourceId $id): ?Institution;
 }

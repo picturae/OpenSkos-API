@@ -8,10 +8,9 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Rdf\Iri;
-use App\Rdf\Literal;
-use App\Rdf\TripleSet;
+use App\Rdf\Literal\Literal;
 
-final class Set extends TripleSet
+final class Set
 {
     const allow_oai = 'allow_oai';
     const code = 'code';
@@ -39,6 +38,10 @@ final class Set extends TripleSet
         self::publisher => DcTerms::PUBLISHER,
         self::title => DC::TITLE,
     ];
+    /**
+     * @var Iri
+     */
+    private $subject;
 
     public function __construct(Iri $subject)
     {
@@ -61,20 +64,11 @@ final class Set extends TripleSet
         return self::tenant;
     }
 
-
     /**
      * @return Literal|null
      */
     public function getCode(): ?Literal
     {
         return $this->properties[self::code] ?? null;
-    }
-
-    /**
-     * @return Literal|null
-     */
-    public function getWebsite(): ?Literal
-    {
-        return $this->properties[self::website] ?? null;
     }
 }

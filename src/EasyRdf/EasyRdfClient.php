@@ -38,5 +38,4 @@ class EasyRdfClient implements Client
 
         return TripleFactory::triplesFromGraph($graph);
     }
-
 }

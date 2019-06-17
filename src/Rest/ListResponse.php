@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Rest;
 
-final class ListResponse
+use App\Rdf\Format\RdfFormat;
+use App\Rdf\RdfResource;
+
+final class ListResponse implements SkosResponse
 {
     /**
      * @var array
@@ -20,19 +23,25 @@ final class ListResponse
      * @var int
      */
     private $offset;
+    /**
+     * @var RdfFormat
+     */
+    private $format;
 
     public function __construct(
         array $docs,
         int $total,
-        int $offset
+        int $offset,
+        RdfFormat $format
     ) {
         $this->docs = $docs;
         $this->total = $total;
         $this->offset = $offset;
+        $this->format = $format;
     }
 
     /**
-     * @return array
+     * @return RdfResource[]
      */
     public function getDocs(): array
     {
@@ -53,5 +62,13 @@ final class ListResponse
     public function getOffset(): int
     {
         return $this->offset;
+    }
+
+    /**
+     * @return RdfFormat
+     */
+    public function format(): RdfFormat
+    {
+        return $this->format;
     }
 }

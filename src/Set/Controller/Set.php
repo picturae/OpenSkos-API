@@ -29,7 +29,7 @@ final class Set
         $this->serializer = $serializer;
     }
 
-    /**
+    /*
      * @Route(path="/sets", methods={"GET"})
      *
      * @param ApiRequest    $apiRequest
@@ -37,7 +37,7 @@ final class Set
      *
      * @return Response
      */
-    public function sets(ApiRequest $apiRequest, SetRepository $repository): Response
+/*    public function sets(ApiRequest $apiRequest, SetRepository $repository): Response
     {
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
 
@@ -51,9 +51,9 @@ final class Set
         $response->headers->set('Content-Type', $formatOut);
 
         return $response;
-    }
+    }*/
 
-    /**
+    /*
      * @Route(path="/set/{id}", methods={"GET"})
      *
      * @param ApiRequest    $apiRequest
@@ -61,7 +61,7 @@ final class Set
      *
      * @return Response
      */
-    public function set(Request $request, ApiRequest $apiRequest, SetRepository $repository): Response
+/*    public function set(Request $request, ApiRequest $apiRequest, SetRepository $repository): Response
     {
         $id = $request->get('id');
 
@@ -74,7 +74,6 @@ final class Set
         if (!$set) {
             throw new NotFoundHttpException("The set $id could not be retreived.");
         }
-        $l2Object = $set->getLevel2Object();
 
         $list = new ScalarResponse($set);
 
@@ -86,5 +85,5 @@ final class Set
         $response->headers->set('Content-Type', $formatOut);
 
         return $response;
-    }
+    }*/
 }

@@ -7,6 +7,8 @@ namespace App\Institution\Sparql;
 use App\Institution\Institution;
 use App\Institution\InstitutionRepository;
 use App\Ontology\Org;
+use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\OpenSkosIriFactory;
 use App\Rdf\Client;
 use App\Rdf\Iri;
 use App\Rdf\SparqlQueryBuilder;
@@ -17,11 +19,17 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      * @var Client
      */
     private $rdfClient;
+    /**
+     * @var OpenSkosIriFactory
+     */
+    private $iriFactory;
 
     public function __construct(
-        Client $rdfClient
+        Client $rdfClient,
+        OpenSkosIriFactory $iriFactory
     ) {
         $this->rdfClient = $rdfClient;
+        $this->iriFactory = $iriFactory;
     }
 
     /**
@@ -53,48 +61,26 @@ final class SparqlInstitutionRepository implements InstitutionRepository
         return $res;
     }
 
-    public function find(Iri $iri): ?Institution
+    public function findByIri(Iri $iri): ?Institution
     {
-        throw new \RuntimeException('Not implemented');
-    }
-
-    public function findBy(Iri $rdfType, Iri $predicate, string $object): array
-    {
-        $sparql = SparqlQueryBuilder::describeByTypeAndPredicate(
-            $rdfType,
-            $predicate,
-            $object
-        );
+        $sparql = SparqlQueryBuilder::describeResource($iri);
         $triples = $this->rdfClient->describe($sparql);
-
-        //TODO: Move to separate helper class?
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
+        if (0 === count($triples)) {
+            return null;
         }
 
-        $res = [];
-        foreach ($groups as $iriString => $group) {
-            $res[] = Institution::fromTriples(new Iri($iriString), $group);
-        }
-
-        return $res;
+        return Institution::fromTriples($iri, $triples);
     }
 
     /**
-     * @param Iri $rdfType
-     * @param Iri $predicate
-     * @param string $object
+     * @param InternalResourceId $id
+     *
      * @return Institution|null
      */
-    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Institution
+    public function find(InternalResourceId $id): ?Institution
     {
-        $objects = $this->findBy($rdfType, $predicate, $object);
-        if ($objects) {
-            return $objects[0];
-        }
+        $iri = $this->iriFactory->fromInternalResourceId($id);
 
-        return null;
+        return $this->findByIri($iri);
     }
-
 }

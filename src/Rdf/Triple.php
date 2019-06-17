@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rdf;
 
+use App\Rdf\Literal\Literal;
+
 final class Triple
 {
     /**
@@ -69,35 +71,12 @@ final class Triple
 
             return $retVal;
         } elseif ($this->object instanceof Literal) {
-            $type = $this->object->getType();
-            $lang = $this->object->getLanguage();
-
-            if (isset($type)) {
-                $retVal = sprintf(
-                    '<%s> <%s> "%s"^^<%s>',
-                    $this->subject->getUri(),
-                    $this->predicate->getUri(),
-                    $this->object->getValue(),
-                    $type
-                );
-            } elseif (isset($lang)) {
-                $retVal = sprintf(
-                    '<%s> <%s> "%s"@%s',
-                    $this->subject->getUri(),
-                    $this->predicate->getUri(),
-                    $this->object->getValue(),
-                    $lang
-                );
-            } else {
-                $retVal = sprintf(
-                    '<%s> <%s> "%s"',
-                    $this->subject->getUri(),
-                    $this->predicate->getUri(),
-                    $this->object->getValue()
-                );
-            }
-
-            return $retVal;
+            return sprintf(
+                '<%s> <%s> %s',
+                $this->subject->getUri(),
+                $this->predicate->getUri(),
+                $this->object->__toString()
+            );
         }
 
         throw new \LogicException('Object must be either Iri or Literal');

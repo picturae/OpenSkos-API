@@ -46,9 +46,9 @@ final class SparqlSetRepository implements SetRepository
         }
 
         $res = [];
-        foreach ($groups as $iriString => $group) {
-            $res[] = Set::fromTriples(new Iri($iriString), $group);
-        }
+//        foreach ($groups as $iriString => $group) {
+//            $res[] = Set::fromTriples(new Iri($iriString), $group);
+//        }
 
         return $res;
     }
@@ -56,44 +56,5 @@ final class SparqlSetRepository implements SetRepository
     public function find(Iri $iri): ?Set
     {
         throw new \RuntimeException('Not implemented');
-    }
-
-    public function findBy(Iri $rdfType, Iri $predicate, string $object): array
-    {
-        $sparql = SparqlQueryBuilder::describeByTypeAndPredicate(
-            $rdfType,
-            $predicate,
-            $object
-        );
-        $triples = $this->rdfClient->describe($sparql);
-
-        //TODO: Move to separate helper class?
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
-        }
-
-        $res = [];
-        foreach ($groups as $iriString => $group) {
-            $res[] = Set::fromTriples(new Iri($iriString), $group);
-        }
-
-        return $res;
-    }
-
-    /**
-     * @param Iri $rdfType
-     * @param Iri $predicate
-     * @param string $object
-     * @return Set|null
-     */
-    public function findOneBy(Iri $rdfType, Iri $predicate, string $object): ?Set
-    {
-        $objects = $this->findBy($rdfType, $predicate, $object);
-        if ($objects) {
-            return $objects[0];
-        }
-
-        return null;
     }
 }

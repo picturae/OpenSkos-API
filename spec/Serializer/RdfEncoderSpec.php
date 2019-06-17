@@ -2,155 +2,86 @@
 
 namespace spec\App\Serializer;
 
-use App\Institution\Institution;
+use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Iri;
-use App\Serializer\RdfEncoder;
-use App\Rest\ListResponse;
+use App\Rdf\Literal\BooleanLiteral;
+use App\Rdf\Literal\DatetimeLiteral;
+use App\Rdf\Literal\StringLiteral;
+use App\Rdf\Triple;
 use PhpSpec\ObjectBehavior;
-use App\EasyRdf\TripleFactory;
-use EasyRdf_Graph;
 
 class RdfEncoderSpec extends ObjectBehavior
 {
-    public function it_is_initializable()
+    /**
+     * @var Triple[]
+     */
+    private $triples;
+
+    public function let()
     {
-        $this->shouldHaveType(RdfEncoder::class);
+        $this->triples = [
+            new Triple(
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+                new Iri('http://www.w3.org/ns/org#FormalOrganization')
+            ),
+            new Triple(
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://openskos.org/xmlns#code'),
+                new StringLiteral('pic')
+            ),
+            new Triple(
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://www.w3.org/2004/02/skos/core#prefLabel'),
+                new StringLiteral('Doe, John', 'nl')
+            ),
+            new Triple(
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://openskos.org/xmlns#disableSearchInOtherTenants'),
+                new BooleanLiteral(false)
+            ),
+            new Triple(
+                new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
+                new Iri('http://purl.org/dc/terms/dateSubmitted'),
+                new DatetimeLiteral(new \DateTime('2019-02-05T15:25:05+00:00'))
+            ),
+        ];
+        $this->beConstructedWith(RdfFormatFactory::loadDefault());
     }
 
-    public function it_can_serialise_strings()
+    public function it_can_serialise_to_jsonld()
     {
-        $graphString = <<<GRAPH_STRING
-<http://tenant/TestData> <http://openskos.org/xmlns#code> "pic".
-GRAPH_STRING;
-        $graph = new EasyRdf_Graph();
-        $graph->parse($graphString, 'turtle');
+        $res = $this->encode($this->triples, 'json-ld');
+        $res->shouldBe(file_get_contents(__DIR__.'/example.jsonld'));
+    }
 
-        $testData = TripleFactory::triplesFromGraph($graph);
+    public function it_can_serialise_to_turtle()
+    {
+        $res = $this->encode($this->triples, 'turtle');
+        $res->shouldBe(file_get_contents(__DIR__.'/example.ttl'));
+    }
 
-        $graphUri = $testData[0]->getSubject()->getUri();
-
-        $institutions = [Institution::fromTriples(new Iri($graphUri), $testData)];
-        $list = new ListResponse($institutions, count($testData), 0);
-
-        $output = ($this->encode($list->getDocs(), 'rdf', []));
-
-        $expectedOutput = <<<RDF_BLOCK
+    public function it_can_serialise_to_rdfxml()
+    {
+        $res = $this->encode($this->triples, 'rdfxml');
+        $expected = <<<XML
 <?xml version="1.0" encoding="utf-8" ?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:openskos="http://openskos.org/xmlns#">
+         xmlns:org="http://www.w3.org/ns/org#"
+         xmlns:openskos="http://openskos.org/xmlns#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dc="http://purl.org/dc/terms/">
 
-  <rdf:Description rdf:about="http://tenant/TestData">
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Description"/>
+  <org:FormalOrganization rdf:about="http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a">
     <openskos:code>pic</openskos:code>
-  </rdf:Description>
-
-</rdf:RDF>
-
-RDF_BLOCK;
-
-        $output->shouldBe($expectedOutput);
-    }
-
-    /*
-     *This will fail until we build concepts, which do support language independen strings. So I've left it out for now
-    public function it_can_serialise_language_dependent_strings()
-    {
-        $graphString = <<<GRAPH_STRING
-<http://tenant/TestData> <http://www.w3.org/2004/02/skos/core#prefLabel> "Doe, John"@nl .
-GRAPH_STRING;
-        $graph = new EasyRdf_Graph();
-        $graph->parse($graphString, 'turtle');
-
-        $testData = TripleFactory::triplesFromGraph($graph);
-
-        $graphUri = $testData[0]->getSubject()->getUri();
-
-        $institutions = [Institution::fromTriples(new Iri($graphUri), $testData)];
-        $list = new ListResponse($institutions, count($testData), 0);
-
-        $output = ($this->encode($list->getDocs(), 'rdf', []));
-
-        $expectedOutput = <<<RDF_BLOCK
-<?xml version="1.0" encoding="utf-8" ?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-
-  <rdf:Description rdf:about="http://tenant/TestData">
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Description"/>
     <skos:prefLabel xml:lang="nl">Doe, John</skos:prefLabel>
-  </rdf:Description>
-
-</rdf:RDF>
-
-RDF_BLOCK;
-
-        $output->shouldBe($expectedOutput);
-    }
-    */
-
-    public function it_can_serialise_resources()
-    {
-        $graphString = <<<GRAPH_STRING
-<http://tenant/TestData> a <http://www.w3.org/ns/org#FormalOrganization> .
-GRAPH_STRING;
-        $graph = new EasyRdf_Graph();
-        $graph->parse($graphString, 'turtle');
-
-        $testData = TripleFactory::triplesFromGraph($graph);
-
-        $graphUri = $testData[0]->getSubject()->getUri();
-
-        $institutions = [Institution::fromTriples(new Iri($graphUri), $testData)];
-        $list = new ListResponse($institutions, count($testData), 0);
-
-        $output = ($this->encode($list->getDocs(), 'rdf', []));
-
-        $expectedOutput = <<<RDF_BLOCK
-<?xml version="1.0" encoding="utf-8" ?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-
-  <rdf:Description rdf:about="http://tenant/TestData">
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Description"/>
-    <rdf:type rdf:resource="http://www.w3.org/ns/org#FormalOrganization"/>
-  </rdf:Description>
-
-</rdf:RDF>
-
-RDF_BLOCK;
-
-        $output->shouldBe($expectedOutput);
-    }
-
-    public function it_can_serialise_booleans()
-    {
-        $graphString = <<<GRAPH_STRING
-<http://tenant/TestData> <http://openskos.org/xmlns#disableSearchInOtherTenants> "false"^^<http://www.w3.org/2001/XMLSchema#bool> .
-GRAPH_STRING;
-        $graph = new EasyRdf_Graph();
-        $graph->parse($graphString, 'turtle');
-
-        $testData = TripleFactory::triplesFromGraph($graph);
-
-        $graphUri = $testData[0]->getSubject()->getUri();
-
-        $institutions = [Institution::fromTriples(new Iri($graphUri), $testData)];
-        $list = new ListResponse($institutions, count($testData), 0);
-
-        $output = ($this->encode($list->getDocs(), 'rdf', []));
-
-        $expectedOutput = <<<RDF_BLOCK
-<?xml version="1.0" encoding="utf-8" ?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:openskos="http://openskos.org/xmlns#">
-
-  <rdf:Description rdf:about="http://tenant/TestData">
-    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Description"/>
     <openskos:disableSearchInOtherTenants rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</openskos:disableSearchInOtherTenants>
-  </rdf:Description>
+    <dc:dateSubmitted rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-02-05T15:25:05Z</dc:dateSubmitted>
+  </org:FormalOrganization>
 
 </rdf:RDF>
 
-RDF_BLOCK;
-
-        $output->shouldBe($expectedOutput);
+XML;
+        $res->shouldBe($expected);
     }
 }

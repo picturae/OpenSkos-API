@@ -4,51 +4,46 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
-use App\Rdf\RdfHeaders;
+use App\Rdf\Format\JsonLd;
+use App\Rdf\Format\Ntriples;
+use App\Rdf\Format\RdfFormatFactory;
+use App\Rdf\Format\RdfXml;
+use App\Rdf\Format\Turtle;
+use App\Rdf\Literal\BooleanLiteral;
+use App\Rdf\Literal\DatetimeLiteral;
+use App\Rdf\Literal\StringLiteral;
+use App\Rdf\Triple;
 use EasyRdf_Graph;
 use App\Ontology\OpenSkos;
-use App\Rdf\Literal;
+use App\Rdf\Literal\Literal;
 use App\Rdf\Iri;
-use EasyRdf_Literal_Boolean;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
+use Symfony\Component\Serializer\Encoder\NormalizationAwareInterface;
+use Symfony\Component\Serializer\Exception\UnsupportedException;
 
-
-
-
-class RdfEncoder implements EncoderInterface, DecoderInterface
+class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
 {
     /**
-     * @param $formatIn
-     *
-     * @return string
+     * @var RdfFormatFactory
      */
-    private function format2EasyRdfFormat($formatIn)
-    {
-        $formatOut = $formatIn;
-
-        switch ($formatIn) {
-           case  RdfHeaders::FORMAT_JSON_LD:
-               $formatOut = 'jsonld';
-               break;
-           default:
-               //Do absolutely nothing
-               break;
-       }
-
-        return $formatOut;
-    }
+    private $formatFactory;
 
     /**
-     * EasyRdf is used an an intermediate format between the TripleStore and its serialised formats.
+     * @var array<string,string>
      */
-    public function encode($data, $format, array $context = [])
-    {
-        $easyRdfFormat = $this->format2EasyRdfFormat($format);
+    private $formatMap = [];
 
-        $graph = $this->arrayToEasyRdfGraph($data);
+    public function __construct(
+        RdfFormatFactory $formatFactory
+    ) {
+        $this->formatFactory = $formatFactory;
 
-        return $graph->serialise($easyRdfFormat);
+        $this->formatMap = [
+            JsonLd::instance()->name() => 'jsonld',
+            RdfXml::instance()->name() => 'rdfxml',
+            Ntriples::instance()->name() => 'ntriples',
+            Turtle::instance()->name() => 'turtle',
+        ];
     }
 
     /**
@@ -58,74 +53,79 @@ class RdfEncoder implements EncoderInterface, DecoderInterface
      */
     public function supportsEncoding($format)
     {
-        return in_array($format, [RdfHeaders::FORMAT_JSON_LD, RdfHeaders::FORMAT_RDF_XML]);
+        return $this->formatFactory->exists($format);
     }
 
     /**
-     * @param string $data
+     * EasyRdf is used an an intermediate format between the TripleStore and its serialised formats.
+     *
+     * @param $data
      * @param string $format
      * @param array  $context
      *
-     * @return EasyRdf_Graph|mixed
-     *
-     * @throws \EasyRdf_Exception
+     * @return string
      */
-    public function decode($data, $format, array $context = [])
+    public function encode($data, $format, array $context = [])
     {
-        $easyRdfFormat = $this->format2EasyRdfFormat($format);
-        $graph = new EasyRdf_Graph($_REQUEST['uri']);
-        $graph->parse($_REQUEST['data'], $easyRdfFormat, 'http://openskos.org');
+        if (!is_iterable($data)) {
+            throw new UnsupportedException('data is not an iterable');
+        }
 
-        return $graph;
+        /** @var iterable<int,Triple> $data */
+        $graph = $this->tripleSetToEasyRdfGraph($data);
+
+        return (string) $graph->serialise($this->formatMap[$format] ?? $format);
+    }
+
+    private function literalToEasyRdf(Literal $literal): \EasyRdf_Literal
+    {
+        if ($literal instanceof BooleanLiteral) {
+            $value = new \EasyRdf_Literal_Boolean($literal->value());
+        } elseif ($literal instanceof DatetimeLiteral) {
+            $value = new \EasyRdf_Literal_DateTime($literal->value());
+        } elseif ($literal instanceof StringLiteral) {
+            $value = new \EasyRdf_Literal(
+                $literal->value(),
+                $literal->lang()
+            );
+        } else {
+            $value = new \EasyRdf_Literal(
+                (string) $literal,
+                null,
+                $literal->typeIri()->getUri()
+            );
+        }
+
+        return $value;
     }
 
     /**
-     * @param string $format
+     * @param iterable<int,Triple> $triples
      *
-     * @return bool
+     * @return EasyRdf_Graph
      */
-    public function supportsDecoding($format)
-    {
-        return in_array($format, [RdfHeaders::FORMAT_JSON_LD, RdfHeaders::FORMAT_RDF_XML]);
-    }
-
-    private function arrayToEasyRdfGraph($data)
+    private function tripleSetToEasyRdfGraph(iterable $triples): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph('http://openskos.org');
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
 
-        $OSEntityCollection = $data;
+        foreach ($triples as $triple) {
+            $subject = $triple->getSubject();
+            $predicate = $triple->getPredicate();
+            $object = $triple->getObject();
 
-        foreach ($OSEntityCollection as $osEntity) {
-            $subject = $osEntity->getSubject()->getUri();
-
-            $entity = $graph->resource($subject, 'rdf:Description');
-
-            $mapping = $osEntity->getMapping();
-            $properties = $osEntity->getProperties();
-            foreach ($mapping as $key => $property) {
-                if (isset($properties[$key])) {
-                    if ($properties[$key] instanceof Literal) {
-                        if (null === $properties[$key]->getType()) {
-                            $entity->addLiteral(
-                                $property,
-                                $properties[$key]->getValue(),
-                                $properties[$key]->getLanguage(),
-                            );
-                        } elseif (\App\Rdf\Literal::TYPE_BOOL === $properties[$key]->getType()) {
-                            $res = new EasyRdf_Literal_Boolean($properties[$key]->getValue());
-                            $entity->add($property, $res);
-                        } else {
-                            $entity->addLiteral(
-                                $property,
-                                $properties[$key]->getValue(),
-                                $properties[$key]->getLanguage(),
-                            );
-                        }
-                    } elseif ($properties[$key] instanceof Iri) {
-                        $entity->addResource($property, $properties[$key]->getUri());
-                    }
-                }
+            if ($object instanceof Literal) {
+                $graph->addLiteral(
+                    $subject->getUri(),
+                    $predicate->getUri(),
+                    $this->literalToEasyRdf($object)
+                );
+            } elseif ($object instanceof Iri) {
+                $graph->addResource(
+                    $subject->getUri(),
+                    $predicate->getUri(),
+                    $object->getUri()
+                );
             }
         }
 

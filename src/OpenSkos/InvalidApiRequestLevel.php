@@ -6,7 +6,7 @@ namespace App\OpenSkos;
 
 final class InvalidApiRequestLevel extends \InvalidArgumentException
 {
-    public function __construct($level = '')
+    public function __construct(int $level)
     {
         parent::__construct("Invalid level $level. Valid range is 1 to 4");
     }

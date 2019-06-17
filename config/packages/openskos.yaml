@@ -8,16 +8,14 @@ services:
     EasyRdf_Sparql_Client:
       class:  EasyRdf_Sparql_Client
       arguments:
-          $queryUri: '%query_uri%'
-          $updateUri: '%update_uri%'
+          $queryUri: '%env(SPARQL_QUERY_URI)%'
+          $updateUri: '%env(SPARQL_UPDATE_URI)%'
 
 
-    MyEasyRdfClient:
-        class: App\EasyRdf\EasyRdfClient
+    App\EasyRdf\EasyRdfClient:
         arguments: ['@EasyRdf_Sparql_Client']
 
-    App\Institution\Sparql\SparqlInstitutionRepository:
-        arguments: ['@MyEasyRdfClient']
+    App\Rdf\Client: '@App\EasyRdf\EasyRdfClient'
 
-    App\Set\Sparql\SparqlSetRepository:
-        arguments: ['@MyEasyRdfClient']
+    App\Rdf\Format\RdfFormatFactory:
+        factory: [ 'App\Rdf\Format\RdfFormatFactory', 'loadDefault' ]

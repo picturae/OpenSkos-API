@@ -1,0 +1,13 @@
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix openskos: <http://openskos.org/xmlns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a>
+  a org:FormalOrganization ;
+  openskos:code "pic" ;
+  skos:prefLabel "Doe, John"@nl ;
+  openskos:disableSearchInOtherTenants false ;
+  dc:dateSubmitted "2019-02-05T15:25:05Z"^^xsd:dateTime .
+

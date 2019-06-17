@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Institution;
 
+use App\Institution\Exception\UnknownProperty;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
 use App\Rdf\Iri;
-use App\Rdf\Literal;
+use App\Rdf\Literal\Literal;
+use App\Rdf\RdfResource;
 use App\Rdf\Triple;
-use App\Rdf\TripleSet;
 
-final class Institution extends TripleSet
+final class Institution implements RdfResource
 {
     const code = 'code';
     const name = 'name';
@@ -47,45 +48,87 @@ final class Institution extends TripleSet
         self::type => Rdf::TYPE,
     ];
 
+    /**
+     * @var Iri
+     */
+    private $subject;
+
+    /**
+     * @var array<string,?Literal>
+     */
+    private $literals;
+
+    /**
+     * @var Triple[]
+     */
+    private $triples = [];
 
     public function __construct(Iri $subject)
     {
         $this->subject = $subject;
+
+        $this->literals = array_fill_keys(
+            array_values(self::$mapping),
+            null
+        );
+    }
+
+    public function addLiteral(Iri $property, Literal $literal): void
+    {
+        $iri = $property->getUri();
+        if (!array_key_exists($iri, $this->literals)) {
+            throw new UnknownProperty($property);
+        }
+
+        $this->literals[$iri] = $literal;
+
+        $this->triples[] = new Triple(
+            $this->subject,
+            $property,
+            $literal
+        );
+    }
+
+    public function iri(): Iri
+    {
+        return $this->subject;
+    }
+
+    public function triples(): array
+    {
+        return $this->triples;
     }
 
     /**
-     * @return string[]
+     * @param Iri      $iri
+     * @param Triple[] $triples
+     *
+     * @return Institution
      */
-    public static function getMapping(): array
+    public static function fromTriples(Iri $iri, array $triples)
     {
-        return self::$mapping;
+        $iriString = $iri->getUri();
+        $obj = new self($iri);
+        foreach ($triples as $triple) {
+            if ($triple->getSubject()->getUri() !== $iriString) {
+                // TODO: Should we skip, log or throw an exception?
+                continue;
+            }
+
+            $predicateString = $triple->getPredicate()->getUri();
+            if (false === array_key_exists($predicateString, $obj->literals)) {
+                // TODO: Should we skip, log or throw an exception?
+                continue;
+            }
+
+            $obj->triples[] = $triple;
+            $object = $triple->getObject();
+            if ($object instanceof Literal) {
+                $obj->literals[$predicateString] = $object;
+            }
+            //TODO: Add Resources
+        }
+
+        return $obj;
     }
-
-
-    /**
-     * @return string[]
-     */
-    public function getLevel2Predicate()
-    {
-        //Institutions have no level 2
-        return '';
-    }
-
-    /**
-     * @return Literal|null
-     */
-    public function getCode(): ?Literal
-    {
-        return $this->properties[self::code] ?? null;
-    }
-
-    /**
-     * @return Literal|null
-     */
-    public function getWebsite(): ?Literal
-    {
-        return $this->properties[self::website] ?? null;
-    }
-
-
 }

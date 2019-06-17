@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\EasyRdf;
 
 use App\Rdf\Iri;
-use App\Rdf\Literal;
+use App\Rdf\Literal\BooleanLiteral;
+use App\Rdf\Literal\DatetimeLiteral;
+use App\Rdf\Literal\StringLiteral;
 use App\Rdf\RdfTerm;
 use App\Rdf\Triple;
 use EasyRdf_Graph;
@@ -29,11 +31,12 @@ final class TripleFactory
             case 'uri':
                 return new Iri($value);
             case 'literal':
-                return new Literal(
-                    $value,
-                    $arr['lang'] ?? null,
-                    $arr['datatype'] ?? null
-                );
+                // FIXME: Possible performance issues
+                switch ($arr['datatype'] ?? null) {
+                    case BooleanLiteral::typeIri()->getUri(): return BooleanLiteral::fromString($value);
+                    case DatetimeLiteral::typeIri()->getUri(): return DatetimeLiteral::fromString($value);
+                    default: return new StringLiteral($value, $arr['lang'] ?? null);
+                }
         }
 
         return null;

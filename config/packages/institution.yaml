@@ -8,5 +8,16 @@ services:
         resource: '../../src/Institution/Controller/*'
         tags: ['controller.service_arguments']
 
-    App\Institution\InstitutionRepository: '@App\Institution\Sparql\SparqlInstitutionRepository'
+    # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
+    # To cover all our needs
+    institution.iri_factory:
+        class: App\OpenSkos\OpenSkosIriFactory
+        arguments:
+            $namespace: 'http://tenant'
 
+    App\Institution\Sparql\SparqlInstitutionRepository:
+        arguments:
+            $iriFactory: '@institution.iri_factory'
+
+    App\Institution\InstitutionRepository: '@App\Institution\Sparql\SparqlInstitutionRepository'
+    

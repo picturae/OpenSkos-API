@@ -4,32 +4,47 @@ declare(strict_types=1);
 
 namespace App\Rest;
 
+use App\Rdf\Format\RdfFormat;
+use App\Rdf\RdfResource;
+
 /**
  * Class ScalarResponse.
  */
-final class ScalarResponse
+final class ScalarResponse implements SkosResponse
 {
     /**
-     * @var array
+     * @var RdfResource
      */
-    private $docs;
+    private $doc;
+
+    /**
+     * @var RdfFormat
+     */
+    private $format;
 
     /**
      * ScalarResponse constructor.
      *
-     * @param $doc
+     * @param RdfResource $doc
+     * @param RdfFormat   $format
      */
     public function __construct(
-        $doc
+        RdfResource $doc, RdfFormat $format
     ) {
-        $this->docs = [$doc];
+        $this->doc = $doc;
+        $this->format = $format;
     }
 
     /**
-     * @return array
+     * @return RdfResource
      */
-    public function getDocs(): array
+    public function doc(): RdfResource
     {
-        return $this->docs;
+        return $this->doc;
+    }
+
+    public function format(): RdfFormat
+    {
+        return $this->format;
     }
 }

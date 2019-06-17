@@ -5,6 +5,9 @@ services:
     build:
       context: ..
       dockerfile: docker/fpm/Dockerfile
+    networks:
+      - default
+      - openskos
     env_file:
       - fpm/symfony.env
     volumes:
@@ -18,3 +21,8 @@ services:
       - 9020:80
     volumes:
       - ./nginx:/app:ro
+
+networks:
+  openskos:
+    external:
+      name: openskos
