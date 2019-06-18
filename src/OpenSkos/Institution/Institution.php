@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Institution;
+namespace App\OpenSkos\Institution;
 
-use App\Institution\Exception\UnknownProperty;
+use App\OpenSkos\Institution\Exception\UnknownProperty;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;

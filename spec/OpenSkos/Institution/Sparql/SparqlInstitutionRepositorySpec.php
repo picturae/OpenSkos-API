@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\App\Institution\Sparql;
+namespace spec\App\OpenSkos\Institution\Sparql;
 
 use App\OpenSkos\OpenSkosIriFactory;
 use App\Rdf\Client;

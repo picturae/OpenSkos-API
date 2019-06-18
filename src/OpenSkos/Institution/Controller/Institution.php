@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Institution\Controller;
+namespace App\OpenSkos\Institution\Controller;
 
-use App\Institution\InstitutionRepository;
+use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\InternalResourceId;
 use App\Rest\ListResponse;

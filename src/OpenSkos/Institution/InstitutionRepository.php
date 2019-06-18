@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Institution;
+namespace App\OpenSkos\Institution;
 
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;

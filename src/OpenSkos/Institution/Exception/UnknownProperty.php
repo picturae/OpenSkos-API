@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Institution\Exception;
+namespace App\OpenSkos\Institution\Exception;
 
 use App\Rdf\Iri;
 

@@ -19,5 +19,4 @@ services:
         arguments:
             $iriFactory: '@institution.iri_factory'
 
-    App\Institution\InstitutionRepository: '@App\Institution\Sparql\SparqlInstitutionRepository'
-    
+    App\Institution\InstitutionRepository: '@App\OpenSkos\Institution\Sparql\SparqlInstitutionRepository'

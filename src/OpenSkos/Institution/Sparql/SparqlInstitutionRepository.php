@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Institution\Sparql;
+namespace App\OpenSkos\Institution\Sparql;
 
-use App\Institution\Institution;
-use App\Institution\InstitutionRepository;
+use App\OpenSkos\Institution\Institution;
+use App\OpenSkos\Institution\InstitutionRepository;
 use App\Ontology\Org;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
