@@ -2,7 +2,7 @@
 
 namespace spec\App\OpenSkos;
 
-use App\OpenSkos\InvalidApiRequestLevel;
+use App\OpenSkos\Exception\InvalidApiRequestLevel;
 use App\Rdf\Format\RdfFormat;
 use PhpSpec\ObjectBehavior;
 

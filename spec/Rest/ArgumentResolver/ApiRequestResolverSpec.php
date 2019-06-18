@@ -3,7 +3,7 @@
 namespace spec\App\Rest\ArgumentResolver;
 
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\InvalidApiRequest;
+use App\OpenSkos\Exception\InvalidApiRequest;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormatFactory;
 use PhpSpec\ObjectBehavior;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
+use App\OpenSkos\Exception\InvalidApiRequestLevel;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormat;
 

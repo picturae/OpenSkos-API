@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Rest\ArgumentResolver;
 
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\InvalidApiRequest;
+use App\OpenSkos\Exception\InvalidApiRequest;
 use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\UnknownFormatException;

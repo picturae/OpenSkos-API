@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos;
+namespace App\OpenSkos\Exception;
 
 class InvalidApiRequest extends \Exception
 {
