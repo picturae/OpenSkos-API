@@ -6,7 +6,7 @@ healthcheck:
     type: annotation
 
 institution:
-    resource: ../../src/Institution/Controller
+    resource: ../../src/OpenSkos/Institution/Controller
     type: annotation
 
 set:

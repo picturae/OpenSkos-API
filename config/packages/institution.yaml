@@ -4,8 +4,8 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    App\Institution\Controller\:
-        resource: '../../src/Institution/Controller/*'
+    App\OpenSkos\Institution\Controller\:
+        resource: '../../src/OpenSkos/Institution/Controller/*'
         tags: ['controller.service_arguments']
 
     # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
@@ -15,8 +15,8 @@ services:
         arguments:
             $namespace: 'http://tenant'
 
-    App\Institution\Sparql\SparqlInstitutionRepository:
+    App\OpenSkos\Institution\Sparql\SparqlInstitutionRepository:
         arguments:
             $iriFactory: '@institution.iri_factory'
 
-    App\Institution\InstitutionRepository: '@App\OpenSkos\Institution\Sparql\SparqlInstitutionRepository'
+    App\OpenSkos\Institution\InstitutionRepository: '@App\OpenSkos\Institution\Sparql\SparqlInstitutionRepository'
