@@ -7,10 +7,12 @@ namespace App\OpenSkos\Institution;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
-use App\OpenSkos\SkosResource;
+use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
+use App\Rdf\RdfResource;
+use App\Rdf\Triple;
 
-final class Institution extends SkosResource
+final class Institution implements RdfResource
 {
     const code = 'code';
     const name = 'name';
@@ -29,7 +31,7 @@ final class Institution extends SkosResource
     /**
      * @var string[]
      */
-    protected static $mapping = [
+    private static $mapping = [
         self::code => OpenSkos::CODE,
         self::name => OpenSkos::NAME,
         self::disableSearchInOtherTenants => OpenSkos::DISABLESEARCHINOTERTENANTS,
@@ -45,13 +47,55 @@ final class Institution extends SkosResource
         self::type => Rdf::TYPE,
     ];
 
-    public function __construct(Iri $subject)
-    {
-        $this->subject = $subject;
+    /**
+     * @var VocabularyAwareResource
+     */
+    private $resource;
 
-        $this->literals = array_fill_keys(
-            array_values(self::$mapping),
-            null
-        );
+    private function __construct(
+        Iri $subject,
+        ?VocabularyAwareResource $resource = null
+    ) {
+        if (null === $resource) {
+            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
+        } else {
+            $this->resource = $resource;
+        }
+    }
+
+    public function iri(): Iri
+    {
+        return $this->resource->iri();
+    }
+
+    /**
+     * @return Triple[]
+     */
+    public function triples(): array
+    {
+        return $this->resource->triples();
+    }
+
+    /**
+     * @param Iri $subject
+     *
+     * @return Institution
+     */
+    public static function createEmpty(Iri $subject): self
+    {
+        return new self($subject);
+    }
+
+    /**
+     * @param Iri      $subject
+     * @param Triple[] $triples
+     *
+     * @return Institution
+     */
+    public static function fromTriples(Iri $subject, array $triples): self
+    {
+        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
+
+        return new self($subject, $resource);
     }
 }
