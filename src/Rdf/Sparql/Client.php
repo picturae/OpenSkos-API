@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Rdf;
+namespace App\Rdf\Sparql;
+
+use App\Rdf\Triple;
 
 interface Client
 {

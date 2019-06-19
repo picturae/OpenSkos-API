@@ -2,9 +2,9 @@
 
 namespace App\EasyRdf;
 
-use App\Rdf\Client;
+use App\Rdf\Sparql\Client;
 use App\Rdf\Exception\InvalidSparqlQuery;
-use App\Rdf\SparqlQuery;
+use App\Rdf\Sparql\SparqlQuery;
 use App\Rdf\Triple;
 use EasyRdf_Graph;
 use EasyRdf_Sparql_Client;

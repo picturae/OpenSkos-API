@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Rdf\Exception;
 
-use App\Rdf\SparqlQuery;
+use App\Rdf\Sparql\SparqlQuery;
 
 class InvalidSparqlQuery extends ClientException
 {
     /**
-     * @var SparqlQuery|null
+     * @var \App\Rdf\Sparql\SparqlQuery|null
      */
     private $query;
 

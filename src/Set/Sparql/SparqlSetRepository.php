@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Set\Sparql;
 
+use App\Rdf\Sparql\SparqlQuery;
 use App\Set\Set;
 use App\Set\SetRepository;
 use App\Ontology\OpenSkos;
-use App\Rdf\Client;
+use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
-use App\Rdf\SparqlQueryBuilder;
 
 final class SparqlSetRepository implements SetRepository
 {
     /**
-     * @var Client
+     * @var \App\Rdf\Sparql\Client
      */
     private $rdfClient;
 
@@ -32,7 +32,7 @@ final class SparqlSetRepository implements SetRepository
      */
     public function all(int $offset = 0, int $limit = 100): array
     {
-        $sparql = SparqlQueryBuilder::describeAllOfType(
+        $sparql = SparqlQuery::describeAllOfType(
             new Iri(Openskos::SET),
             $offset,
             $limit

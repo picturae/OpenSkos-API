@@ -15,7 +15,7 @@ services:
     App\EasyRdf\EasyRdfClient:
         arguments: ['@EasyRdf_Sparql_Client']
 
-    App\Rdf\Client: '@App\EasyRdf\EasyRdfClient'
+    App\Rdf\Sparql\Client: '@App\EasyRdf\EasyRdfClient'
 
     App\Rdf\Format\RdfFormatFactory:
         factory: [ 'App\Rdf\Format\RdfFormatFactory', 'loadDefault' ]
