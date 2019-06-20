@@ -87,4 +87,52 @@ final class SkosResourceRepository
 
         return call_user_func($this->resourceFactory, $iri, $triples);
     }
+
+    /**
+     * @param Iri                $rdfType
+     * @param Iri                $predicate
+     * @param InternalResourceId $object
+     *
+     * @return array
+     */
+    public function findBy(Iri $rdfType, Iri $predicate, InternalResourceId $object): ?array
+    {
+        $sparql = SparqlQuery::describeByTypeAndPredicate($rdfType, $predicate, $object);
+        $triples = $this->rdfClient->describe($sparql);
+        if (0 === count($triples)) {
+            return null;
+        }
+
+        //TODO: Move to separate helper class?
+        $groups = [];
+        foreach ($triples as $triple) {
+            $groups[$triple->getSubject()->getUri()][] = $triple;
+        }
+
+        $res = [];
+        foreach ($groups as $iriString => $group) {
+            $res[] = call_user_func($this->resourceFactory, new Iri($iriString), $group);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param Iri                $rdfType
+     * @param Iri                $predicate
+     * @param InternalResourceId $object
+     *
+     * @return array|mixed|null
+     */
+    public function findOneBy(Iri $rdfType, Iri $predicate, InternalResourceId $object)
+    {
+        $fullSet = $this->findBy($rdfType, $predicate, $object);
+        if (isset($fullSet) && is_array($fullSet)) {
+            $resourceTriples = $fullSet[0];
+
+            return $resourceTriples;
+        }
+
+        return $fullSet;
+    }
 }

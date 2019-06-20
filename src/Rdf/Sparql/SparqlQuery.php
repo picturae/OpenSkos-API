@@ -66,4 +66,31 @@ final class SparqlQuery
             )
         );
     }
+
+    /**
+     * @param Iri $rdfType
+     * @param Iri $predicate
+     * @param $object
+     *
+     * @return SparqlQuery
+     */
+    public static function describeByTypeAndPredicate(
+        Iri $rdfType,
+        Iri $predicate,
+        $object
+    ): SparqlQuery {
+        $queryString = <<<QUERY_BY_TYPE_AND_PREDICATE
+DESCRIBE ?subject 
+    WHERE {
+      ?subject <%s> <%s>;
+        <%s> "%s"
+    }
+QUERY_BY_TYPE_AND_PREDICATE;
+
+        $queryString = sprintf($queryString, Rdf::TYPE, (string) $rdfType, (string) $predicate, $object);
+
+        $retVal = new SparqlQuery($queryString);
+
+        return $retVal;
+    }
 }

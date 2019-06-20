@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos\Institution\Sparql;
+namespace App\OpenSkos\Set\Sparql;
 
-use App\OpenSkos\Institution\Institution;
-use App\OpenSkos\Institution\InstitutionRepository;
-use App\Ontology\Org;
+use App\Ontology\OpenSkos;
+use App\OpenSkos\Set\SetRepository;
+use App\OpenSkos\Set\Set;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
 
-final class SparqlInstitutionRepository implements InstitutionRepository
+final class SparqlSetRepository implements SetRepository
 {
     /**
      * @var Client
@@ -21,7 +21,7 @@ final class SparqlInstitutionRepository implements InstitutionRepository
     private $rdfClient;
 
     /**
-     * @var SkosResourceRepository<Institution>
+     * @var SkosResourceRepository<Set>
      */
     private $skosRepository;
 
@@ -30,12 +30,6 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      */
     private $iriFactory;
 
-    /**
-     * SparqlInstitutionRepository constructor.
-     *
-     * @param Client             $rdfClient
-     * @param OpenSkosIriFactory $iriFactory
-     */
     public function __construct(
         Client $rdfClient,
         OpenSkosIriFactory $iriFactory
@@ -43,8 +37,8 @@ final class SparqlInstitutionRepository implements InstitutionRepository
         $this->rdfClient = $rdfClient;
 
         $this->skosRepository = new SkosResourceRepository(
-            function (Iri $iri, array $triples): Institution {
-                return Institution::fromTriples($iri, $triples);
+            function (Iri $iri, array $triples): Set {
+                return Set::fromTriples($iri, $triples);
             },
             $this->rdfClient
         );
@@ -56,23 +50,18 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      * @param int $offset
      * @param int $limit
      *
-     * @return array
+     * @return Set[]
      */
     public function all(int $offset = 0, int $limit = 100): array
     {
         return $this->skosRepository->allOfType(
-            new Iri(Org::FORMALORG),
+            new Iri(OpenSkos::SET),
             $offset,
             $limit
         );
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return Institution|null
-     */
-    public function findByIri(Iri $iri): ?Institution
+    public function findByIri(Iri $iri): ?Set
     {
         return $this->skosRepository->findByIri($iri);
     }
@@ -80,9 +69,9 @@ final class SparqlInstitutionRepository implements InstitutionRepository
     /**
      * @param InternalResourceId $id
      *
-     * @return Institution|null
+     * @return Set|null
      */
-    public function find(InternalResourceId $id): ?Institution
+    public function find(InternalResourceId $id): ?Set
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
@@ -91,22 +80,22 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      * @param Iri                $predicate
      * @param InternalResourceId $object
      *
-     * @return array|null
+     * @return array
      */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
-        return $this->skosRepository->findBy(new Iri(Org::FORMALORG), $predicate, $object);
+        return $this->skosRepository->findBy(new Iri(OpenSkos::SET), $predicate, $object);
     }
 
     /**
      * @param Iri                $predicate
      * @param InternalResourceId $object
      *
-     * @return Institution|null
+     * @return Set|null
      */
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Institution
+    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Set
     {
-        $res = $this->skosRepository->findOneBy(new Iri(Org::FORMALORG), $predicate, $object);
+        $res = $this->skosRepository->findOneBy(new Iri(OpenSkos::SET), $predicate, $object);
 
         return $res;
     }

@@ -30,7 +30,7 @@ final class InternalResourceId
      */
     public function __toString(): string
     {
-        return self::class."('$this->id'')";
+        return "$this->id";
     }
 
     public function isEquals(self $that): bool

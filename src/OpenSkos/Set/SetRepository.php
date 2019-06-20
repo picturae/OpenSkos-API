@@ -2,40 +2,33 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos\Institution;
+namespace App\OpenSkos\Set;
 
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 
-interface InstitutionRepository
+interface SetRepository
 {
     /**
      * @param int $limit
      * @param int $offset
      *
-     * @return array
+     * @return Set[]
      */
     public function all(int $offset = 0, int $limit = 100): array;
 
     /**
-     * @param Iri $iri
-     *
-     * @return Institution|null
-     */
-    public function findByIri(Iri $iri): ?Institution;
-
-    /**
      * @param InternalResourceId $id
      *
-     * @return Institution|null
+     * @return Set|null
      */
-    public function find(InternalResourceId $id): ?Institution;
+    public function find(InternalResourceId $id): ?Set;
 
     /**
      * @param Iri                $predicate
      * @param InternalResourceId $object
      *
-     * @return array|null
+     * @return array
      */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array;
 
@@ -43,7 +36,7 @@ interface InstitutionRepository
      * @param Iri                $predicate
      * @param InternalResourceId $object
      *
-     * @return Institution|null
+     * @return Set|null
      */
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Institution;
+    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Set;
 }

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Institution\Controller;
 
+use App\Ontology\OpenSkos;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\InternalResourceId;
+use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -62,7 +64,10 @@ final class Institution
         ApiRequest $apiRequest,
         InstitutionRepository $repository
     ): ScalarResponse {
-        $institution = $repository->find($id);
+        $institution = $repository->findOneBy(
+            new Iri(OpenSkos::CODE),
+            $id
+        );
 
         if (null === $institution) {
             throw new NotFoundHttpException("The institution $id could not be retreived.");

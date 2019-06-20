@@ -10,5 +10,5 @@ institution:
     type: annotation
 
 set:
-    resource: ../../src/Set/Controller
+    resource: ../../src/OpenSkos/Set/Controller
     type: annotation
