@@ -12,3 +12,7 @@ institution:
 set:
     resource: ../../src/OpenSkos/Set/Controller
     type: annotation
+
+conceptscheme:
+    resource: ../../src/OpenSkos/ConceptScheme/Controller
+    type: annotation
