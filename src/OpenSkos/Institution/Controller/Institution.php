@@ -12,6 +12,7 @@ use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 final class Institution
@@ -21,11 +22,6 @@ final class Institution
      */
     private $serializer;
 
-    /**
-     * Institution constructor.
-     *
-     * @param SerializerInterface $serializer
-     */
     public function __construct(
         SerializerInterface $serializer
     ) {
@@ -33,6 +29,8 @@ final class Institution
     }
 
     /**
+     * @Route(path="/institutions", methods={"GET"})
+     *
      * @param ApiRequest            $apiRequest
      * @param InstitutionRepository $repository
      *
@@ -53,6 +51,8 @@ final class Institution
     }
 
     /**
+     * @Route(path="/institution/{id}", methods={"GET"})
+     *
      * @param InternalResourceId    $id
      * @param ApiRequest            $apiRequest
      * @param InstitutionRepository $repository
