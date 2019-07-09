@@ -35,7 +35,6 @@ final class ApiRequest
      */
     private $institutions;
 
-
     /**
      * @var array
      */
@@ -50,12 +49,12 @@ final class ApiRequest
      * ApiRequest constructor.
      *
      * @param RdfFormat|null $format
-     * @param int $level
-     * @param int $limit
-     * @param int $offset
-     * @param int $institutions
-     * @param int $sets
-     * @param int $searchProfile
+     * @param int            $level
+     * @param int            $limit
+     * @param int            $offset
+     * @param array          $institutions
+     * @param array          $sets
+     * @param int            $searchProfile
      */
     public function __construct(
         ?RdfFormat $format = null,
@@ -65,7 +64,6 @@ final class ApiRequest
         array $institutions = [],
         array $sets = [],
         int $searchProfile = 0
-
     ) {
         if (null === $format) {
             $format = JsonLd::instance();
@@ -128,7 +126,6 @@ final class ApiRequest
     {
         return $this->institutions;
     }
-
 
     /**
      * @param array $institutions

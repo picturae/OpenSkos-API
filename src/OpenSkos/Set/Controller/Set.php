@@ -32,9 +32,10 @@ final class Set
     /**
      * @Route(path="/sets", methods={"GET"})
      *
-     * @param ApiRequest $apiRequest
-     * @param SetRepository $repository
+     * @param ApiRequest      $apiRequest
+     * @param SetRepository   $repository
      * @param FilterProcessor $filterProcessor
+     *
      * @return ListResponse
      */
     public function sets(ApiRequest $apiRequest, SetRepository $repository, FilterProcessor $filterProcessor): ListResponse
@@ -67,8 +68,6 @@ final class Set
         ApiRequest $apiRequest,
         SetRepository $repository
     ): ScalarResponse {
-
-
         $set = $repository->findOneBy(
             new Iri(OpenSkos::CODE),
             $id
