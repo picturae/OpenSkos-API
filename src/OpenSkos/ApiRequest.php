@@ -31,18 +31,41 @@ final class ApiRequest
     private $limit;
 
     /**
+     * @var array
+     */
+    private $institutions;
+
+
+    /**
+     * @var array
+     */
+    private $sets;
+
+    /**
+     * @var int
+     */
+    private $searchProfile;
+
+    /**
      * ApiRequest constructor.
      *
      * @param RdfFormat|null $format
-     * @param int            $level
-     * @param int            $limit
-     * @param int            $offset
+     * @param int $level
+     * @param int $limit
+     * @param int $offset
+     * @param int $institutions
+     * @param int $sets
+     * @param int $searchProfile
      */
     public function __construct(
         ?RdfFormat $format = null,
         int $level = 1,
         int $limit = 100,
-        int $offset = 0
+        int $offset = 0,
+        array $institutions = [],
+        array $sets = [],
+        int $searchProfile = 0
+
     ) {
         if (null === $format) {
             $format = JsonLd::instance();
@@ -52,6 +75,9 @@ final class ApiRequest
         $this->level = $level;
         $this->offset = $offset;
         $this->limit = $limit;
+        $this->institutions = $institutions;
+        $this->sets = $sets;
+        $this->searchProfile = $searchProfile;
 
         if ($level < 1 || $level > 4) {
             throw new InvalidApiRequestLevel($level);
@@ -93,5 +119,54 @@ final class ApiRequest
     public function getFormat(): RdfFormat
     {
         return $this->format;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInstitutions(): array
+    {
+        return $this->institutions;
+    }
+
+
+    /**
+     * @param array $institutions
+     */
+    public function setInstitutions(array $institutions): void
+    {
+        $this->institutions = $institutions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSets(): array
+    {
+        return $this->sets;
+    }
+
+    /**
+     * @param array $sets
+     */
+    public function setSets(array $sets): void
+    {
+        $this->sets = $sets;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSearchProfile(): int
+    {
+        return $this->searchProfile;
+    }
+
+    /**
+     * @param int $searchProfile
+     */
+    public function setSearchProfile(int $searchProfile): void
+    {
+        $this->searchProfile = $searchProfile;
     }
 }

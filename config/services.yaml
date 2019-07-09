@@ -28,3 +28,6 @@ services:
   App\Rest\ArgumentResolver\InternalResourceIdResolver:
     tags:
       - { name: controller.argument_value_resolver, priority: 100 }
+
+  App\OpenSkos\Filters\FilterProcessor:
+    autowire: true

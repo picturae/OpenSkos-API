@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set\Controller;
 
+use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
 use App\Ontology\OpenSkos;
@@ -31,13 +32,17 @@ final class Set
     /**
      * @Route(path="/sets", methods={"GET"})
      *
-     * @param ApiRequest    $apiRequest
+     * @param ApiRequest $apiRequest
      * @param SetRepository $repository
-     *
+     * @param FilterProcessor $filterProcessor
      * @return ListResponse
      */
-    public function sets(ApiRequest $apiRequest, SetRepository $repository): ListResponse
+    public function sets(ApiRequest $apiRequest, SetRepository $repository, FilterProcessor $filterProcessor): ListResponse
     {
+        $institutions = $apiRequest->getInstitutions();
+
+        $institutions_filter = $filterProcessor->buildInstitutionFilters($institutions);
+
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
 
         return new ListResponse(
@@ -62,6 +67,8 @@ final class Set
         ApiRequest $apiRequest,
         SetRepository $repository
     ): ScalarResponse {
+
+
         $set = $repository->findOneBy(
             new Iri(OpenSkos::CODE),
             $id

@@ -61,11 +61,22 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
+        $institutions = $request->query->get('institutions', '');
+        $institutions = preg_split('/\s*,\s*/', $institutions, -1, PREG_SPLIT_NO_EMPTY);
+
+        $sets = $request->query->get('sets', '');
+        $sets = preg_split('/\s*,\s*/', $sets, -1, PREG_SPLIT_NO_EMPTY);
+
+        $searchProfile = $request->query->getInt('searchProfile');
+
         yield new ApiRequest(
             $this->resolveFormat($request->query->get('format')),
             $request->query->getInt('level', 1),
             $request->query->getInt('limit', 100),
-            $request->query->getInt('offset', 0)
+            $request->query->getInt('offset', 0),
+            $institutions,
+            $sets,
+            $searchProfile
         );
     }
 }
