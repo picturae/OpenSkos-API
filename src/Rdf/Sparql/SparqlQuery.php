@@ -77,6 +77,7 @@ final class SparqlQuery
 
             foreach ($groupedFilters as $gf_key => $gf_val) {
                 ++$nIdx;
+                $filterPredicates[] = sprintf('<%s> $f%d ', $gf_key, $nIdx);
                 foreach ($gf_val as $sub_val) {
                     if (FilterProcessor::TYPE_URI == $sub_val['type']) {
                         $delimOpen = '<';
@@ -84,7 +85,6 @@ final class SparqlQuery
                     } else {
                         $delimOpen = $delimClose = '"';
                     }
-                    $filterPredicates[] = sprintf('<%s> $f%d ', $sub_val['predicate'], $nIdx);
                     $filterValues[] = sprintf('$f%d = %s%s%s', $nIdx, $delimOpen, $sub_val['value'], $delimClose);
                 }
             }
