@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Filters;
 
+use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class FilterProcessor
 {
+    const TYPE_URI = 'uri';
+    const TYPE_UUID = 'uuid';
+    const TYPE_STRING = 'string';
+
     public static function isUuid($value)
     {
         $retval = false;
@@ -30,9 +35,9 @@ final class FilterProcessor
             if (self::isUuid($filter)) {
                 throw new BadRequestHttpException('The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                throw new BadRequestHttpException('The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).');
+                $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI];
             } else {
-                $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $filter];
+                $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $filter, 'type' => self::TYPE_STRING];
             }
         }
 

@@ -38,9 +38,10 @@ final class SkosResourceRepository
     }
 
     /**
-     * @param Iri $type
-     * @param int $offset
-     * @param int $limit
+     * @param Iri   $type
+     * @param int   $offset
+     * @param int   $limit
+     * @param array $filters
      *
      * @return array
      * @psalm-return array<T>
@@ -48,12 +49,14 @@ final class SkosResourceRepository
     public function allOfType(
         Iri $type,
         int $offset = 0,
-        int $limit = 100
+        int $limit = 100,
+        array $filters = []
     ): array {
         $sparql = SparqlQuery::describeAllOfType(
             $type,
             $offset,
-            $limit
+            $limit,
+            $filters
         );
         $triples = $this->rdfClient->describe($sparql);
 

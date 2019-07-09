@@ -6,6 +6,7 @@ namespace App\Rdf\Sparql;
 
 use App\Ontology\Rdf;
 use App\Rdf\Iri;
+use App\OpenSkos\Filters\FilterProcessor;
 
 final class SparqlQuery
 {
@@ -35,25 +36,72 @@ final class SparqlQuery
     /**
      * FIXME: Make it not static.
      *
-     * @param Iri $type
-     * @param int $offset
-     * @param int $limit
+     * @param Iri   $type
+     * @param int   $offset
+     * @param int   $limit
+     * @param array $filters
      *
      * @return SparqlQuery
      */
     public static function describeAllOfType(
         Iri $type,
         int $offset,
-        int $limit
+        int $limit,
+        array $filters = []
     ): SparqlQuery {
-        return new SparqlQuery(
-            sprintf(
-                'DESCRIBE ?x WHERE { ?x <%s> <%s> } LIMIT %d OFFSET %d',
+        //In the interests of performance, we split out the predicates. Using filters referencing more than one string seems to put Jena in problems
+        if (0 === count($filters)) {
+            //If there are no filters, we can keep this simple
+
+            $queryString = sprintf(
+                'DESCRIBE ?subject WHERE { ?subject <%s> <%s> } LIMIT %d OFFSET %d',
                 Rdf::TYPE,
                 $type->getUri(),
                 $limit,
                 $offset
-            )
+            );
+        } else {
+            //Group all filters on predicate
+            $groupedFilters = [];
+            foreach ($filters as $f_key => $f_val) {
+                $predicate = $f_val['predicate'];
+                if (!isset($groupedFilters[$predicate])) {
+                    $groupedFilters[$predicate] = [];
+                }
+                $groupedFilters[$predicate][] = $f_val;
+            }
+
+            $nIdx = 0;
+            $filterPredicates = [];
+            $filterValues = [];
+
+            foreach ($groupedFilters as $gf_key => $gf_val) {
+                ++$nIdx;
+                foreach ($gf_val as $sub_val) {
+                    if (FilterProcessor::TYPE_URI == $sub_val['type']) {
+                        $delimOpen = '<';
+                        $delimClose = '>';
+                    } else {
+                        $delimOpen = $delimClose = '"';
+                    }
+                    $filterPredicates[] = sprintf('<%s> $f%d ', $sub_val['predicate'], $nIdx);
+                    $filterValues[] = sprintf('$f%d = %s%s%s', $nIdx, $delimOpen, $sub_val['value'], $delimClose);
+                }
+            }
+
+            $queryString = sprintf(
+                'DESCRIBE ?subject WHERE{ SELECT ?subject WHERE { ?subject <%s> <%s>; %s . FILTER ( %s ) }} LIMIT %d OFFSET %d',
+                Rdf::TYPE,
+                $type->getUri(),
+                implode('; ', $filterPredicates),
+                implode(' || ', $filterValues),
+                $limit,
+                $offset
+            );
+        }
+
+        return new SparqlQuery(
+            $queryString
         );
     }
 

@@ -18,8 +18,8 @@ class SparqlQuerySpec extends ObjectBehavior
         );
 
         $this->rawSparql()->shouldBe(
-            'DESCRIBE ?x WHERE '
-            .'{ ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://some-type> } '
+            'DESCRIBE ?subject WHERE '
+            .'{ ?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://some-type> } '
             .'LIMIT 100 OFFSET 200'
         );
     }

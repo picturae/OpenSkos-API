@@ -44,7 +44,7 @@ final class Set
 
         $institutions_filter = $filterProcessor->buildInstitutionFilters($institutions);
 
-        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
+        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $institutions_filter);
 
         return new ListResponse(
             $sets,

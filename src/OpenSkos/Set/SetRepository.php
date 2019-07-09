@@ -10,12 +10,13 @@ use App\Rdf\Iri;
 interface SetRepository
 {
     /**
-     * @param int $limit
-     * @param int $offset
+     * @param int   $offset
+     * @param int   $limit
+     * @param array $filters
      *
      * @return Set[]
      */
-    public function all(int $offset = 0, int $limit = 100): array;
+    public function all(int $offset = 0, int $limit = 100, array $filters = []): array;
 
     /**
      * @param InternalResourceId $id
