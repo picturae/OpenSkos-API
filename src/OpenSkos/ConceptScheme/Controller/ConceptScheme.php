@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\ConceptScheme\Controller;
 
+use App\OpenSkos\Filters\FilterProcessor;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\ApiRequest;
@@ -11,6 +12,7 @@ use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -33,14 +35,28 @@ final class ConceptScheme
      *
      * @param ApiRequest              $apiRequest
      * @param ConceptSchemeRepository $repository
+     * @param FilterProcessor         $filterProcessor
      *
      * @return ListResponse
      */
     public function conceptschemes(
         ApiRequest $apiRequest,
-        ConceptSchemeRepository $repository
+        ConceptSchemeRepository $repository,
+        FilterProcessor $filterProcessor
     ): ListResponse {
-        $conceptschemes = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
+        $institutions = $apiRequest->getInstitutions();
+        $institutions_filter = $filterProcessor->buildInstitutionFilters($institutions);
+
+        if ($filterProcessor->hasPublisher($institutions_filter)) {
+            throw new BadRequestHttpException('The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concept Schemes).');
+        }
+
+        $sets = $apiRequest->getSets();
+        $sets_filter = $filterProcessor->buildSetFilters($sets);
+
+        $full_filter = array_merge($institutions_filter, $sets_filter);
+
+        $conceptschemes = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
             $conceptschemes,

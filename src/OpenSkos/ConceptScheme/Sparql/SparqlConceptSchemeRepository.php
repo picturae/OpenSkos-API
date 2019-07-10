@@ -54,17 +54,19 @@ final class SparqlConceptSchemeRepository implements ConceptSchemeRepository
     }
 
     /**
-     * @param int $offset
-     * @param int $limit
+     * @param int   $offset
+     * @param int   $limit
+     * @param array $filters
      *
      * @return array
      */
-    public function all(int $offset = 0, int $limit = 100): array
+    public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         return $this->skosRepository->allOfType(
             new Iri(Skos::CONCEPTSCHEME),
             $offset,
-            $limit
+            $limit,
+            $filters
         );
     }
 

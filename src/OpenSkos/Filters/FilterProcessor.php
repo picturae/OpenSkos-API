@@ -14,6 +14,11 @@ final class FilterProcessor
     const TYPE_UUID = 'uuid';
     const TYPE_STRING = 'string';
 
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
     public static function isUuid($value)
     {
         $retval = false;
@@ -27,6 +32,29 @@ final class FilterProcessor
         return $retval;
     }
 
+    /**
+     * @param array $filters
+     *
+     * @return bool
+     */
+    public function hasPublisher(array $filters)
+    {
+        $has_publisher = false;
+        foreach ($filters as $elem) {
+            if (FilterProcessor::TYPE_URI == $elem['type']) {
+                $has_publisher = true;
+                break;
+            }
+        }
+
+        return $has_publisher;
+    }
+
+    /**
+     * @param array $filterList
+     *
+     * @return array
+     */
     public function buildInstitutionFilters(array $filterList)
     {
         $dataOut = [];
@@ -38,6 +66,28 @@ final class FilterProcessor
                 $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI];
             } else {
                 $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $filter, 'type' => self::TYPE_STRING];
+            }
+        }
+
+        return $dataOut;
+    }
+
+    /**
+     * @param array $filterList
+     *
+     * @return array
+     */
+    public function buildSetFilters(array $filterList)
+    {
+        $dataOut = [];
+
+        foreach ($filterList as $filter) {
+            if (self::isUuid($filter)) {
+                throw new BadRequestHttpException('The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).');
+            } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
+                $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_URI];
+            } else {
+                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
             }
         }
 

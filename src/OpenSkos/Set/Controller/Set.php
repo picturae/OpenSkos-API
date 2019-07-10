@@ -12,6 +12,7 @@ use App\OpenSkos\ApiRequest;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -41,8 +42,14 @@ final class Set
     public function sets(ApiRequest $apiRequest, SetRepository $repository, FilterProcessor $filterProcessor): ListResponse
     {
         $institutions = $apiRequest->getInstitutions();
-
         $institutions_filter = $filterProcessor->buildInstitutionFilters($institutions);
+
+        /* According to the specs, throw a 400 when asked for sets */
+        $sets = $apiRequest->getSets();
+        $sets_filter = $filterProcessor->buildSetFilters($sets);
+        if (0 !== count($sets_filter)) {
+            throw new BadRequestHttpException('Sets filter is not applicable here.');
+        }
 
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $institutions_filter);
 

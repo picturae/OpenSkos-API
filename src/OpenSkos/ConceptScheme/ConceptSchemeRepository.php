@@ -10,12 +10,13 @@ use App\Rdf\Iri;
 interface ConceptSchemeRepository
 {
     /**
-     * @param int $limit
-     * @param int $offset
+     * @param int   $offset
+     * @param int   $limit
+     * @param array $filter
      *
      * @return array
      */
-    public function all(int $offset = 0, int $limit = 100): array;
+    public function all(int $offset = 0, int $limit = 100, array $filter = []): array;
 
     /**
      * @param Iri $iri
