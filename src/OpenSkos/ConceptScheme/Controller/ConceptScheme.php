@@ -44,15 +44,15 @@ final class ConceptScheme
         ConceptSchemeRepository $repository,
         FilterProcessor $filterProcessor
     ): ListResponse {
-        $institutions = $apiRequest->getInstitutions();
-        $institutions_filter = $filterProcessor->buildInstitutionFilters($institutions);
+        $param_institutions = $apiRequest->getInstitutions();
+        $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         if ($filterProcessor->hasPublisher($institutions_filter)) {
             throw new BadRequestHttpException('The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concept Schemes).');
         }
 
-        $sets = $apiRequest->getSets();
-        $sets_filter = $filterProcessor->buildSetFilters($sets);
+        $param_sets = $apiRequest->getSets();
+        $sets_filter = $filterProcessor->buildSetFilters($param_sets);
 
         $full_filter = array_merge($institutions_filter, $sets_filter);
 

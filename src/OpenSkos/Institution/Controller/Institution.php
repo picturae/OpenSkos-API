@@ -11,6 +11,7 @@ use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -40,6 +41,17 @@ final class Institution
         ApiRequest $apiRequest,
         InstitutionRepository $repository
     ): ListResponse {
+        $param_institutions = $apiRequest->getInstitutions();
+        if (isset($param_institutions) && 0 !== count($param_institutions)) {
+            throw new BadRequestHttpException('Institutions filter is not applicable here.');
+        }
+
+        /* According to the specs, throw a 400 when asked for sets */
+        $param_sets = $apiRequest->getSets();
+        if (isset($param_sets) && 0 !== count($param_sets)) {
+            throw new BadRequestHttpException('Sets filter is not applicable here.');
+        }
+
         $institutions = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit());
 
         return new ListResponse(

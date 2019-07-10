@@ -41,13 +41,12 @@ final class Set
      */
     public function sets(ApiRequest $apiRequest, SetRepository $repository, FilterProcessor $filterProcessor): ListResponse
     {
-        $institutions = $apiRequest->getInstitutions();
-        $institutions_filter = $filterProcessor->buildInstitutionFilters($institutions);
+        $param_institutions = $apiRequest->getInstitutions();
+        $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         /* According to the specs, throw a 400 when asked for sets */
-        $sets = $apiRequest->getSets();
-        $sets_filter = $filterProcessor->buildSetFilters($sets);
-        if (0 !== count($sets_filter)) {
+        $param_sets = $apiRequest->getSets();
+        if (isset($param_sets) && 0 !== count($param_sets)) {
             throw new BadRequestHttpException('Sets filter is not applicable here.');
         }
 
