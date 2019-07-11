@@ -7,7 +7,8 @@ RUN apt update \
     && docker-php-ext-install intl \
     && docker-php-ext-enable opcache \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /app/var
+    && mkdir -p /app/var \
+    && docker-php-ext-install pdo pdo_mysql
 
 COPY docker/fpm/php.ini /usr/local/etc/
 

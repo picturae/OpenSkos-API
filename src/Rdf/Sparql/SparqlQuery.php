@@ -62,39 +62,61 @@ final class SparqlQuery
             );
         } else {
             //Group all filters on predicate
+
+            /*
+             * $groupedFilters is split into 3 levels
+             * 1.) Entity to act upon (i.e. Institution, Set, ConceptScheme etc.
+             * 2.) The predicate to act upon
+             * 3.) The object values
+             *
+             * object predicate <-> value matches are ORed
+             *
+             * entity are ANDed. (Otherwise the higher group will always override the lower one
+             */
             $groupedFilters = [];
+
             foreach ($filters as $f_key => $f_val) {
+                $entity = $f_val['entity'];
                 $predicate = $f_val['predicate'];
-                if (!isset($groupedFilters[$predicate])) {
-                    $groupedFilters[$predicate] = [];
+
+                if (!isset($groupedFilters[$entity])) {
+                    $groupedFilters[$entity] = [];
                 }
-                $groupedFilters[$predicate][] = $f_val;
+
+                if (!isset($groupedFilters[$entity][$predicate])) {
+                    $groupedFilters[$entity][$predicate] = [];
+                }
+                $groupedFilters[$entity][$predicate][] = $f_val;
             }
 
             $nIdx = 0;
             $filterPredicates = [];
             $filterValues = [];
 
-            foreach ($groupedFilters as $gf_key => $gf_val) {
-                ++$nIdx;
-                $filterPredicates[] = sprintf('<%s> $f%d ', $gf_key, $nIdx);
-                foreach ($gf_val as $sub_val) {
-                    if (FilterProcessor::TYPE_URI == $sub_val['type']) {
-                        $delimOpen = '<';
-                        $delimClose = '>';
-                    } else {
-                        $delimOpen = $delimClose = '"';
+            foreach ($groupedFilters as $entity_key => $entity_val) {
+                $entityValues = [];
+                foreach ($entity_val as $pred_key => $pred_val) {
+                    ++$nIdx;
+                    $filterPredicates[] = sprintf('<%s> $f%d ', $pred_key, $nIdx);
+                    foreach ($pred_val as $obj_key => $obj_val) {
+                        if (FilterProcessor::TYPE_URI == $obj_val['type']) {
+                            $delimOpen = '<';
+                            $delimClose = '>';
+                        } else {
+                            $delimOpen = $delimClose = '"';
+                        }
+                        $entityValues[] = sprintf('$f%d = %s%s%s', $nIdx, $delimOpen, $obj_val['value'], $delimClose);
                     }
-                    $filterValues[] = sprintf('$f%d = %s%s%s', $nIdx, $delimOpen, $sub_val['value'], $delimClose);
+                    $filterValues[] = sprintf(' FILTER ( %s )', implode(' || ', $entityValues));
                 }
             }
 
             $queryString = sprintf(
-                'DESCRIBE ?subject WHERE{ SELECT ?subject WHERE { ?subject <%s> <%s>; %s . FILTER ( %s ) }} LIMIT %d OFFSET %d',
+                'DESCRIBE ?subject WHERE{ SELECT ?subject WHERE { ?subject <%s> <%s>; %s . %s }} LIMIT %d OFFSET %d',
                 Rdf::TYPE,
                 $type->getUri(),
                 implode('; ', $filterPredicates),
-                implode(' || ', $filterValues),
+                implode(' . ', $filterValues),
                 $limit,
                 $offset
             );

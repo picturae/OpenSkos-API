@@ -42,7 +42,7 @@ final class Set
     public function sets(ApiRequest $apiRequest, SetRepository $repository, FilterProcessor $filterProcessor): ListResponse
     {
         $param_institutions = $apiRequest->getInstitutions();
-        $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
+        $full_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
@@ -50,7 +50,16 @@ final class Set
             throw new BadRequestHttpException('Sets filter is not applicable here.');
         }
 
-        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $institutions_filter);
+        $param_profile = $apiRequest->getSearchProfile();
+
+        if ($param_profile) {
+            if (0 !== count($full_filter)) {
+                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
+            }
+            $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true];
+            $full_filter = $filterProcessor->retrieveSearchProfile($param_profile, $to_apply);
+        }
+        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
             $sets,
