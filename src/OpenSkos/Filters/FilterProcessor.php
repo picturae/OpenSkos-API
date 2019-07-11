@@ -7,6 +7,7 @@ namespace App\OpenSkos\Filters;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class FilterProcessor
@@ -130,22 +131,24 @@ final class FilterProcessor
         $filters = [];
         $res = $qb->execute();
 
-        $profile = $res->fetchAll();
-        if (0 === count($profile)) {
-            throw new BadRequestHttpException('The searchProfile id does not exist');
-        }
-        $searchOptions = unserialize($profile[0]['searchOptions']);
-
-        if (isset($to_apply[self::ENTITY_INSTITUTION]) && true === $to_apply[self::ENTITY_INSTITUTION]) {
-            if (isset($searchOptions['tenants']) && 0 !== count($searchOptions['tenants'])) {
-                $read_filters = $this->buildInstitutionFilters($searchOptions['tenants']);
-                $filters = array_merge($filters, $read_filters);
+        if ($res instanceof Statement){
+            $profile = $res->fetchAll();
+            if (0 === count($profile)) {
+                throw new BadRequestHttpException('The searchProfile id does not exist');
             }
-        }
-        if (isset($to_apply[self::ENTITY_SET]) && true === $to_apply[self::ENTITY_SET]) {
-            if (isset($searchOptions['collections']) && 0 !== count($searchOptions['collections'])) {
-                $read_filters = $this->buildSetFilters($searchOptions['collections']);
-                $filters = array_merge($filters, $read_filters);
+            $searchOptions = unserialize($profile[0]['searchOptions']);
+
+            if (isset($to_apply[self::ENTITY_INSTITUTION]) && true === $to_apply[self::ENTITY_INSTITUTION]) {
+                if (isset($searchOptions['tenants']) && 0 !== count($searchOptions['tenants'])) {
+                    $read_filters = $this->buildInstitutionFilters($searchOptions['tenants']);
+                    $filters = array_merge($filters, $read_filters);
+                }
+            }
+            if (isset($to_apply[self::ENTITY_SET]) && true === $to_apply[self::ENTITY_SET]) {
+                if (isset($searchOptions['collections']) && 0 !== count($searchOptions['collections'])) {
+                    $read_filters = $this->buildSetFilters($searchOptions['collections']);
+                    $filters = array_merge($filters, $read_filters);
+                }
             }
         }
 
