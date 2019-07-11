@@ -129,9 +129,10 @@ final class FilterProcessor
             ->setParameter('id', $profile_id);
 
         $filters = [];
+
         $res = $qb->execute();
 
-        if ($res instanceof Statement){
+        if ($res instanceof Statement) {
             $profile = $res->fetchAll();
             if (0 === count($profile)) {
                 throw new BadRequestHttpException('The searchProfile id does not exist');
