@@ -91,7 +91,7 @@ final class ConceptScheme
         ConceptSchemeRepository $repository
     ): ScalarResponse {
         $conceptscheme = $repository->findOneBy(
-            new Iri(OpenSkos::CODE),
+            new Iri(OpenSkos::UUID),
             $id
         );
 

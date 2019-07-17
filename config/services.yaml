@@ -25,6 +25,9 @@ services:
       autowire: true
       tags: ['controller.argument_value_resolver']
 
+  App\OpenSkos\ApiRequest:
+    autowire: true
+
   App\Rest\ArgumentResolver\InternalResourceIdResolver:
     tags:
       - { name: controller.argument_value_resolver, priority: 100 }

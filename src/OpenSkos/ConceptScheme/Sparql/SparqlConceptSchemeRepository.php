@@ -7,7 +7,6 @@ namespace App\OpenSkos\ConceptScheme\Sparql;
 use App\Ontology\Skos;
 use App\OpenSkos\ConceptScheme\ConceptScheme;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
-use App\Ontology\Org;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
@@ -98,7 +97,7 @@ final class SparqlConceptSchemeRepository implements ConceptSchemeRepository
      */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
-        return $this->skosRepository->findBy(new Iri(Org::FORMALORG), $predicate, $object);
+        return $this->skosRepository->findBy(new Iri(Skos::CONCEPTSCHEME), $predicate, $object);
     }
 
     /**
@@ -109,7 +108,7 @@ final class SparqlConceptSchemeRepository implements ConceptSchemeRepository
      */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?ConceptScheme
     {
-        $res = $this->skosRepository->findOneBy(new Iri(Org::FORMALORG), $predicate, $object);
+        $res = $this->skosRepository->findOneBy(new Iri(Skos::CONCEPTSCHEME), $predicate, $object);
 
         return $res;
     }

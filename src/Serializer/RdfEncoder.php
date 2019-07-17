@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
+use App\EasyRdf\Serializer\OpenSkosJsonLdSerializer;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\Ntriples;
 use App\Rdf\Format\RdfFormatFactory;
@@ -27,6 +28,8 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
      * @var RdfFormatFactory
      */
     private $formatFactory;
+
+    private $apiRequest;
 
     /**
      * @var array<string,string>
@@ -74,7 +77,44 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
         /** @var iterable<int,Triple> $data */
         $graph = $this->tripleSetToEasyRdfGraph($data);
 
-        return (string) $graph->serialise($this->formatMap[$format] ?? $format);
+        $options = [];
+
+        if ('json-ld' === $format) {
+            $context = <<<CONTEXT
+{
+  "@context": {
+    "openskos": "http://openskos.org/xmlns#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dc": "http://purl.org/dc/"
+  }
+}
+CONTEXT;
+
+            $serialiser = new OpenSkosJsonLdSerializer();
+
+            /*
+             * A couple of undocumented options. pretty formatting, and flattened or expanded outputs
+             */
+            $pretty = isset($_REQUEST['pretty']) ? filter_var($_REQUEST['pretty'], FILTER_VALIDATE_BOOLEAN) : false;
+
+            $syntax = (isset($_REQUEST['syntax']) &&
+                        in_array($_REQUEST['syntax'], ['compact', 'expand', 'flatten'], true)
+            ) ? $_REQUEST['syntax'] : 'compact';
+
+            $processed_data = $serialiser->serialise($graph, 'jsonld', [
+                'compact' => true,
+                'context' => $context,
+                'pretty' => $pretty,
+                'syntax' => $syntax,
+            ]);
+
+            $serialised_data = $processed_data;
+        } else {
+            $serialised_data = $graph->serialise($this->formatMap[$format] ?? $format, $options);
+        }
+
+        return $serialised_data;
     }
 
     private function literalToEasyRdf(Literal $literal): \EasyRdf_Literal
