@@ -9,6 +9,7 @@ use App\Ontology\OpenSkos;
 use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -82,21 +83,25 @@ final class Concept
      * @param InternalResourceId $id
      * @param ApiRequest         $apiRequest
      * @param ConceptRepository  $repository
+     * @param LabelRepository    $labelRepository
      *
      * @return ScalarResponse
      */
     public function concept(
         InternalResourceId $id,
         ApiRequest $apiRequest,
-        ConceptRepository $repository
+        ConceptRepository $repository,
+        LabelRepository $labelRepository
     ): ScalarResponse {
         $concept = $repository->findOneBy(
             new Iri(OpenSkos::UUID),
             $id
         );
-
         if (null === $concept) {
             throw new NotFoundHttpException("The concept $id could not be retreived.");
+        }
+        if (2 === $apiRequest->getLevel()) {
+            $concept->loadFullXlLabels($labelRepository);
         }
 
         return new ScalarResponse($concept, $apiRequest->getFormat());

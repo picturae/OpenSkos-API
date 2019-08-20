@@ -21,6 +21,9 @@ final class OpenSkosIriFactory
 
     public function fromInternalResourceId(InternalResourceId $id): Iri
     {
+        //TODO: These are all being constructed as services from .yaml with http://tenant as the namespace, so why is
+        // this not broken? Can we ditch it?
+
         return new Iri($this->namespace.'/'.$id->id());
     }
 }

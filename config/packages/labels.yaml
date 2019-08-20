@@ -1,0 +1,16 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  label.iri_factory:
+    class: App\OpenSkos\OpenSkosIriFactory
+    arguments:
+      $namespace: 'http://tenant'
+
+  App\OpenSkos\Label\Sparql\SparqlLabelRepository:
+    arguments:
+      $iriFactory: '@label.iri_factory'
+
+  App\OpenSkos\Label\LabelRepository: '@App\OpenSkos\Label\Sparql\SparqlLabelRepository'

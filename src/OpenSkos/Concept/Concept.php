@@ -10,6 +10,8 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
 use App\Ontology\SkosXl;
+use App\OpenSkos\Label\Label;
+use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
@@ -68,48 +70,6 @@ final class Concept implements RdfResource
 
     const relatedMatch = 'relatedMatch';
 
-    /*
-    <http://www.w3.org/2004/02/skos/core#prefLabel>
-    <http://www.w3.org/2004/02/skos/core#inScheme>
-    <http://www.w3.org/2004/02/skos/core#notation>
-    <http://www.w3.org/2008/05/skos-xl#prefLabel>
-    
-    <http://purl.org/dc/terms/publisher>
-    <http://www.w3.org/2004/02/skos/core#editorialNote>
-    <http://www.w3.org/2004/02/skos/core#changeNote>
-    <http://openskos.org/xmlns#toBeChecked>
-    <http://purl.org/dc/terms/dateAccepted>
-    <http://www.w3.org/2004/02/skos/core#hiddenLabel>
-    <http://openskos.org/xmlns#acceptedBy>
-    <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
-    <http://www.w3.org/2004/02/skos/core#scopeNote>
-    <http://www.w3.org/2004/02/skos/core#related>
-    <http://purl.org/dc/terms/title>
-    <http://www.w3.org/2004/02/skos/core#altLabel>
-    <http://www.w3.org/2008/05/skos-xl#altLabel>
-    <http://www.w3.org/2004/02/skos/core#historyNote>
-    <http://purl.org/dc/terms/creator>
-    <http://www.w3.org/2004/02/skos/core#note>
-    <http://purl.org/dc/elements/1.1/contributor>
-    <http://www.w3.org/2004/02/skos/core#topConceptOf>
-    <http://www.w3.org/2004/02/skos/core#broadMatch>
-    <http://www.w3.org/2004/02/skos/core#narrowerTransitive>
-    <http://www.w3.org/2004/02/skos/core#narrower>
-    <http://www.w3.org/2004/02/skos/core#broaderMatch>
-    <http://www.w3.org/2004/02/skos/core#broaderTransitive>
-    <http://www.w3.org/2004/02/skos/core#broader>
-    <http://www.w3.org/2004/02/skos/core#narrowMatch>
-    <http://www.w3.org/2004/02/skos/core#example>
-    <http://openskos.org/xmlns#dateDeleted>
-    <http://www.w3.org/2004/02/skos/core#definition>
-    <http://purl.org/dc/terms/contributor>
-    <http://openskos.org/xmlns#deletedBy>
-    <http://www.w3.org/2004/02/skos/core#relatedMatch>
-    <http://openskos.org/xmlns#notation>
-    <http://purl.org/dc/terms/dateApproved>
-    <http://www.w3.org/2004/02/skos/core#Note>
-    */
-
     /**
      * @var string[]
      */
@@ -167,6 +127,19 @@ final class Concept implements RdfResource
         self::narrowerTransitive => Skos::NARROWERTRANSITIVE,
     ];
 
+
+    private static $xlPredicates = [
+        self::XlPrefLabel => SkosXl::PREFLABEL,
+        self::XlAltLabel => SkosXl::ALTLABEL,
+        self::XlHiddenLabel => SkosXl::HIDDENLABEL,
+    ];
+
+    private static $nonXlPredicates = [
+        self::prefLabel => Skos::PREFLABEL,
+        self::altLabel => Skos::ALTLABEL,
+        self::hiddenLabel => Skos::HIDDENLABEL
+    ];
+
     /**
      * @var VocabularyAwareResource
      */
@@ -217,5 +190,27 @@ final class Concept implements RdfResource
         $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
 
         return new self($subject, $resource);
+    }
+
+
+    /**
+     * Loads the XL labels and replaces the default URI value with the full resource
+     * @param LabelRepository $labelRepository
+     */
+    public function loadFullXlLabels(LabelRepository $labelRepository)
+    {
+        foreach ($this::$xlPredicates as $key => xlLabelPredicate) {
+            $fullXlLabels = [];
+            /*
+            foreach ($this->getProperty($xlLabelPredicate) as $xlLabel) {
+                if ($xlLabel instanceof Label) {
+                    $fullXlLabels[] = $xlLabel;
+                } else {
+                    $fullXlLabels[] = $labelManager->fetchByUri($xlLabel);
+                }
+            }
+            $this->setProperties($xlLabelPredicate, $fullXlLabels);
+            */
+        }
     }
 }
