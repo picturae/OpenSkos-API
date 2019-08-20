@@ -252,6 +252,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "solarium/solarium": {
+        "version": "5.0.3"
+    },
     "symfony/cache": {
         "version": "v4.2.8"
     },

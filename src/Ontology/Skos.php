@@ -38,10 +38,12 @@ final class Skos
     const MEMBERLIST = 'http://www.w3.org/2004/02/skos/core#memberList';
     //MappingProperties
     const BROADMATCH = 'http://www.w3.org/2004/02/skos/core#broadMatch';
+    const BROADERMATCH = 'http://www.w3.org/2004/02/skos/core#broaderMatch';
     const CLOSEMATCH = 'http://www.w3.org/2004/02/skos/core#closeMatch';
     const EXACTMATCH = 'http://www.w3.org/2004/02/skos/core#exactMatch';
     const MAPPINGRELATION = 'http://www.w3.org/2004/02/skos/core#mappingRelation';
     const NARROWMATCH = 'http://www.w3.org/2004/02/skos/core#narrowMatch';
+    const NARROWERMATCH = 'http://www.w3.org/2004/02/skos/core#narrowerMatch';
     const RELATEDMATCH = 'http://www.w3.org/2004/02/skos/core#relatedMatch';
     const HTML_REFERENCE = 'http://www.w3.org/2009/08/skos-reference/skos.html';
 }

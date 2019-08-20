@@ -16,3 +16,8 @@ set:
 conceptscheme:
     resource: ../../src/OpenSkos/ConceptScheme/Controller
     type: annotation
+
+
+concept:
+    resource: ../../src/OpenSkos/Concept/Controller
+    type: annotation

@@ -1,0 +1,26 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  App\OpenSkos\Concept\Controller\:
+    resource: '../../src/OpenSkos/Concept/Controller/*'
+    tags: ['controller.service_arguments']
+
+  # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
+  # To cover all our needs
+  concept.iri_factory:
+    class: App\OpenSkos\OpenSkosIriFactory
+    arguments:
+      $namespace: 'http://tenant'
+
+  App\OpenSkos\Concept\Sparql\SparqlConceptRepository:
+    arguments:
+      $iriFactory: '@concept.iri_factory'
+
+  App\OpenSkos\Concept\Solr\SolrConceptRepository:
+    arguments:
+      $iriFactory: '@concept.iri_factory'
+
+  App\OpenSkos\Concept\ConceptRepository: '@App\OpenSkos\Concept\Sparql\SparqlConceptRepository'

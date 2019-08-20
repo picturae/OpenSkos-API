@@ -25,6 +25,7 @@ final class DcTerms
     const CREATOR = 'http://purl.org/dc/terms/creator';
     const DATE = 'http://purl.org/dc/terms/date';
     const DATEACCEPTED = 'http://purl.org/dc/terms/dateAccepted';
+    const DATEAPPROVED = 'http://purl.org/dc/terms/dateApproved';
     const DATECOPYRIGHTED = 'http://purl.org/dc/terms/dateCopyrighted';
     const DATESUBMITTED = 'http://purl.org/dc/terms/dateSubmitted';
     const DESCRIPTION = 'http://purl.org/dc/terms/description';
