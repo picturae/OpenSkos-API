@@ -9,7 +9,7 @@ interface RdfResource
     public function iri(): Iri;
 
     /**
-     * @return Triple[]
+     * @return array
      */
     public function triples(): array;
 }

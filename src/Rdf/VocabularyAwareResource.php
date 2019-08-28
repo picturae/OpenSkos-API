@@ -12,12 +12,14 @@ final class VocabularyAwareResource implements RdfResource
      * @var Triple[]
      */
     private $triples = [];
+
     /**
      * @var Iri
      */
     private $subject;
+
     /**
-     * @var array<string,?RdfTerm>
+     * @var array
      */
     private $properties;
 
@@ -43,9 +45,9 @@ final class VocabularyAwareResource implements RdfResource
      * @param Triple[]             $triples
      * @param array<string,string> $mapping
      *
-     * @return static
+     * @return VocabularyAwareResource
      */
-    public static function fromTriples(Iri $iri, array $triples, array $mapping)
+    public static function fromTriples(Iri $iri, array $triples, array $mapping): VocabularyAwareResource
     {
         $iriString = $iri->getUri();
         $obj = new self($iri, $mapping);
@@ -60,7 +62,7 @@ final class VocabularyAwareResource implements RdfResource
                 continue;
             }
             $obj->triples[] = $triple;
-            if(!isset($obj->properties[$predicateString])){
+            if (!isset($obj->properties[$predicateString])) {
                 $obj->properties[$predicateString] = [];
             }
             $obj->properties[$predicateString][0] = $triple->getObject();
@@ -75,7 +77,7 @@ final class VocabularyAwareResource implements RdfResource
     }
 
     /**
-     * @return Triple[]
+     * @return array
      */
     public function triples(): array
     {
@@ -85,13 +87,14 @@ final class VocabularyAwareResource implements RdfResource
     /**
      * @return Triple[]
      */
-    public function properties(): array
+    public function properties(): ?array
     {
         return $this->properties;
     }
 
     /**
      * @param string $property
+     *
      * @return array|null
      */
     public function getProperty(string $property): ?array
@@ -115,10 +118,10 @@ final class VocabularyAwareResource implements RdfResource
         );
     }
 
-
     /**
-     * @param string $predicate
+     * @param string      $predicate
      * @param string|null $value
+     *
      * @return int
      */
     public function removeTriple(string $predicate, $value = null): int
@@ -128,49 +131,47 @@ final class VocabularyAwareResource implements RdfResource
         /* We have 2 things to delete. First the triples */
         foreach ($this->triples as $key => $triple) {
             $triplePred = $triple->getPredicate()->getUri();
-            if( $triplePred === $predicate){
-                if( (!isset($value)) || $value === $triple->getObject() ) {
+            if ($triplePred === $predicate) {
+                if ((!isset($value)) || $value === $triple->getObject()) {
                     unset($this->triples[$key]);
-                    $numberRemoved++;
+                    ++$numberRemoved;
                 }
             }
         }
         $this->triples = array_values($this->triples);
 
         /* Then the properties */
-        if(isset($this->properties[$predicate])) {
+        if (isset($this->properties[$predicate])) {
             if (isset($value)) {
                 foreach ($this->properties[$predicate] as $key => $triple) {
-                    if ($value->__toString() === $triple->__toString()) {
+                    if ($value === $triple->__toString()) {
                         unset($this->properties[$predicate][$key]);
                     }
                 }
-                if (count($this->properties[$predicate]) === 0) {
+                if (0 === count($this->properties[$predicate])) {
                     unset($this->properties[$predicate]);
                 }
             } else {
                 unset($this->properties[$predicate]);
             }
         }
+
         return $numberRemoved;
     }
 
     /**
      * @param $tripleKey
      * @param $newValue
-     * @return void
      */
-    public function replaceTriple( $tripleKey, $newValue)
+    public function replaceTriple($tripleKey, $newValue)
     {
         $this->triples[$tripleKey] = $newValue;
+
         return;
     }
 
-    /**
-     *
-     */
-    public function reIndexTripleStore(){
+    public function reIndexTripleStore()
+    {
         $this->triples = array_values($this->triples);
     }
-
 }
