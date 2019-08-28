@@ -60,7 +60,10 @@ final class VocabularyAwareResource implements RdfResource
                 continue;
             }
             $obj->triples[] = $triple;
-            $obj->properties[$predicateString] = $triple->getObject();
+            if(!isset($obj->properties[$predicateString])){
+                $obj->properties[$predicateString] = [];
+            }
+            $obj->properties[$predicateString][0] = $triple->getObject();
         }
 
         return $obj;
@@ -79,6 +82,23 @@ final class VocabularyAwareResource implements RdfResource
         return $this->triples;
     }
 
+    /**
+     * @return Triple[]
+     */
+    public function properties(): array
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @param string $property
+     * @return array|null
+     */
+    public function getProperty(string $property): ?array
+    {
+        return $this->properties[$property] ?? [];
+    }
+
     public function addProperty(Iri $property, RdfTerm $object): void
     {
         $iri = $property->getUri();
@@ -94,4 +114,63 @@ final class VocabularyAwareResource implements RdfResource
             $object
         );
     }
+
+
+    /**
+     * @param string $predicate
+     * @param string|null $value
+     * @return int
+     */
+    public function removeTriple(string $predicate, $value = null): int
+    {
+        $numberRemoved = 0;
+
+        /* We have 2 things to delete. First the triples */
+        foreach ($this->triples as $key => $triple) {
+            $triplePred = $triple->getPredicate()->getUri();
+            if( $triplePred === $predicate){
+                if( (!isset($value)) || $value === $triple->getObject() ) {
+                    unset($this->triples[$key]);
+                    $numberRemoved++;
+                }
+            }
+        }
+        $this->triples = array_values($this->triples);
+
+        /* Then the properties */
+        if(isset($this->properties[$predicate])) {
+            if (isset($value)) {
+                foreach ($this->properties[$predicate] as $key => $triple) {
+                    if ($value->__toString() === $triple->__toString()) {
+                        unset($this->properties[$predicate][$key]);
+                    }
+                }
+                if (count($this->properties[$predicate]) === 0) {
+                    unset($this->properties[$predicate]);
+                }
+            } else {
+                unset($this->properties[$predicate]);
+            }
+        }
+        return $numberRemoved;
+    }
+
+    /**
+     * @param $tripleKey
+     * @param $newValue
+     * @return void
+     */
+    public function replaceTriple( $tripleKey, $newValue)
+    {
+        $this->triples[$tripleKey] = $newValue;
+        return;
+    }
+
+    /**
+     *
+     */
+    public function reIndexTripleStore(){
+        $this->triples = array_values($this->triples);
+    }
+
 }

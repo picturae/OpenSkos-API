@@ -169,6 +169,25 @@ final class Concept implements RdfResource
         return $this->resource->triples();
     }
 
+
+
+    /**
+     * @return Triple[]
+     */
+    public function properties(): array
+    {
+        return $this->resource->properties();
+    }
+
+    /**
+     * @param string $property
+     * @return array|null
+     */
+    public function getProperty(string $property): ?array
+    {
+        return $this->resource->getProperty($property);
+    }
+
     /**
      * @param Iri $subject
      *
@@ -199,18 +218,25 @@ final class Concept implements RdfResource
      */
     public function loadFullXlLabels(LabelRepository $labelRepository)
     {
-        foreach ($this::$xlPredicates as $key => xlLabelPredicate) {
-            $fullXlLabels = [];
-            /*
-            foreach ($this->getProperty($xlLabelPredicate) as $xlLabel) {
-                if ($xlLabel instanceof Label) {
-                    $fullXlLabels[] = $xlLabel;
-                } else {
-                    $fullXlLabels[] = $labelManager->fetchByUri($xlLabel);
+        $tripleList = $this->triples();
+        foreach ($tripleList as $triplesKey => $triple){
+
+            if ($triple instanceof Label) {
+                continue;
+            }
+
+            foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
+                if($triple->getPredicate()->getUri() == $xlLabelPredicate){
+                    $xlLabel = $triple->getObject();
+
+                    $fullLabel = $labelRepository->findByIri($xlLabel);
+                    $predicate = $triple->getPredicate();
+                    $fullLabel->setType($predicate);
+                    $this->resource->replaceTriple($triplesKey, $fullLabel);
                 }
             }
-            $this->setProperties($xlLabelPredicate, $fullXlLabels);
-            */
+
         }
+        $this->resource->reIndexTripleStore();
     }
 }

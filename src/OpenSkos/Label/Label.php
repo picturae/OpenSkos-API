@@ -32,21 +32,26 @@ final class Label implements RdfResource
      */
     private $resource;
 
+    private $type;
+
     private function __construct(
         Iri $subject,
-        ?VocabularyAwareResource $resource = null
+        ?VocabularyAwareResource $resource = null,
+        ?Iri $labelType = null
     ) {
         if (null === $resource) {
             $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
         } else {
             $this->resource = $resource;
         }
+        $this->type = $labelType;
     }
 
     public function iri(): Iri
     {
         return $this->resource->iri();
     }
+
 
     /**
      * @return Triple[]
@@ -78,4 +83,28 @@ final class Label implements RdfResource
 
         return new self($subject, $resource);
     }
+
+    /**
+     * @return Iri|null
+     */
+    public function getResourceSubject(): ?Iri {
+        return $this->resource->getResourceSubject();
+    }
+
+    /**
+     * @return Iri|null
+     */
+    public function getType(): ?Iri
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param Iri|null $type
+     */
+    public function setType(?Iri $type): void
+    {
+        $this->type = $type;
+    }
+
 }

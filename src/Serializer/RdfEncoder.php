@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Serializer;
 
 use App\EasyRdf\Serializer\OpenSkosJsonLdSerializer;
+use App\OpenSkos\Label\Label;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\Ntriples;
 use App\Rdf\Format\RdfFormatFactory;
@@ -149,7 +150,49 @@ CONTEXT;
         $graph = new EasyRdf_Graph('http://openskos.org');
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
 
+        $this->serializeLevelOfTriples($graph, $triples);
+
+        return $graph;
+    }
+
+
+    /**
+     * @return Iri|null
+     */
+    public function getResourceSubject($triples): ?Iri {
+        /*
+        A design "quirk" of the resource objects, is that they store a list of triples all with the same subject, but don't ever
+        set a subject specifically
+        */
+        $subject = null;
+        if(0 !== count($triples)){
+            $subject = $triples[0]->getSubject();
+        }
+        return $subject;
+    }
+
+    private function serializeLevelOfTriples( &$graph, iterable $triples, $recursionLevel = 0){
+
+        $resourceSubject = $this->getResourceSubject($triples);
+
         foreach ($triples as $triple) {
+            if ($triple instanceof Label) {
+
+                if($resourceSubject) {
+                    $this->serializeLevelOfTriples($graph, $triple->triples(), $recursionLevel + 1);
+
+                    //Add this node to the parent
+                    $labelSubject = $this->getResourceSubject($triple->triples());
+                    $predicate = $triple->getType();
+
+                    $graph->addResource(
+                        $resourceSubject->getUri(),
+                        $predicate->getUri(),
+                        $labelSubject->getUri()
+                    );
+                }
+                continue;
+            }
             $subject = $triple->getSubject();
             $predicate = $triple->getPredicate();
             $object = $triple->getObject();
@@ -169,6 +212,6 @@ CONTEXT;
             }
         }
 
-        return $graph;
     }
+
 }
