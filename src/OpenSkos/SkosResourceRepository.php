@@ -94,15 +94,14 @@ final class SkosResourceRepository
     /**
      * @param array $iris
      *
-     * @return mixed
-     * @psalm-return T|null
+     * @return array
      */
-    public function findManyByIriList(array $iris)
+    public function findManyByIriList(array $iris): array
     {
         $sparql = SparqlQuery::describeResources($iris);
         $triples = $this->rdfClient->describe($sparql);
         if (0 === count($triples)) {
-            return null;
+            return [];
         }
 
         //TODO: Move to separate helper class?
@@ -126,12 +125,12 @@ final class SkosResourceRepository
      *
      * @return array
      */
-    public function findBy(Iri $rdfType, Iri $predicate, InternalResourceId $object): ?array
+    public function findBy(Iri $rdfType, Iri $predicate, InternalResourceId $object): array
     {
         $sparql = SparqlQuery::describeByTypeAndPredicate($rdfType, $predicate, $object);
         $triples = $this->rdfClient->describe($sparql);
         if (0 === count($triples)) {
-            return null;
+            return [];
         }
 
         //TODO: Move to separate helper class?

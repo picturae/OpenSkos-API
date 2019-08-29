@@ -34,3 +34,7 @@ services:
 
   App\OpenSkos\Filters\FilterProcessor:
     autowire: true
+
+
+  App\OpenSkos\Filters\SolrFilterProcessor:
+    autowire: true

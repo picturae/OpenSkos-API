@@ -188,11 +188,13 @@ CONTEXT;
                     $labelSubject = $this->getResourceSubject($triple->triples());
                     $predicate = $triple->getType();
 
-                    $graph->addResource(
-                        $resourceSubject->getUri(),
-                        $predicate->getUri(),
-                        $labelSubject->getUri()
-                    );
+                    if (isset($labelSubject) && isset($predicate)) {
+                        $graph->addResource(
+                            $resourceSubject->getUri(),
+                            $predicate->getUri(),
+                            $labelSubject->getUri()
+                        );
+                    }
                 }
                 continue;
             }

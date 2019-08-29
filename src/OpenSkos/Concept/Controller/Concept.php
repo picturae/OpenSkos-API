@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept\Controller;
 
-use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\Filters\SolrFilterProcessor;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\ApiRequest;
@@ -32,40 +32,105 @@ final class Concept
     }
 
     /**
+     * @param ApiRequest $apiRequest
+     * @param string     $key
+     *
+     * @return array
+     */
+    private function processFilterFromRequest(
+        ApiRequest $apiRequest,
+        string $key
+    ): array {
+        /* Concept Schemes */
+        $filter = [];
+        $param = $apiRequest->getParameter($key);
+        if (isset($param)) {
+            $filter = preg_split('/\s*,\s*/', $param, -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        return $filter;
+    }
+
+    /**
+     * @param ApiRequest          $apiRequest
+     * @param ConceptRepository   $repository
+     * @param SolrFilterProcessor $solrFilterProcessor
+     *
+     * @return array
+     */
+    private function buildConceptFilters(
+        ApiRequest $apiRequest,
+        ConceptRepository $repository,
+        SolrFilterProcessor $solrFilterProcessor
+    ): array {
+        /* From Spec
+            conceptSchemes=comma separated list of concept scheme URIs or IDs. Applied to http://www.w3.org/2004/02/skos/core#inScheme
+            collections=comma separated list of collection URIs or IDs [On Hold: Predicate not known]
+            searchProfile=id of a search profile. Stored in MySQL table 'search_profiles'.
+            dateSubmitted=xsd:duration and some shortcuts (?). Applied to http://purl.org/dc/terms/dateSubmitted
+            modified=xsd:duration and some shortcuts (?). Applied to http://purl.org/dc/terms/modified
+            dateAccepted=xsd:duration and some shortcuts (?). Applied to http://purl.org/dc/terms/dateAccepted
+            openskos:deleted=xsd:duration and some shortcuts (?). Applied to http://openskos.org/xmlns#dateDeleted
+            statuses=comma separated list of statuses. Applied to http://openskos.org/xmlns#status
+            candidate
+            approved
+            redirected
+            not_compliant
+            rejected
+            obsolete
+            deleted
+            creator=comma separated list of user URIs or IDs. Applied to http://purl.org/dc/terms/creator
+            openskos:modifiedBy=comma separated list of user URIs or IDs. Applied to http://openskos.org/xmlns#modifiedBy
+            openskos:acceptedBy=comma separated list of user URIs or IDs. Applied to http://openskos.org/xmlns#acceptedBy
+            openskos:deletedBy=comma separated list of user URIs or IDs. Applied to http://openskos.org/xmlns#deletedBy
+        */
+
+        /* Institutions (tenants) */
+        $param_institutions = $apiRequest->getInstitutions();
+        $institutions_filter = $solrFilterProcessor->buildInstitutionFilters($param_institutions);
+
+        /* Sets */
+        $param_sets = $apiRequest->getSets();
+        $sets_filter = $solrFilterProcessor->buildSetFilters($param_sets);
+
+        /* Concept Schemes */
+        $param_conceptschemes = $this->processFilterFromRequest($apiRequest, 'conceptSchemes');
+        $conceptSchemes_filter = $solrFilterProcessor->buildConceptSchemeFilters($param_conceptschemes);
+
+        $param_profile = $apiRequest->getSearchProfile();
+
+        $full_filter = array_merge(
+            $institutions_filter,
+            $sets_filter,
+            $conceptSchemes_filter
+        );
+
+        if ($param_profile) {
+            if (0 !== count($full_filter)) {
+                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
+            }
+            $to_apply = [solrFilterProcessor::ENTITY_INSTITUTION => true, solrFilterProcessor::ENTITY_SET => true];
+            $full_filter = $solrFilterProcessor->retrieveSearchProfile($param_profile, $to_apply);
+        }
+
+        return $full_filter;
+    }
+
+    /**
      * @Route(path="/concepts", methods={"GET"})
      *
-     * @param ApiRequest        $apiRequest
-     * @param ConceptRepository $repository
-     * @param FilterProcessor   $filterProcessor
+     * @param ApiRequest          $apiRequest
+     * @param ConceptRepository   $repository
+     * @param SolrFilterProcessor $solrFilterProcessor
      *
      * @return ListResponse
      */
     public function concepts(
         ApiRequest $apiRequest,
         ConceptRepository $repository,
-        FilterProcessor $filterProcessor
+        SolrFilterProcessor $solrFilterProcessor
     ): ListResponse {
-        $param_institutions = $apiRequest->getInstitutions();
-        $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
-
-        if ($filterProcessor->hasPublisher($institutions_filter)) {
-            throw new BadRequestHttpException('The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concepts).');
-        }
-
-        $param_sets = $apiRequest->getSets();
-        $sets_filter = $filterProcessor->buildSetFilters($param_sets);
-
-        $param_profile = $apiRequest->getSearchProfile();
-
-        $full_filter = array_merge($institutions_filter, $sets_filter);
-
-        if ($param_profile) {
-            if (0 !== count($full_filter)) {
-                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
-            }
-            $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true, FilterProcessor::ENTITY_SET => true];
-            $full_filter = $filterProcessor->retrieveSearchProfile($param_profile, $to_apply);
-        }
+        $full_filter = $this->buildConceptFilters($apiRequest, $repository, $solrFilterProcessor);
 
         $concepts = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 

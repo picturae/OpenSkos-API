@@ -141,7 +141,7 @@ final class SparqlQuery
         array $subjects
     ): SparqlQuery {
         $uris = array_map(function ($v) { return sprintf('?subject = <%s> ', $v); }, $subjects);
-        $query = sprintf('DESCRIBE ?subject WHERE {?subject ?predicate ?object . FILTER ( %s ) }', join($uris, ' || '));
+        $query = sprintf('DESCRIBE ?subject WHERE {?subject ?predicate ?object . FILTER ( %s ) }', join(' || ', $uris));
 
         return new SparqlQuery($query);
     }

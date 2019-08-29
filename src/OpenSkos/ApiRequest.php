@@ -11,6 +11,11 @@ use App\Rdf\Format\RdfFormat;
 final class ApiRequest
 {
     /**
+     * @var array
+     */
+    private $allParams;
+
+    /**
      * @var RdfFormat
      */
     private $format;
@@ -57,6 +62,7 @@ final class ApiRequest
      * @param int            $searchProfile
      */
     public function __construct(
+        array $allParams = [],
         ?RdfFormat $format = null,
         int $level = 1,
         int $limit = 100,
@@ -68,6 +74,8 @@ final class ApiRequest
         if (null === $format) {
             $format = JsonLd::instance();
         }
+
+        $this->allParams = $allParams;
 
         $this->format = $format;
         $this->level = $level;
@@ -85,6 +93,14 @@ final class ApiRequest
                 "Limit and offset must be zero or higher. $limit and $offset passed"
             );
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParameter($key)
+    {
+        return $this->allParams[$key] ?? null;
     }
 
     /**

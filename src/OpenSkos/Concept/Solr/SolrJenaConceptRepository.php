@@ -12,7 +12,10 @@ use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
 use App\Solr\SolrClient;
 use App\Rdf\Sparql\Client as RdfClient;
+use Solarium\QueryType\Select\Query\Query;
+use Solarium\QueryType\Select\Result\Result;
 use App\Rdf\Iri;
+use Exception;
 
 final class SolrJenaConceptRepository implements ConceptRepository
 {
@@ -66,25 +69,30 @@ final class SolrJenaConceptRepository implements ConceptRepository
      * lucene / solr queries are possible
      * for the available fields see schema.xml.
      *
-     * @param string $query
-     * @param int    $rows
-     * @param int    $start
-     * @param int    &$numFound output Total number of found records
-     * @param array  $sorts
+     * @param string     $query
+     * @param int        $rows
+     * @param int        $start
+     * @param int        &$numFound     output Total number of found records
+     * @param array      $sorts
+     * @param array|null $filterQueries
+     * @param bool       $full_retrieve
      *
      * @return array Array of uris
+     *
+     * @throws Exception
      */
     public function search(
         $query,
-        $rows = 20,
-        $start = 0,
-        &$numFound = 0,
+        int $rows = 20,
+        int $start = 0,
+        ?int &$numFound = 0,
         $sorts = null,
         array $filterQueries = null,
         $full_retrieve = false
     ) {
         $client = $this->solrClient->getClient();
 
+        /** @var Query $select */
         $select = $client->createSelect();
         $select->setStart($start)
             ->setRows($rows)
@@ -95,15 +103,12 @@ final class SolrJenaConceptRepository implements ConceptRepository
         }
 
         if (!empty($filterQueries)) {
-            if (!is_array($filterQueries)) {
-                throw new OpenSkos2\Exception\InvalidArgumentException('Filter queries must be array.');
-            }
-
             foreach ($filterQueries as $key => $value) {
                 $select->addFilterQuery($select->createFilterQuery($key)->setQuery($value));
             }
         }
 
+        /** @var Result $solrResult */
         $solrResult = $client->select($select);
         $numFound = $solrResult->getNumFound();
 
@@ -128,18 +133,26 @@ final class SolrJenaConceptRepository implements ConceptRepository
      * @param array $filters
      *
      * @return array
+     *
+     * @throws Exception
      */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         $numfound = 0;
 
-        $conceptFilter = [
-            'rdfTypeFilter' => sprintf('s_rdfType:"%s"', Skos::CONCEPT),
-        ];
+        $conceptFilter = array_merge($filters,
+            [
+                'rdfTypeFilter' => sprintf('s_rdfType:"%s"', Skos::CONCEPT),
+            ]
+        );
 
         $matchingIris = $this->search('*:*', $limit, $offset, $numfound, null, $conceptFilter);
 
-        $data = $this->skosRepository->findManyByIriList($matchingIris);
+        if (0 !== count($matchingIris)) {
+            $data = $this->skosRepository->findManyByIriList($matchingIris);
+        } else {
+            $data = [];
+        }
 
         return $data;
     }
