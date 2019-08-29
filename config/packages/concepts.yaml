@@ -19,8 +19,10 @@ services:
     arguments:
       $iriFactory: '@concept.iri_factory'
 
-  App\OpenSkos\Concept\Solr\SolrConceptRepository:
+  App\OpenSkos\Concept\Solr\SolrJenaConceptRepository:
     arguments:
+      $rdfClient: '@App\Rdf\Sparql\Client'
+      $solrClient: '@App\Solr\SolrClient'
       $iriFactory: '@concept.iri_factory'
 
-  App\OpenSkos\Concept\ConceptRepository: '@App\OpenSkos\Concept\Sparql\SparqlConceptRepository'
+  App\OpenSkos\Concept\ConceptRepository: '@App\OpenSkos\Concept\Solr\SolrJenaConceptRepository'

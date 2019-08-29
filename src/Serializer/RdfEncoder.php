@@ -155,30 +155,33 @@ CONTEXT;
         return $graph;
     }
 
-
     /**
+     * @param $triples
+     *
      * @return Iri|null
      */
-    public function getResourceSubject($triples): ?Iri {
+    public function getResourceSubject($triples): ?Iri
+    {
         /*
         A design "quirk" of the resource objects, is that they store a list of triples all with the same subject, but don't ever
         set a subject specifically
         */
         $subject = null;
-        if(0 !== count($triples)){
-            $subject = $triples[0]->getSubject();
+        foreach ($triples as $triple) {         //We could be receiving a \Generator object
+            $subject = $triple->getSubject();
+            break;
         }
+
         return $subject;
     }
 
-    private function serializeLevelOfTriples( &$graph, iterable $triples, $recursionLevel = 0){
-
+    private function serializeLevelOfTriples(&$graph, iterable $triples, $recursionLevel = 0)
+    {
         $resourceSubject = $this->getResourceSubject($triples);
 
         foreach ($triples as $triple) {
             if ($triple instanceof Label) {
-
-                if($resourceSubject) {
+                if ($resourceSubject) {
                     $this->serializeLevelOfTriples($graph, $triple->triples(), $recursionLevel + 1);
 
                     //Add this node to the parent
@@ -211,7 +214,5 @@ CONTEXT;
                 );
             }
         }
-
     }
-
 }

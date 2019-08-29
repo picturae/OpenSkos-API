@@ -92,6 +92,34 @@ final class SkosResourceRepository
     }
 
     /**
+     * @param array $iris
+     *
+     * @return mixed
+     * @psalm-return T|null
+     */
+    public function findManyByIriList(array $iris)
+    {
+        $sparql = SparqlQuery::describeResources($iris);
+        $triples = $this->rdfClient->describe($sparql);
+        if (0 === count($triples)) {
+            return null;
+        }
+
+        //TODO: Move to separate helper class?
+        $groups = [];
+        foreach ($triples as $triple) {
+            $groups[$triple->getSubject()->getUri()][] = $triple;
+        }
+
+        $res = [];
+        foreach ($groups as $iriString => $group) {
+            $res[] = call_user_func($this->resourceFactory, new Iri($iriString), $group);
+        }
+
+        return $res;
+    }
+
+    /**
      * @param Iri                $rdfType
      * @param Iri                $predicate
      * @param InternalResourceId $object

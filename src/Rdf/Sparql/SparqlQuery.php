@@ -137,6 +137,15 @@ final class SparqlQuery
         );
     }
 
+    public static function describeResources(
+        array $subjects
+    ): SparqlQuery {
+        $uris = array_map(function ($v) { return sprintf('?subject = <%s> ', $v); }, $subjects);
+        $query = sprintf('DESCRIBE ?subject WHERE {?subject ?predicate ?object . FILTER ( %s ) }', join($uris, ' || '));
+
+        return new SparqlQuery($query);
+    }
+
     /**
      * @param Iri $rdfType
      * @param Iri $predicate

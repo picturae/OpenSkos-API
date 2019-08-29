@@ -12,10 +12,23 @@ services:
           $updateUri: '%env(SPARQL_UPDATE_URI)%'
 
 
+
     App\EasyRdf\EasyRdfClient:
         arguments: ['@EasyRdf_Sparql_Client']
 
+
     App\Rdf\Sparql\Client: '@App\EasyRdf\EasyRdfClient'
+
+    Solarium_Client:
+      class: Solarium\Client
+      arguments:
+        $options: { endpoint: {localhost : { host: '%env(SOLR_HOST)%', port: '%env(SOLR_PORT)%', path: '%env(SOLR_PATH)%', core: '%env(SOLR_CORE)%' }}}
+
+    App\Solr\SolrClient:
+      class: App\Solr\SolrClient
+      arguments:
+        $client: '@Solarium_Client'
+
 
     App\Rdf\Format\RdfFormatFactory:
         factory: [ 'App\Rdf\Format\RdfFormatFactory', 'loadDefault' ]
