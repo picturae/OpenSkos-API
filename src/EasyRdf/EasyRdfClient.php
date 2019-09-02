@@ -38,4 +38,14 @@ class EasyRdfClient implements Client
 
         return TripleFactory::triplesFromGraph($graph);
     }
+
+    /**
+     * @param SparqlQuery $query
+     */
+    public function fetch(SparqlQuery $query): object
+    {
+        $graph = $this->easyRdfClient->query($query->rawSparql());
+
+        return $graph;
+    }
 }

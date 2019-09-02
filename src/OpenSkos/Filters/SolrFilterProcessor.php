@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Filters;
 
+use App\EasyRdf\EasyRdfClient;
+use App\Rdf\Sparql\SparqlQuery;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -19,17 +21,56 @@ final class SolrFilterProcessor
     const ENTITY_INSTITUTION = 'institution';
     const ENTITY_SET = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
+    const VALUE_SCHEMA = 'schema';
 
+    /**
+     * @var Connection
+     */
     private $connection;
+
+    /**
+     * @var EasyRdfClient
+     */
+    private $rdfClient;
 
     /**
      * FilterProcessor constructor.
      *
-     * @param Connection $connection
+     * @param Connection    $connection
+     * @param EasyRdfClient $rdfClient
      */
-    public function __construct(Connection $connection)
-    {
+    public function __construct(
+        Connection $connection,
+        EasyRdfClient $rdfClient
+    ) {
         $this->connection = $connection;
+        $this->rdfClient = $rdfClient;
+    }
+
+    /**
+     * @param $uuid
+     *
+     * @return string|null
+     *
+     * @psalm-suppress UndefinedInterfaceMethod
+     */
+    private function retrieveUriFromUuid($uuid): ?string
+    {
+        $sparql = SparqlQuery::SelectSubjectFromUuid(
+            $uuid
+        );
+        $graph = $this->rdfClient->fetch($sparql);
+
+        /*
+         * @psalm-suppress UndefinedInterfaceMethod
+         */
+        if (is_iterable($graph) && iterator_count($graph) > 0) {
+            $resource = $graph[0];
+
+            return $resource->subject->getUri();
+        }
+
+        return null;
     }
 
     /**
@@ -120,15 +161,58 @@ final class SolrFilterProcessor
         $dataOut = [];
 
         $nIdx = 0;
+        $filtersAsStrings = [];
+
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for concept schemes could not be retrieved (Predicate is not used in Jena Store).');
+                $uriAsString = $this->retrieveUriFromUuid($filter);
+                if (isset($uriAsString)) {
+                    $filtersAsStrings[] = sprintf('s_inScheme:"%s"', $uriAsString);
+                } else {
+                    //Make sure this filter term doesn't match anything. Other logical-ORed terms may still work.
+                    $filtersAsStrings[] = 's_inScheme:"xxxxxxxxxxxxxxxxxxxx"';
+                }
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                ++$nIdx;
-                $dataOut[sprintf('conceptschemeFilter%d', $nIdx)] = sprintf('s_inScheme:"%s"', $filter);
+                $filtersAsStrings[] = sprintf('s_inScheme:"%s"', $filter);
             } else {
                 throw new BadRequestHttpException('The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store).');
             }
+        }
+
+        if (count($filtersAsStrings)) {
+            $dataOut['conceptschemeFilter'] = sprintf('( %s )', join(' OR ', $filtersAsStrings));
+        }
+
+        return $dataOut;
+    }
+
+    /**
+     * @param array $filterList
+     *
+     * @return array
+     */
+    public function buildStatusesFilters(array $filterList)
+    {
+        $acceptableStatuses = ['none', 'candidate', 'approved', 'redirected', 'not_compliant', 'rejected', 'obsolete', 'deleted'];
+        $dataOut = [];
+
+        $nIdx = 0;
+        $filtersAsStrings = [];
+
+        foreach ($filterList as $filter) {
+            if (!in_array($filter, $acceptableStatuses, true)) {
+                throw new BadRequestHttpException(sprintf("Unrecognised status '%s' in filters. Accepted values are: %s", $filter, join(', ', $acceptableStatuses)));
+            }
+            if ('none' === $filter) {
+                //'none' turns up in some search profiles. I have no idea how it got there.
+                continue;
+            } else {
+                $filtersAsStrings[] = sprintf('s_status:"%s"', $filter);
+            }
+        }
+
+        if (count($filtersAsStrings)) {
+            $dataOut['statusesFilter'] = sprintf('( %s )', join(' OR ', $filtersAsStrings));
         }
 
         return $dataOut;
@@ -168,6 +252,18 @@ final class SolrFilterProcessor
             if (isset($to_apply[self::ENTITY_SET]) && true === $to_apply[self::ENTITY_SET]) {
                 if (isset($searchOptions['collections']) && 0 !== count($searchOptions['collections'])) {
                     $read_filters = $this->buildSetFilters($searchOptions['collections']);
+                    $filters = array_merge($filters, $read_filters);
+                }
+            }
+            if (isset($to_apply[self::ENTITY_CONCEPTSCHEME]) && true === $to_apply[self::ENTITY_CONCEPTSCHEME]) {
+                if (isset($searchOptions['conceptScheme']) && 0 !== count($searchOptions['conceptScheme'])) {
+                    $read_filters = $this->buildConceptSchemeFilters($searchOptions['conceptScheme']);
+                    $filters = array_merge($filters, $read_filters);
+                }
+            }
+            if (isset($to_apply[self::VALUE_SCHEMA]) && true === $to_apply[self::VALUE_SCHEMA]) {
+                if (isset($searchOptions['status']) && 0 !== count($searchOptions['status'])) {
+                    $read_filters = $this->buildStatusesFilters($searchOptions['status']);
                     $filters = array_merge($filters, $read_filters);
                 }
             }

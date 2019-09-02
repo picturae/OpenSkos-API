@@ -45,12 +45,8 @@ final class BooleanLiteral implements Literal
      */
     public static function fromString(string $value): self
     {
-        switch ($value) {
-            case 'true': $bool = true; break;
-            case 'false': $bool = false; break;
-            default: throw new \InvalidArgumentException("Cant parse bool value: '$value'");
-        }
+        $retval = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 
-        return new BooleanLiteral($bool);
+        return new BooleanLiteral($retval);
     }
 }

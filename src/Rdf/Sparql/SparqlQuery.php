@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rdf\Sparql;
 
+use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Rdf\Iri;
 use App\OpenSkos\Filters\FilterProcessor;
@@ -171,5 +172,20 @@ QUERY_BY_TYPE_AND_PREDICATE;
         $retVal = new SparqlQuery($queryString);
 
         return $retVal;
+    }
+
+    public static function selectSubjectFromUuid(
+        string $uuid
+    ): SparqlQuery {
+        return new SparqlQuery(
+            sprintf(
+               'SELECT ?subject
+                            WHERE { 
+                              ?subject <%s> "%s"
+                            }',
+                OpenSkos::UUID,
+                $uuid
+            )
+        );
     }
 }
