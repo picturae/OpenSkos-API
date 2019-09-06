@@ -46,6 +46,11 @@ final class ApiRequest
     private $sets;
 
     /**
+     * @var ?string
+     */
+    private $foreignUri;
+
+    /**
      * @var int
      */
     private $searchProfile;
@@ -53,6 +58,7 @@ final class ApiRequest
     /**
      * ApiRequest constructor.
      *
+     * @param array          $allParams
      * @param RdfFormat|null $format
      * @param int            $level
      * @param int            $limit
@@ -60,6 +66,7 @@ final class ApiRequest
      * @param array          $institutions
      * @param array          $sets
      * @param int            $searchProfile
+     * @param string|null    $foreignUri
      */
     public function __construct(
         array $allParams = [],
@@ -69,7 +76,8 @@ final class ApiRequest
         int $offset = 0,
         array $institutions = [],
         array $sets = [],
-        int $searchProfile = 0
+        int $searchProfile = 0,
+        string $foreignUri = null
     ) {
         if (null === $format) {
             $format = JsonLd::instance();
@@ -84,6 +92,7 @@ final class ApiRequest
         $this->institutions = $institutions;
         $this->sets = $sets;
         $this->searchProfile = $searchProfile;
+        $this->foreignUri = $foreignUri;
 
         if ($level < 1 || $level > 4) {
             throw new InvalidApiRequestLevel($level);
@@ -96,11 +105,14 @@ final class ApiRequest
     }
 
     /**
+     * @param string      $key
+     * @param string|null $default
+     *
      * @return mixed
      */
-    public function getParameter($key)
+    public function getParameter(string $key, ?string $default = null)
     {
-        return $this->allParams[$key] ?? null;
+        return $this->allParams[$key] ?? $default;
     }
 
     /**
@@ -181,5 +193,13 @@ final class ApiRequest
     public function setSearchProfile(int $searchProfile): void
     {
         $this->searchProfile = $searchProfile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getForeignUri()
+    {
+        return $this->foreignUri;
     }
 }

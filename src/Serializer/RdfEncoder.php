@@ -150,7 +150,9 @@ CONTEXT;
         $graph = new EasyRdf_Graph('http://openskos.org');
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
 
-        $this->serializeLevelOfTriples($graph, $triples);
+        if ($triples->valid()) {
+            $this->serializeLevelOfTriples($graph, $triples);
+        }
 
         return $graph;
     }
@@ -168,8 +170,10 @@ CONTEXT;
         */
         $subject = null;
         foreach ($triples as $triple) {         //We could be receiving a \Generator object
-            $subject = $triple->getSubject();
-            break;
+            if ($triple instanceof Triple) {
+                $subject = $triple->getSubject();
+                break;
+            }
         }
 
         return $subject;

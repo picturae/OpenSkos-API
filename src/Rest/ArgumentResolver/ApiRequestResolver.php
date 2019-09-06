@@ -69,6 +69,10 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         $sets = $request->query->get('sets', '');
         $sets = preg_split('/\s*,\s*/', $sets, -1, PREG_SPLIT_NO_EMPTY);
 
+        //B.Hillier. The specs from Menzo ask for a 'foreign uri' as a parameter. I have no idea how this is stored
+        // at Meertens. For now it just searches on the same field as the 'native' uri
+        $foreignUri = $request->query->get('uri', null);
+
         $searchProfile = $request->query->getInt('searchProfile');
 
         yield new ApiRequest(
@@ -79,7 +83,8 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
             $request->query->getInt('offset', 0),
             $institutions,
             $sets,
-            $searchProfile
+            $searchProfile,
+            $foreignUri
         );
     }
 }

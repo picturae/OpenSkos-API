@@ -40,19 +40,27 @@ final class SolrJenaConceptRepository implements ConceptRepository
     private $iriFactory;
 
     /**
+     * @var SolrQueryBuilder
+     */
+    private $solrQueryBuilder;
+
+    /**
      * SparqlConceptRepository constructor.
      *
      * @param RdfClient          $rdfClient
      * @param SolrClient         $solrClient
      * @param OpenSkosIriFactory $iriFactory
+     * @param SolrQueryBuilder   $solrQueryBuilder
      */
     public function __construct(
         RdfClient $rdfClient,
         SolrClient $solrClient,
-        OpenSkosIriFactory $iriFactory
+        OpenSkosIriFactory $iriFactory,
+        SolrQueryBuilder $solrQueryBuilder
     ) {
         $this->rdfClient = $rdfClient;
         $this->solrClient = $solrClient;
+        $this->solrQueryBuilder = $solrQueryBuilder;
 
         $this->skosRepository = new SkosResourceRepository(
             function (Iri $iri, array $triples): Concept {
@@ -147,6 +155,40 @@ final class SolrJenaConceptRepository implements ConceptRepository
         );
 
         $matchingIris = $this->search('*:*', $limit, $offset, $numfound, null, $conceptFilter);
+
+        if (0 !== count($matchingIris)) {
+            $data = $this->skosRepository->findManyByIriList($matchingIris);
+        } else {
+            $data = [];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $searchTerm
+     * @param int    $offset
+     * @param int    $limit
+     * @param array  $filters
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function fullSolrSearch(string $searchTerm, int $offset = 0, int $limit = 100, array $filters = [], array $selection = []): array
+    {
+        $numfound = 0;
+
+        $conceptFilter = array_merge($filters,
+            [
+                'rdfTypeFilter' => sprintf('s_rdfType:"%s"', Skos::CONCEPT),
+            ]
+        );
+
+        //TODO: Projection Params
+        $searchExpression = $this->solrQueryBuilder->processSearchExpression($searchTerm, $selection);
+
+        $matchingIris = $this->search($searchExpression, $limit, $offset, $numfound, null, $conceptFilter);
 
         if (0 !== count($matchingIris)) {
             $data = $this->skosRepository->findManyByIriList($matchingIris);

@@ -32,3 +32,7 @@ services:
 
     App\Rdf\Format\RdfFormatFactory:
         factory: [ 'App\Rdf\Format\RdfFormatFactory', 'loadDefault' ]
+
+
+    App\Helper\xsdDateHelper:
+      class: App\Helper\xsdDateHelper

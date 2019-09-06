@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Filters;
 
 use App\EasyRdf\EasyRdfClient;
+use App\OpenSkos\Concept\Solr\ParserText;
 use App\Rdf\Sparql\SparqlQuery;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
@@ -21,7 +22,7 @@ final class SolrFilterProcessor
     const ENTITY_INSTITUTION = 'institution';
     const ENTITY_SET = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
-    const VALUE_SCHEMA = 'schema';
+    const VALUE_STATUS = 'status';
 
     /**
      * @var Connection
@@ -219,6 +220,86 @@ final class SolrFilterProcessor
     }
 
     /**
+     * @param array $filterList
+     *
+     * @return array
+     */
+    public function buildUserFilters(array $filterList)
+    {
+        $userParams = [
+            'creator' => 's_creator',
+            'openskos:acceptedBy' => 's_acceptedBy',
+            /* The following fields are copied from OpenSkos 2.2, but do not seem to work in solr! */
+            'openskos:modifiedBy' => 's_contributor',
+            'openskos:deletedBy' => 's_deletedBy',
+        ];
+
+        $dataOut = [];
+
+        $filtersAsStrings = [];
+
+        foreach ($userParams as $param => $solrField) {
+            if (isset($filterList[$param])) {
+                foreach ($filterList[$param] as $value) {
+                    if (filter_var($value, FILTER_VALIDATE_URL)) {
+                        $filtersAsStrings[] = sprintf('%s:"%s"', $solrField, $value);
+                    }
+                }
+                //@TODO: Retrieve URI from ID. Implement in ticket #39357.
+            }
+        }
+
+        if (count($filtersAsStrings)) {
+            $dataOut['usersFilter'] = sprintf('( %s )', join(' OR ', $filtersAsStrings));
+        }
+
+        return $dataOut;
+    }
+
+    /**
+     * @param array $filterList
+     *
+     * @return array
+     */
+    public function buildInteractionsFilters(array $filterList)
+    {
+        $dateParams = ['dateSubmitted', 'modified', 'dateAccepted', 'openskos:deleted'];
+
+        $userParams = ['creator', 'openskos:modifiedBy', 'openskos:acceptedBy', 'openskos:deletedBy'];
+
+        $parser = new ParserText();
+
+        $dateParams = [
+            'dateSubmitted' => 'd_dateSubmitted',
+            'modified' => 'd_modified',
+            'dateAccepted' => 'd_dateAccepted',
+            'openskos:deleted' => 'd_dateDeleted',
+        ];
+
+        $dataOut = [];
+
+        $nIdx = 0;
+        $filtersAsStrings = [];
+
+        foreach ($dateParams as $param => $solrField) {
+            if (isset($filterList[$param])) {
+                $dateQuery = $parser->buildDatePeriodQuery(
+                    $solrField,
+                    $filterList[$param]['from'] ?? null,
+                    $filterList[$param]['until'] ?? null,
+            );
+                $filtersAsStrings[] = $dateQuery;
+            }
+        }
+
+        if (count($filtersAsStrings)) {
+            $dataOut['interactionsFilter'] = sprintf('( %s )', join(' OR ', $filtersAsStrings));
+        }
+
+        return $dataOut;
+    }
+
+    /**
      * @param int   $profile_id
      * @param array $to_apply
      *
@@ -261,7 +342,7 @@ final class SolrFilterProcessor
                     $filters = array_merge($filters, $read_filters);
                 }
             }
-            if (isset($to_apply[self::VALUE_SCHEMA]) && true === $to_apply[self::VALUE_SCHEMA]) {
+            if (isset($to_apply[self::VALUE_STATUS]) && true === $to_apply[self::VALUE_STATUS]) {
                 if (isset($searchOptions['status']) && 0 !== count($searchOptions['status'])) {
                     $read_filters = $this->buildStatusesFilters($searchOptions['status']);
                     $filters = array_merge($filters, $read_filters);

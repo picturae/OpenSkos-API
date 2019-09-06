@@ -15,6 +15,9 @@ services:
     arguments:
       $namespace: 'http://tenant'
 
+
+  App\OpenSkos\Concept\Solr\SolrQueryBuilder:
+
   App\OpenSkos\Concept\Sparql\SparqlConceptRepository:
     arguments:
       $iriFactory: '@concept.iri_factory'

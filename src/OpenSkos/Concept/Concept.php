@@ -19,6 +19,18 @@ use App\Rdf\Triple;
 
 final class Concept implements RdfResource
 {
+    /**
+     * All possible statuses.
+     */
+    const STATUS_CANDIDATE = 'candidate';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_REDIRECTED = 'redirected';
+    const STATUS_NOT_COMPLIANT = 'not_compliant';
+    const STATUS_REJECTED = 'rejected';
+    const STATUS_OBSOLETE = 'obsolete';
+    const STATUS_DELETED = 'deleted';
+    const STATUS_EXPIRED = 'expired';
+
     const type = 'type';
     const set = 'set';
     const uuid = 'uuid';
@@ -127,7 +139,6 @@ final class Concept implements RdfResource
         self::narrowerTransitive => Skos::NARROWERTRANSITIVE,
     ];
 
-
     private static $xlPredicates = [
         self::XlPrefLabel => SkosXl::PREFLABEL,
         self::XlAltLabel => SkosXl::ALTLABEL,
@@ -137,7 +148,7 @@ final class Concept implements RdfResource
     private static $nonXlPredicates = [
         self::prefLabel => Skos::PREFLABEL,
         self::altLabel => Skos::ALTLABEL,
-        self::hiddenLabel => Skos::HIDDENLABEL
+        self::hiddenLabel => Skos::HIDDENLABEL,
     ];
 
     /**
@@ -169,18 +180,17 @@ final class Concept implements RdfResource
         return $this->resource->triples();
     }
 
-
-
     /**
      * @return Triple[]
      */
-    public function properties(): array
+    public function properties(): ?array
     {
         return $this->resource->properties();
     }
 
     /**
      * @param string $property
+     *
      * @return array|null
      */
     public function getProperty(string $property): ?array
@@ -211,22 +221,21 @@ final class Concept implements RdfResource
         return new self($subject, $resource);
     }
 
-
     /**
-     * Loads the XL labels and replaces the default URI value with the full resource
+     * Loads the XL labels and replaces the default URI value with the full resource.
+     *
      * @param LabelRepository $labelRepository
      */
     public function loadFullXlLabels(LabelRepository $labelRepository)
     {
         $tripleList = $this->triples();
-        foreach ($tripleList as $triplesKey => $triple){
-
+        foreach ($tripleList as $triplesKey => $triple) {
             if ($triple instanceof Label) {
                 continue;
             }
 
             foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
-                if($triple->getPredicate()->getUri() == $xlLabelPredicate){
+                if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
                     $xlLabel = $triple->getObject();
 
                     $fullLabel = $labelRepository->findByIri($xlLabel);
@@ -235,7 +244,6 @@ final class Concept implements RdfResource
                     $this->resource->replaceTriple($triplesKey, $fullLabel);
                 }
             }
-
         }
         $this->resource->reIndexTripleStore();
     }
