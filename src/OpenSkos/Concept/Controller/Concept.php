@@ -112,19 +112,7 @@ final class Concept
         */
 
         /*
-        These are on hold.
-
-            Not stored in Solr, and Jena queries are too expensive
-            openskos:deleted=xsd:duration and some shortcuts (?). Applied to http://openskos.org/xmlns#dateDeleted
-            dateSubmitted=xsd:duration and some shortcuts (?). Applied to http://purl.org/dc/terms/dateSubmitted
-            modified=xsd:duration and some shortcuts (?). Applied to http://purl.org/dc/terms/modified
-            dateAccepted=xsd:duration and some shortcuts (?). Applied to http://purl.org/dc/terms/dateAccepted
-            creator=comma separated list of user URIs or IDs. Applied to http://purl.org/dc/terms/creator
-            openskos:modifiedBy=comma separated list of user URIs or IDs. Applied to http://openskos.org/xmlns#modifiedBy
-            openskos:acceptedBy=comma separated list of user URIs or IDs. Applied to http://openskos.org/xmlns#acceptedBy
-            openskos:deletedBy=comma separated list of user URIs or IDs. Applied to http://openskos.org/xmlns#deletedBy
-
-            No specificationkkkkk of this made available from Meertens. And not in Solr
+            No specification of this made available from Meertens. And not in Solr
             collections=comma separated list of collection URIs or IDs [On Hold: Predicate not known]
         */
 
@@ -188,15 +176,6 @@ final class Concept
         ConceptRepository $repository
     ): array {
         $selectionParameters = ['labels' => []];
-        /*
-         * fields=comma separated list of
-            default: label
-            label(@{lang})?
-            prefLabel(@{lang})?
-            altLabel(@{lang})?
-            hiddenLabel(@{lang})?
-            notation
-         */
         $sel = $apiRequest->getParameter('fields', '');
 
         if (isset($sel)) {
