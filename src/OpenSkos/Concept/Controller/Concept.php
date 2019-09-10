@@ -73,6 +73,7 @@ final class Concept
             if (isset($param)) {
                 $dates = preg_split('/\s*,\s*/', $param, -1, PREG_SPLIT_NO_EMPTY);
                 if (count($dates) > 0) {
+                    $rowOut = [];
                     $date1 = $dates[0];
                     if (!$xsdDateHelper->isValidXsdDateTime($date1)) {
                         throw new BadRequestHttpException('Dates must be a valid xsd:DateTime or xsdDuration');
@@ -182,14 +183,16 @@ final class Concept
             $sel = preg_split('/\s*,\s*/', $sel, -1, PREG_SPLIT_NO_EMPTY);
         }
 
-        foreach ($sel as $param) {
-            if (preg_match('/^(pref|alt|hidden|)(label)\(*(\w{0,3})\)*$/i', $param, $capture)) {
-                $label = sprintf('%sLabel', $capture[1]);
-                $lang = $capture[3];
+        if (isset($sel) && is_iterable($sel)) {
+            foreach ($sel as $param) {
+                if (preg_match('/^(pref|alt|hidden|)(label)\(*(\w{0,3})\)*$/i', $param, $capture)) {
+                    $label = sprintf('%sLabel', $capture[1]);
+                    $lang = $capture[3];
 
-                $selectionParameters['labels'][$capture[0]] = ['type' => $label, 'lang' => $lang];
-            } elseif ('notation' === $param) {
-                $selectionParameters['notation'] = ['type' => 'notation'];
+                    $selectionParameters['labels'][$capture[0]] = ['type' => $label, 'lang' => $lang];
+                } elseif ('notation' === $param) {
+                    $selectionParameters['notation'] = ['type' => 'notation'];
+                }
             }
         }
 
@@ -314,6 +317,7 @@ final class Concept
         $full_filter = $this->buildConceptFilters($apiRequest, $repository, $solrFilterProcessor);
 
         $full_selection = $this->buildSelectionParameters($apiRequest, $repository);
+        //$full_selection = $this->buildProjectionParameters($apiRequest, $repository);
 
         $searchText = $apiRequest->getParameter('text', '*');
 

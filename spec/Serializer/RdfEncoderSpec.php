@@ -19,7 +19,7 @@ class RdfEncoderSpec extends ObjectBehavior
 
     public function let()
     {
-        $this->triples = [
+        $this->triples = new \ArrayIterator([
             new Triple(
                 new Iri('http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a'),
                 new Iri('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
@@ -45,7 +45,7 @@ class RdfEncoderSpec extends ObjectBehavior
                 new Iri('http://purl.org/dc/terms/dateSubmitted'),
                 new DatetimeLiteral(new \DateTime('2019-02-05T15:25:05+00:00'))
             ),
-        ];
+        ]);
         $this->beConstructedWith(RdfFormatFactory::loadDefault());
     }
 
