@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use App\OpenSkos\Concept\Concept as SkosConcept;
 
 final class Concept
 {
@@ -27,6 +28,11 @@ final class Concept
      */
     private $serializer;
 
+    /**
+     * Concept constructor.
+     *
+     * @param SerializerInterface $serializer
+     */
     public function __construct(
         SerializerInterface $serializer
     ) {
@@ -34,6 +40,8 @@ final class Concept
     }
 
     /**
+     * Processes comma separated parameters for filters.
+     *
      * @param ApiRequest $apiRequest
      * @param string     $key
      *
@@ -54,6 +62,9 @@ final class Concept
     }
 
     /**
+     * Extracts datestamp from request strings. Only a restricted number of formats are accepted
+     * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
      * @param ApiRequest $apiRequest
      * @param string     $key
      *
@@ -97,6 +108,9 @@ final class Concept
     }
 
     /**
+     * Builds the filters for a concept. Should follow
+     * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
      * @param ApiRequest          $apiRequest
      * @param ConceptRepository   $repository
      * @param SolrFilterProcessor $solrFilterProcessor
@@ -172,6 +186,15 @@ final class Concept
         return $full_filter;
     }
 
+    /**
+     * Builds the selection parameters for a concept. Should follow
+     * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
+     * @param ApiRequest        $apiRequest
+     * @param ConceptRepository $repository
+     *
+     * @return array
+     */
     private function buildSelectionParameters(
         ApiRequest $apiRequest,
         ConceptRepository $repository
@@ -205,22 +228,78 @@ final class Concept
     }
 
     /**
+     * Builds the projection parameters for a concept. Should follow
+     * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
+     * @param ApiRequest        $apiRequest
+     * @param ConceptRepository $repository
+     *
+     * @return array
+     */
+    private function buildProjectionParameters(
+        ApiRequest $apiRequest,
+        ConceptRepository $repository
+    ): array {
+        /* Levels are dealt with elsewhere; they are applicable to more that just concepts */
+
+        $projectionParameters = [];
+        $props = $apiRequest->getParameter('props', '');
+
+        if (isset($props)) {
+            $props = preg_split('/\s*,\s*/', $props, -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        if (isset($props) && is_iterable($props)) {
+            foreach ($props as $param) {
+                //The language flag might be buried in brackets
+                if (preg_match('/^([a-zA-Z:]*)\(*?(\w{0,3}?)\)*?$/i', $param, $capture)) {
+                    $field = $capture[1];
+                    $lang = $capture[2];
+                    if (in_array($field, SkosConcept::$language_sensitive, true) && '' !== $lang) {
+                        $projectionParameters[$field] = ['lang' => $lang];
+                    } elseif ('' !== $lang) {
+                        throw new BadRequestHttpException(sprintf("No language support for field '%s'", $field));
+                    } elseif (isset(SkosConcept::$acceptable_fields[$field])) { //The spec doesn't mention if these keys are case-sensitive, so lets just assume they are
+                        $projectionParameters[$field] = ['lang' => ''];
+                    } elseif (isset(SkosConcept::$meta_groups[$field])) {
+                        $projectionParameters = SkosConcept::$meta_groups[$field];
+                    } else {
+                        throw new BadRequestHttpException(sprintf("Field '%s' is not supported for projection", $field));
+                    }
+                }
+            }
+        } else {
+            $projectionParameters = SkosConcept::$meta_groups['default'];
+        }
+        //Whatever else happens, the Rdf::Type is projected, to ensure there's at least one triple
+        if (count($projectionParameters) > 0) {
+            $projectionParameters['type'] = ['lang' => ''];
+        }
+
+        return $projectionParameters;
+    }
+
+    /**
      * @Route(path="/concepts", methods={"GET"})
      *
-     * @param ApiRequest          $apiRequest
-     * @param ConceptRepository   $repository
-     * @param SolrFilterProcessor $solrFilterProcessor
+     * @param ApiRequest                $apiRequest
+     * @param SolrJenaConceptRepository $repository
+     * @param SolrFilterProcessor       $solrFilterProcessor
      *
      * @return ListResponse
+     *
+     * @throws \Exception
      */
     public function concepts(
         ApiRequest $apiRequest,
-        ConceptRepository $repository,
+        SolrJenaConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor
     ): ListResponse {
         $full_filter = $this->buildConceptFilters($apiRequest, $repository, $solrFilterProcessor);
 
-        $concepts = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
+        $full_projection = $this->buildProjectionParameters($apiRequest, $repository);
+
+        $concepts = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter, $full_projection);
 
         return new ListResponse(
             $concepts,
@@ -317,13 +396,11 @@ final class Concept
         $full_filter = $this->buildConceptFilters($apiRequest, $repository, $solrFilterProcessor);
 
         $full_selection = $this->buildSelectionParameters($apiRequest, $repository);
-        //$full_selection = $this->buildProjectionParameters($apiRequest, $repository);
+        $full_projection = $this->buildProjectionParameters($apiRequest, $repository);
 
         $searchText = $apiRequest->getParameter('text', '*');
 
-        //@todo projection params
-
-        $concepts = $repository->fullSolrSearch($searchText, $apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter, $full_selection);
+        $concepts = $repository->fullSolrSearch($searchText, $apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter, $full_selection, $full_projection);
 
         return new ListResponse(
             $concepts,

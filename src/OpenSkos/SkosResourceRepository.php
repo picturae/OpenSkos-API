@@ -11,17 +11,17 @@ use App\Rdf\Sparql\SparqlQuery;
 /**
  * @template T
  */
-final class SkosResourceRepository
+class SkosResourceRepository
 {
     /**
      * @var Client
      */
-    private $rdfClient;
+    protected $rdfClient;
 
     /**
      * @var callable
      */
-    private $resourceFactory;
+    protected $resourceFactory;
 
     /**
      * SkosResourceRepository constructor.

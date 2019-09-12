@@ -151,6 +151,89 @@ final class Concept implements RdfResource
         self::hiddenLabel => Skos::HIDDENLABEL,
     ];
 
+    /*
+     * Which fields can be used for projection
+     */
+    public static $acceptable_fields = [
+        'uri' => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
+        'label' => '?',     //Unclear what is meant
+        'type' => Rdf::TYPE,
+
+        //Labels
+        'prefLabel' => Skos::PREFLABEL,
+        'altLabel' => Skos::ALTLABEL,
+        'hiddenLabel' => Skos::HIDDENLABEL,
+
+        //Notes
+        'note' => Skos::NOTE,
+        'Note' => Skos::NOTE,
+        'example' => Skos::EXAMPLE,
+        'changeNote' => Skos::CHANGENOTE,
+        'historyNote' => Skos::HISTORYNOTE,
+        'scopeNote' => Skos::SCOPENOTE,
+        'editorialNote' => Skos::EDITORIALNOTE,
+        'notation' => Skos::NOTATION,
+
+        //Relations
+        'definition' => Skos::DEFINITION,
+        'broader' => Skos::BROADER,
+        'narrower' => Skos::NARROWER,
+        'related' => Skos::RELATED,
+        'broaderTransitive' => Skos::BROADERTRANSITIVE,
+        'narrowerTransitive' => Skos::NARROWERTRANSITIVE,
+
+        'mappingRelation' => '?',
+
+        //Matches
+        'closeMatch' => Skos::CLOSEMATCH,
+        'exactMatch' => Skos::EXACTMATCH,
+        'broadMatch' => Skos::BROADMATCH,
+        'narrowMatch' => Skos::NARROWMATCH,
+        'relatedMatch' => Skos::RELATEDMATCH,
+
+        //Mappings
+        'openskos:inCollection' => OpenSkos::INSKOSCOLLECTION,
+        'openskos:set' => OpenSkos::SET,
+        'openskos:institution' => OpenSkos::TENANT,
+
+        //Dates
+        'dateSubmitted' => DcTerms::DATESUBMITTED,
+        'modified' => DcTerms::MODIFIED,
+        'dateAccepted' => DcTerms::DATEACCEPTED,
+        'openskos:deleted' => OpenSkos::DATE_DELETED,
+
+        //Users
+        'creator' => Dc::CREATOR,
+        'openskos:modifiedBy' => OpenSkos::MODIFIEDBY,
+        'openskos:acceptedBy' => OpenSkos::ACCEPTEDBY,
+        'openskos:deletedBy' => OpenSkos::DELETEDBY,
+
+        //Other Stuff
+        'openskos:status' => OpenSkos::STATUS,
+        'inScheme' => Skos::INSCHEME,
+        'topConceptOf' => Skos::TOPCONCEPTOF,
+        'skosxl' => '?',
+    ];
+
+    /*
+     * Which fields are language sensitive. Subset of $acceptable_fields
+     */
+    public static $language_sensitive = [
+        //Labels
+        'label', 'prefLabel', 'altLabel', 'hiddenLabel',
+        //Notes
+        'note', 'definition', 'example', 'changeNote', 'historyNote', 'scopeNote', 'editorialNote',
+    ];
+
+    /*
+     * Meta projection parameters
+     */
+    public static $meta_groups = [
+        'all' => [],
+        'skosxl' => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
+        'default' => ['uri' => ['lang' => ''], 'prefLabel' => ['lang' => ''], 'definition' => ['lang' => '']],
+    ];
+
     /**
      * @var VocabularyAwareResource
      */
@@ -236,12 +319,17 @@ final class Concept implements RdfResource
 
             foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
                 if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
+                    /**
+                     * @var Iri
+                     */
                     $xlLabel = $triple->getObject();
 
                     $fullLabel = $labelRepository->findByIri($xlLabel);
-                    $predicate = $triple->getPredicate();
-                    $fullLabel->setType($predicate);
-                    $this->resource->replaceTriple($triplesKey, $fullLabel);
+                    if (isset($fullLabel)) {
+                        $predicate = $triple->getPredicate();
+                        $fullLabel->setType($predicate);
+                        $this->resource->replaceTriple($triplesKey, $fullLabel);
+                    }
                 }
             }
         }

@@ -9,7 +9,7 @@ use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
-use App\OpenSkos\SkosResourceRepository;
+use App\OpenSkos\SkosResourceRepositoryWithProjection;
 use App\Solr\SolrClient;
 use App\Rdf\Sparql\Client as RdfClient;
 use Solarium\QueryType\Select\Query\Query;
@@ -30,7 +30,7 @@ final class SolrJenaConceptRepository implements ConceptRepository
     private $rdfClient;
 
     /**
-     * @var SkosResourceRepository<Concept>
+     * @var SkosResourceRepositoryWithProjection
      */
     private $skosRepository;
 
@@ -62,7 +62,7 @@ final class SolrJenaConceptRepository implements ConceptRepository
         $this->solrClient = $solrClient;
         $this->solrQueryBuilder = $solrQueryBuilder;
 
-        $this->skosRepository = new SkosResourceRepository(
+        $this->skosRepository = new SkosResourceRepositoryWithProjection(
             function (Iri $iri, array $triples): Concept {
                 return Concept::fromTriples($iri, $triples);
             },
@@ -139,12 +139,13 @@ final class SolrJenaConceptRepository implements ConceptRepository
      * @param int   $offset
      * @param int   $limit
      * @param array $filters
+     * @param array $projection
      *
      * @return array
      *
      * @throws Exception
      */
-    public function all(int $offset = 0, int $limit = 100, array $filters = []): array
+    public function all(int $offset = 0, int $limit = 100, array $filters = [], array $projection = []): array
     {
         $numfound = 0;
 
@@ -157,7 +158,11 @@ final class SolrJenaConceptRepository implements ConceptRepository
         $matchingIris = $this->search('*:*', $limit, $offset, $numfound, null, $conceptFilter);
 
         if (0 !== count($matchingIris)) {
-            $data = $this->skosRepository->findManyByIriList($matchingIris);
+            if (0 !== count($projection)) {
+                $data = $this->skosRepository->findManyByIriListWithProjection($matchingIris, $projection);
+            } else {
+                $data = $this->skosRepository->findManyByIriList($matchingIris);
+            }
         } else {
             $data = [];
         }
@@ -166,16 +171,20 @@ final class SolrJenaConceptRepository implements ConceptRepository
     }
 
     /**
+     * This is my documentation.
+     *
      * @param string $searchTerm
      * @param int    $offset
      * @param int    $limit
      * @param array  $filters
+     * @param array  $selection
+     * @param array  $projection
      *
      * @return array
      *
      * @throws Exception
      */
-    public function fullSolrSearch(string $searchTerm, int $offset = 0, int $limit = 100, array $filters = [], array $selection = []): array
+    public function fullSolrSearch(string $searchTerm, int $offset = 0, int $limit = 100, array $filters = [], array $selection = [], array $projection = []): array
     {
         $numfound = 0;
 
@@ -191,7 +200,7 @@ final class SolrJenaConceptRepository implements ConceptRepository
         $matchingIris = $this->search($searchExpression, $limit, $offset, $numfound, null, $conceptFilter);
 
         if (0 !== count($matchingIris)) {
-            $data = $this->skosRepository->findManyByIriList($matchingIris);
+            $data = $this->skosRepository->findManyByIriListWithProjection($matchingIris, $projection);
         } else {
             $data = [];
         }
