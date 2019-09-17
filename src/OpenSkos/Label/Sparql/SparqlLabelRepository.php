@@ -80,6 +80,16 @@ final class SparqlLabelRepository implements LabelRepository
     }
 
     /**
+     * @param array $iris
+     *
+     * @return array
+     */
+    public function findManyByIriList(array $iris): array
+    {
+        return $this->skosRepository->findManyByIriList($iris);
+    }
+
+    /**
      * @param InternalResourceId $id
      *
      * @return Label|null

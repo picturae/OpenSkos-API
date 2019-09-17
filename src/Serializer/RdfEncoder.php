@@ -141,64 +141,41 @@ CONTEXT;
     }
 
     /**
-     * @param iterable<int,Triple> $triples
+     * @param $triples
      *
      * @return EasyRdf_Graph
+     * @psalm-suppress InvalidMethodCall
      */
-    private function tripleSetToEasyRdfGraph(iterable $triples): EasyRdf_Graph
+    private function tripleSetToEasyRdfGraph($triples): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph('http://openskos.org');
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
 
-        if ($triples->valid()) {
+        if ((is_array($triples) && count($triples) > 0) || (is_iterable($triples) && $triples->valid())) {
             $this->serializeLevelOfTriples($graph, $triples);
         }
 
         return $graph;
     }
 
-    /**
-     * @param $triples
-     *
-     * @return Iri|null
-     */
-    public function getResourceSubject($triples): ?Iri
-    {
-        /*
-        A design "quirk" of the resource objects, is that they store a list of triples all with the same subject, but don't ever
-        set a subject specifically
-        */
-        $subject = null;
-        foreach ($triples as $triple) {         //We could be receiving a \Generator object
-            if ($triple instanceof Triple) {
-                $subject = $triple->getSubject();
-                break;
-            }
-        }
-
-        return $subject;
-    }
-
     private function serializeLevelOfTriples(&$graph, iterable $triples, $recursionLevel = 0)
     {
-        $resourceSubject = $this->getResourceSubject($triples);
-
         foreach ($triples as $triple) {
             if ($triple instanceof Label) {
-                if ($resourceSubject) {
-                    $this->serializeLevelOfTriples($graph, $triple->triples(), $recursionLevel + 1);
+                $tripleSubject = $triple->getSubject();
+                $labelSubject = $triple->getChildSubject();
 
-                    //Add this node to the parent
-                    $labelSubject = $this->getResourceSubject($triple->triples());
-                    $predicate = $triple->getType();
+                $this->serializeLevelOfTriples($graph, $triple->triples(), $recursionLevel + 1);
 
-                    if (isset($labelSubject) && isset($predicate)) {
-                        $graph->addResource(
-                            $resourceSubject->getUri(),
-                            $predicate->getUri(),
-                            $labelSubject->getUri()
-                        );
-                    }
+                //Add this node to the parent
+                $predicate = $triple->getType();
+
+                if (isset($tripleSubject) && isset($predicate)) {
+                    $graph->addResource(
+                        $tripleSubject->getUri(),
+                        $predicate->getUri(),
+                        $labelSubject->getUri()
+                    );
                 }
                 continue;
             }

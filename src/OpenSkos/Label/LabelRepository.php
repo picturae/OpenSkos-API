@@ -47,4 +47,11 @@ interface LabelRepository
      * @return Label|null
      */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Label;
+
+    /**
+     * @param array $iris
+     *
+     * @return array
+     */
+    public function findManyByIriList(array $iris): array;
 }

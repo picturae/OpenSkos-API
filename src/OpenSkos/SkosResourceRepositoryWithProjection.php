@@ -28,10 +28,11 @@ final class SkosResourceRepositoryWithProjection extends SkosResourceRepository
         $fields_to_project = [];
         $do_projection = false;
         //Extract which fields we want to use from the projection parameters
+        $acceptable_fields = Concept::getAcceptableFields();
         foreach ($projection as $key => $param) {
-            if (isset(Concept::$acceptable_fields[$key])) {
+            if (isset($acceptable_fields[$key])) {
                 $do_projection = true;
-                $fields_to_project[Concept::$acceptable_fields[$key]] = $param['lang'];
+                $fields_to_project[$acceptable_fields[$key]] = $param['lang'];
             }
         }
 

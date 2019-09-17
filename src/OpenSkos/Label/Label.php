@@ -32,26 +32,60 @@ final class Label implements RdfResource
      */
     private $resource;
 
+    /**
+     * @var Iri|null
+     */
     private $type;
 
+    /**
+     * @var Iri|null
+     */
+    private $subject;
+
+    /**
+     * @var Iri
+     */
+    private $childSubject;
+
+    /**
+     * When we create a label, the terms 'subject', 'predicate', 'object' can get mixed up, because the object of the parent is
+     * also the subject of the label elements.
+     *
+     * We allow the parent subject and predicate to be null because
+     * 1) In theory labels can exist in isolation.
+     * 2) The way the repositories are structured means the code the fetches label elements is unaware of which parent
+     *      it's fetching for. Indeed: it can be fetched for several parents
+     *
+     * Label constructor.
+     *
+     * @param Iri                          $childSubject
+     * @param VocabularyAwareResource|null $resource
+     * @param Iri|null                     $parentPredicate
+     * @param Iri|null                     $parentSubject
+     */
     private function __construct(
-        Iri $subject,
+        Iri $childSubject,
         ?VocabularyAwareResource $resource = null,
-        ?Iri $labelType = null
+        ?Iri $parentPredicate = null,
+        ?Iri $parentSubject = null
     ) {
         if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
+            $this->resource = new VocabularyAwareResource($childSubject, array_flip(self::$mapping));
         } else {
             $this->resource = $resource;
         }
-        $this->type = $labelType;
+        $this->childSubject = $childSubject;
+        $this->type = $parentPredicate;
+        $this->subject = $parentSubject;
     }
 
+    /**
+     * @return Iri
+     */
     public function iri(): Iri
     {
         return $this->resource->iri();
     }
-
 
     /**
      * @return Triple[]
@@ -87,13 +121,6 @@ final class Label implements RdfResource
     /**
      * @return Iri|null
      */
-    public function getResourceSubject(): ?Iri {
-        return $this->resource->getResourceSubject();
-    }
-
-    /**
-     * @return Iri|null
-     */
     public function getType(): ?Iri
     {
         return $this->type;
@@ -107,4 +134,35 @@ final class Label implements RdfResource
         $this->type = $type;
     }
 
+    /**
+     * @return Iri|null
+     */
+    public function getSubject(): ?Iri
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param Iri $subject|null
+     */
+    public function setSubject(Iri $subject): void
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * @return Iri
+     */
+    public function getChildSubject(): Iri
+    {
+        return $this->childSubject;
+    }
+
+    /**
+     * @param Iri $childSubject
+     */
+    public function setChildSubject(Iri $childSubject): void
+    {
+        $this->childSubject = $childSubject;
+    }
 }

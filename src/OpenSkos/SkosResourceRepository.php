@@ -112,7 +112,7 @@ class SkosResourceRepository
 
         $res = [];
         foreach ($groups as $iriString => $group) {
-            $res[] = call_user_func($this->resourceFactory, new Iri($iriString), $group);
+            $res[$iriString] = call_user_func($this->resourceFactory, new Iri($iriString), $group);
         }
 
         return $res;

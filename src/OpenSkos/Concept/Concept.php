@@ -152,9 +152,10 @@ final class Concept implements RdfResource
     ];
 
     /*
-     * Which fields can be used for projection
+     * Which fields can be used for projection.
+     * Labels defined at: https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
      */
-    public static $acceptable_fields = [
+    private static $acceptable_fields = [
         'uri' => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
         'label' => '?',     //Unclear what is meant
         'type' => Rdf::TYPE,
@@ -163,6 +164,10 @@ final class Concept implements RdfResource
         'prefLabel' => Skos::PREFLABEL,
         'altLabel' => Skos::ALTLABEL,
         'hiddenLabel' => Skos::HIDDENLABEL,
+
+        'prefLabelXl' => SkosXl::PREFLABEL,
+        'altLabelXl' => SkosXl::ALTLABEL,
+        'hiddenLabelXl' => SkosXl::HIDDENLABEL,
 
         //Notes
         'note' => Skos::NOTE,
@@ -216,6 +221,15 @@ final class Concept implements RdfResource
     ];
 
     /*
+     * XL alternatives for acceptable fields
+     */
+    private static $acceptable_fields_to_xl = [
+        'prefLabel' => 'prefLabelXl',
+        'altLabel' => 'altLabelXl',
+        'hiddenLabel' => 'hiddenLabelXl',
+    ];
+
+    /*
      * Which fields are language sensitive. Subset of $acceptable_fields
      */
     public static $language_sensitive = [
@@ -248,6 +262,62 @@ final class Concept implements RdfResource
         } else {
             $this->resource = $resource;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAcceptableFields(): array
+    {
+        return self::$acceptable_fields;
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getMapping(): array
+    {
+        return self::$mapping;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getXlPredicates(): array
+    {
+        return self::$xlPredicates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getNonXlPredicates(): array
+    {
+        return self::$nonXlPredicates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getLanguageSensitive(): array
+    {
+        return self::$language_sensitive;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMetaGroups(): array
+    {
+        return self::$meta_groups;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAcceptableFieldsToXl(): array
+    {
+        return self::$acceptable_fields_to_xl;
     }
 
     public function iri(): Iri
@@ -326,6 +396,8 @@ final class Concept implements RdfResource
 
                     $fullLabel = $labelRepository->findByIri($xlLabel);
                     if (isset($fullLabel)) {
+                        $subject = $triple->getSubject();
+                        $fullLabel->setSubject($subject);
                         $predicate = $triple->getPredicate();
                         $fullLabel->setType($predicate);
                         $this->resource->replaceTriple($triplesKey, $fullLabel);
@@ -334,5 +406,16 @@ final class Concept implements RdfResource
             }
         }
         $this->resource->reIndexTripleStore();
+    }
+
+    /**
+     * We are returning by reference, to quickly enable the data-levels functionality.
+     *   Otherwise, a lot of extra hoops have to be jumped through just to add a data level.
+     *
+     * @return VocabularyAwareResource
+     */
+    public function &getResource(): VocabularyAwareResource
+    {
+        return $this->resource;
     }
 }

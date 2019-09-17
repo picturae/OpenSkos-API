@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept\Controller;
 
+use App\OpenSkos\DataLevels\Level2Processor;
 use App\Helper\xsdDateHelper;
 use App\OpenSkos\Concept\Solr\SolrJenaConceptRepository;
 use App\OpenSkos\Filters\SolrFilterProcessor;
@@ -15,6 +16,7 @@ use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -249,64 +251,47 @@ final class Concept
             $props = preg_split('/\s*,\s*/', $props, -1, PREG_SPLIT_NO_EMPTY);
         }
 
+        $acceptable_fields = SkosConcept::getAcceptableFields();
+        $language_sensitive = SkosConcept::getLanguageSensitive();
+        $meta_groups = SkosConcept::getMetaGroups();
         if (isset($props) && is_iterable($props)) {
             foreach ($props as $param) {
                 //The language flag might be buried in brackets
                 if (preg_match('/^([a-zA-Z:]*)\(*?(\w{0,3}?)\)*?$/i', $param, $capture)) {
                     $field = $capture[1];
                     $lang = $capture[2];
-                    if (in_array($field, SkosConcept::$language_sensitive, true) && '' !== $lang) {
+                    if (in_array($field, $language_sensitive, true) && '' !== $lang) {
+                        //@Todo: Not going work
                         $projectionParameters[$field] = ['lang' => $lang];
                     } elseif ('' !== $lang) {
                         throw new BadRequestHttpException(sprintf("No language support for field '%s'", $field));
-                    } elseif (isset(SkosConcept::$acceptable_fields[$field])) { //The spec doesn't mention if these keys are case-sensitive, so lets just assume they are
+                    } elseif (isset($acceptable_fields[$field])) { //The spec doesn't mention if these keys are case-sensitive, so lets just assume they are
                         $projectionParameters[$field] = ['lang' => ''];
-                    } elseif (isset(SkosConcept::$meta_groups[$field])) {
-                        $projectionParameters = SkosConcept::$meta_groups[$field];
+                    } elseif (isset($meta_groups[$field])) {
+                        $projectionParameters = $meta_groups[$field];
                     } else {
                         throw new BadRequestHttpException(sprintf("Field '%s' is not supported for projection", $field));
                     }
                 }
             }
         } else {
-            $projectionParameters = SkosConcept::$meta_groups['default'];
+            $projectionParameters = $meta_groups['default'];
         }
+
+        //If we have chosen a projection parameter with an XL label, add that to our list too.
+        $labelMappings = SkosConcept::getAcceptableFieldsToXl();
+        foreach ($labelMappings  as $skosLabel => $skosXLLabel) {
+            if (isset($projectionParameters[$skosLabel])) {
+                $projectionParameters[$skosXLLabel] = $projectionParameters[$skosLabel];
+            }
+        }
+
         //Whatever else happens, the Rdf::Type is projected, to ensure there's at least one triple
         if (count($projectionParameters) > 0) {
             $projectionParameters['type'] = ['lang' => ''];
         }
 
         return $projectionParameters;
-    }
-
-    /**
-     * @Route(path="/concepts", methods={"GET"})
-     *
-     * @param ApiRequest                $apiRequest
-     * @param SolrJenaConceptRepository $repository
-     * @param SolrFilterProcessor       $solrFilterProcessor
-     *
-     * @return ListResponse
-     *
-     * @throws \Exception
-     */
-    public function concepts(
-        ApiRequest $apiRequest,
-        SolrJenaConceptRepository $repository,
-        SolrFilterProcessor $solrFilterProcessor
-    ): ListResponse {
-        $full_filter = $this->buildConceptFilters($apiRequest, $repository, $solrFilterProcessor);
-
-        $full_projection = $this->buildProjectionParameters($apiRequest, $repository);
-
-        $concepts = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter, $full_projection);
-
-        return new ListResponse(
-            $concepts,
-            count($concepts),
-            $apiRequest->getOffset(),
-            $apiRequest->getFormat()
-        );
     }
 
     /**
@@ -378,6 +363,43 @@ final class Concept
     }
 
     /**
+     * @Route(path="/concepts", methods={"GET"})
+     *
+     * @param ApiRequest                $apiRequest
+     * @param SolrJenaConceptRepository $repository
+     * @param SolrFilterProcessor       $solrFilterProcessor
+     * @param LabelRepository           $labelRepository
+     *
+     * @return ListResponse
+     *
+     * @throws Exception
+     */
+    public function concepts(
+        ApiRequest $apiRequest,
+        SolrJenaConceptRepository $repository,
+        SolrFilterProcessor $solrFilterProcessor,
+        LabelRepository $labelRepository
+    ): ListResponse {
+        $full_filter = $this->buildConceptFilters($apiRequest, $repository, $solrFilterProcessor);
+
+        $full_projection = $this->buildProjectionParameters($apiRequest, $repository);
+
+        $concepts = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter, $full_projection);
+
+        if (2 === $apiRequest->getLevel()) {
+            $levelProcessor = new Level2Processor();
+            $levelProcessor->AddLevel2Data($labelRepository, $concepts);
+        }
+
+        return new ListResponse(
+            $concepts,
+            count($concepts),
+            $apiRequest->getOffset(),
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
      * @Route(path="/autocomplete", methods={"GET"})
      *
      * @param ApiRequest                $apiRequest
@@ -386,7 +408,7 @@ final class Concept
      *
      * @return ListResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function autocomplete(
         ApiRequest $apiRequest,
