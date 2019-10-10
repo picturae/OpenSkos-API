@@ -21,3 +21,7 @@ conceptscheme:
 concept:
     resource: ../../src/OpenSkos/Concept/Controller
     type: annotation
+
+role:
+    resource: ../../src/OpenSkos/Role/Controller
+    type: annotation

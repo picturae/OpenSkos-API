@@ -40,6 +40,8 @@ final class ControllerResponseListener
                     }
                 }
             })();
+        } elseif ($res instanceof DirectGraphResponse) {
+            $triples = $res->getGraph();
         } else {
             return;
         }
