@@ -14,7 +14,6 @@ use App\Rdf\Format\Turtle;
 use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\StringLiteral;
-use App\Rdf\Triple;
 use EasyRdf_Graph;
 use App\Ontology\OpenSkos;
 use App\Rdf\Literal\Literal;
@@ -63,7 +62,7 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
     /**
      * EasyRdf is used an an intermediate format between the TripleStore and its serialised formats.
      *
-     * @param $data
+     * @param mixed  $data
      * @param string $format
      * @param array  $context
      *
@@ -71,12 +70,15 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
      */
     public function encode($data, $format, array $context = [])
     {
-        if (!is_iterable($data)) {
+        if ((!is_iterable($data)) && (!($data instanceof EasyRdf_Graph))) {
             throw new UnsupportedException('data is not an iterable');
         }
 
-        /** @var iterable<int,Triple> $data */
-        $graph = $this->tripleSetToEasyRdfGraph($data);
+        if ($data instanceof EasyRdf_Graph) {
+            $graph = $data;
+        } else {
+            $graph = $this->tripleSetToEasyRdfGraph($data);
+        }
 
         $options = [];
 
