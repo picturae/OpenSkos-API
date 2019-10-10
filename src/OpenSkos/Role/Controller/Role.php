@@ -35,7 +35,7 @@ final class Role
      *
      * @return DirectGraphResponse
      */
-    public function concept(
+    public function role(
         ApiRequest $apiRequest
     ): DirectGraphResponse {
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
