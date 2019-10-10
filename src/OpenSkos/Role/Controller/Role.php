@@ -7,6 +7,7 @@ namespace App\OpenSkos\Role\Controller;
 use App\Rest\DirectGraphResponse;
 use App\OpenSkos\ApiRequest;
 use App\Ontology\OpenSkos;
+use App\Ontology\Rdf;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -35,10 +36,11 @@ final class Role
      *
      * @return DirectGraphResponse
      */
-    public function concept(
+    public function role(
         ApiRequest $apiRequest
     ): DirectGraphResponse {
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
+        \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
 
         // Define graph structure
         $graph = new \EasyRdf_Graph('openskos.org');
