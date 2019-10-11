@@ -60,8 +60,8 @@ final class RelationType
         $semanticRelation = $graph->resource('openskos:semanticRelation');
         $semanticRelation->setType('rdf:Property');
         $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
-        $semanticRelation->addLiteral('rdfs:domain', 'openskos:Concept');
-        $semanticRelation->addLiteral('rdfs:range', 'openskos:Concept');
+        $semanticRelation->addResource('rdfs:domain', 'openskos:Concept');
+        $semanticRelation->addResource('rdfs:range', 'openskos:Concept');
 
         $related = $graph->resource('openskos:related');
         $related->setType('rdf:Property');
@@ -130,6 +130,18 @@ final class RelationType
         $relatedMatch->addResource('rdf:type', 'owl:SymmetricProperty');
         $relatedMatch->addResource('rdfs:subPropertyOf', $mappingRelation);
         $relatedMatch->addResource('rdfs:subPropertyOf', $related);
+
+        //////////////////////////////////////////////////////////
+
+        $inScheme = $graph->resource('openskos:inScheme');
+        $inScheme->setType('rdf:Property');
+        $inScheme->addResource('rdf:type', 'owl:ObjectProperty');
+        $inScheme->addResource('rdfs:range', 'openskos:ConceptScheme');
+
+        $topConceptOf = $graph->resource('openskos:topConceptOf');
+        $topConceptOf->setType('rdf:Property');
+        $topConceptOf->addResource('rdf:type', 'owl:ObjectProperty');
+        $topConceptOf->addResource('rdfs:subPropertyOf', $inScheme);
 
         return new DirectGraphResponse(
           $graph,
