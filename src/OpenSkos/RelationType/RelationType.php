@@ -2,46 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos\RelationType\Controller;
+namespace App\OpenSkos\RelationType;
 
-use App\Rest\DirectGraphResponse;
-use App\OpenSkos\ApiRequest;
 use App\Ontology\Dc;
 use App\Ontology\OpenSkos;
 use App\Ontology\Owl;
 use App\Ontology\Rdf;
 use App\Ontology\Rdfs;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final class RelationType
 {
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * Role constructor.
-     *
-     * @param SerializerInterface $serializer
-     */
-    public function __construct(
-        SerializerInterface $serializer
-    ) {
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * @Route(path="/relationtypes", methods={"GET"})
-     *
-     * @param ApiRequest $apiRequest
-     *
-     * @return DirectGraphResponse
-     */
-    public function relationtypes(
-        ApiRequest $apiRequest
-    ): DirectGraphResponse {
+    public static function relationtypes(): \EasyRdf_Graph
+    {
         \EasyRdf_Namespace::set('dc', Dc::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
         \EasyRdf_Namespace::set('owl', Owl::NAME_SPACE);
@@ -224,9 +196,6 @@ final class RelationType
         //   - labelRelation
         //   - {user relation types}
 
-        return new DirectGraphResponse(
-          $graph,
-          $apiRequest->getFormat()
-        );
+        return $graph;
     }
 }
