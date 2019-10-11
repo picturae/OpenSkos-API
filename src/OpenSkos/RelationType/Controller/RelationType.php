@@ -56,7 +56,12 @@ final class RelationType
         $openskos->setType('owl:Ontology');
         $openskos->addLiteral('dc:title', 'OpenSkos RelationType vocabulary');
 
-        // Semantic Relation
+        ///////////////////////////////////
+        // Semantic Relation             //
+        //                               //
+        // Copy of SKOS:semanticRelation //
+        ///////////////////////////////////
+
         $semanticRelation = $graph->resource('openskos:semanticRelation');
         $semanticRelation->setType('rdf:Property');
         $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
@@ -91,7 +96,11 @@ final class RelationType
         $narrower->addResource('rdf:type', 'owl:ObjectProperty');
         $narrower->addResource('rdfs:subPropertyOf', $narrowerTransitive);
 
-        //////////////////////////////////////////////////////////
+        //////////////////////////////////
+        // Mapping Relation             //
+        //                              //
+        // Copy of SKOS:mappingRelation //
+        //////////////////////////////////
 
         // Mapping relation
         $mappingRelation = $graph->resource('openskos:mappingRelation');
@@ -131,17 +140,89 @@ final class RelationType
         $relatedMatch->addResource('rdfs:subPropertyOf', $mappingRelation);
         $relatedMatch->addResource('rdfs:subPropertyOf', $related);
 
-        //////////////////////////////////////////////////////////
+        ///////////////////////////
+        // inScheme              //
+        //                       //
+        // Copy of SKOS:inScheme //
+        ///////////////////////////
 
         $inScheme = $graph->resource('openskos:inScheme');
         $inScheme->setType('rdf:Property');
         $inScheme->addResource('rdf:type', 'owl:ObjectProperty');
         $inScheme->addResource('rdfs:range', 'openskos:ConceptScheme');
 
+        // TODO: inverseOf topConceptOf
+        $hasTopConcept = $graph->resource('openskos:hasTopConcept');
+        $hasTopConcept->setType('rdf:Property');
+        $hasTopConcept->addResource('rdf:type', 'owl:ObjectProperty');
+        $hasTopConcept->addResource('rdfs:range', 'openskos:Concept');
+        $hasTopConcept->addResource('rdfs:domain', 'openskos:ConceptScheme');
+
+        // TODO: inverseOf hasTopConcept
         $topConceptOf = $graph->resource('openskos:topConceptOf');
         $topConceptOf->setType('rdf:Property');
         $topConceptOf->addResource('rdf:type', 'owl:ObjectProperty');
         $topConceptOf->addResource('rdfs:subPropertyOf', $inScheme);
+
+        ////////////
+        // labels //
+        ////////////
+
+        $prefLabel = $graph->resource('openskos:prefLabel');
+        $prefLabel->setType('rdf:Property');
+        $prefLabel->addResource('rdf:type', 'owl:AnnotationProperty');
+        $prefLabel->addResource('rdf:supPropertyOf', 'rdfs:label');
+
+        $altLabel = $graph->resource('openskos:altLabel');
+        $altLabel->setType('rdf:Property');
+        $altLabel->addResource('rdf:type', 'owl:AnnotationProperty');
+        $altLabel->addResource('rdf:supPropertyOf', 'rdfs:label');
+
+        $hiddenLabel = $graph->resource('openskos:hiddenLabel');
+        $hiddenLabel->setType('rdf:Property');
+        $hiddenLabel->addResource('rdf:type', 'owl:AnnotationProperty');
+        $hiddenLabel->addResource('rdf:supPropertyOf', 'rdfs:label');
+
+        // ON HOLD:
+        //   - isPrefLabelOf
+        //   - isAltLabelOf
+        //   - isHiddenLabelOf
+
+        ////////////////////////
+        // CUSTOM DEFINITIONS //
+        ////////////////////////
+
+        // TODO: supPropertyOf exactMatch?
+        // TODO: inverseOf replaces?
+        $isReplacedBy = $graph->resource('openskos:isReplacedBy');
+        $isReplacedBy->setType('rdf:Property');
+        $isReplacedBy->addResource('rdf:type', 'owl:ObjectProperty');
+
+        // TODO: supPropertyOf exactMatch?
+        // TODO: inverseOf isReplacedBy?
+        $replaces = $graph->resource('openskos:replaces');
+        $replaces->setType('rdf:Property');
+        $replaces->addResource('rdf:type', 'owl:ObjectProperty');
+
+        $inCollection = $graph->resource('openskos:inCollection');
+        $inCollection->setType('rdf:Property');
+        $inCollection->addResource('rdf:type', 'owl:ObjectProperty');
+
+        $inSet = $graph->resource('openskos:inSet');
+        $inSet->setType('rdf:Property');
+        $inSet->addResource('rdf:type', 'owl:ObjectProperty');
+
+        // TODO: subPropertyOf exactMatch?
+        $tenant = $graph->resource('openskos:tenant');
+        $tenant->setType('rdf:Property');
+        $tenant->addResource('rdf:type', 'owl:ObjectProperty');
+
+        // ON HOLD:
+        //   - member
+
+        // TO BE DEFINED:
+        //   - labelRelation
+        //   - {user relation types}
 
         return new DirectGraphResponse(
           $graph,
