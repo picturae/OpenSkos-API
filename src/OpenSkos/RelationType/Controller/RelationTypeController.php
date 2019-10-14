@@ -39,7 +39,7 @@ final class RelationTypeController
         ApiRequest $apiRequest
     ): DirectGraphResponse {
         return new DirectGraphResponse(
-            RelationType::relationtypes(),
+            RelationType::vocabulary(),
             $apiRequest->getFormat()
         );
     }
@@ -58,7 +58,7 @@ final class RelationTypeController
     ): DirectGraphResponse {
 
         // Build source data
-        $graph        = RelationType::relationTypes();
+        $graph        = RelationType::vocabulary();
         $relationtype = null;
         $options      = [
             $graph->resource($id),
@@ -72,6 +72,7 @@ final class RelationTypeController
         }
 
         // TODO: Handle 404 in a nicer way than an empty graph
+        // TODO: Add a better method to filter
         $resources = $graph->resources();
         foreach($resources as $key => $resource) {
             if (!is_null($relationtype)) {

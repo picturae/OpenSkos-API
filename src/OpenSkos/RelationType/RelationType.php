@@ -12,7 +12,7 @@ use App\Ontology\Rdfs;
 
 final class RelationType
 {
-    public static function relationtypes(): \EasyRdf_Graph
+    public static function vocabulary(): \EasyRdf_Graph
     {
         \EasyRdf_Namespace::set('dc', Dc::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
