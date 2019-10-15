@@ -52,7 +52,7 @@ class RdfEncoderSpec extends ObjectBehavior
     public function it_can_serialise_to_jsonld()
     {
         $res = $this->encode($this->triples, 'json-ld');
-        $res->shouldBe(file_get_contents(__DIR__.'/example.jsonld'));
+        $res->shouldBe(trim(file_get_contents(__DIR__.'/example.jsonld')));
     }
 
     public function it_can_serialise_to_turtle()

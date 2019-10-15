@@ -160,6 +160,7 @@ class SkosResourceRepository
         if (isset($fullSet) && is_array($fullSet)) {
             if (count($fullSet)) {
                 $resourceTriples = $fullSet[0];
+
                 return $resourceTriples;
             } else {
                 return null;
