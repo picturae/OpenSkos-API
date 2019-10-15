@@ -158,9 +158,12 @@ class SkosResourceRepository
     {
         $fullSet = $this->findBy($rdfType, $predicate, $object);
         if (isset($fullSet) && is_array($fullSet)) {
-            $resourceTriples = $fullSet[0];
-
-            return $resourceTriples;
+            if (count($fullSet)) {
+                $resourceTriples = $fullSet[0];
+                return $resourceTriples;
+            } else {
+                return null;
+            }
         }
 
         return $fullSet;
