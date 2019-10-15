@@ -40,7 +40,13 @@ final class Context
         return $result;
     }
 
-    private static function walk($arr, $callback)
+    /**
+     * array_walk_recursive, including branch nodes.
+     *
+     * @param array    $arr
+     * @param callable $callback Arguments: <item, key>
+     */
+    private static function walk(array $arr, callable $callback): void
     {
         /* var_dump($arr); */
         foreach ($arr as $key => $value) {
