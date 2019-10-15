@@ -10,6 +10,7 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
 use App\Ontology\SkosXl;
+use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\VocabularyAwareResource;
@@ -249,10 +250,10 @@ final class User implements RdfResource
     //     'default' => ['uri' => ['lang' => ''], 'prefLabel' => ['lang' => ''], 'definition' => ['lang' => '']],
     // ];
 
-    // /**
-    //  * @var VocabularyAwareResource
-    //  */
-    // private $resource;
+    /**
+     * @var VocabularyAwareResource
+     */
+    private $resource;
 
     private function __construct(
         Iri $subject,
@@ -366,7 +367,7 @@ final class User implements RdfResource
      * @param Iri      $subject
      * @param Triple[] $triples
      *
-     * @return Concept
+     * @return User
      */
     public static function fromTriples(Iri $subject, array $triples): self
     {
@@ -375,39 +376,39 @@ final class User implements RdfResource
         return new self($subject, $resource);
     }
 
-    // /**
-    //  * Loads the XL labels and replaces the default URI value with the full resource.
-    //  *
-    //  * @param LabelRepository $labelRepository
-    //  */
-    // public function loadFullXlLabels(LabelRepository $labelRepository)
-    // {
-    //     $tripleList = $this->triples();
-    //     foreach ($tripleList as $triplesKey => $triple) {
-    //         if ($triple instanceof Label) {
-    //             continue;
-    //         }
+    /**
+     * Loads the XL labels and replaces the default URI value with the full resource.
+     *
+     * @param LabelRepository $labelRepository
+     */
+    public function loadFullXlLabels(LabelRepository $labelRepository)
+    {
+        $tripleList = $this->triples();
+        foreach ($tripleList as $triplesKey => $triple) {
+            if ($triple instanceof Label) {
+                continue;
+            }
 
-    //         foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
-    //             if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
-    //                 /**
-    //                  * @var Iri
-    //                  */
-    //                 $xlLabel = $triple->getObject();
+            foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
+                if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
+                    /**
+                     * @var Iri
+                     */
+                    $xlLabel = $triple->getObject();
 
-    //                 $fullLabel = $labelRepository->findByIri($xlLabel);
-    //                 if (isset($fullLabel)) {
-    //                     $subject = $triple->getSubject();
-    //                     $fullLabel->setSubject($subject);
-    //                     $predicate = $triple->getPredicate();
-    //                     $fullLabel->setType($predicate);
-    //                     $this->resource->replaceTriple($triplesKey, $fullLabel);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     $this->resource->reIndexTripleStore();
-    // }
+                    $fullLabel = $labelRepository->findByIri($xlLabel);
+                    if (isset($fullLabel)) {
+                        $subject = $triple->getSubject();
+                        $fullLabel->setSubject($subject);
+                        $predicate = $triple->getPredicate();
+                        $fullLabel->setType($predicate);
+                        $this->resource->replaceTriple($triplesKey, $fullLabel);
+                    }
+                }
+            }
+        }
+        $this->resource->reIndexTripleStore();
+    }
 
     /**
      * We are returning by reference, to quickly enable the data-levels functionality.

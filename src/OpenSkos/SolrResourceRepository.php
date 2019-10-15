@@ -287,7 +287,7 @@ class SolrResourceRepository
      *
      * @param string $field Get the max value of a single value field
      *
-     * @return string
+     * @return string|int
      */
     public function getMaxFieldValue($query, $field)
     {

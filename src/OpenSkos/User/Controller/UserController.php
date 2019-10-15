@@ -9,6 +9,7 @@ use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
 use App\OpenSkos\User\UserRepository;
 use App\Ontology\Foaf;
@@ -74,10 +75,11 @@ final class UserController
     /**
      * @Route(path="/user/{id}", methods={"GET"})
      *
-     * @param IntternalResourceId $id
+     * @param InternalResourceId $id
      * @param UserRepository $repository
      * @param Connection $connection
      * @param ApiRequest $apiRequest
+     * @param LabelRepository $labelRepository
      *
      * @return ScalarResponse
      */
@@ -85,7 +87,8 @@ final class UserController
         InternalResourceId $id,
         UserRepository $repository,
         Connection $connection,
-        ApiRequest $apiRequest
+        ApiRequest $apiRequest,
+        LabelRepository $labelRepository
     ): ScalarResponse {
         \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
@@ -100,7 +103,7 @@ final class UserController
             throw new NotFoundHttpException("The user $id could not be retreived.");
         }
         if (2 === $apiRequest->getLevel()) {
-            $user>loadFullXlLabels($labelRepository);
+            $user->loadFullXlLabels($labelRepository);
         }
 
         return new ScalarResponse($user, $apiRequest->getFormat());
