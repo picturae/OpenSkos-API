@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\OpenSkos\User\Sparql;
 
 use App\Ontology\Org;
-use App\Ontology\Skos;
 use App\OpenSkos\User\User;
 use App\OpenSkos\User\UserRepository;
 use App\OpenSkos\InternalResourceId;

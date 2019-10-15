@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\User\Controller;
 
-use App\Rest\DirectGraphResponse;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use App\OpenSkos\ApiRequest;
@@ -12,9 +11,11 @@ use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
 use App\OpenSkos\User\UserRepository;
+use App\Ontology\DcTerms;
 use App\Ontology\Foaf;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
+use App\Ontology\VCard;
 use App\Rdf\Iri;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -48,8 +49,8 @@ final class UserController
      * @Route(path="/users", methods={"GET"})
      *
      * @param UserRepository $repository
-     * @param Connection $connection
-     * @param ApiRequest $apiRequest
+     * @param Connection     $connection
+     * @param ApiRequest     $apiRequest
      *
      * @return ListResponse
      */
@@ -58,9 +59,11 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
+        \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
         \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
         \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
+        \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
 
         $users = $repository->all();
 
@@ -76,10 +79,10 @@ final class UserController
      * @Route(path="/user/{id}", methods={"GET"})
      *
      * @param InternalResourceId $id
-     * @param UserRepository $repository
-     * @param Connection $connection
-     * @param ApiRequest $apiRequest
-     * @param LabelRepository $labelRepository
+     * @param UserRepository     $repository
+     * @param Connection         $connection
+     * @param ApiRequest         $apiRequest
+     * @param LabelRepository    $labelRepository
      *
      * @return ScalarResponse
      */
@@ -90,9 +93,11 @@ final class UserController
         ApiRequest $apiRequest,
         LabelRepository $labelRepository
     ): ScalarResponse {
+        \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
         \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
         \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
+        \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
 
         $user = $repository->findOneBy(
             new Iri(OpenSkos::UUID),
