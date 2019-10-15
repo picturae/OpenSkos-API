@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos\User;
+namespace App\Repository;
 
 use App\OpenSkos\InternalResourceId;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 
-interface UserRepository
+interface RepositoryInterface
 {
     /**
      * @param int   $offset
@@ -21,16 +22,16 @@ interface UserRepository
     /**
      * @param Iri $iri
      *
-     * @return User|null
+     * @return AbstractRdfDocument|null
      */
-    public function findByIri(Iri $iri): ?User;
+    public function findByIri(Iri $iri): ?AbstractRdfDocument;
 
     /**
      * @param InternalResourceId $id
      *
-     * @return User|null
+     * @return AbstractRdfDocument|null
      */
-    public function find(InternalResourceId $id): ?User;
+    public function find(InternalResourceId $id): ?AbstractRdfDocument;
 
     /**
      * @param Iri                $predicate
@@ -44,7 +45,7 @@ interface UserRepository
      * @param Iri                $predicate
      * @param InternalResourceId $object
      *
-     * @return User|null
+     * @return AbstractRdfDocument|null
      */
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?User;
+    public function findOneBy(Iri $predicate, InternalResourceId $object): ?AbstractRdfDocument;
 }
