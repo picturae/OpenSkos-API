@@ -2,12 +2,11 @@
 
 namespace App\Annotation\Document;
 
+use App\Annotation\AbstractAnnotation;
+
 /**
  * @Annotation
  */
-class Table
+class Table extends AbstractAnnotation
 {
-    public $value;
-    public $type;
-    public $desc;
 }

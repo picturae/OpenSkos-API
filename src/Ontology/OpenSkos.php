@@ -31,6 +31,8 @@ final class OpenSkos
     const MODIFIEDBY = 'http://openskos.org/xmlns#modifiedBy';
     const UUID = 'http://openskos.org/xmlns#uuid';
     const SET = 'http://openskos.org/xmlns#set';
+    const ROLE = 'http://openskos.org/xmlns#role';
+    const URI = 'http://openskos.org/xmlns#uri';
     const INSKOSCOLLECTION = 'http://openskos.org/xmlns#inSkosCollection';
     const CODE = 'http://openskos.org/xmlns#code';
     const NAME = 'http://openskos.org/xmlns#name';      //TODO: Do we just need code?

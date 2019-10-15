@@ -10,6 +10,7 @@ use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
+use Doctrine\DBAL\Connection;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
@@ -34,6 +35,11 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $skosRepository;
 
     /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
      * @var OpenSkosIriFactory
      */
     protected $iriFactory;
@@ -46,18 +52,32 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function __construct(
         Client $rdfClient,
-        OpenSkosIriFactory $iriFactory
+        OpenSkosIriFactory $iriFactory,
+        Connection $connection
     ) {
         $this->rdfClient = $rdfClient;
 
+        $this->connection = $connection;
+        $repository = $this;
+
         $this->skosRepository = new SkosResourceRepository(
-            function (Iri $iri, array $triples): AbstractRdfDocument {
-                return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples);
+            function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
+                return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
             },
             $this->rdfClient
         );
 
         $this->iriFactory = $iriFactory;
+    }
+
+    /**
+     * Returns the connection for this repository.
+     *
+     * @return Connection
+     */
+    public function getConnection(): Connection
+    {
+        return $this->connection;
     }
 
     /**

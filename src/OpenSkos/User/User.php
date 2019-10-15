@@ -12,17 +12,27 @@ use App\Rdf\AbstractRdfDocument;
 use App\Annotation\Document\Table;
 
 /**
- * @Table('user')
+ * @Table("user")
  */
 final class User extends AbstractRdfDocument
 {
     const type = 'type';
-    const name = 'set';
+    const name = 'name';
     const uuid = 'uuid';
     const email = 'email';
     const tenant = 'tenant';
+    const role = 'role';
+    const uri = 'uri';
+    const userType = 'usertype';
 
     const dateSubmitted = 'dateSubmitted';
+
+    /**
+     * @var string[]
+     */
+    protected static $ignoreFields = [
+        self::type,
+    ];
 
     /**
      * @var string[]
@@ -34,5 +44,7 @@ final class User extends AbstractRdfDocument
         self::email => VCard::EMAIL,
         self::tenant => Openskos::TENANT,
         self::dateSubmitted => DcTerms::DATESUBMITTED,
+        self::role => OpenSkos::ROLE,
+        self::uri => OpenSkos::ROLE,
     ];
 }

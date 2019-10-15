@@ -10,6 +10,7 @@ use App\OpenSkos\ApiRequest;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
+use App\OpenSkos\User\User;
 use App\Ontology\DcTerms;
 use App\Ontology\Foaf;
 use App\Ontology\OpenSkos;
@@ -20,7 +21,7 @@ use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\OpenSkos\User\Sparql\SparqlUserRepository;
+use App\OpenSkos\User\UserRepository;
 
 final class UserController
 {
@@ -48,14 +49,14 @@ final class UserController
     /**
      * @Route(path="/users", methods={"GET"})
      *
-     * @param SparqlUserRepository $repository
-     * @param Connection           $connection
-     * @param ApiRequest           $apiRequest
+     * @param UserRepository $repository
+     * @param Connection     $connection
+     * @param ApiRequest     $apiRequest
      *
      * @return ListResponse
      */
-    public function geAlltUsers(
-        SparqlUserRepository $repository,
+    public function geAllUsers(
+        UserRepository $repository,
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
@@ -66,6 +67,10 @@ final class UserController
         \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
 
         $users = $repository->all();
+
+        foreach ($users as $user) {
+            $user->extendFrom(User::email);
+        }
 
         return new ListResponse(
             $users,
@@ -78,17 +83,17 @@ final class UserController
     /**
      * @Route(path="/user/{id}", methods={"GET"})
      *
-     * @param InternalResourceId   $id
-     * @param SparqlUserRepository $repository
-     * @param Connection           $connection
-     * @param ApiRequest           $apiRequest
-     * @param LabelRepository      $labelRepository
+     * @param InternalResourceId $id
+     * @param UserRepository     $repository
+     * @param Connection         $connection
+     * @param ApiRequest         $apiRequest
+     * @param LabelRepository    $labelRepository
      *
      * @return ScalarResponse
      */
     public function getOneUser(
         InternalResourceId $id,
-        SparqlUserRepository $repository,
+        UserRepository $repository,
         Connection $connection,
         ApiRequest $apiRequest,
         LabelRepository $labelRepository
