@@ -8,7 +8,6 @@ use App\Ontology\DcTerms;
 use App\Ontology\Foaf;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
-use App\Ontology\VCard;
 use App\Rdf\AbstractRdfDocument;
 use App\Annotation\Document;
 
@@ -26,7 +25,8 @@ final class User extends AbstractRdfDocument
     const tenant = 'tenant';
     const role = 'role';
     const enableSkosXl = 'enableSkosXl';
-    const userType = 'userType';
+    const usertype = 'usertype';
+    const apikey = 'apikey';
 
     const dateSubmitted = 'dateSubmitted';
 
@@ -37,12 +37,13 @@ final class User extends AbstractRdfDocument
         self::type => Rdf::TYPE,
         self::name => Openskos::NAME,
         self::uuid => OpenSkos::UUID,
-        self::email => VCard::EMAIL,
+        self::email => Foaf::MBOX,
         self::tenant => Openskos::TENANT,
         self::dateSubmitted => DcTerms::DATESUBMITTED,
         self::role => OpenSkos::ROLE,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
-        self::userType => OpenSkos::USERTYPE,
+        self::usertype => OpenSkos::USERTYPE,
+        /* self::apikey => OpenSkos::APIKEY, */ // TODO: make this an authenticated field
     ];
 
     /**
@@ -54,6 +55,6 @@ final class User extends AbstractRdfDocument
     ];
 
     protected static $columnAlias = [
-        'type' => self::userType,
+        'type' => self::usertype,
     ];
 }

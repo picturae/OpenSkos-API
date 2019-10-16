@@ -13,7 +13,7 @@ services:
   set.iri_factory:
     class: App\OpenSkos\OpenSkosIriFactory
     arguments:
-      $namespace: 'http://tenant'
+      $namespace: 'http://user'
 
   App\OpenSkos\User\UserRepository:
     arguments:
