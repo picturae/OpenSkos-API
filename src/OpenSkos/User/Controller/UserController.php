@@ -60,7 +60,10 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
-        $users = $repository->all();
+        $users = $repository->all(
+            $apiRequest->getOffset(),
+            $apiRequest->getLimit(),
+        );
 
         return new ListResponse(
             $users,
