@@ -114,36 +114,41 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
-        if (empty($this->annotations['table'])) {
-            return $this->skosRepository->allOfType(
-                new Iri(static::DOCUMENT_TYPE),
-                $offset,
-                $limit,
-                $filters
-            );
-        } else {
+        $results = $this->skosRepository->allOfType(
+            new Iri(static::DOCUMENT_TYPE),
+            $offset,
+            $limit,
+            $filters
+        );
+
+        if (!empty($this->annotations['table'])) {
             $repository = $this;
             $connection = $this->getConnection();
             $documentClass = static::DOCUMENT_CLASS;
             $documentType = static::DOCUMENT_TYPE;
-            $stmt = $connection
-                ->createQueryBuilder()
-                ->select('*')
-                ->from($this->annotations['table'], 't')
-                ->setFirstResult($offset)
-                ->setMaxResults($limit)
-                ->execute();
-            if (is_int($stmt)) {
-                return [];
+
+            foreach ($results as $user) {
+                $uri = $user->getResource()->iri()->getUri();
+
+                // Fetch more data from the database
+                $stmt = $connection
+                    ->createQueryBuilder()
+                    ->select('*')
+                    ->from($this->annotations['table'], 't')
+                    ->where('t.uri = :uri')
+                    ->setParameter(':uri', $uri)
+                    ->execute();
+                if (is_int($stmt)) {
+                    return [];
+                }
+                $rawDocument = $stmt->fetch();
+
+                // Attach fetched data to the document
+                $user->populate($rawDocument);
             }
-            $rawDocuments = $stmt->fetchAll();
-
-            return array_map(function ($data) use ($documentClass, $repository) {
-                $subject = new Iri('http://'.($repository->annotations['table']).'/'.$data[$repository->annotations['uuid']]);
-
-                return $documentClass::fromRelational($subject, $data, $repository);
-            }, $rawDocuments);
         }
+
+        return $results;
     }
 
     /**

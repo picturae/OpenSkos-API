@@ -14,19 +14,18 @@ use App\Annotation\Document;
 /**
  * @Document\Table("user")
  * @Document\Type(Foaf::PERSON)
- * @Document\UUID(User::uuid)
  */
 final class User extends AbstractRdfDocument
 {
     const type = 'type';
     const name = 'name';
-    const uuid = 'id';
     const email = 'email';
     const tenant = 'tenant';
     const role = 'role';
     const enableSkosXl = 'enableSkosXl';
     const usertype = 'usertype';
     const apikey = 'apikey';
+    const uri = 'uri';
 
     const dateSubmitted = 'dateSubmitted';
 
@@ -35,8 +34,7 @@ final class User extends AbstractRdfDocument
      */
     protected static $mapping = [
         self::type => Rdf::TYPE,
-        self::name => Openskos::NAME,
-        self::uuid => OpenSkos::UUID,
+        self::name => Foaf::NAME,
         self::email => Foaf::MBOX,
         self::tenant => Openskos::TENANT,
         self::dateSubmitted => DcTerms::DATESUBMITTED,
@@ -50,8 +48,7 @@ final class User extends AbstractRdfDocument
      * @var array
      */
     protected static $uniqueFields = [
-        'email' => self::email,
-        'tenant' => self::tenant,
+        'uri' => self::uri,
     ];
 
     protected static $columnAlias = [
