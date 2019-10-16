@@ -38,6 +38,7 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * Fields to be ignored when importing through doctrine.
+     * These are field names BEFORE running aliases.
      *
      * @var string[]
      */
