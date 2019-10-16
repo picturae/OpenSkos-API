@@ -7,7 +7,6 @@ namespace App\OpenSkos\User\Controller;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
 use App\OpenSkos\User\User;
@@ -76,16 +75,16 @@ final class UserController
     /**
      * @Route(path="/user/{id}", methods={"GET"})
      *
-     * @param InternalResourceId $id
-     * @param UserRepository     $repository
-     * @param Connection         $connection
-     * @param ApiRequest         $apiRequest
-     * @param LabelRepository    $labelRepository
+     * @param string          $id
+     * @param UserRepository  $repository
+     * @param Connection      $connection
+     * @param ApiRequest      $apiRequest
+     * @param LabelRepository $labelRepository
      *
      * @return ScalarResponse
      */
     public function getOneUser(
-        InternalResourceId $id,
+        string $id,
         UserRepository $repository,
         Connection $connection,
         ApiRequest $apiRequest,
@@ -97,10 +96,10 @@ final class UserController
         \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
         \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
 
-        $user = $repository->findOneBy(
-            new Iri(OpenSkos::UUID),
-            $id
-        );
+        if (array_key_exists('USER_IRI_PREFIX', $_ENV)) {
+            $id = $_ENV['USER_IRI_PREFIX'].$id;
+        }
+        $user = $repository->get(new Iri($id));
 
         if (null === $user) {
             throw new NotFoundHttpException("The user $id could not be retreived.");

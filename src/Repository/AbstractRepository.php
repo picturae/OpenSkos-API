@@ -135,8 +135,8 @@ abstract class AbstractRepository implements RepositoryInterface
                     ->createQueryBuilder()
                     ->select('*')
                     ->from($this->annotations['table'], 't')
-                    ->where('t.uri = :uri')
-                    ->setParameter(':uri', $uri)
+                    ->where('t.'.($this->annotations['uuid']).' = :uuid')
+                    ->setParameter(':uuid', $uri)
                     ->execute();
                 if (is_int($stmt)) {
                     return [];
@@ -190,22 +190,64 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?AbstractRdfDocument
     {
-        if (empty($this->annotations['table'])) {
-            $res = $this->skosRepository->findOneBy(new Iri(static::DOCUMENT_TYPE), $predicate, $object);
-        } else {
+        /** @var AbstractRdfDocument $res */
+        $res = $this->skosRepository->findOneBy(new Iri(static::DOCUMENT_TYPE), $predicate, $object);
+
+        // No resource = done
+        if (is_null($res)) {
+            return null;
+        }
+
+        if (!empty($this->annotations['table'])) {
             $documentClass = static::DOCUMENT_CLASS;
             $documentMapping = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
 
-            $fieldUri = $predicate->getUri();
-            $column = $documentReverseMapping[$fieldUri];
+            $uri = $res->getResource()->iri()->getUri();
+
+            // Fetch more data from the database
+            $stmt = $this->getConnection()
+                ->createQueryBuilder()
+                ->select('*')
+                ->from($this->annotations['table'], 't')
+                ->where('t.'.($this->annotations['uuid']).' = :uuid')
+                ->setParameter(':uuid', $uri)
+                ->execute();
+
+            if (is_int($stmt)) {
+                return $res;
+            }
+            $rawDocument = $stmt->fetch();
+
+            // Attach fetched data to the document
+            $res->populate($rawDocument);
+        }
+
+        return $res;
+    }
+
+    public function get(Iri $object)
+    {
+        $res = $this->skosRepository->get($object);
+
+        // No resource = done
+        if (is_null($res)) {
+            return null;
+        }
+
+        if (!empty($this->annotations['table'])) {
+            $documentClass = static::DOCUMENT_CLASS;
+            $documentMapping = $documentClass::getMapping();
+            $documentReverseMapping = array_flip($documentMapping);
+
+            $column = $this->annotations['uuid'];
 
             $stmt = $this->getConnection()
                 ->createQueryBuilder()
                 ->select('*')
                 ->from($this->annotations['table'], 't')
-                ->where("t.${column} = :${column}")
-                ->setParameter(":${column}", $object->id())
+                ->where("t.${column} = :uuid")
+                ->setParameter(':uuid', $res->getResource()->iri()->getUri())
                 ->setMaxResults(1)
                 ->execute();
 
@@ -213,15 +255,12 @@ abstract class AbstractRepository implements RepositoryInterface
                 return null;
             }
 
-            $data = $stmt->fetchAll();
-            if (!count($data)) {
+            $data = $stmt->fetch();
+            if (is_null($data)) {
                 return null;
             }
-            $data = $data[0];
 
-            $subject = new Iri('http://'.($this->annotations['table']).'/'.$data[$this->annotations['uuid']]);
-
-            return $documentClass::fromRelational($subject, $data, $this);
+            $res->populate($data);
         }
 
         return $res;
