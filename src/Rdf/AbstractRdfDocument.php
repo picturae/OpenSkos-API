@@ -9,6 +9,7 @@ use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use App\Repository\AbstractRepository;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\DBAL\Connection;
 
 abstract class AbstractRdfDocument implements RdfResource
 {
@@ -18,6 +19,16 @@ abstract class AbstractRdfDocument implements RdfResource
      * @var string[]
      */
     protected static $mapping = null;
+
+    /**
+     * Mapping between different-named fields between local and doctrine.
+     *
+     * The key   = doctrine
+     * The value = local
+     *
+     * @var array
+     */
+    protected static $uniqueFields = null;
 
     /**
      * Fields to be ignored when importing through doctrine.
@@ -107,6 +118,34 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
+     * @param string $property
+     *
+     * @return string[]|string|null
+     */
+    public function getMappedValue(string $property)
+    {
+        $literals = $this->getProperty($this->getMapping()[$property]);
+
+        if (is_null($literals)) {
+            return null;
+        }
+
+        $literals = array_map(function (Literal $literal) {
+            return $literal->__toString();
+        }, array_values($literals));
+
+        if (!count($literals)) {
+            return null;
+        }
+
+        if (1 === count($literals)) {
+            return $literals[0];
+        }
+
+        return $literals;
+    }
+
+    /**
      * @param Iri $subject
      *
      * @return AbstractRdfDocument
@@ -175,29 +214,11 @@ abstract class AbstractRdfDocument implements RdfResource
         return $this->resource;
     }
 
-    public function extendFrom(string $property, ?string $value = null): bool
+    public function populate(): bool
     {
         // No repository = no extend
         if (is_null($this->repository)) {
             return false;
-        }
-
-        // The property must be known
-        if (!array_key_exists($property, static::$mapping)) {
-            return false;
-        }
-
-        // Value fallback = read from our resource
-        if (is_null($value)) {
-            $rawValue = $this->getMappedProperty($property);
-
-            if (is_null($rawValue)) {
-                return false;
-            }
-
-            $value = array_map(function (Literal $literal) {
-                return $literal->__toString();
-            }, $rawValue);
         }
 
         // Fetch all annotations
@@ -220,25 +241,40 @@ abstract class AbstractRdfDocument implements RdfResource
             return false;
         }
 
-        // Fetch source data from database
+        // Start on statement
         $connection = $this->repository->getConnection();
         $stmt = $connection
             ->createQueryBuilder()
             ->select('*')
-            ->from($table, 't')
-            ->where("t.${property} IN (:value)")
-            ->setParameter(':value', $value, is_array($value) ? \Doctrine\DBAL\Connection::PARAM_STR_ARRAY : null)
-            ->execute();
+            ->from($table, 't');
 
-        // Stop on errors
-        if (is_int($stmt)) {
+        // Add filter
+        $expr = $stmt->expr()->andX();
+        foreach (static::$uniqueFields as $remote => $local) {
+            $value = $this->getMappedValue($local);
+            if (is_array($value)) {
+                $expr->add($stmt->expr()->in("t.${remote}", ":${local}"));
+                $stmt = $stmt->setParameter(":${local}", $value, Connection::PARAM_STR_ARRAY);
+            } else {
+                $expr->add($stmt->expr()->eq("t.${remote}", ":${local}"));
+                $stmt = $stmt->setParameter(":${local}", $value);
+            }
+
+            // Remove old local field, it was there to match upon
+            if ($remote != $local) {
+                $this->getResource()->removeTriple(static::$mapping[$local]);
+            }
+        }
+
+        // Run the query
+        $stmt = $stmt->where($expr);
+        $query_result = $stmt->execute();
+        if (is_int($query_result)) {
             return false;
         }
 
-        // Fetch the found rows
-        $results = $stmt->fetchAll();
-
-        // Inject data into resource
+        // Fetch found rows
+        $results = $query_result->fetchAll();
         $resource = $this->getResource();
 
         foreach ($results as $row) {

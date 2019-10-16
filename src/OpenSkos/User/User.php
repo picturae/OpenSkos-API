@@ -21,6 +21,7 @@ final class User extends AbstractRdfDocument
     const uuid = 'uuid';
     const email = 'email';
     const tenant = 'tenant';
+    const code = 'code';
     const role = 'role';
     const enableSkosXl = 'enableSkosXl';
 
@@ -42,8 +43,17 @@ final class User extends AbstractRdfDocument
         self::uuid => OpenSkos::UUID,
         self::email => VCard::EMAIL,
         self::tenant => Openskos::TENANT,
+        self::code => Openskos::CODE,
         self::dateSubmitted => DcTerms::DATESUBMITTED,
         self::role => OpenSkos::ROLE,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $uniqueFields = [
+        'email' => self::email,
+        'tenant' => self::code,
     ];
 }

@@ -69,7 +69,7 @@ final class UserController
         $users = $repository->all();
 
         foreach ($users as $user) {
-            $user->extendFrom(User::email);
+            $user->populate();
         }
 
         return new ListResponse(
@@ -116,7 +116,7 @@ final class UserController
             $user->loadFullXlLabels($labelRepository);
         }
 
-        $user->extendFrom(User::email);
+        $user->populate();
 
         return new ScalarResponse($user, $apiRequest->getFormat());
     }
