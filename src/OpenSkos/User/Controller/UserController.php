@@ -116,6 +116,8 @@ final class UserController
             $user->loadFullXlLabels($labelRepository);
         }
 
+        $user->extendFrom(User::email);
+
         return new ScalarResponse($user, $apiRequest->getFormat());
     }
 }

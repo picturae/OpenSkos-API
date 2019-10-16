@@ -22,8 +22,7 @@ final class User extends AbstractRdfDocument
     const email = 'email';
     const tenant = 'tenant';
     const role = 'role';
-    const uri = 'uri';
-    const userType = 'usertype';
+    const enableSkosXl = 'enableSkosXl';
 
     const dateSubmitted = 'dateSubmitted';
 
@@ -45,6 +44,6 @@ final class User extends AbstractRdfDocument
         self::tenant => Openskos::TENANT,
         self::dateSubmitted => DcTerms::DATESUBMITTED,
         self::role => OpenSkos::ROLE,
-        self::uri => OpenSkos::ROLE,
+        self::enableSkosXl => OpenSkos::ENABLESKOSXL,
     ];
 }
