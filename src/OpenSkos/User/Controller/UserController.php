@@ -60,17 +60,7 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
-        \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
-        \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
-        \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
-        \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
-        \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
-
         $users = $repository->all();
-
-        foreach ($users as $user) {
-            $user->populate();
-        }
 
         return new ListResponse(
             $users,
@@ -115,8 +105,6 @@ final class UserController
         if (2 === $apiRequest->getLevel()) {
             $user->loadFullXlLabels($labelRepository);
         }
-
-        $user->populate();
 
         return new ScalarResponse($user, $apiRequest->getFormat());
     }

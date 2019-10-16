@@ -2,14 +2,12 @@
 
 namespace App\Rdf;
 
-use App\Annotation\Document\Table;
+use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use App\Repository\AbstractRepository;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\DBAL\Connection;
 
 abstract class AbstractRdfDocument implements RdfResource
 {
@@ -18,7 +16,7 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * @var string[]
      */
-    protected static $mapping = null;
+    protected static $mapping = [];
 
     /**
      * Mapping between different-named fields between local and doctrine.
@@ -29,6 +27,14 @@ abstract class AbstractRdfDocument implements RdfResource
      * @var array
      */
     protected static $uniqueFields = null;
+
+    /**
+     * The key   = doctrine
+     * The value = local.
+     *
+     * @var array
+     */
+    protected static $columnAlias = [];
 
     /**
      * Fields to be ignored when importing through doctrine.
@@ -52,13 +58,13 @@ abstract class AbstractRdfDocument implements RdfResource
      * @param VocabularyAwareResource $resource
      * @param AbstractRepository      $repository
      */
-    protected function __construct(
+    public function __construct(
         Iri $subject,
         ?VocabularyAwareResource $resource = null,
         ?AbstractRepository $repository = null
     ) {
         if (is_null($resource)) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(static::$mapping));
+            $this->resource = new VocabularyAwareResource($subject, static::$mapping);
         } else {
             $this->resource = $resource;
         }
@@ -105,6 +111,54 @@ abstract class AbstractRdfDocument implements RdfResource
     public function getProperty(string $property): ?array
     {
         return $this->resource->getProperty($property);
+    }
+
+    /**
+     * @param mixed $property
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function addProperty($property, $value): bool
+    {
+        if (is_string($property)) {
+            if (!array_key_exists($property, static::$mapping)) {
+                return false;
+            }
+        }
+
+        if ($value instanceof RdfTerm) {
+            if ($property instanceof Iri) {
+                $iri = $property;
+            } else {
+                $mapped = static::$mapping['property'];
+                if (is_null($mapped)) {
+                    return false;
+                }
+                $iri = new Iri($mapped);
+            }
+            $this->getResource()->addProperty($iri, $value);
+
+            return true;
+        }
+
+        if (is_string($value)) {
+            if ($property instanceof Iri) {
+                $iri = $property;
+            } else {
+                $mapped = static::$mapping[$property];
+                if (is_null($mapped)) {
+                    return false;
+                }
+                $iri = new Iri($mapped);
+            }
+            $term = new StringLiteral($value);
+            $this->getResource()->addProperty($iri, $term);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -170,6 +224,33 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
+     * @param Iri                $subject
+     * @param array              $data
+     * @param AbstractRepository $repository
+     *
+     * @return AbstractRdfDocument
+     */
+    public static function fromRelational(Iri $subject, ?array $data, AbstractRepository $repository = null): self
+    {
+        $document = new static($subject, null, $repository);
+
+        if (is_array($data)) {
+            $document->populate($data);
+        }
+
+        $type = $document->getProperty(Rdf::TYPE);
+        if (is_array($type) && (!count($type))) {
+            $type = null;
+        }
+
+        if (is_null($type) && (!is_null($repository))) {
+            $document->addProperty(new Iri(Rdf::TYPE), new Iri($repository->getAnnotations()['type']));
+        }
+
+        return $document;
+    }
+
+    /**
      * Loads the XL labels and replaces the default URI value with the full resource.
      *
      * @param LabelRepository $labelRepository
@@ -214,85 +295,35 @@ abstract class AbstractRdfDocument implements RdfResource
         return $this->resource;
     }
 
-    public function populate(): bool
+    public function populate(array $data = null): bool
     {
-        // No repository = no extend
-        if (is_null($this->repository)) {
+        if (is_null($data)) {
             return false;
         }
 
-        // Fetch all annotations
-        $annotationReader = new AnnotationReader();
-        $documentReflection = new \ReflectionClass(static::class);
-        $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
-
-        // Data we're extract from the annotations
-        $table = null;
-
-        // Loop through annotations and extract data
-        foreach ($documentAnnotations as $annotation) {
-            if ($annotation instanceof Table) {
-                $table = $annotation->value;
-            }
-        }
-
-        // No table = no populate
-        if (is_null($table)) {
-            return false;
-        }
-
-        // Start on statement
-        $connection = $this->repository->getConnection();
-        $stmt = $connection
-            ->createQueryBuilder()
-            ->select('*')
-            ->from($table, 't');
-
-        // Add filter
-        $expr = $stmt->expr()->andX();
-        foreach (static::$uniqueFields as $remote => $local) {
-            $value = $this->getMappedValue($local);
-            if (is_array($value)) {
-                $expr->add($stmt->expr()->in("t.${remote}", ":${local}"));
-                $stmt = $stmt->setParameter(":${local}", $value, Connection::PARAM_STR_ARRAY);
-            } else {
-                $expr->add($stmt->expr()->eq("t.${remote}", ":${local}"));
-                $stmt = $stmt->setParameter(":${local}", $value);
-            }
-
-            // Remove old local field, it was there to match upon
-            if ($remote != $local) {
-                $this->getResource()->removeTriple(static::$mapping[$local]);
-            }
-        }
-
-        // Run the query
-        $stmt = $stmt->where($expr);
-        $query_result = $stmt->execute();
-        if (is_int($query_result)) {
-            return false;
-        }
-
-        // Fetch found rows
-        $results = $query_result->fetchAll();
+        // Iterate over data and inject into resource
         $resource = $this->getResource();
-
-        foreach ($results as $row) {
-            foreach ($row as $column => $value) {
-                if (in_array($column, static::$ignoreFields, true)) {
-                    continue;
-                }
-                if (!array_key_exists($column, static::$mapping)) {
-                    continue;
-                }
-                if (is_null($value)) {
-                    continue;
-                }
-
-                $iri = new Iri(static::$mapping[$column]);
-                $term = new StringLiteral($value);
-                $resource->addProperty($iri, $term);
+        foreach ($data as $column => $value) {
+            if (in_array($column, static::$ignoreFields, true)) {
+                continue;
             }
+            if (array_key_exists($column, static::$columnAlias)) {
+                $column = static::$columnAlias[$column];
+            }
+            if (!array_key_exists($column, static::$mapping)) {
+                continue;
+            }
+            if (is_null($value)) {
+                continue;
+            }
+
+            $iri = new Iri(static::$mapping[$column]);
+            if (Rdf::TYPE === static::$mapping[$column]) {
+                $term = new Iri($value);
+            } else {
+                $term = new StringLiteral($value);
+            }
+            $resource->addProperty($iri, $term);
         }
 
         return true;
