@@ -16,6 +16,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * @Route(path="/",defaults={"format":""})
+ */
 final class Institution
 {
     /**
@@ -30,7 +33,7 @@ final class Institution
     }
 
     /**
-     * @Route(path="/institutions", methods={"GET"})
+     * @Route(path="/institutions.{format}", methods={"GET"})
      *
      * @param ApiRequest            $apiRequest
      * @param InstitutionRepository $repository
@@ -63,7 +66,7 @@ final class Institution
     }
 
     /**
-     * @Route(path="/institution/{id}", methods={"GET"})
+     * @Route(path="/institution/{id}.{format}", methods={"GET"})
      *
      * @param InternalResourceId    $id
      * @param ApiRequest            $apiRequest

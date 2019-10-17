@@ -11,6 +11,9 @@ use App\Ontology\Rdf;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * @Route(path="/",defaults={"format":""})
+ */
 final class Role
 {
     /**
@@ -30,7 +33,7 @@ final class Role
     }
 
     /**
-     * @Route(path="/roles", methods={"GET"})
+     * @Route(path="/roles.{format}", methods={"GET"})
      *
      * @param ApiRequest $apiRequest
      *

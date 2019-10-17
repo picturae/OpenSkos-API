@@ -17,6 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @Route(path="/",defaults={"format":""})
+ */
 final class Set
 {
     /**
@@ -31,7 +34,7 @@ final class Set
     }
 
     /**
-     * @Route(path="/sets", methods={"GET"})
+     * @Route(path="/sets.{format}", methods={"GET"})
      *
      * @param ApiRequest      $apiRequest
      * @param SetRepository   $repository
@@ -70,7 +73,7 @@ final class Set
     }
 
     /**
-     * @Route(path="/set/{id}", methods={"GET"})
+     * @Route(path="/set/{id}.{format}", methods={"GET"})
      *
      * @param InternalResourceId $id
      * @param ApiRequest         $apiRequest

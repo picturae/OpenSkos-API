@@ -23,6 +23,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\OpenSkos\Concept\Concept as SkosConcept;
 
+/**
+ * @Route(path="/",defaults={"format":""})
+ */
 final class Concept
 {
     /**
@@ -295,7 +298,7 @@ final class Concept
     }
 
     /**
-     * @Route(path="/concept/{id}", methods={"GET"})
+     * @Route(path="/concept/{id}.{format}", methods={"GET"})
      *
      * @param InternalResourceId $id
      * @param ApiRequest         $apiRequest
@@ -327,7 +330,7 @@ final class Concept
     /**
      * Version for foreign Uri's. For now, this is a wrapper for the 'native uri' functionality, but that will probably change.
      *
-     * @Route(path="/concept", methods={"GET"})
+     * @Route(path="/concept.{format}", methods={"GET"})
      *
      * @param ApiRequest        $apiRequest
      * @param ConceptRepository $repository
@@ -363,7 +366,7 @@ final class Concept
     }
 
     /**
-     * @Route(path="/concepts", methods={"GET"})
+     * @Route(path="/concepts.{format}", methods={"GET"})
      *
      * @param ApiRequest                $apiRequest
      * @param SolrJenaConceptRepository $repository
@@ -400,7 +403,7 @@ final class Concept
     }
 
     /**
-     * @Route(path="/autocomplete", methods={"GET"})
+     * @Route(path="/autocomplete.{format}", methods={"GET"})
      *
      * @param ApiRequest                $apiRequest
      * @param SolrJenaConceptRepository $repository
