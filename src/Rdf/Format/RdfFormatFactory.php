@@ -12,6 +12,11 @@ final class RdfFormatFactory
     private $formats = [];
 
     /**
+     * @var array<string,RdfFormat>
+     */
+    private $mimes = [];
+
+    /**
      * RdfFormatFactory constructor.
      *
      * @param RdfFormat[] $formats
@@ -21,6 +26,7 @@ final class RdfFormatFactory
     ) {
         foreach ($formats as $format) {
             $this->formats[$format->name()] = $format;
+            $this->mimes[$format->contentTypeString()] = $format;
         }
     }
 
@@ -38,6 +44,20 @@ final class RdfFormatFactory
         }
 
         return $this->formats[$name];
+    }
+
+    /**
+     * @param string $mime
+     *
+     * @return RdfFormat|null
+     */
+    public function createFromMime(string $mime): ?RdfFormat
+    {
+        if (!isset($this->mimes[$mime])) {
+            return null;
+        }
+
+        return $this->mimes[$mime];
     }
 
     /**
@@ -65,7 +85,6 @@ final class RdfFormatFactory
             RdfXml::instance(),
             Turtle::instance(),
             Ntriples::instance(),
-            Html::instance(),
         ]);
     }
 
