@@ -29,7 +29,7 @@ final class RelationTypeController
     }
 
     /**
-     * @Route(path="/relationtypes", methods={"GET"})
+     * @Route(path="/relationtypes.{format?}", methods={"GET"})
      *
      * @param ApiRequest $apiRequest
      *
@@ -45,7 +45,7 @@ final class RelationTypeController
     }
 
     /**
-     * @Route(path="/relationtype/{id}", methods={"GET"})
+     * @Route(path="/relationtype/{id}.{format?}", methods={"GET"})
      *
      * @param string     $id
      * @param ApiRequest $apiRequest
@@ -56,29 +56,32 @@ final class RelationTypeController
         string $id,
         ApiRequest $apiRequest
     ): DirectGraphResponse {
-
         // Build source data
-        $graph        = RelationType::vocabulary();
+        $graph = RelationType::vocabulary();
         $relationtype = null;
-        $options      = [
+        $options = [
             $graph->resource($id),
             $graph->resource('openskos:'.$id),
         ];
 
         // Simple 'exists' filter
-        foreach($options as $resource) {
-            if (is_null($resource->type())) continue;
+        foreach ($options as $resource) {
+            if (is_null($resource->type())) {
+                continue;
+            }
             $relationtype = $resource;
         }
 
         // TODO: Handle 404 in a nicer way than an empty graph
         // TODO: Add a better method to filter
         $resources = $graph->resources();
-        foreach($resources as $key => $resource) {
+        foreach ($resources as $key => $resource) {
             if (!is_null($relationtype)) {
-                if ($graph->resource($key)->getUri() === $relationtype->getUri()) continue;
+                if ($graph->resource($key)->getUri() === $relationtype->getUri()) {
+                    continue;
+                }
             }
-            foreach($resource->properties() as $property) {
+            foreach ($resource->properties() as $property) {
                 $graph->delete($resource, $property, null);
             }
         }

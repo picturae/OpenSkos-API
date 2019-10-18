@@ -8,6 +8,6 @@ class RelationTypeSpec extends ObjectBehavior
 {
     public function it_returns_an_easyrdf_graph()
     {
-        self::relationTypes()->shouldBeAnInstanceOf('EasyRdf_Graph');
+        self::vocabulary()->shouldBeAnInstanceOf('EasyRdf_Graph');
     }
 }
