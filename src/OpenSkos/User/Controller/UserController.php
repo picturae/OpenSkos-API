@@ -46,7 +46,7 @@ final class UserController
     }
 
     /**
-     * @Route(path="/users", methods={"GET"})
+     * @Route(path="/users.{format?}", methods={"GET"})
      *
      * @param UserRepository $repository
      * @param Connection     $connection
@@ -73,7 +73,7 @@ final class UserController
     }
 
     /**
-     * @Route(path="/user/{id}", methods={"GET"})
+     * @Route(path="/user/{id}.{format?}", methods={"GET"})
      *
      * @param string          $id
      * @param UserRepository  $repository
