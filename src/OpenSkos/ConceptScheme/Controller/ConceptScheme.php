@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * @Route(path="/",defaults={"format":""})
- */
 final class ConceptScheme
 {
     /**
@@ -34,7 +31,7 @@ final class ConceptScheme
     }
 
     /**
-     * @Route(path="/conceptschemes.{format}", methods={"GET"})
+     * @Route(path="/conceptschemes.{format?}", methods={"GET"})
      *
      * @param ApiRequest              $apiRequest
      * @param ConceptSchemeRepository $repository
@@ -80,7 +77,7 @@ final class ConceptScheme
     }
 
     /**
-     * @Route(path="/conceptscheme/{id}.{format}", methods={"GET"})
+     * @Route(path="/conceptscheme/{id}.{format?}", methods={"GET"})
      *
      * @param InternalResourceId      $id
      * @param ApiRequest              $apiRequest
