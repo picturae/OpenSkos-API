@@ -143,6 +143,11 @@ abstract class AbstractRepository implements RepositoryInterface
                 }
                 $rawDocument = $stmt->fetch();
 
+                // No data = skip
+                if (!is_array($rawDocument)) {
+                    continue;
+                }
+
                 // Attach fetched data to the document
                 $user->populate($rawDocument);
             }
@@ -219,6 +224,11 @@ abstract class AbstractRepository implements RepositoryInterface
             }
             $rawDocument = $stmt->fetch();
 
+            // No data = skip
+            if (!is_array($rawDocument)) {
+                return $res;
+            }
+
             // Attach fetched data to the document
             $res->populate($rawDocument);
         }
@@ -252,12 +262,12 @@ abstract class AbstractRepository implements RepositoryInterface
                 ->execute();
 
             if (is_int($stmt)) {
-                return null;
+                return $res;
             }
 
             $data = $stmt->fetch();
-            if (is_null($data)) {
-                return null;
+            if (!is_array($data)) {
+                return $res;
             }
 
             $res->populate($data);
