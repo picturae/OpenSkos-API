@@ -104,9 +104,6 @@ final class UserController
         if (null === $user) {
             throw new NotFoundHttpException("The user $id could not be retreived.");
         }
-        if (2 === $apiRequest->getLevel()) {
-            $user->loadFullXlLabels($labelRepository);
-        }
 
         return new ScalarResponse($user, $apiRequest->getFormat());
     }
