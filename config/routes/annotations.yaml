@@ -25,3 +25,7 @@ concept:
 role:
     resource: ../../src/OpenSkos/Role/Controller
     type: annotation
+
+relation:
+    resource: ../../src/OpenSkos/RelationType/Controller
+    type: annotation
