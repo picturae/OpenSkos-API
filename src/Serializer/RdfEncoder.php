@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Serializer;
 
 use App\EasyRdf\Serializer\OpenSkosJsonLdSerializer;
+use App\Ontology\Context;
+use App\Ontology\OpenSkos;
 use App\OpenSkos\Label\Label;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\Ntriples;
@@ -15,7 +17,6 @@ use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\StringLiteral;
 use EasyRdf_Graph;
-use App\Ontology\OpenSkos;
 use App\Rdf\Literal\Literal;
 use App\Rdf\Iri;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
@@ -83,16 +84,9 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
         $options = [];
 
         if ('json-ld' === $format) {
-            $context = <<<CONTEXT
-{
-  "@context": {
-    "openskos": "http://openskos.org/xmlns#",
-    "skos": "http://www.w3.org/2004/02/skos/core#",
-    "dcterms": "http://purl.org/dc/terms/",
-    "dc": "http://purl.org/dc/"
-  }
-}
-CONTEXT;
+            $context = json_encode([
+                '@context' => Context::detect($graph),
+            ]);
 
             $serialiser = new OpenSkosJsonLdSerializer();
 

@@ -158,11 +158,40 @@ class SkosResourceRepository
     {
         $fullSet = $this->findBy($rdfType, $predicate, $object);
         if (isset($fullSet) && is_array($fullSet)) {
-            $resourceTriples = $fullSet[0];
+            if (count($fullSet)) {
+                $resourceTriples = $fullSet[0];
 
-            return $resourceTriples;
+                return $resourceTriples;
+            } else {
+                return null;
+            }
         }
 
         return $fullSet;
+    }
+
+    public function get(Iri $object)
+    {
+        $sparql = SparqlQuery::describeResource($object);
+        $triples = $this->rdfClient->describe($sparql);
+
+        if (0 === count($triples)) {
+            return null;
+        }
+
+        $groups = [];
+        foreach ($triples as $triple) {
+            $groups[$triple->getSubject()->getUri()][] = $triple;
+        }
+
+        if (1 !== count($groups)) {
+            return null;
+        }
+
+        foreach ($groups as $iriString => $group) {
+            return call_user_func($this->resourceFactory, new Iri($iriString), $group);
+        }
+
+        return null;
     }
 }

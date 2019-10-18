@@ -1,0 +1,20 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  App\OpenSkos\User\Controller\:
+    resource: '../../src/OpenSkos/User/Controller/*'
+    tags: ['controller.service_arguments']
+
+  # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
+  # To cover all our needs
+  set.iri_factory:
+    class: App\OpenSkos\OpenSkosIriFactory
+    arguments:
+      $namespace: 'http://user'
+
+  App\OpenSkos\User\UserRepository:
+    arguments:
+      $iriFactory: '@set.iri_factory'
