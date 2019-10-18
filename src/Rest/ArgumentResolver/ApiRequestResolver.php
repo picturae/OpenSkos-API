@@ -28,14 +28,38 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
 
     /**
      * @param string|null $formatName
+     * @param array|null  $headers
      *
      * @return RdfFormat|null
      *
      * @throws InvalidApiRequest
      */
-    private function resolveFormat(?string $formatName): ?RdfFormat
+    private function resolveFormat(?string $formatName, $headers = null): ?RdfFormat
     {
         if (null === $formatName) {
+            // Attempt using the accept header
+            if (isset($headers['accept'])) {
+                // Build accept list
+                $accepts = [];
+                foreach ($headers['accept'] as $list) {
+                    $list = str_getcsv($list);
+                    foreach ($list as $entry) {
+                        if (false !== strpos($entry, ';')) {
+                            $entry = explode(';', $entry)[0];
+                        }
+                        array_push($accepts, $entry);
+                    }
+                }
+
+                // Attempt using the mimetype
+                foreach ($accepts as $mime) {
+                    $format = $this->formatFactory->createFromMime($mime);
+                    if (!is_null($format)) {
+                        return $format;
+                    }
+                }
+            }
+
             return null;
         }
 
@@ -75,9 +99,17 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
 
         $searchProfile = $request->query->getInt('searchProfile');
 
+        $formatName = $request->query->get('format');
+        if (is_null($formatName)) {
+            $formatName = $request->attributes->get('format');
+            if (is_string($formatName) && (!strlen($formatName))) {
+                $formatName = null;
+            }
+        }
+
         yield new ApiRequest(
             $allParameters,
-            $this->resolveFormat($request->query->get('format')),
+            $this->resolveFormat($formatName, $request->headers->all()),
             $request->query->getInt('level', 1),
             $request->query->getInt('limit', 100),
             $request->query->getInt('offset', 0),

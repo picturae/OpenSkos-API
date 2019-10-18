@@ -31,7 +31,7 @@ final class Set
     }
 
     /**
-     * @Route(path="/sets", methods={"GET"})
+     * @Route(path="/sets.{format?}", methods={"GET"})
      *
      * @param ApiRequest      $apiRequest
      * @param SetRepository   $repository
@@ -70,7 +70,7 @@ final class Set
     }
 
     /**
-     * @Route(path="/set/{id}", methods={"GET"})
+     * @Route(path="/set/{id}.{format?}", methods={"GET"})
      *
      * @param InternalResourceId $id
      * @param ApiRequest         $apiRequest
