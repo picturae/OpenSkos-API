@@ -30,7 +30,7 @@ final class Role
     }
 
     /**
-     * @Route(path="/roles", methods={"GET"})
+     * @Route(path="/roles.{format?}", methods={"GET"})
      *
      * @param ApiRequest $apiRequest
      *

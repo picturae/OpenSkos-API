@@ -70,13 +70,13 @@ class RdfEncoderSpec extends ObjectBehavior
          xmlns:org="http://www.w3.org/ns/org#"
          xmlns:openskos="http://openskos.org/xmlns#"
          xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-         xmlns:dc="http://purl.org/dc/terms/">
+         xmlns:dcterms="http://purl.org/dc/terms/">
 
   <org:FormalOrganization rdf:about="http://tenant/0e2a9a87-ea19-4704-90e6-a75b3baba80a">
     <openskos:code>pic</openskos:code>
     <skos:prefLabel xml:lang="nl">Doe, John</skos:prefLabel>
     <openskos:disableSearchInOtherTenants rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</openskos:disableSearchInOtherTenants>
-    <dc:dateSubmitted rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-02-05T15:25:05Z</dc:dateSubmitted>
+    <dcterms:dateSubmitted rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-02-05T15:25:05Z</dcterms:dateSubmitted>
   </org:FormalOrganization>
 
 </rdf:RDF>

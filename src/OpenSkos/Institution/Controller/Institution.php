@@ -30,7 +30,7 @@ final class Institution
     }
 
     /**
-     * @Route(path="/institutions", methods={"GET"})
+     * @Route(path="/institutions.{format?}", methods={"GET"})
      *
      * @param ApiRequest            $apiRequest
      * @param InstitutionRepository $repository
@@ -63,7 +63,7 @@ final class Institution
     }
 
     /**
-     * @Route(path="/institution/{id}", methods={"GET"})
+     * @Route(path="/institution/{id}.{format?}", methods={"GET"})
      *
      * @param InternalResourceId    $id
      * @param ApiRequest            $apiRequest

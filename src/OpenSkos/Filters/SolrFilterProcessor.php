@@ -286,7 +286,7 @@ final class SolrFilterProcessor
                 $dateQuery = $parser->buildDatePeriodQuery(
                     $solrField,
                     $filterList[$param]['from'] ?? null,
-                    $filterList[$param]['until'] ?? null,
+                    $filterList[$param]['until'] ?? null
             );
                 $filtersAsStrings[] = $dateQuery;
             }

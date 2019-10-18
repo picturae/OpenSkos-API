@@ -29,3 +29,7 @@ role:
 user:
     resource: ../../src/OpenSkos/User/Controller
     type: annotation
+
+relation:
+    resource: ../../src/OpenSkos/RelationType/Controller
+    type: annotation
