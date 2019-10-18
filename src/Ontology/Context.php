@@ -4,7 +4,7 @@ namespace App\Ontology;
 
 final class Context
 {
-    const FULL = [
+    const prefixes = [
         'dcmi' => Dcmi::NAME_SPACE,
         'dc' => Dc::NAME_SPACE,
         'dcterms' => DcTerms::NAME_SPACE,
@@ -32,8 +32,8 @@ final class Context
         $result = [];
 
         foreach ($names as $name) {
-            if (isset(self::FULL[$name])) {
-                $result[$name] = self::FULL;
+            if (isset(self::prefixes[$name])) {
+                $result[$name] = self::prefixes[$name];
             }
         }
 
@@ -69,7 +69,7 @@ final class Context
         if (!is_string($uri)) {
             return false;
         }
-        foreach (self::FULL as $prefix => $namespace) {
+        foreach (self::prefixes as $prefix => $namespace) {
             if (substr($uri, 0, strlen($namespace)) === $namespace) {
                 return $prefix;
             }
@@ -88,7 +88,7 @@ final class Context
     public static function detect(\EasyRdf_Graph $graph): array
     {
         $result = [];
-        $known = self::FULL;
+        $known = self::prefixes;
 
         // Walk through the whole graph
         // CAUTION: this may result in a performance hit
