@@ -91,6 +91,7 @@ final class PingController extends AbstractController
         }
 
         return new Response(json_encode([
+            'name' => 'openskos-api',
             'status' => $status,
             'version' => $composer->version ?? 'n/a',
             'license' => $composer->license ?? 'proprietary',
