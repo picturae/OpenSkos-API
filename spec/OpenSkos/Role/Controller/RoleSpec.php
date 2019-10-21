@@ -2,6 +2,7 @@
 
 namespace spec\App\OpenSkos\Role\Controller;
 
+use EasyRdf_Graph as Graph;
 use App\OpenSkos\ApiRequest;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rest\DirectGraphResponse;
@@ -10,9 +11,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class RoleSpec extends ObjectBehavior
 {
-    public function it_returns_a_direct_graph(
-        SerializerInterface $serializer
-    ) {
+    protected static function buildApiRequest()
+    {
         // Define request parameters
         $formatFactory = RdfFormatFactory::loadDefault();
         $format = $formatFactory->createFromName('rdf');
@@ -26,7 +26,7 @@ class RoleSpec extends ObjectBehavior
         $foreignUri = null;
 
         // Build the apiRequest
-        $apiRequest = new ApiRequest(
+        return new ApiRequest(
             $allParameters,
             $format,
             $level,
@@ -37,6 +37,12 @@ class RoleSpec extends ObjectBehavior
             $searchProfile,
             $foreignUri,
         );
+    }
+
+    public function it_returns_a_direct_graph(
+        SerializerInterface $serializer
+    ) {
+        $apiRequest = self::buildApiRequest();
 
         // Initialize the controller we're testing
         $this->beConstructedWith($serializer);
@@ -45,5 +51,6 @@ class RoleSpec extends ObjectBehavior
         $result = $this->role($apiRequest);
 
         $result->shouldBeAnInstanceOf(DirectGraphResponse::class);
+        $result->getGraph()->shouldBeAnInstanceOf(Graph::class);
     }
 }
