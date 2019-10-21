@@ -33,3 +33,7 @@ user:
 relation:
     resource: ../../src/OpenSkos/RelationType/Controller
     type: annotation
+
+status:
+    resource: ../../src/OpenSkos/Status/Controller
+    type: annotation

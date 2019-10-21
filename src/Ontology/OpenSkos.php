@@ -72,4 +72,22 @@ final class OpenSkos
     const REPLACES = 'http://openskos.org/xmlns#replaces';
     const INCOLLECTION = 'http://openskos.org/xmlns#inCollection';
     const INSET = 'http://openskos.org/xmlns#inSet';
+
+    const STATUS_CANDIDATE = 'candidate';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_REDIRECTED = 'redirected';
+    const STATUS_NOT_COMPLIANT = 'not_compliant';
+    const STATUS_REJECTED = 'rejected';
+    const STATUS_OBSOLETE = 'obsolete';
+    const STATUS_DELETED = 'deleted';
+
+    const STATUSES = [
+        self::STATUS_CANDIDATE,
+        self::STATUS_APPROVED,
+        self::STATUS_REDIRECTED,
+        self::STATUS_NOT_COMPLIANT,
+        self::STATUS_REJECTED,
+        self::STATUS_OBSOLETE,
+        self::STATUS_DELETED,
+    ];
 }
