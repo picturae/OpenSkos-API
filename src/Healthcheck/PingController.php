@@ -28,7 +28,7 @@ final class PingController extends AbstractController
     }
 
     /**
-     * @Route(path="/ping.{format?}", methods={"GET"})
+     * @Route(path="/ping", methods={"GET"})
      *
      * @param JenaRepository $jenaRepository
      *
