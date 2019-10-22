@@ -136,30 +136,6 @@ final class RelationType
         $topConceptOf->addResource('rdf:type', 'owl:ObjectProperty');
         $topConceptOf->addResource('rdfs:subPropertyOf', $inScheme);
 
-        ////////////
-        // labels //
-        ////////////
-
-        $prefLabel = $graph->resource('openskos:prefLabel');
-        $prefLabel->setType('rdf:Property');
-        $prefLabel->addResource('rdf:type', 'owl:AnnotationProperty');
-        $prefLabel->addResource('rdf:supPropertyOf', 'rdfs:label');
-
-        $altLabel = $graph->resource('openskos:altLabel');
-        $altLabel->setType('rdf:Property');
-        $altLabel->addResource('rdf:type', 'owl:AnnotationProperty');
-        $altLabel->addResource('rdf:supPropertyOf', 'rdfs:label');
-
-        $hiddenLabel = $graph->resource('openskos:hiddenLabel');
-        $hiddenLabel->setType('rdf:Property');
-        $hiddenLabel->addResource('rdf:type', 'owl:AnnotationProperty');
-        $hiddenLabel->addResource('rdf:supPropertyOf', 'rdfs:label');
-
-        // ON HOLD:
-        //   - isPrefLabelOf
-        //   - isAltLabelOf
-        //   - isHiddenLabelOf
-
         ////////////////////////
         // CUSTOM DEFINITIONS //
         ////////////////////////
@@ -183,11 +159,6 @@ final class RelationType
         $inSet = $graph->resource('openskos:inSet');
         $inSet->setType('rdf:Property');
         $inSet->addResource('rdf:type', 'owl:ObjectProperty');
-
-        // TODO: subPropertyOf exactMatch?
-        $tenant = $graph->resource('openskos:tenant');
-        $tenant->setType('rdf:Property');
-        $tenant->addResource('rdf:type', 'owl:ObjectProperty');
 
         // ON HOLD:
         //   - member
