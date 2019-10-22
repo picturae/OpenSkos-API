@@ -7,3 +7,7 @@ services:
 
     App\Healthcheck\PingController:
         tags: ['controller.service_arguments']
+
+    App\Healthcheck\JenaRepository:
+      arguments:
+        $iriFactory: '@set.iri_factory'
