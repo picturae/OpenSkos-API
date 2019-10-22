@@ -3,3 +3,52 @@ parameters:
     name: Skos
     prefix: skos
     namespace: 'http://www.w3.org/2004/02/skos/core#'
+    properties:
+
+      # Core
+      - Concept
+      - ConceptScheme
+      - inScheme
+      - hasTopConcept
+      - topConceptOf
+
+      # Lexical label
+      - altLabel
+      - hiddenLabel
+      - prefLabel
+
+      # Notations
+      - notation
+
+      # Documentation properties
+      - changeNote
+      - definition
+      - editorialNote
+      - example
+      - historyNote
+      - note
+      - scopeNote
+
+      # Semantic relations
+      - broader
+      - broaderTransitive
+      - narrower
+      - narrowerTransitive
+      - related
+      - semanticRelation
+
+      # Concept collections
+      - Collection
+      - OrderedCollection
+      - member
+      - memberList
+
+      # Mapping properties
+      - broadMatch
+      - broaderMatch
+      - closeMatch
+      - exactMatch
+      - mappingRelation
+      - narrowMatch
+      - narrowerMatch
+      - relatedMatch

@@ -3,3 +3,14 @@ parameters:
     name: VCard
     prefix: vcard
     namespace: 'http://www.w3.org/2006/vcard/ns#'
+    properties:
+      - ORG
+      - orgname
+      - orgunit
+      - URL
+      - EMAIL
+      - ADR
+      - Street
+      - Locality
+      - Pcode
+      - Country

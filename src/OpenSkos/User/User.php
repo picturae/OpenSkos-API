@@ -38,7 +38,7 @@ final class User extends AbstractRdfDocument
         self::name => Foaf::NAME,
         self::email => Foaf::MBOX,
         self::tenant => Openskos::TENANT,
-        self::dateSubmitted => DcTerms::DATESUBMITTED,
+        self::dateSubmitted => DcTerms::DATE_SUBMITTED,
         self::role => OpenSkos::ROLE,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
         self::usertype => OpenSkos::USERTYPE,

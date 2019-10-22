@@ -29,12 +29,13 @@ class Template
      *
      * @return string $str Translated into underscore format
      */
-    public static function from_camel_case($str)
+    public static function from_camel_case($str): string
     {
+        $func = create_function('$c', 'return strtolower($c[1]) . "_" . strtolower($c[2]);');
+        $str = preg_replace_callback('/([a-z])([A-Z])/', $func, $str);
         $str[0] = strtolower($str[0]);
-        $func = create_function('$c', 'return "_" . strtolower($c[1]);');
-
-        return preg_replace_callback('/([A-Z])/', $func, $str);
+        /** @var string $str */
+        return $str;
     }
 
     /**

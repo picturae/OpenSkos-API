@@ -3,3 +3,10 @@ parameters:
     name: SkosXl
     prefix: skosxl
     namespace: 'http://www.w3.org/2008/05/skos-xl#'
+    properties:
+      - Label
+      - altLabel
+      - hiddenLabel
+      - labelRelation
+      - literalForm
+      - prefLabel

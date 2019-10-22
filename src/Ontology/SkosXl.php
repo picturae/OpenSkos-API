@@ -19,19 +19,13 @@
 
 namespace App\Ontology;
 
-/**
- * Namespace for skos eXtensio for Lables.
- *
- * @see http://www.w3.org/TR/skos-reference/#xl
- * @see http://www.w3.org/TR/skos-reference/skos-xl.html
- */
 final class SkosXl
 {
     const NAME_SPACE = 'http://www.w3.org/2008/05/skos-xl#';
     const LABEL = 'http://www.w3.org/2008/05/skos-xl#Label';
-    const ALTLABEL = 'http://www.w3.org/2008/05/skos-xl#altLabel';
-    const HIDDENLABEL = 'http://www.w3.org/2008/05/skos-xl#hiddenLabel';
-    const LABELRELATION = 'http://www.w3.org/2008/05/skos-xl#labelRelation';
-    const LITERALFORM = 'http://www.w3.org/2008/05/skos-xl#literalForm';
-    const PREFLABEL = 'http://www.w3.org/2008/05/skos-xl#prefLabel';
+    const ALT_LABEL = 'http://www.w3.org/2008/05/skos-xl#altLabel';
+    const HIDDEN_LABEL = 'http://www.w3.org/2008/05/skos-xl#hiddenLabel';
+    const LABEL_RELATION = 'http://www.w3.org/2008/05/skos-xl#labelRelation';
+    const LITERAL_FORM = 'http://www.w3.org/2008/05/skos-xl#literalForm';
+    const PREF_LABEL = 'http://www.w3.org/2008/05/skos-xl#prefLabel';
 }

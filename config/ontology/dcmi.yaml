@@ -2,4 +2,6 @@ parameters:
   ontology.dcmi:
     name: Dcmi
     prefix: dcmi
-    namespace: 'http://purl.org/dc/terms/DCMIType'
+    namespace: 'http://purl.org/dc/dcmitype/'
+    properties:
+      - Dataset

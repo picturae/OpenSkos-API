@@ -92,63 +92,63 @@ final class Concept implements RdfResource
         self::notation => Skos::NOTATION,
         self::status => OpenSkos::STATUS,
         self::tenant => OpenSkos::TENANT,
-        self::inScheme => Skos::INSCHEME,
+        self::inScheme => Skos::IN_SCHEME,
         self::publisher => DcTerms::PUBLISHER,
         self::title => DcTerms::TITLE,
         self::example => Skos::EXAMPLE,
 
         self::contributor => Dc::CONTRIBUTOR,
-        self::dateApproved => DcTerms::DATEAPPROVED,
+        self::dateApproved => DcTerms::DATE_APPROVED,
         self::deletedBy => OpenSkos::DELETEDBY,
         self::dateDeleted => OpenSkos::DATE_DELETED,
         self::creator => Dc::CREATOR,
         self::modified => DcTerms::MODIFIED,
         self::modifiedBy => OpenSkos::MODIFIEDBY,
-        self::datesubmitted => DcTerms::DATESUBMITTED,
+        self::datesubmitted => DcTerms::DATE_SUBMITTED,
 
-        self::prefLabel => Skos::PREFLABEL,
-        self::altLabel => Skos::ALTLABEL,
-        self::hiddenLabel => Skos::HIDDENLABEL,
-        self::XlPrefLabel => SkosXl::PREFLABEL,
-        self::XlAltLabel => SkosXl::ALTLABEL,
-        self::XlHiddenLabel => SkosXl::HIDDENLABEL,
+        self::prefLabel => Skos::PREF_LABEL,
+        self::altLabel => Skos::ALT_LABEL,
+        self::hiddenLabel => Skos::HIDDEN_LABEL,
+        self::XlPrefLabel => SkosXl::PREF_LABEL,
+        self::XlAltLabel => SkosXl::ALT_LABEL,
+        self::XlHiddenLabel => SkosXl::HIDDEN_LABEL,
 
-        self::editorialNote => Skos::EDITORIALNOTE,
+        self::editorialNote => Skos::EDITORIAL_NOTE,
         self::Note => Skos::NOTE,
         self::note => Skos::NOTE,              /*Both lc and capitalized found in data ???? */
-        self::historyNote => Skos::HISTORYNOTE,
-        self::scopeNote => Skos::SCOPENOTE,
-        self::changeNote => Skos::CHANGENOTE,
+        self::historyNote => Skos::HISTORY_NOTE,
+        self::scopeNote => Skos::SCOPE_NOTE,
+        self::changeNote => Skos::CHANGE_NOTE,
 
         self::toBeChecked => OpenSkos::TOBECHECKED,
-        self::dateAccepted => DcTerms::DATEACCEPTED,
+        self::dateAccepted => DcTerms::DATE_ACCEPTED,
         self::acceptedBy => OpenSkos::ACCEPTEDBY,
 
         self::definition => Skos::DEFINITION,
-        self::topConceptOf => Skos::TOPCONCEPTOF,
+        self::topConceptOf => Skos::TOP_CONCEPT_OF,
         self::related => Skos::RELATED,
-        self::relatedMatch => Skos::RELATEDMATCH,
+        self::relatedMatch => Skos::RELATED_MATCH,
 
         self::broader => Skos::BROADER,
-        self::broadMatch => Skos::BROADMATCH,
-        self::broaderMatch => Skos::BROADERMATCH,  /* I'm not certain this should be here, but I've found it lurking in Jena */
-        self::broaderTransitive => Skos::BROADERTRANSITIVE,
+        self::broadMatch => Skos::BROAD_MATCH,
+        self::broaderMatch => Skos::BROADER_MATCH,  /* I'm not certain this should be here, but I've found it lurking in Jena */
+        self::broaderTransitive => Skos::BROADER_TRANSITIVE,
 
         self::narrower => Skos::NARROWER,
-        self::narrowMatch => Skos::NARROWMATCH,
-        self::narrowerTransitive => Skos::NARROWERTRANSITIVE,
+        self::narrowMatch => Skos::NARROW_MATCH,
+        self::narrowerTransitive => Skos::NARROWER_TRANSITIVE,
     ];
 
     private static $xlPredicates = [
-        self::XlPrefLabel => SkosXl::PREFLABEL,
-        self::XlAltLabel => SkosXl::ALTLABEL,
-        self::XlHiddenLabel => SkosXl::HIDDENLABEL,
+        self::XlPrefLabel => SkosXl::PREF_LABEL,
+        self::XlAltLabel => SkosXl::ALT_LABEL,
+        self::XlHiddenLabel => SkosXl::HIDDEN_LABEL,
     ];
 
     private static $nonXlPredicates = [
-        self::prefLabel => Skos::PREFLABEL,
-        self::altLabel => Skos::ALTLABEL,
-        self::hiddenLabel => Skos::HIDDENLABEL,
+        self::prefLabel => Skos::PREF_LABEL,
+        self::altLabel => Skos::ALT_LABEL,
+        self::hiddenLabel => Skos::HIDDEN_LABEL,
     ];
 
     /*
@@ -161,22 +161,22 @@ final class Concept implements RdfResource
         'type' => Rdf::TYPE,
 
         //Labels
-        'prefLabel' => Skos::PREFLABEL,
-        'altLabel' => Skos::ALTLABEL,
-        'hiddenLabel' => Skos::HIDDENLABEL,
+        'prefLabel' => Skos::PREF_LABEL,
+        'altLabel' => Skos::ALT_LABEL,
+        'hiddenLabel' => Skos::HIDDEN_LABEL,
 
-        'prefLabelXl' => SkosXl::PREFLABEL,
-        'altLabelXl' => SkosXl::ALTLABEL,
-        'hiddenLabelXl' => SkosXl::HIDDENLABEL,
+        'prefLabelXl' => SkosXl::PREF_LABEL,
+        'altLabelXl' => SkosXl::ALT_LABEL,
+        'hiddenLabelXl' => SkosXl::HIDDEN_LABEL,
 
         //Notes
         'note' => Skos::NOTE,
         'Note' => Skos::NOTE,
         'example' => Skos::EXAMPLE,
-        'changeNote' => Skos::CHANGENOTE,
-        'historyNote' => Skos::HISTORYNOTE,
-        'scopeNote' => Skos::SCOPENOTE,
-        'editorialNote' => Skos::EDITORIALNOTE,
+        'changeNote' => Skos::CHANGE_NOTE,
+        'historyNote' => Skos::HISTORY_NOTE,
+        'scopeNote' => Skos::SCOPE_NOTE,
+        'editorialNote' => Skos::EDITORIAL_NOTE,
         'notation' => Skos::NOTATION,
 
         //Relations
@@ -184,17 +184,17 @@ final class Concept implements RdfResource
         'broader' => Skos::BROADER,
         'narrower' => Skos::NARROWER,
         'related' => Skos::RELATED,
-        'broaderTransitive' => Skos::BROADERTRANSITIVE,
-        'narrowerTransitive' => Skos::NARROWERTRANSITIVE,
+        'broaderTransitive' => Skos::BROADER_TRANSITIVE,
+        'narrowerTransitive' => Skos::NARROWER_TRANSITIVE,
 
         'mappingRelation' => '?',
 
         //Matches
-        'closeMatch' => Skos::CLOSEMATCH,
-        'exactMatch' => Skos::EXACTMATCH,
-        'broadMatch' => Skos::BROADMATCH,
-        'narrowMatch' => Skos::NARROWMATCH,
-        'relatedMatch' => Skos::RELATEDMATCH,
+        'closeMatch' => Skos::CLOSE_MATCH,
+        'exactMatch' => Skos::EXACT_MATCH,
+        'broadMatch' => Skos::BROAD_MATCH,
+        'narrowMatch' => Skos::NARROW_MATCH,
+        'relatedMatch' => Skos::RELATED_MATCH,
 
         //Mappings
         'openskos:inCollection' => OpenSkos::INSKOSCOLLECTION,
@@ -202,9 +202,9 @@ final class Concept implements RdfResource
         'openskos:institution' => OpenSkos::TENANT,
 
         //Dates
-        'dateSubmitted' => DcTerms::DATESUBMITTED,
+        'dateSubmitted' => DcTerms::DATE_SUBMITTED,
         'modified' => DcTerms::MODIFIED,
-        'dateAccepted' => DcTerms::DATEACCEPTED,
+        'dateAccepted' => DcTerms::DATE_ACCEPTED,
         'openskos:deleted' => OpenSkos::DATE_DELETED,
 
         //Users
@@ -215,8 +215,8 @@ final class Concept implements RdfResource
 
         //Other Stuff
         'openskos:status' => OpenSkos::STATUS,
-        'inScheme' => Skos::INSCHEME,
-        'topConceptOf' => Skos::TOPCONCEPTOF,
+        'inScheme' => Skos::IN_SCHEME,
+        'topConceptOf' => Skos::TOP_CONCEPT_OF,
         'skosxl' => '?',
     ];
 

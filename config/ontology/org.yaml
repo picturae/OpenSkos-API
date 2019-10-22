@@ -3,3 +3,5 @@ parameters:
     name: Org
     prefix: org
     namespace: 'http://www.w3.org/ns/org#'
+    properties:
+      - FormalOrganization
