@@ -42,9 +42,36 @@ class GenerateOntologyCommand extends Command
         $context = $this->params->get('ontology');
 
         // Step 1: build context file
-        file_put_contents("${dir}${ds}Context.php", "<?php\n\n".(Template::render('Context', [
+        file_put_contents("${dir}${ds}Context.php", Template::render('Context', [
             'context' => $context,
-        ])));
+        ]));
+
+        // Build ontology file for referenced vocabulary
+        foreach ($context as $ontology) {
+            if (!array_key_exists('properties', $ontology)) {
+                continue;
+            }
+
+            $name = $ontology['name'];
+
+            // Normalize property descriptors
+            $properties = array_map(function ($propertyDescriptor) {
+                if (is_string($propertyDescriptor)) {
+                    return [
+                        'name' => $propertyDescriptor,
+                        'const' => strtoupper(Template::from_camel_case($propertyDescriptor)),
+                    ];
+                }
+
+                return null;
+            }, $ontology['properties']);
+
+            file_put_contents("${dir}${ds}${name}.php", Template::render('Namespace', [
+                'name' => $ontology['name'],
+                'namespace' => $ontology['namespace'],
+                'properties' => $properties,
+            ]));
+        }
 
         /* // Fetch names to build */
         /* $generateNames = json_decode(file_get_contents(implode(DIRECTORY_SEPARATOR, [ */

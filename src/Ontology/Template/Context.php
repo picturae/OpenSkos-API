@@ -1,3 +1,5 @@
+<?= "<?php\n"; ?>
+
 namespace App\Ontology;
 
 final class Context
