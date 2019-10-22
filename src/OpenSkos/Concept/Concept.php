@@ -99,11 +99,11 @@ final class Concept implements RdfResource
 
         self::contributor => Dc::CONTRIBUTOR,
         self::dateApproved => DcTerms::DATE_APPROVED,
-        self::deletedBy => OpenSkos::DELETEDBY,
+        self::deletedBy => OpenSkos::DELETED_BY,
         self::dateDeleted => OpenSkos::DATE_DELETED,
         self::creator => Dc::CREATOR,
         self::modified => DcTerms::MODIFIED,
-        self::modifiedBy => OpenSkos::MODIFIEDBY,
+        self::modifiedBy => OpenSkos::MODIFIED_BY,
         self::datesubmitted => DcTerms::DATE_SUBMITTED,
 
         self::prefLabel => Skos::PREF_LABEL,
@@ -120,9 +120,9 @@ final class Concept implements RdfResource
         self::scopeNote => Skos::SCOPE_NOTE,
         self::changeNote => Skos::CHANGE_NOTE,
 
-        self::toBeChecked => OpenSkos::TOBECHECKED,
+        self::toBeChecked => OpenSkos::TO_BE_CHECKED,
         self::dateAccepted => DcTerms::DATE_ACCEPTED,
-        self::acceptedBy => OpenSkos::ACCEPTEDBY,
+        self::acceptedBy => OpenSkos::ACCEPTED_BY,
 
         self::definition => Skos::DEFINITION,
         self::topConceptOf => Skos::TOP_CONCEPT_OF,
@@ -197,7 +197,7 @@ final class Concept implements RdfResource
         'relatedMatch' => Skos::RELATED_MATCH,
 
         //Mappings
-        'openskos:inCollection' => OpenSkos::INSKOSCOLLECTION,
+        'openskos:inCollection' => OpenSkos::IN_SKOS_COLLECTION,
         'openskos:set' => OpenSkos::SET,
         'openskos:institution' => OpenSkos::TENANT,
 
@@ -209,9 +209,9 @@ final class Concept implements RdfResource
 
         //Users
         'creator' => Dc::CREATOR,
-        'openskos:modifiedBy' => OpenSkos::MODIFIEDBY,
-        'openskos:acceptedBy' => OpenSkos::ACCEPTEDBY,
-        'openskos:deletedBy' => OpenSkos::DELETEDBY,
+        'openskos:modifiedBy' => OpenSkos::MODIFIED_BY,
+        'openskos:acceptedBy' => OpenSkos::ACCEPTED_BY,
+        'openskos:deletedBy' => OpenSkos::DELETED_BY,
 
         //Other Stuff
         'openskos:status' => OpenSkos::STATUS,

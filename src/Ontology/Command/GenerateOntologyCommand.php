@@ -56,6 +56,7 @@ class GenerateOntologyCommand extends Command
 
             // Normalize property descriptors
             $properties = array_map(function ($propertyDescriptor) {
+                // Handle string property descriptor
                 if (is_string($propertyDescriptor)) {
                     return [
                         'name' => $propertyDescriptor,
@@ -66,10 +67,29 @@ class GenerateOntologyCommand extends Command
                 return null;
             }, $ontology['properties']);
 
+            // Custom consts
+            $consts = [];
+            $lists = [];
+            $ontology['const'] = $ontology['const'] ?? [];
+            foreach ($ontology['const'] as $constName => $constDescriptor) {
+                $constName = strtoupper($constName);
+                switch ($constDescriptor['type']) {
+                    case 'list':
+                        foreach ($ontology[$constDescriptor['source']] as $constValue) {
+                            $upper = strtoupper($constDescriptor['source'].'_'.$constValue);
+                            $consts[$upper] = $constValue;
+                            $lists[$constName][] = $upper;
+                        }
+                        break;
+                }
+            }
+
             file_put_contents("${dir}${ds}${name}.php", Template::render('Namespace', [
                 'name' => $ontology['name'],
                 'namespace' => $ontology['namespace'],
                 'properties' => $properties,
+                'consts' => $consts,
+                'lists' => $lists,
             ]));
         }
 

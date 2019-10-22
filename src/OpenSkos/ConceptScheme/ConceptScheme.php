@@ -47,8 +47,8 @@ final class ConceptScheme implements RdfResource
         self::hasTopConcept => Skos::HAS_TOP_CONCEPT,
         self::status => OpenSkos::STATUS,
         self::dateDeleted => OpenSkos::DATE_DELETED,
-        self::deletedBy => OpenSkos::DELETEDBY,
-        self::modifiedBy => OpenSkos::MODIFIEDBY,
+        self::deletedBy => OpenSkos::DELETED_BY,
+        self::modifiedBy => OpenSkos::MODIFIED_BY,
     ];
 
     /**

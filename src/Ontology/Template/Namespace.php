@@ -26,6 +26,22 @@ final class <?= $name; ?>
 <?php foreach ($properties as $property) { ?>
     const <?= $property['const']; ?> = '<?= $namespace.$property['name']; ?>';
 <?php } ?>
+<?php if (count($consts)) {
+    echo "\n";
+} ?>
+<?php foreach ($consts as $name => $value) { ?>
+    const <?= $name; ?> = '<?= $value; ?>';
+<?php } ?>
+<?php if (count($lists)) {
+    echo "\n";
+} ?>
+<?php foreach ($lists as $name => $values) { ?>
+    const <?= $name; ?> = [
+<?php foreach ($values as $value) { ?>
+        self::<?= $value; ?>,
+<?php } ?>
+    ];
+<?php } ?>
 <?/* TODO:
 
     const STATUS_CANDIDATE = 'candidate';
