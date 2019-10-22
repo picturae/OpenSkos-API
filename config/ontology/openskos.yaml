@@ -1,0 +1,5 @@
+parameters:
+  ontology.openskos:
+    name: OpenSkos
+    prefix: openskos
+    namespace: 'http://openskos.org/xmlns#'

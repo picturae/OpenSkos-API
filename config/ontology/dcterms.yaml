@@ -1,0 +1,5 @@
+parameters:
+  ontology.dcterms:
+    name: DcTerms
+    prefix: dcterms
+    namespace: 'http://purl.org/dc/terms/'

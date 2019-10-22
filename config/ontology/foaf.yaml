@@ -1,0 +1,5 @@
+parameters:
+  ontology.foaf:
+    name: Foaf
+    prefix: foaf
+    namespace: 'http://xmlns.com/foaf/0.1/'

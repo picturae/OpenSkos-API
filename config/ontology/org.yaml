@@ -1,0 +1,5 @@
+parameters:
+  ontology.org:
+    name: Org
+    prefix: org
+    namespace: 'http://www.w3.org/ns/org#'

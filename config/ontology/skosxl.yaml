@@ -1,0 +1,5 @@
+parameters:
+  ontology.skosxl:
+    name: SkosXl
+    prefix: skosxl
+    namespace: 'http://www.w3.org/2008/05/skos-xl#'
