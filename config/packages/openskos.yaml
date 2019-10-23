@@ -35,4 +35,8 @@ services:
 
 
     App\Helper\xsdDateHelper:
-      class: App\Helper\xsdDateHelper
+        class: App\Helper\xsdDateHelper
+
+    App\OpenSkos\Vocabulary\Controller\:
+        resource: '../../src/OpenSkos/Vocabulary/Controller/*'
+        tags: ['controller.service_arguments']

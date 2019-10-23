@@ -65,10 +65,6 @@ class GenerateOntologyCommand extends Command
                         'name' => $propertyDescriptor,
                         'const' => strtoupper(Template::from_camel_case($propertyDescriptor)),
                     ];
-                    if ($ontology['hasVocabulary']) {
-                        $vocabulary[] = [
-                        ];
-                    }
                     continue;
                 }
 
@@ -78,6 +74,15 @@ class GenerateOntologyCommand extends Command
                         'name' => $key,
                         'const' => strtoupper(Template::from_camel_case($key)),
                     ];
+                    if ($ontology['hasVocabulary']) {
+                        $propertyDescriptor['name'] = $key;
+                        $vocabulary[] = $propertyDescriptor;
+                        /* $semanticRelation = $graph->resource('openskos:semanticRelation');
+                            $semanticRelation->setType('rdf:Property');
+                            $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
+                            $semanticRelation->addResource('rdfs:domain', 'openskos:Concept');
+                            $semanticRelation->addResource('rdfs:range', 'openskos:Concept'); */
+                    }
                     continue;
                 }
             }
@@ -102,6 +107,7 @@ class GenerateOntologyCommand extends Command
             file_put_contents("${dir}${ds}${name}.php", Template::render('Namespace', [
                 'context' => $context,
                 'name' => $ontology['name'],
+                'prefix' => $ontology['prefix'],
                 'namespace' => $ontology['namespace'],
                 'properties' => $properties,
                 'vocabulary' => $vocabulary,

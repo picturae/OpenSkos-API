@@ -1,4 +1,9 @@
 <?= "<?php\n"; ?>
+<?php
+$skipFields = [
+    'name',
+];
+?>
 
 /**
  * OpenSKOS.
@@ -27,12 +32,12 @@ final class <?= $name; ?>
     const <?= $property['const']; ?> = '<?= $namespace.$property['name']; ?>';
 <?php } ?>
 <?= count($consts) ? "\n" : ''; ?>
-<?php foreach ($consts as $name => $value) { ?>
-    const <?= $name; ?> = '<?= $value; ?>';
+<?php foreach ($consts as $key => $value) { ?>
+    const <?= $key; ?> = '<?= $value; ?>';
 <?php } ?>
 <?= count($lists) ? "\n" : ''; ?>
-<?php foreach ($lists as $name => $values) { ?>
-    const <?= $name; ?> = [
+<?php foreach ($lists as $key => $values) { ?>
+    const <?= $key; ?> = [
 <?php foreach ($values as $value) { ?>
         self::<?= $value; ?>,
 <?php } ?>
@@ -50,31 +55,33 @@ final class <?= $name; ?>
         $graph = new \EasyRdf_Graph('openskos.org');
 
         // Intro
-        $openskos = $graph->resource('openskos');
+        $openskos = $graph->resource('<?= $namespace; ?>');
         $openskos->setType('owl:Ontology');
-        $openskos->addLiteral('dc:title', 'OpenSkos vocabulary');
+        $openskos->addLiteral('dc:title', '<?= $name; ?> vocabulary');
 
+<?php foreach ($vocabulary as $descriptor) { ?>
+        $<?= $descriptor['name']; ?> = $graph->resource('<?= $prefix; ?>:<?= $descriptor['name']; ?>');
+        $<?= $descriptor['name']; ?>->setType('rdf:Property');
+<?php foreach ($descriptor as $field => $values) {
+    if (in_array($field, $skipFields, true)) {
+        continue;
+    }
+    if (is_string($values)) {
+        $values = [$values];
+    } ?>
+<?php foreach ($values as $value) { ?>
+        $<?= $descriptor['name']; ?>->addResource('<?= $field; ?>', '<?= $value; ?>');
+<?php } /* foreach values as value */ ?>
+<?php
+} /* foreach descriptor as field => values */ ?>
+
+<?php } /* foreach vocabulary as descriptor */ ?>
+<?php /* $semanticRelation = $graph->resource('openskos:semanticRelation');
+        $semanticRelation->setType('rdf:Property');
+        $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
+        $semanticRelation->addResource('rdfs:domain', 'openskos:Concept');
+        $semanticRelation->addResource('rdfs:range', 'openskos:Concept'); */ ?>
         return $graph;
     }
 <?php } /* if count vocabulary */ ?>
-<?/* TODO:
-
-    const STATUS_CANDIDATE = 'candidate';
-    const STATUS_APPROVED = 'approved';
-    const STATUS_REDIRECTED = 'redirected';
-    const STATUS_NOT_COMPLIANT = 'not_compliant';
-    const STATUS_REJECTED = 'rejected';
-    const STATUS_OBSOLETE = 'obsolete';
-    const STATUS_DELETED = 'deleted';
-
-    const STATUSES = [
-        self::STATUS_CANDIDATE,
-        self::STATUS_APPROVED,
-        self::STATUS_REDIRECTED,
-        self::STATUS_NOT_COMPLIANT,
-        self::STATUS_REJECTED,
-        self::STATUS_OBSOLETE,
-        self::STATUS_DELETED,
-    ];
-*/?>
 }
