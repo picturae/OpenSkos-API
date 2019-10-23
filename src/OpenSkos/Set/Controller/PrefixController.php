@@ -5,17 +5,13 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Controller;
 
 use App\OpenSkos\Filters\FilterProcessor;
-use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
-use App\Rdf\Iri;
 use App\Rest\DirectGraphResponse;
-use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class PrefixController
 {
@@ -78,31 +74,5 @@ final class PrefixController
             $graph,
             $apiRequest->getFormat()
         );
-    }
-
-    /**
-     * @Route(path="/set/{id}.{format?}", methods={"GET"})
-     *
-     * @param InternalResourceId $id
-     * @param ApiRequest         $apiRequest
-     * @param SetRepository      $repository
-     *
-     * @return ScalarResponse
-     */
-    public function set(
-        InternalResourceId $id,
-        ApiRequest $apiRequest,
-        SetRepository $repository
-    ): ScalarResponse {
-        $set = $repository->findOneBy(
-            new Iri(OpenSkos::CODE),
-            $id
-        );
-
-        if (null === $set) {
-            throw new NotFoundHttpException("The institution $id could not be retreived.");
-        }
-
-        return new ScalarResponse($set, $apiRequest->getFormat());
     }
 }
