@@ -12,12 +12,6 @@ class GenerateOntologyCommand extends Command
 {
     protected static $defaultName = 'ontology:generate';
 
-    /** @var string */
-    protected static $ontologyNamespace = 'App\\Ontology\\';
-
-    /** @var string */
-    protected static $ontologaDirectory = __DIR__.'/../../Ontology';
-
     /** @var ParameterBagInterface */
     protected $params;
 
