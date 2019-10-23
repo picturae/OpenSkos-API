@@ -21,6 +21,11 @@ class Template
         return ob_get_clean();
     }
 
+    public static function quoteString(string $str): string
+    {
+        return "'".str_replace("'", "\\'", $str)."'";
+    }
+
     /**
      * Translates a camel case string into a string with
      * underscores (e.g. firstName -> first_name).
@@ -33,8 +38,8 @@ class Template
     {
         $func = create_function('$c', 'return strtolower($c[1]) . "_" . strtolower($c[2]);');
         $str = preg_replace_callback('/([a-z])([A-Z])/', $func, $str);
-        $str[0] = strtolower($str[0]);
-        /** @var string $str */
+        $str = lcfirst($str);
+
         return $str;
     }
 
@@ -50,7 +55,7 @@ class Template
     public static function to_camel_case($str, $capitalise_first_char = false)
     {
         if ($capitalise_first_char) {
-            $str[0] = strtoupper($str[0]);
+            $str = ucfirst($str);
         }
         $func = create_function('$c', 'return strtoupper($c[1]);');
 

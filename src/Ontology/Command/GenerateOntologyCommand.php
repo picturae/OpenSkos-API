@@ -46,12 +46,22 @@ class GenerateOntologyCommand extends Command
             'context' => $context,
         ]));
 
+        // Build datatype list
+        $datatype = [];
+        foreach ($context as $ontology) {
+            $ontology['properties'] = $ontology['properties'] ?? [];
+            foreach ($ontology['properties'] as $key => $propertyDescriptor) {
+                if (is_string($propertyDescriptor)) {
+                    $datatype[$ontology['prefix'].':'.$key] = 'literal';
+                } elseif (is_array($propertyDescriptor)) {
+                    $propertyDescriptor['dataType'] = $propertyDescriptor['dataType'] ?? 'literal';
+                    $datatype[$ontology['prefix'].':'.$key] = $propertyDescriptor['dataType'];
+                }
+            }
+        }
+
         // Build ontology file for referenced vocabulary
         foreach ($context as $ontology) {
-            if (!array_key_exists('properties', $ontology)) {
-                continue;
-            }
-
             $name = $ontology['name'];
 
             // Normalize property descriptors
@@ -98,9 +108,19 @@ class GenerateOntologyCommand extends Command
                         foreach ($ontology[$constDescriptor['source']] as $constValue) {
                             $upper = strtoupper($constDescriptor['source'].'_'.$constValue);
                             $consts[$upper] = $constValue;
-                            $lists[$constName][] = $upper;
+                            $lists[$constName][] = 'self::'.$upper;
                         }
                         break;
+                }
+            }
+
+            // Custom lists
+            $ontology['list'] = $ontology['list'] ?? [];
+            foreach ($ontology['list'] as $listName => $listDescriptor) {
+                $listName = strtoupper($listName);
+                foreach ($listDescriptor as $listValue) {
+                    $upper = strtoupper($listValue);
+                    $lists[$listName][] = 'self::'.$upper;
                 }
             }
 
@@ -113,6 +133,7 @@ class GenerateOntologyCommand extends Command
                 'vocabulary' => $vocabulary,
                 'consts' => $consts,
                 'lists' => $lists,
+                'dataType' => $datatype,
             ]));
         }
 

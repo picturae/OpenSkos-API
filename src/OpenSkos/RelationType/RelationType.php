@@ -121,14 +121,14 @@ final class RelationType
         $inScheme = $graph->resource('skos:inScheme');
         $inScheme->setType('rdf:Property');
         $inScheme->addResource('rdf:type', 'owl:ObjectProperty');
-        $inScheme->addResource('rdfs:range', 'openskos:ConceptScheme');
+        $inScheme->addResource('rdfs:range', 'skos:ConceptScheme');
 
         // TODO: inverseOf topConceptOf
         $hasTopConcept = $graph->resource('skos:hasTopConcept');
         $hasTopConcept->setType('rdf:Property');
         $hasTopConcept->addResource('rdf:type', 'owl:ObjectProperty');
-        $hasTopConcept->addResource('rdfs:range', 'openskos:Concept');
-        $hasTopConcept->addResource('rdfs:domain', 'openskos:ConceptScheme');
+        $hasTopConcept->addResource('rdfs:range', 'skos:Concept');
+        $hasTopConcept->addResource('rdfs:domain', 'skos:ConceptScheme');
 
         // TODO: inverseOf hasTopConcept
         $topConceptOf = $graph->resource('skos:topConceptOf');

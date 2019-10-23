@@ -1,7 +1,13 @@
+<?php
+
+namespace App\Ontology\Template;
+
+?>
 <?= "<?php\n"; ?>
 <?php
 $skipFields = [
     'name',
+    'dataType',
 ];
 ?>
 
@@ -39,7 +45,7 @@ final class <?= $name; ?>
 <?php foreach ($lists as $key => $values) { ?>
     const <?= $key; ?> = [
 <?php foreach ($values as $value) { ?>
-        self::<?= $value; ?>,
+        <?= $value; ?>,
 <?php } ?>
     ];
 <?php } ?>
@@ -48,20 +54,21 @@ final class <?= $name; ?>
     public static function vocabulary(): \EasyRdf_Graph
     {
 <?php foreach ($context as $descriptor) { ?>
-        \EasyRdf_Namespace::set('<?= $descriptor['prefix']; ?>', <?= $descriptor['name']; ?>::NAME_SPACE);
+        \EasyRdf_Namespace::set(<?= Template::quoteString($descriptor['prefix']); ?>, <?= $descriptor['name']; ?>::NAME_SPACE);
 <?php } /* foreach */ ?>
 
         // Define graph structure
         $graph = new \EasyRdf_Graph('openskos.org');
 
         // Intro
-        $openskos = $graph->resource('<?= $namespace; ?>');
+        $openskos = $graph->resource(<?= Template::quoteString($namespace); ?>);
         $openskos->setType('owl:Ontology');
-        $openskos->addLiteral('dc:title', '<?= $name; ?> vocabulary');
+        $openskos->addLiteral('dc:title', <?= Template::quoteString($name.' vocabulary'); ?>);
 
 <?php foreach ($vocabulary as $descriptor) { ?>
-        $<?= $descriptor['name']; ?> = $graph->resource('<?= $prefix; ?>:<?= $descriptor['name']; ?>');
+        $<?= $descriptor['name']; ?> = $graph->resource(<?= Template::quoteString($prefix.':'.$descriptor['name']); ?>);
         $<?= $descriptor['name']; ?>->setType('rdf:Property');
+        $<?= $descriptor['name']; ?>->addLiteral('openskos:dataType', '<?= $descriptor['dataType'] ?? 'literal'; ?>');
 <?php foreach ($descriptor as $field => $values) {
     if (in_array($field, $skipFields, true)) {
         continue;
@@ -70,17 +77,12 @@ final class <?= $name; ?>
         $values = [$values];
     } ?>
 <?php foreach ($values as $value) { ?>
-        $<?= $descriptor['name']; ?>->addResource('<?= $field; ?>', '<?= $value; ?>');
+        $<?= $descriptor['name']; ?>->add<?= ucfirst($dataType[$field] ?? 'literal'); ?>(<?= Template::quoteString($field); ?>, <?= Template::quoteString($value); ?>);
 <?php } /* foreach values as value */ ?>
 <?php
 } /* foreach descriptor as field => values */ ?>
 
 <?php } /* foreach vocabulary as descriptor */ ?>
-<?php /* $semanticRelation = $graph->resource('openskos:semanticRelation');
-        $semanticRelation->setType('rdf:Property');
-        $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
-        $semanticRelation->addResource('rdfs:domain', 'openskos:Concept');
-        $semanticRelation->addResource('rdfs:range', 'openskos:Concept'); */ ?>
         return $graph;
     }
 <?php } /* if count vocabulary */ ?>

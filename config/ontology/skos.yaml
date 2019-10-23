@@ -5,50 +5,84 @@ parameters:
     namespace: 'http://www.w3.org/2004/02/skos/core#'
     properties:
 
-      # Core
-      - Concept
-      - ConceptScheme
-      - inScheme
-      - hasTopConcept
-      - topConceptOf
+      Concept:
+        dataType: resource
+      ConceptScheme:
+        dataType: resource
+      inScheme:
+        dataType: resource
+      hasTopConcept:
+        dataType: literal
+      topConceptOf:
+        dataType: resource
 
-      # Lexical label
-      - altLabel
-      - hiddenLabel
-      - prefLabel
+
+      # Labels
+      altLabel:
+      hiddenLabel:
+      prefLabel:
+
 
       # Notations
-      - notation
+      notation:
+        dataType: literal
+
 
       # Documentation properties
-      - changeNote
-      - definition
-      - editorialNote
-      - example
-      - historyNote
-      - note
-      - scopeNote
+      changeNote:
+        dataType: literal
+      definition:
+        dataType: literal
+      editorialNote:
+        dataType: literal
+      example:
+        dataType: literal
+      historyNote:
+        dataType: literal
+      note:
+        dataType: literal
+      scopeNote:
+        dataType: literal
+
 
       # Semantic relations
-      - broader
-      - broaderTransitive
-      - narrower
-      - narrowerTransitive
-      - related
-      - semanticRelation
+      broader:
+        dataType: resource
+      broaderTransitive:
+        dataType: resource
+      narrower:
+        dataType: resource
+      narrowerTransitive:
+        dataType: resource
+      related:
+        dataType: resource
+      semanticRelation:
+        dataType: resource
 
       # Concept collections
-      - Collection
-      - OrderedCollection
-      - member
-      - memberList
+      Collection:
+        dataType: resource
+      OrderedCollection:
+        dataType: resource
+      member:
+        dataType: resource
+      memberList:
+        dataType: resource
 
       # Mapping properties
-      - broadMatch
-      - broaderMatch
-      - closeMatch
-      - exactMatch
-      - mappingRelation
-      - narrowMatch
-      - narrowerMatch
-      - relatedMatch
+      broadMatch:
+        dataType: resource
+      broaderMatch:
+        dataType: resource
+      closeMatch:
+        dataType: resource
+      exactMatch:
+        dataType: resource
+      mappingRelation:
+        dataType: resource
+      narrowMatch:
+        dataType: resource
+      narrowerMatch:
+        dataType: resource
+      relatedMatch:
+        dataType: resource

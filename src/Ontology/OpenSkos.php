@@ -22,6 +22,7 @@ namespace App\Ontology;
 final class OpenSkos
 {
     const NAME_SPACE = 'http://openskos.org/xmlns#';
+    const DATA_TYPE = 'http://openskos.org/xmlns#dataType';
     const TENANT = 'http://openskos.org/xmlns#tenant';
     const STATUS = 'http://openskos.org/xmlns#status';
     const TO_BE_CHECKED = 'http://openskos.org/xmlns#toBeChecked';
@@ -94,120 +95,157 @@ final class OpenSkos
         $openskos->setType('owl:Ontology');
         $openskos->addLiteral('dc:title', 'OpenSkos vocabulary');
 
+        $dataType = $graph->resource('openskos:dataType');
+        $dataType->setType('rdf:Property');
+        $dataType->addLiteral('openskos:dataType', 'literal');
+        $dataType->addResource('rdf:type', 'owl:ObjectProperty');
+        $dataType->addLiteral('rdfs:comment', 'The type of data that\'s supposed to go in the described field');
+
         $tenant = $graph->resource('openskos:tenant');
         $tenant->setType('rdf:Property');
+        $tenant->addLiteral('openskos:dataType', 'literal');
         $tenant->addResource('rdf:type', 'owl:ObjectProperty');
+        $tenant->addLiteral('rdfs:comment', 'A reference to an org:FormalOrganization by it\'s openskos:code field');
 
         $status = $graph->resource('openskos:status');
         $status->setType('rdf:Property');
+        $status->addLiteral('openskos:dataType', 'literal');
         $status->addResource('rdf:type', 'owl:ObjectProperty');
 
         $toBeChecked = $graph->resource('openskos:toBeChecked');
         $toBeChecked->setType('rdf:Property');
+        $toBeChecked->addLiteral('openskos:dataType', 'literal');
         $toBeChecked->addResource('rdf:type', 'owl:ObjectProperty');
 
         $dateDeleted = $graph->resource('openskos:dateDeleted');
         $dateDeleted->setType('rdf:Property');
+        $dateDeleted->addLiteral('openskos:dataType', 'literal');
         $dateDeleted->addResource('rdf:type', 'owl:ObjectProperty');
 
         $deletedBy = $graph->resource('openskos:deletedBy');
         $deletedBy->setType('rdf:Property');
+        $deletedBy->addLiteral('openskos:dataType', 'resource');
         $deletedBy->addResource('rdf:type', 'owl:ObjectProperty');
 
         $acceptedBy = $graph->resource('openskos:acceptedBy');
         $acceptedBy->setType('rdf:Property');
+        $acceptedBy->addLiteral('openskos:dataType', 'resource');
         $acceptedBy->addResource('rdf:type', 'owl:ObjectProperty');
 
         $modifiedBy = $graph->resource('openskos:modifiedBy');
         $modifiedBy->setType('rdf:Property');
+        $modifiedBy->addLiteral('openskos:dataType', 'resource');
         $modifiedBy->addResource('rdf:type', 'owl:ObjectProperty');
 
         $uuid = $graph->resource('openskos:uuid');
         $uuid->setType('rdf:Property');
+        $uuid->addLiteral('openskos:dataType', 'literal');
         $uuid->addResource('rdf:type', 'owl:ObjectProperty');
 
         $set = $graph->resource('openskos:set');
         $set->setType('rdf:Property');
+        $set->addLiteral('openskos:dataType', 'resource');
         $set->addResource('rdf:type', 'owl:ObjectProperty');
 
         $role = $graph->resource('openskos:role');
         $role->setType('rdf:Property');
+        $role->addLiteral('openskos:dataType', 'literal');
         $role->addResource('rdf:type', 'owl:ObjectProperty');
 
         $inSkosCollection = $graph->resource('openskos:inSkosCollection');
         $inSkosCollection->setType('rdf:Property');
+        $inSkosCollection->addLiteral('openskos:dataType', 'literal');
         $inSkosCollection->addResource('rdf:type', 'owl:ObjectProperty');
 
         $code = $graph->resource('openskos:code');
         $code->setType('rdf:Property');
+        $code->addLiteral('openskos:dataType', 'literal');
         $code->addResource('rdf:type', 'owl:ObjectProperty');
+        $code->addLiteral('rdfs:comment', 'Short unique identifier for an org:FormalOrganization');
 
         $name = $graph->resource('openskos:name');
         $name->setType('rdf:Property');
+        $name->addLiteral('openskos:dataType', 'literal');
         $name->addResource('rdf:type', 'owl:ObjectProperty');
 
         $disableSearchInOtherTenants = $graph->resource('openskos:disableSearchInOtherTenants');
         $disableSearchInOtherTenants->setType('rdf:Property');
+        $disableSearchInOtherTenants->addLiteral('openskos:dataType', 'literal');
         $disableSearchInOtherTenants->addResource('rdf:type', 'owl:ObjectProperty');
 
         $enableStatussesSystem = $graph->resource('openskos:enableStatussesSystem');
         $enableStatussesSystem->setType('rdf:Property');
+        $enableStatussesSystem->addLiteral('openskos:dataType', 'literal');
         $enableStatussesSystem->addResource('rdf:type', 'owl:ObjectProperty');
 
         $allow_oai = $graph->resource('openskos:allow_oai');
         $allow_oai->setType('rdf:Property');
+        $allow_oai->addLiteral('openskos:dataType', 'literal');
         $allow_oai->addResource('rdf:type', 'owl:ObjectProperty');
 
         $oai_baseURL = $graph->resource('openskos:oai_baseURL');
         $oai_baseURL->setType('rdf:Property');
+        $oai_baseURL->addLiteral('openskos:dataType', 'literal');
         $oai_baseURL->addResource('rdf:type', 'owl:ObjectProperty');
 
         $conceptBaseUri = $graph->resource('openskos:conceptBaseUri');
         $conceptBaseUri->setType('rdf:Property');
+        $conceptBaseUri->addLiteral('openskos:dataType', 'literal');
         $conceptBaseUri->addResource('rdf:type', 'owl:ObjectProperty');
 
         $licenceURL = $graph->resource('openskos:licenceURL');
         $licenceURL->setType('rdf:Property');
+        $licenceURL->addLiteral('openskos:dataType', 'literal');
         $licenceURL->addResource('rdf:type', 'owl:ObjectProperty');
 
         $webpage = $graph->resource('openskos:webpage');
         $webpage->setType('rdf:Property');
+        $webpage->addLiteral('openskos:dataType', 'literal');
         $webpage->addResource('rdf:type', 'owl:ObjectProperty');
 
         $enableskosxl = $graph->resource('openskos:enableskosxl');
         $enableskosxl->setType('rdf:Property');
+        $enableskosxl->addLiteral('openskos:dataType', 'literal');
         $enableskosxl->addResource('rdf:type', 'owl:ObjectProperty');
 
         $notationuniquepertenant = $graph->resource('openskos:notationuniquepertenant');
         $notationuniquepertenant->setType('rdf:Property');
+        $notationuniquepertenant->addLiteral('openskos:dataType', 'literal');
         $notationuniquepertenant->addResource('rdf:type', 'owl:ObjectProperty');
 
         $notationautogenerated = $graph->resource('openskos:notationautogenerated');
         $notationautogenerated->setType('rdf:Property');
+        $notationautogenerated->addLiteral('openskos:dataType', 'literal');
         $notationautogenerated->addResource('rdf:type', 'owl:ObjectProperty');
 
         $usertype = $graph->resource('openskos:usertype');
         $usertype->setType('rdf:Property');
+        $usertype->addLiteral('openskos:dataType', 'literal');
         $usertype->addResource('rdf:type', 'owl:ObjectProperty');
 
         $apikey = $graph->resource('openskos:apikey');
         $apikey->setType('rdf:Property');
+        $apikey->addLiteral('openskos:dataType', 'literal');
         $apikey->addResource('rdf:type', 'owl:ObjectProperty');
 
         $isReplacedBy = $graph->resource('openskos:isReplacedBy');
         $isReplacedBy->setType('rdf:Property');
+        $isReplacedBy->addLiteral('openskos:dataType', 'resource');
         $isReplacedBy->addResource('rdf:type', 'owl:ObjectProperty');
 
         $replaces = $graph->resource('openskos:replaces');
         $replaces->setType('rdf:Property');
+        $replaces->addLiteral('openskos:dataType', 'resource');
         $replaces->addResource('rdf:type', 'owl:ObjectProperty');
 
         $inCollection = $graph->resource('openskos:inCollection');
         $inCollection->setType('rdf:Property');
+        $inCollection->addLiteral('openskos:dataType', 'resource');
         $inCollection->addResource('rdf:type', 'owl:ObjectProperty');
 
         $inSet = $graph->resource('openskos:inSet');
         $inSet->setType('rdf:Property');
+        $inSet->addLiteral('openskos:dataType', 'resource');
         $inSet->addResource('rdf:type', 'owl:ObjectProperty');
 
         return $graph;

@@ -4,6 +4,9 @@ parameters:
     prefix: foaf
     namespace: 'http://xmlns.com/foaf/0.1/'
     properties:
-      - name
-      - Person
-      - mbox
+      Person:
+        dataType: class
+      name:
+        dataType: literal
+      mbox:
+        dataType: literal

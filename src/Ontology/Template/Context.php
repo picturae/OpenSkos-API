@@ -1,3 +1,8 @@
+<?php
+
+namespace App\Ontology\Template;
+
+?>
 <?= "<?php\n"; ?>
 
 namespace App\Ontology;
