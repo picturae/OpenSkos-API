@@ -3,6 +3,7 @@ parameters:
     name: OpenSkos
     prefix: openskos
     namespace: 'http://openskos.org/xmlns#'
+    hasVocabulary: true
     properties:
       - tenant
       - status

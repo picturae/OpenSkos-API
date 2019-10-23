@@ -26,15 +26,11 @@ final class <?= $name; ?>
 <?php foreach ($properties as $property) { ?>
     const <?= $property['const']; ?> = '<?= $namespace.$property['name']; ?>';
 <?php } ?>
-<?php if (count($consts)) {
-    echo "\n";
-} ?>
+<?= count($consts) ? "\n" : ''; ?>
 <?php foreach ($consts as $name => $value) { ?>
     const <?= $name; ?> = '<?= $value; ?>';
 <?php } ?>
-<?php if (count($lists)) {
-    echo "\n";
-} ?>
+<?= count($lists) ? "\n" : ''; ?>
 <?php foreach ($lists as $name => $values) { ?>
     const <?= $name; ?> = [
 <?php foreach ($values as $value) { ?>
@@ -42,6 +38,25 @@ final class <?= $name; ?>
 <?php } ?>
     ];
 <?php } ?>
+<?php if (count($vocabulary)) { ?>
+
+    public static function vocabulary(): \EasyRdf_Graph
+    {
+<?php foreach ($context as $descriptor) { ?>
+        \EasyRdf_Namespace::set('<?= $descriptor['prefix']; ?>', <?= $descriptor['name']; ?>::NAME_SPACE);
+<?php } /* foreach */ ?>
+
+        // Define graph structure
+        $graph = new \EasyRdf_Graph('openskos.org');
+
+        // Intro
+        $openskos = $graph->resource('openskos');
+        $openskos->setType('owl:Ontology');
+        $openskos->addLiteral('dc:title', 'OpenSkos vocabulary');
+
+        return $graph;
+    }
+<?php } /* if count vocabulary */ ?>
 <?/* TODO:
 
     const STATUS_CANDIDATE = 'candidate';

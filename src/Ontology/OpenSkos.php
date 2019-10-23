@@ -87,4 +87,31 @@ final class OpenSkos
         self::STATUS_OBSOLETE,
         self::STATUS_DELETED,
     ];
+
+    public static function vocabulary(): \EasyRdf_Graph
+    {
+        \EasyRdf_Namespace::set('dc', Dc::NAME_SPACE);
+        \EasyRdf_Namespace::set('dcmi', Dcmi::NAME_SPACE);
+        \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
+        \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
+        \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
+        \EasyRdf_Namespace::set('org', Org::NAME_SPACE);
+        \EasyRdf_Namespace::set('owl', Owl::NAME_SPACE);
+        \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
+        \EasyRdf_Namespace::set('rdfs', Rdfs::NAME_SPACE);
+        \EasyRdf_Namespace::set('skos', Skos::NAME_SPACE);
+        \EasyRdf_Namespace::set('skosxl', SkosXl::NAME_SPACE);
+        \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
+        \EasyRdf_Namespace::set('xsd', Xsd::NAME_SPACE);
+
+        // Define graph structure
+        $graph = new \EasyRdf_Graph('openskos.org');
+
+        // Intro
+        $openskos = $graph->resource('openskos');
+        $openskos->setType('owl:Ontology');
+        $openskos->addLiteral('dc:title', 'OpenSkos vocabulary');
+
+        return $graph;
+    }
 }

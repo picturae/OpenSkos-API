@@ -55,17 +55,32 @@ class GenerateOntologyCommand extends Command
             $name = $ontology['name'];
 
             // Normalize property descriptors
-            $properties = array_map(function ($propertyDescriptor) {
+            $properties = [];
+            $vocabulary = [];
+            $ontology['hasVocabulary'] = $ontology['hasVocabulary'] ?? false;
+            foreach ($ontology['properties'] as $key => $propertyDescriptor) {
                 // Handle string property descriptor
                 if (is_string($propertyDescriptor)) {
-                    return [
+                    $properties[] = [
                         'name' => $propertyDescriptor,
                         'const' => strtoupper(Template::from_camel_case($propertyDescriptor)),
                     ];
+                    if ($ontology['hasVocabulary']) {
+                        $vocabulary[] = [
+                        ];
+                    }
+                    continue;
                 }
 
-                return null;
-            }, $ontology['properties']);
+                // Handle more complex property
+                if (is_array($propertyDescriptor)) {
+                    $properties[] = [
+                        'name' => $key,
+                        'const' => strtoupper(Template::from_camel_case($key)),
+                    ];
+                    continue;
+                }
+            }
 
             // Custom consts
             $consts = [];
@@ -85,9 +100,11 @@ class GenerateOntologyCommand extends Command
             }
 
             file_put_contents("${dir}${ds}${name}.php", Template::render('Namespace', [
+                'context' => $context,
                 'name' => $ontology['name'],
                 'namespace' => $ontology['namespace'],
                 'properties' => $properties,
+                'vocabulary' => $vocabulary,
                 'consts' => $consts,
                 'lists' => $lists,
             ]));
