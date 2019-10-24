@@ -57,19 +57,6 @@ abstract class AbstractEntity
                 ->from(static::getTable(), 't')
                 ->where('1 = 1');
 
-            /* // Fetch more data from the database */
-            /* $stmt = $connection */
-            /*     ->createQueryBuilder() */
-            /*     ->select('*') */
-            /*     ->from($this->annotations['table'], 't') */
-            /*     ->where('t.'.($this->annotations['uuid']).' = :uuid') */
-            /*     ->setParameter(':uuid', $uri) */
-            /*     ->execute(); */
-            /* if (is_int($stmt)) { */
-            /*     return []; */
-            /* } */
-            /* $rawDocument = $stmt->fetch(); */
-
             $searchData = array_filter($this->__toArray());
             foreach ($searchData as $name => $value) {
                 $stmt = $stmt->andWhere("t.${name} = :${name}");
