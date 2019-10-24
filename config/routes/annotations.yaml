@@ -17,6 +17,9 @@ conceptscheme:
     resource: ../../src/OpenSkos/ConceptScheme/Controller
     type: annotation
 
+label:
+    resource: ../../src/OpenSkos/Label/Controller
+    type: annotation
 
 concept:
     resource: ../../src/OpenSkos/Concept/Controller
