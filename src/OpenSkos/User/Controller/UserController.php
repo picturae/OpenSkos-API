@@ -59,10 +59,40 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
-        $users = $repository->all(
+        $nullResponse = new ListResponse(
+            [], 0,
             $apiRequest->getOffset(),
-            $apiRequest->getLimit(),
+            $apiRequest->getFormat()
         );
+
+        $auth = $apiRequest->getAuthentication();
+        if (is_null($auth)) {
+            return $nullResponse;
+        }
+
+        if ($auth->isAdministrator()) {
+            $users = $repository->all(
+                $apiRequest->getOffset(),
+                $apiRequest->getLimit(),
+            );
+        } elseif ($auth->isAuthenticated()) {
+            // Authenticated = only fetch yourself
+            $user = $auth->getUser();
+            if (is_null($user)) {
+                return $nullResponse;
+            }
+
+            $uri = $user->getUri();
+            if (is_null($uri)) {
+                return $nullResponse;
+            }
+
+            $users = [
+                $repository->get(new Iri($uri)),
+            ];
+        } else {
+            $users = [];
+        }
 
         return new ListResponse(
             $users,
@@ -97,7 +127,9 @@ final class UserController
         \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
 
         if (array_key_exists('USER_IRI_PREFIX', $_ENV)) {
-            $id = $_ENV['USER_IRI_PREFIX'].$id;
+            if ('http' !== substr($id, 0, 4)) {
+                $id = $_ENV['USER_IRI_PREFIX'].$id;
+            }
         }
         $user = $repository->get(new Iri($id));
 

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Security;
+namespace App\Entity;
 
 use App\Annotation\Document;
-use App\Entity\AbstractEntity;
 
 /**
  * @Document\Table("user")
@@ -26,7 +25,7 @@ class User extends AbstractEntity
     protected $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $password;
 
@@ -53,7 +52,7 @@ class User extends AbstractEntity
     /**
      * @var string[]
      */
-    protected $role;
+    protected $role = [];
 
     /**
      * @var array|null
@@ -146,8 +145,8 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param string $password A plain or hashed password
-     * @param bool   $hash     Whether or not the password needs to be hashed
+     * @param string|null $password A plain or hashed password
+     * @param bool        $hash     Whether or not the password needs to be hashed
      *
      * @return self
      */
@@ -162,7 +161,7 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getPassword()
     {

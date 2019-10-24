@@ -213,4 +213,12 @@ final class ApiRequest
     {
         return $this->foreignUri;
     }
+
+    /**
+     * @return Authentication|null
+     */
+    public function getAuthentication()
+    {
+        return $this->authentication;
+    }
 }
