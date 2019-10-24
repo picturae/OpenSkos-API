@@ -58,6 +58,12 @@ class Authentication
         $user = new User($knownData);
         $user->populate();
 
+        // Only api users are allowed to authenticate through this method
+        $userType = $user->getType();
+        if (!in_array($userType, ['both', 'api'], true)) {
+            return;
+        }
+
         // Fetch the user's roles
         // Verifies if the client is logged in as well
         $roles = $user->getRole();
