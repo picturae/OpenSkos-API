@@ -122,4 +122,11 @@ final class SparqlLabelRepository implements LabelRepository
 
         return $res;
     }
+
+    public function getOneWithoutUuid(InternalResourceId $uuid): ?Label
+    {
+        $res = $this->skosRepository->getOneWithoutUuid(new Iri(SkosXl::LABEL), $uuid);
+
+        return $res;
+    }
 }

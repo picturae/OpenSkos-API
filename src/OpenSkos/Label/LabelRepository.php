@@ -54,4 +54,11 @@ interface LabelRepository
      * @return array
      */
     public function findManyByIriList(array $iris): array;
+
+    /**
+     * @param InternalResourceId $subject
+     *
+     * @return Label|null
+     */
+    public function getOneWithoutUuid(InternalResourceId $subject): ?Label;
 }

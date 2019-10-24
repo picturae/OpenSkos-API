@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace App\OpenSkos\Label\Controller;
 
 use App\OpenSkos\Filters\FilterProcessor;
-/* use App\Ontology\OpenSkos; */
-/* use App\OpenSkos\ConceptScheme\ConceptSchemeRepository; */
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
-/* use App\OpenSkos\InternalResourceId; */
-/* use App\Rdf\Iri; */
+use App\OpenSkos\InternalResourceId;
 use App\Rest\ListResponse;
-/* use App\Rest\ScalarResponse; */
+use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-/* use Symfony\Component\HttpKernel\Exception\NotFoundHttpException; */
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -71,29 +68,29 @@ final class LabelController
         );
     }
 
-    /*/***/
-    /* * @Route(path="/conceptscheme/{id}.{format?}", methods={"GET"})*/
-    /* **/
-    /* * @param InternalResourceId      $id*/
-    /* * @param ApiRequest              $apiRequest*/
-    /* * @param ConceptSchemeRepository $repository*/
-    /* **/
-    /* * @return ScalarResponse*/
-    /* */
-    /*public function conceptscheme(*/
-    /*    InternalResourceId $id,*/
-    /*    ApiRequest $apiRequest,*/
-    /*    ConceptSchemeRepository $repository*/
-    /*): ScalarResponse {*/
-    /*    $conceptscheme = $repository->findOneBy(*/
-    /*        new Iri(OpenSkos::UUID),*/
-    /*        $id*/
-    /*    );*/
+    /**
+     * TODO: In OpenSkos2, UUID needs to be added to labels
+     * TODO: Fetch by UUID instead of regex.
+     *
+     * @Route(path="/label/{id}.{format?}", methods={"GET"})
+     *
+     * @param InternalResourceId $id
+     * @param ApiRequest         $apiRequest
+     * @param LabelRepository    $repository
+     *
+     * @return ScalarResponse
+     */
+    public function getLabel(
+       InternalResourceId $id,
+       ApiRequest $apiRequest,
+       LabelRepository $repository
+    ): ScalarResponse {
+        $label = $repository->getOneWithoutUuid($id);
 
-        /* if (null === $conceptscheme) { */
-        /*     throw new NotFoundHttpException("The conceptscheme $id could not be retreived."); */
-        /* } */
+        if (null === $label) {
+            throw new NotFoundHttpException("The label $id could not be retreived.");
+        }
 
-        /* return new ScalarResponse($conceptscheme, $apiRequest->getFormat()); */
-    /* } */
+        return new ScalarResponse($label, $apiRequest->getFormat());
+    }
 }
