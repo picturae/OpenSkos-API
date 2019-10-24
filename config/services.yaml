@@ -38,3 +38,6 @@ services:
 
   App\OpenSkos\Filters\SolrFilterProcessor:
     autowire: true
+
+  App\Database\Doctrine:
+    autowire: true
