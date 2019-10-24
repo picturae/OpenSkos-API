@@ -23,13 +23,13 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     private $formatFactory;
 
     /**
-     * @var Doctrine
+     * @var Doctrine|null
      */
     private $connection;
 
     public function __construct(
         RdfFormatFactory $formatFactory,
-        Doctrine $connection
+        ?Doctrine $connection
     ) {
         $this->formatFactory = $formatFactory;
         $this->connection = $connection;
@@ -126,8 +126,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
             $sets,
             $searchProfile,
             $foreignUri,
-            null
-            /* new Authentication($request) */
+            new Authentication($request)
         );
     }
 }

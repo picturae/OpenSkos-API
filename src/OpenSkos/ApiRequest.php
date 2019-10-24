@@ -7,6 +7,7 @@ namespace App\OpenSkos;
 use App\OpenSkos\Exception\InvalidApiRequestLevel;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormat;
+use App\Security\Authentication;
 
 final class ApiRequest
 {
@@ -56,17 +57,23 @@ final class ApiRequest
     private $searchProfile;
 
     /**
+     * @var Authentication
+     */
+    private $authentication;
+
+    /**
      * ApiRequest constructor.
      *
-     * @param array          $allParams
-     * @param RdfFormat|null $format
-     * @param int            $level
-     * @param int            $limit
-     * @param int            $offset
-     * @param array          $institutions
-     * @param array          $sets
-     * @param int            $searchProfile
-     * @param string|null    $foreignUri
+     * @param array               $allParams
+     * @param RdfFormat|null      $format
+     * @param int                 $level
+     * @param int                 $limit
+     * @param int                 $offset
+     * @param array               $institutions
+     * @param array               $sets
+     * @param int                 $searchProfile
+     * @param string|null         $foreignUri
+     * @param Authentication|null $authentication
      */
     public function __construct(
         array $allParams = [],
@@ -77,14 +84,14 @@ final class ApiRequest
         array $institutions = [],
         array $sets = [],
         int $searchProfile = 0,
-        string $foreignUri = null
+        string $foreignUri = null,
+        Authentication $authentication = null
     ) {
         if (null === $format) {
             $format = JsonLd::instance();
         }
 
         $this->allParams = $allParams;
-
         $this->format = $format;
         $this->level = $level;
         $this->offset = $offset;
@@ -93,6 +100,10 @@ final class ApiRequest
         $this->sets = $sets;
         $this->searchProfile = $searchProfile;
         $this->foreignUri = $foreignUri;
+
+        if (!is_null($authentication)) {
+            $this->authentication = $authentication;
+        }
 
         if ($level < 1 || $level > 4) {
             throw new InvalidApiRequestLevel($level);
