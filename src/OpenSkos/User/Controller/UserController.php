@@ -10,17 +10,14 @@ use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
 use App\OpenSkos\User\User;
-use App\Ontology\DcTerms;
-use App\Ontology\Foaf;
-use App\Ontology\OpenSkos;
-use App\Ontology\Rdf;
-use App\Ontology\VCard;
+use App\Ontology\Context;
 use App\Rdf\Iri;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\OpenSkos\User\UserRepository;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class UserController
 {
@@ -52,6 +49,8 @@ final class UserController
      * @param Connection     $connection
      * @param ApiRequest     $apiRequest
      *
+     * @throws AccessDenieHttpdException;
+     *
      * @return ListResponse
      */
     public function geAllUsers(
@@ -59,39 +58,40 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
-        $nullResponse = new ListResponse(
-            [], 0,
-            $apiRequest->getOffset(),
-            $apiRequest->getFormat()
-        );
+        Context::setupEasyRdf();
 
+        // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
         if (is_null($auth)) {
-            return $nullResponse;
+            throw new AccessDeniedHttpException();
+        }
+        if (!$auth->isAuthenticated()) {
+            throw new AccessDeniedHttpException();
         }
 
         if ($auth->isAdministrator()) {
+            // Administrators are allowed to see all users
             $users = $repository->all(
                 $apiRequest->getOffset(),
                 $apiRequest->getLimit(),
             );
-        } elseif ($auth->isAuthenticated()) {
-            // Authenticated = only fetch yourself
-            $user = $auth->getUser();
-            if (is_null($user)) {
-                return $nullResponse;
+        } else {
+            // We must have a user (likely, but still needs to be checked)
+            $authenticatedUser = $auth->getUser();
+            if (is_null($authenticatedUser)) {
+                throw new AccessDeniedHttpException();
             }
 
-            $uri = $user->getUri();
+            // If we didn't find a uri, we can't fully  fetch our user
+            $uri = $authenticatedUser->getUri();
             if (is_null($uri)) {
-                return $nullResponse;
+                throw new AccessDeniedHttpException();
             }
 
+            // Fetch an array of our authenticated user
             $users = [
                 $repository->get(new Iri($uri)),
             ];
-        } else {
-            $users = [];
         }
 
         return new ListResponse(
@@ -111,6 +111,8 @@ final class UserController
      * @param ApiRequest      $apiRequest
      * @param LabelRepository $labelRepository
      *
+     * @throws AccessDenieHttpdException;
+     *
      * @return ScalarResponse
      */
     public function getOneUser(
@@ -120,18 +122,47 @@ final class UserController
         ApiRequest $apiRequest,
         LabelRepository $labelRepository
     ): ScalarResponse {
-        \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
-        \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
-        \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
-        \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
-        \EasyRdf_Namespace::set('vcard', VCard::NAME_SPACE);
+        Context::setupEasyRdf();
 
+        // Not authenticated = no data
+        $auth = $apiRequest->getAuthentication();
+        if (is_null($auth)) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$auth->isAuthenticated()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        // Prepend known user prefix if it doesn't start with 'http'
         if (array_key_exists('USER_IRI_PREFIX', $_ENV)) {
             if ('http' !== substr($id, 0, 4)) {
                 $id = $_ENV['USER_IRI_PREFIX'].$id;
             }
         }
-        $user = $repository->get(new Iri($id));
+
+        // An administrator is allowed to see anyone
+        if (!$auth->isAdministrator()) {
+            $user = $repository->get(new Iri($id));
+        } else {
+            // We must have a user (likely, but still needs to be checked)
+            $authenticatedUser = $auth->getUser();
+            if (is_null($authenticatedUser)) {
+                throw new AccessDeniedHttpException();
+            }
+
+            // If we didn't find a uri, we can't fully  fetch our user
+            $uri = $authenticatedUser->getUri();
+            if (is_null($uri)) {
+                throw new AccessDeniedHttpException();
+            }
+
+            // Denied if the authenticated user is not fetching itself
+            if ($uri !== $id) {
+                throw new AccessDeniedHttpException();
+            }
+
+            $user = $repository->get(new Iri($id));
+        }
 
         if (null === $user) {
             throw new NotFoundHttpException("The user $id could not be retreived.");

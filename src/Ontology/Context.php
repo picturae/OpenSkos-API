@@ -112,4 +112,11 @@ final class Context
 
         return $result;
     }
+
+    public static function setupEasyRdf(): void
+    {
+        foreach (self::prefixes as $prefix => $namespace) {
+            \EasyRdf_Namespace::set($prefix, $namespace);
+        }
+    }
 }
