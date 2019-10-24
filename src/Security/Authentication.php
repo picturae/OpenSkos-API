@@ -9,12 +9,19 @@ class Authentication
     public function __construct(
         Request $request
     ) {
+        // Fetch bare token
         $token = null;
+        $token = $token ?? $request->query->get('token');
+        $token = $token ?? $request->headers->get('authorization');
+        if (is_null($token)) {
+            return;
+        }
 
-        $user = new User([
-            'apikey' => 'pizza',
-        ]);
+        // Remove known prefixes
+        $token = preg_replace('/^Bearer /', '', $token);
 
-        /* var_dump($user); */
+        // Fetch user
+        $user = new User(['apikey' => $token]);
+        $user->populate();
     }
 }

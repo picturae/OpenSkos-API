@@ -387,7 +387,7 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param mixed $enableSkosXl
+     * @param mixed|null $enableSkosXl
      *
      * @return self
      */
