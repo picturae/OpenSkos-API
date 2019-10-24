@@ -33,11 +33,29 @@ class Authentication
             return;
         }
 
-        // Remove known prefixes
-        $token = preg_replace('/^Bearer /', '', $token);
+        // The data we'll insert into the user
+        $knownData = [];
+
+        // Detect & remove prefix
+        preg_match('/^(bearer|basic) /i', $token, $prefix);
+        $token = preg_replace('/^(bearer|basic) /i', '', $token);
+        $knownData['apikey'] = $token;
+
+        // Handle special prefixes
+        if (count($prefix)) {
+            $prefix = strtolower($prefix[1]);
+            switch ($prefix) {
+                case 'basic':
+                    $decoded = base64_decode($token, true);
+                    $parts = explode(':', $decoded);
+                    $knownData['email'] = trim(array_shift($parts));
+                    $knownData['apikey'] = trim(implode(':', $parts));
+                    break;
+            }
+        }
 
         // Fetch user
-        $user = new User(['apikey' => $token]);
+        $user = new User($knownData);
         $user->populate();
 
         // Fetch the user's roles
