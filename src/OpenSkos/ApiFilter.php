@@ -19,7 +19,9 @@ final class ApiFilter
         'literalForm' => 'skosxl:literalForm',
         'modified' => 'dcterms:modified',
         'modifiedBy' => 'openskos:modifiedBy',
+        'sets' => 'openskos:set',
         'status' => 'openskos:status',
+        'tenant' => 'openskos:tenant',
     ];
 
     const types = [
@@ -69,6 +71,27 @@ final class ApiFilter
         }
     }
 
+    public static function fullUri(string $predicate): string
+    {
+        $tokens = explode(':', $predicate);
+        $prefix = array_shift($tokens);
+        $field = implode(':', $tokens);
+
+        return Context::prefixes[$prefix].$field;
+    }
+
+    public static function fromFullUri(string $predicate): string
+    {
+        // Transform URL into prefix
+        foreach (Context::prefixes as $prefix => $namespace) {
+            if (substr($predicate, 0, strlen($namespace)) === $namespace) {
+                return $prefix.':'.(substr($predicate, strlen($namespace)));
+            }
+        }
+
+        return $predicate;
+    }
+
     /**
      * @param string $predicate
      * @param mixed  $value
@@ -79,18 +102,26 @@ final class ApiFilter
         string $predicate,
         $value
     ): self {
+        if (is_null($value)) {
+            return $this;
+        }
+
+        // Handle arrays
+        if (is_array($value)) {
+            foreach ($value as $entry) {
+                $this->addFilter($predicate, $entry);
+            }
+
+            return $this;
+        }
+
         // Handle aliases
         while (isset(static::aliases[$predicate])) {
             $predicate = static::aliases[$predicate];
         }
 
         // Transform URL into prefix
-        foreach (Context::prefixes as $prefix => $namespace) {
-            if (substr($predicate, 0, strlen($namespace)) === $namespace) {
-                $predicate = $prefix.':'.(substr($predicate, strlen($namespace)));
-                break;
-            }
-        }
+        $predicate = static::fromFullUri($predicate);
 
         // Disallow unknown prefixes
         $tokens = explode(':', $predicate);
@@ -110,7 +141,7 @@ final class ApiFilter
         }
 
         // Handle csv
-        if ('csv' === $type) {
+        if ('csv' === $type && is_string($value)) {
             $value = str_getcsv($value);
         }
 
@@ -138,7 +169,14 @@ final class ApiFilter
         return $retval;
     }
 
-    private static function buildFilter($predicate, $value, $lang = null)
+    /**
+     * @param string       $predicate
+     * @param array|string $value
+     * @param string|null  $lang
+     *
+     * @return array
+     */
+    private static function buildFilter($predicate, $value, $lang = null): array
     {
         $output = [];
 
@@ -160,10 +198,7 @@ final class ApiFilter
 
         // Build the right predicate
         $entity = static::entity[$predicate] ?? 'subject';
-        $tokens = explode(':', $predicate);
-        $prefix = array_shift($tokens);
-        $field = implode(':', $tokens);
-        $predicate = Context::prefixes[$prefix].$field;
+        $predicate = static::fullUri($predicate);
 
         // Add url or string to the output
         if (filter_var($value, FILTER_VALIDATE_URL)) {
@@ -186,17 +221,77 @@ final class ApiFilter
         return $output;
     }
 
-    public function buildFilters(): array
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
+    public function buildFilters($type = 'jena'): array
     {
         $output = [];
 
+        // Build jena filters
         foreach ($this->filters as $preficate => $value) {
             $filters = $this->buildFilter($preficate, $value, $this->lang);
-            if (!is_null($filters)) {
-                $output = array_merge($output, $filters);
-            }
+            $output = array_merge($output, $filters);
         }
 
-        return $output;
+        switch ($type) {
+            // Solr requires some translation but contains less data
+            // That's why we build in jena-mode
+            case 'solr':
+                $solrFilters = [];
+                $ucfirstfn = create_function('$c', 'return ucfirst($c);');
+
+                foreach ($output as $jenaFilter) {
+                    // Fetch short predicate and data type
+                    $predicate = static::fromFullUri($jenaFilter['predicate']);
+                    $datatype = static::types[$predicate] ?? 'csv';
+
+                    // Build solr field
+                    $filterField = null;
+                    $tokens = explode(':', $predicate);
+                    $prefix = array_shift($tokens);
+                    $shortfield = implode(':', $tokens);
+                    switch ($datatype) {
+                        case 'xsd:duration':
+                            $filterField = 'd_'.$shortfield;
+                            break;
+                        case 'csv':
+                            $filterField = 's_'.$shortfield;
+                            break;
+                        default:
+                            continue 2;
+                    }
+
+                    // Register the filters
+                    $filterValue = $jenaFilter['value'];
+                    $filterName = lcfirst(str_replace(' ', '', ucwords(str_replace(':', ' ', $predicate.':filter'))));
+                    $solrFilters[$filterName][] = "${filterField}:\"${filterValue}\"";
+                }
+
+                // OR all lists together
+                foreach ($solrFilters as $name => $filterList) {
+                    if (count($filterList) > 1) {
+                        $solrFilters[$name] = '('.implode(' OR ', $filterList).')';
+                    } else {
+                        $solrFilters[$name] = array_pop($filterList);
+                    }
+                }
+
+                return $solrFilters;
+            case 'jena': return $output;
+            default: return [];
+        }
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
+    public function __toArray($type = 'jena'): array
+    {
+        return $this->buildFilters($type);
     }
 }
