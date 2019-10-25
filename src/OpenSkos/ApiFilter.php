@@ -63,55 +63,61 @@ final class ApiFilter
             unset($params['lang']);
         }
 
+        // Add all filters
+        foreach ($params as $preficate => $value) {
+            $this->addFilter($preficate, $value);
+        }
+    }
+
+    /**
+     * @param string $predicate
+     * @param mixed  $value
+     *
+     * @return self
+     */
+    public function addFilter(
+        string $predicate,
+        $value
+    ): self {
         // Handle aliases
-        foreach($params as $predicate => $value) {
-            if (isset(static::aliases[$predicate])) {
-                $params[static::aliases[$predicate]] = $value;
-                unset($params[$predicate]);
+        while (isset(static::aliases[$predicate])) {
+            $predicate = static::aliases[$predicate];
+        }
+
+        // Transform URL into prefix
+        foreach (Context::prefixes as $prefix => $namespace) {
+            if (substr($predicate, 0, strlen($namespace)) === $namespace) {
+                $predicate = $prefix.':'.(substr($predicate, strlen($namespace)));
+                break;
             }
         }
 
-        // Transform URLs into prefixes
-        foreach($params as $predicate => $value) {
-            foreach(Context::prefixes as $prefix => $namespace) {
-                if (substr($predicate, 0, strlen($namespace)) === $namespace) {
-                    $params[$prefix.':'.(substr($predicate,strlen($namespace)))] = $value;
-                    unset($params[$predicate]);
-                    continue 2;
-                }
-            }
+        // Disallow unknown prefixes
+        $tokens = explode(':', $predicate);
+        $prefix = $tokens[0];
+        if (!isset(Context::prefixes[$prefix])) {
+            return $this;
         }
 
-        // Remove fields without known prefix
-        foreach($params as $predicate => $value) {
-            $tokens = explode(':', $predicate);
-            $prefix = $tokens[0];
-            if (!isset(Context::prefixes[$prefix])) {
-                unset($params[$predicate]);
-            }
-        }
+        // Detect field type
+        $type = static::types[$predicate] ?? 'csv';
 
-        // Handle enums
-        foreach($params as $predicate => $value) {
-            if (!isset(static::types[$predicate])) {
-                continue;
-            }
-            if (!in_array($value, static::types[$predicate])) {
-                unset($params[$predicate]);
+        // Disallow unknown enum
+        if (is_array($type)) {
+            if (!in_array($value, $type, true)) {
+                return $this;
             }
         }
 
         // Handle csv
-        foreach($params as $predicate => $value) {
-            $type = static::types[$predicate] ?? static::types['default'];
-            if ('csv' !== $type) {
-                continue;
-            }
-            $params[$predicate] = str_getcsv($value);
+        if ('csv' === $type) {
+            $value = str_getcsv($value);
         }
 
+        // Register the filter
+        $this->filters[$predicate] = $value;
 
-        $this->filters = $params;
+        return $this;
     }
 
     /**
@@ -137,26 +143,27 @@ final class ApiFilter
         $output = [];
 
         if (is_array($value)) {
-            foreach($value as $entry) {
+            foreach ($value as $entry) {
                 $filter = static::buildFilter($predicate, $entry, $lang);
                 if (!is_null($filter)) {
                     $output = array_merge($output, $filter);
                 }
             }
+
             return $output;
         }
 
         // Remove language if it's not supported on this field
-        if (!in_array($predicate, static::international)) {
+        if (!in_array($predicate, static::international, true)) {
             $lang = null;
         }
 
         // Build the right predicate
-        $entity    = static::entity[$predicate] ?? 'subject';
-        $tokens    = explode(':',$predicate);
-        $prefix    = array_shift($tokens);
-        $field     = implode(':', $tokens);
-        $predicate = Context::prefixes[$prefix] . $field;
+        $entity = static::entity[$predicate] ?? 'subject';
+        $tokens = explode(':', $predicate);
+        $prefix = array_shift($tokens);
+        $field = implode(':', $tokens);
+        $predicate = Context::prefixes[$prefix].$field;
 
         // Add url or string to the output
         if (filter_var($value, FILTER_VALIDATE_URL)) {
@@ -183,7 +190,7 @@ final class ApiFilter
     {
         $output = [];
 
-        foreach($this->filters as $preficate => $value) {
+        foreach ($this->filters as $preficate => $value) {
             $filters = $this->buildFilter($preficate, $value, $this->lang);
             if (!is_null($filters)) {
                 $output = array_merge($output, $filters);
