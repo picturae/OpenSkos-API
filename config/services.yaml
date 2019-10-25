@@ -38,3 +38,10 @@ services:
 
   App\OpenSkos\Filters\SolrFilterProcessor:
     autowire: true
+
+  App\Rest\ArgumentResolver\ApiFilterResolver:
+      autowire: true
+      tags: ['controller.argument_value_resolver']
+
+  App\OpenSkos\ApiFilter:
+      autowire: true

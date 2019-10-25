@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Label\Controller;
 
 use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\InternalResourceId;
@@ -39,25 +40,11 @@ final class LabelController
      */
     public function getLabels(
         ApiRequest $apiRequest,
+        ApiFilter $apiFilter,
         LabelRepository $repository,
         FilterProcessor $filterProcessor
     ): ListResponse {
-        $param_institutions = $apiRequest->getInstitutions();
-        $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
-
-        $param_sets = $apiRequest->getSets();
-        $sets_filter = $filterProcessor->buildSetFilters($param_sets);
-        $param_profile = $apiRequest->getSearchProfile();
-        $full_filter = array_merge($institutions_filter, $sets_filter);
-
-        if ($param_profile) {
-            if (0 !== count($full_filter)) {
-                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
-            }
-            $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true, FilterProcessor::ENTITY_SET => true];
-            $full_filter = $filterProcessor->retrieveSearchProfile($param_profile, $to_apply);
-        }
-
+        $full_filter = $apiFilter->buildFilters();
         $labels = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
