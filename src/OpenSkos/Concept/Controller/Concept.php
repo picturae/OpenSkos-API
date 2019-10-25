@@ -125,6 +125,7 @@ final class Concept
         ApiFilter $apiFilter,
         SolrFilterProcessor $solrFilterProcessor
     ): array {
+        // TODO: Don't use non-default filters anymore
         $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
         $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
         $apiFilter->addFilter('skos:ConceptScheme', $this->processFilterFromRequest($apiRequest, 'conceptSchemes'));
