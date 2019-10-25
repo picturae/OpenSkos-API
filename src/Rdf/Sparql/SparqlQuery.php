@@ -106,7 +106,14 @@ final class SparqlQuery
                         } else {
                             $delimOpen = $delimClose = '"';
                         }
-                        $entityValues[] = sprintf('$f%d = %s%s%s', $nIdx, $delimOpen, $obj_val['value'], $delimClose);
+                        $entityValues[] = sprintf(
+                            '$f%d = %s%s%s%s',
+                            $nIdx,
+                            $delimOpen,
+                            $obj_val['value'],
+                            $delimClose,
+                            isset($obj_val['lang']) ? '@' . $obj_val['lang'] : '@*'
+                        );
                     }
                     $filterValues[] = sprintf(' FILTER ( %s )', implode(' || ', $entityValues));
                 }
