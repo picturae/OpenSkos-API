@@ -33,6 +33,7 @@ final class LabelController
      * @Route(path="/labels.{format?}", methods={"GET"})
      *
      * @param ApiRequest      $apiRequest
+     * @param ApiFilter       $apiFilter
      * @param LabelRepository $repository
      * @param FilterProcessor $filterProcessor
      *
