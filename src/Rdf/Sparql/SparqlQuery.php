@@ -112,7 +112,7 @@ final class SparqlQuery
                             $delimOpen,
                             $obj_val['value'],
                             $delimClose,
-                            isset($obj_val['lang']) ? '@' . $obj_val['lang'] : '@*'
+                            isset($obj_val['lang']) ? '@' . $obj_val['lang'] : ''
                         );
                     }
                     $filterValues[] = sprintf(' FILTER ( %s )', implode(' || ', $entityValues));
