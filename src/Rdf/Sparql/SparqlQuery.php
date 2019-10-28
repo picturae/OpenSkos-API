@@ -196,6 +196,40 @@ QUERY_BY_TYPE_AND_PREDICATE;
         );
     }
 
+    public static function describeSubjectFromUuid(
+        string $uuid
+    ): SparqlQuery {
+        return new SparqlQuery(
+            sprintf(
+               'DESCRIBE ?subject
+                            WHERE { 
+                              ?subject <%s> "%s"
+                            }',
+                OpenSkos::UUID,
+                $uuid
+            )
+        );
+    }
+
+    public static function describeWithoutUUID(
+        string $uuid
+    ): SparqlQuery {
+        /* * * * * * * * * * * * * * * * * * * * * * * * * *
+         * CAUTION: SLOW ON TYPES WITH A LOT OF RESOURCES  *
+        \* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+        $queryString = <<<QUERY_WITHOUT_UUID
+DESCRIBE ?subject
+WHERE {
+  ?subject ?predicate ?object .
+  FILTER(regex(str(?subject), ".*\\\\/%s\$" ) )
+}
+QUERY_WITHOUT_UUID;
+        $queryString = sprintf($queryString, $uuid);
+
+        return new SparqlQuery($queryString);
+    }
+
     public static function describeByTypeWithoutUUID(
         string $rdfType,
         string $uuid

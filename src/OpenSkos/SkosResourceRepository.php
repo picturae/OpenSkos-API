@@ -7,6 +7,7 @@ namespace App\OpenSkos;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\Client;
 use App\Rdf\Sparql\SparqlQuery;
+use App\Rdf\Triple;
 
 /**
  * @template T
@@ -38,6 +39,31 @@ class SkosResourceRepository
     }
 
     /**
+     * Retreive the rdf client in use.
+     *
+     * @return Client
+     */
+    public function rdfClient(): Client
+    {
+        return $this->rdfClient;
+    }
+
+    /**
+     * @param Triple[] $triples
+     *
+     * @return array
+     */
+    public static function groupTriples(array $triples): array
+    {
+        $groups = [];
+        foreach ($triples as $triple) {
+            $groups[$triple->getSubject()->getUri()][] = $triple;
+        }
+
+        return $groups;
+    }
+
+    /**
      * @param Iri   $type
      * @param int   $offset
      * @param int   $limit
@@ -60,11 +86,7 @@ class SkosResourceRepository
         );
         $triples = $this->rdfClient->describe($sparql);
 
-        //TODO: Move to separate helper class?
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
-        }
+        $groups = $this::groupTriples($triples);
 
         $res = [];
         foreach ($groups as $iriString => $group) {
@@ -104,11 +126,7 @@ class SkosResourceRepository
             return [];
         }
 
-        //TODO: Move to separate helper class?
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
-        }
+        $groups = $this::groupTriples($triples);
 
         $res = [];
         foreach ($groups as $iriString => $group) {
@@ -133,11 +151,7 @@ class SkosResourceRepository
             return [];
         }
 
-        //TODO: Move to separate helper class?
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
-        }
+        $groups = $this::groupTriples($triples);
 
         $res = [];
         foreach ($groups as $iriString => $group) {
@@ -170,6 +184,38 @@ class SkosResourceRepository
         return $fullSet;
     }
 
+    public function getByUuid(InternalResourceId $subject)
+    {
+        // Indexed
+        $sparql = SparqlQuery::describeSubjectFromUuid((string) $subject);
+        $triples = $this->rdfClient->describe($sparql);
+
+        // Fallback by filter
+        // TODO: add UUID field to all resources
+        if (!count($triples)) {
+            $sparql = SparqlQuery::describeWithoutUuid((string) $subject);
+            $triples = $this->rdfClient->describe($sparql);
+        }
+
+        // None found = done
+        if (!count($triples)) {
+            return null;
+        }
+
+        // Multiple objects = broken
+        $groups = static::groupTriples($triples);
+        if (1 !== count($groups)) {
+            return null;
+        }
+
+        // Turn triples into object
+        foreach ($groups as $iriString => $group) {
+            return call_user_func($this->resourceFactory, new Iri($iriString), $group);
+        }
+
+        return null;
+    }
+
     public function getOneWithoutUuid(Iri $rdfType, InternalResourceId $subject)
     {
         $sparql = SparqlQuery::describeByTypeWithoutUUID((string) $rdfType, (string) $subject);
@@ -179,42 +225,7 @@ class SkosResourceRepository
             return null;
         }
 
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
-        }
-
-        if (1 !== count($groups)) {
-            return null;
-        }
-
-        foreach ($groups as $iriString => $group) {
-            return call_user_func($this->resourceFactory, new Iri($iriString), $group);
-        }
-
-        return null;
-    }
-
-    /**
-     * Fetches a resource directly by it's subject.
-     *
-     * @param Iri $subject
-     *
-     * @return mixed|null
-     */
-    public function get(Iri $subject)
-    {
-        $sparql = SparqlQuery::describeResource($subject);
-        $triples = $this->rdfClient->describe($sparql);
-
-        if (0 === count($triples)) {
-            return null;
-        }
-
-        $groups = [];
-        foreach ($triples as $triple) {
-            $groups[$triple->getSubject()->getUri()][] = $triple;
-        }
+        $groups = $this::groupTriples($triples);
 
         if (1 !== count($groups)) {
             return null;

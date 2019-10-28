@@ -12,6 +12,11 @@ use App\Ontology\Rdfs;
 
 final class RelationType
 {
+    public static function vocabularyFields(): array
+    {
+        return array_keys(static::vocabulary()->resources());
+    }
+
     public static function vocabulary(): \EasyRdf_Graph
     {
         \EasyRdf_Namespace::set('dc', Dc::NAME_SPACE);

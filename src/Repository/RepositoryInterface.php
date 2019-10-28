@@ -22,9 +22,9 @@ interface RepositoryInterface
     /**
      * @param Iri $iri
      *
-     * @return AbstractRdfDocument|null
+     * @return AbstractRdfDocument|array|null
      */
-    public function findByIri(Iri $iri): ?AbstractRdfDocument;
+    public function findByIri(Iri $iri);
 
     /**
      * @param InternalResourceId $id
