@@ -36,8 +36,10 @@ services:
   App\OpenSkos\Filters\FilterProcessor:
     autowire: true
 
-
   App\OpenSkos\Filters\SolrFilterProcessor:
+    autowire: true
+
+  App\Database\Doctrine:
     autowire: true
 
   App\Rest\ArgumentResolver\ApiFilterResolver:

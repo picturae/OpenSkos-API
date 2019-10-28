@@ -111,4 +111,14 @@ final class Context
 
         return $result;
     }
+
+    /**
+     * Registers all known namespaces into EasyRdf.
+     */
+    public static function setupEasyRdf(): void
+    {
+        foreach (self::prefixes as $prefix => $namespace) {
+            \EasyRdf_Namespace::set($prefix, $namespace);
+        }
+    }
 }

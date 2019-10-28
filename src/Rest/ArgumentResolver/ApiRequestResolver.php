@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Rest\ArgumentResolver;
 
+use App\Database\Doctrine;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Exception\InvalidApiRequest;
 use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\UnknownFormatException;
+use App\Security\Authentication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -20,10 +22,17 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
      */
     private $formatFactory;
 
+    /**
+     * @var Doctrine|null
+     */
+    private $connection;
+
     public function __construct(
-        RdfFormatFactory $formatFactory
+        RdfFormatFactory $formatFactory,
+        ?Doctrine $connection
     ) {
         $this->formatFactory = $formatFactory;
+        $this->connection = $connection;
     }
 
     /**
@@ -116,7 +125,8 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
             $institutions,
             $sets,
             $searchProfile,
-            $foreignUri
+            $foreignUri,
+            new Authentication($request)
         );
     }
 }
