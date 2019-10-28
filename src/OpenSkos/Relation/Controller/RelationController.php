@@ -17,8 +17,6 @@ use App\Rdf\Iri;
 use App\Rdf\RdfTerm;
 use App\Rdf\Triple;
 use App\Rest\ScalarResponse;
-/* use Symfony\Component\HttpKernel\Exception\BadRequestHttpException; */
-/* use Symfony\Component\HttpKernel\Exception\NotFoundHttpException; */
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
