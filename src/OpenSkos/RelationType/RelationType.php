@@ -21,12 +21,12 @@ final class RelationType
         \EasyRdf_Namespace::set('rdfs', Rdfs::NAME_SPACE);
 
         // Define graph structure
-        $graph = new \EasyRdf_Graph('openskos.org');
+        $graph = new \EasyRdf_Graph();
 
         // Intro
-        $openskos = $graph->resource('openskos');
+        $openskos = $graph->resource('skos');
         $openskos->setType('owl:Ontology');
-        $openskos->addLiteral('dc:title', 'OpenSkos RelationType vocabulary');
+        $openskos->addLiteral('dc:title', 'Skos RelationType vocabulary');
 
         ///////////////////////////////////
         // Semantic Relation             //
@@ -34,36 +34,36 @@ final class RelationType
         // Copy of SKOS:semanticRelation //
         ///////////////////////////////////
 
-        $semanticRelation = $graph->resource('openskos:semanticRelation');
+        $semanticRelation = $graph->resource('skos:semanticRelation');
         $semanticRelation->setType('rdf:Property');
         $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
-        $semanticRelation->addResource('rdfs:domain', 'openskos:Concept');
-        $semanticRelation->addResource('rdfs:range', 'openskos:Concept');
+        $semanticRelation->addResource('rdfs:domain', 'skos:Concept');
+        $semanticRelation->addResource('rdfs:range', 'skos:Concept');
 
-        $related = $graph->resource('openskos:related');
+        $related = $graph->resource('skos:related');
         $related->setType('rdf:Property');
         $related->addResource('rdf:type', 'owl:ObjectProperty');
         $related->addResource('rdf:type', 'owl:SymmetricProperty');
         $related->addResource('rdfs:subPropertyOf', $semanticRelation);
 
-        $broaderTransitive = $graph->resource('openskos:broaderTransitive');
+        $broaderTransitive = $graph->resource('skos:broaderTransitive');
         $broaderTransitive->setType('rdf:Property');
         $broaderTransitive->addResource('rdf:type', 'owl:ObjectProperty');
         $broaderTransitive->addResource('rdf:type', 'owl:TransitiveProperty');
         $broaderTransitive->addResource('rdfs:subPropertyOf', $semanticRelation);
 
-        $narrowerTransitive = $graph->resource('openskos:narrowerTransitive');
+        $narrowerTransitive = $graph->resource('skos:narrowerTransitive');
         $narrowerTransitive->setType('rdf:Property');
         $narrowerTransitive->addResource('rdf:type', 'owl:ObjectProperty');
         $narrowerTransitive->addResource('rdf:type', 'owl:TransitiveProperty');
         $narrowerTransitive->addResource('rdfs:subPropertyOf', $semanticRelation);
 
-        $broader = $graph->resource('openskos:broader');
+        $broader = $graph->resource('skos:broader');
         $broader->setType('rdf:Property');
         $broader->addResource('rdf:type', 'owl:ObjectProperty');
         $broader->addResource('rdfs:subPropertyOf', $broaderTransitive);
 
-        $narrower = $graph->resource('openskos:narrower');
+        $narrower = $graph->resource('skos:narrower');
         $narrower->setType('rdf:Property');
         $narrower->addResource('rdf:type', 'owl:ObjectProperty');
         $narrower->addResource('rdfs:subPropertyOf', $narrowerTransitive);
@@ -75,37 +75,37 @@ final class RelationType
         //////////////////////////////////
 
         // Mapping relation
-        $mappingRelation = $graph->resource('openskos:mappingRelation');
+        $mappingRelation = $graph->resource('skos:mappingRelation');
         $mappingRelation->setType('rdf:Property');
         $mappingRelation->addResource('rdf:type', 'owl:ObjectProperty');
         $mappingRelation->addResource('rdfs:subPropertyOf', $semanticRelation);
 
-        $closeMatch = $graph->resource('openskos:closeMatch');
+        $closeMatch = $graph->resource('skos:closeMatch');
         $closeMatch->setType('rdf:Property');
         $closeMatch->addResource('rdf:type', 'owl:ObjectProperty');
         $closeMatch->addResource('rdf:type', 'owl:SymmetricProperty');
         $closeMatch->addResource('rdfs:subPropertyOf', $mappingRelation);
 
-        $exactMatch = $graph->resource('openskos:exactMatch');
+        $exactMatch = $graph->resource('skos:exactMatch');
         $exactMatch->setType('rdf:Property');
         $exactMatch->addResource('rdf:type', 'owl:ObjectProperty');
         $exactMatch->addResource('rdf:type', 'owl:SymmetricProperty');
         $exactMatch->addResource('rdf:type', 'owl:TransitiveProperty');
         $exactMatch->addResource('rdfs:subPropertyOf', $closeMatch);
 
-        $broadMatch = $graph->resource('openskos:broadMatch');
+        $broadMatch = $graph->resource('skos:broadMatch');
         $broadMatch->setType('rdf:Property');
         $broadMatch->addResource('rdf:type', 'owl:ObjectProperty');
         $broadMatch->addResource('rdfs:subPropertyOf', $mappingRelation);
         $broadMatch->addResource('rdfs:subPropertyOf', $broader);
 
-        $narrowMatch = $graph->resource('openskos:narrowMatch');
+        $narrowMatch = $graph->resource('skos:narrowMatch');
         $narrowMatch->setType('rdf:Property');
         $narrowMatch->addResource('rdf:type', 'owl:ObjectProperty');
         $narrowMatch->addResource('rdfs:subPropertyOf', $mappingRelation);
         $narrowMatch->addResource('rdfs:subPropertyOf', $narrower);
 
-        $relatedMatch = $graph->resource('openskos:relatedMatch');
+        $relatedMatch = $graph->resource('skos:relatedMatch');
         $relatedMatch->setType('rdf:Property');
         $relatedMatch->addResource('rdf:type', 'owl:ObjectProperty');
         $relatedMatch->addResource('rdf:type', 'owl:SymmetricProperty');
@@ -118,20 +118,20 @@ final class RelationType
         // Copy of SKOS:inScheme //
         ///////////////////////////
 
-        $inScheme = $graph->resource('openskos:inScheme');
+        $inScheme = $graph->resource('skos:inScheme');
         $inScheme->setType('rdf:Property');
         $inScheme->addResource('rdf:type', 'owl:ObjectProperty');
-        $inScheme->addResource('rdfs:range', 'openskos:ConceptScheme');
+        $inScheme->addResource('rdfs:range', 'skos:ConceptScheme');
 
         // TODO: inverseOf topConceptOf
-        $hasTopConcept = $graph->resource('openskos:hasTopConcept');
+        $hasTopConcept = $graph->resource('skos:hasTopConcept');
         $hasTopConcept->setType('rdf:Property');
         $hasTopConcept->addResource('rdf:type', 'owl:ObjectProperty');
-        $hasTopConcept->addResource('rdfs:range', 'openskos:Concept');
-        $hasTopConcept->addResource('rdfs:domain', 'openskos:ConceptScheme');
+        $hasTopConcept->addResource('rdfs:range', 'skos:Concept');
+        $hasTopConcept->addResource('rdfs:domain', 'skos:ConceptScheme');
 
         // TODO: inverseOf hasTopConcept
-        $topConceptOf = $graph->resource('openskos:topConceptOf');
+        $topConceptOf = $graph->resource('skos:topConceptOf');
         $topConceptOf->setType('rdf:Property');
         $topConceptOf->addResource('rdf:type', 'owl:ObjectProperty');
         $topConceptOf->addResource('rdfs:subPropertyOf', $inScheme);

@@ -9,6 +9,7 @@ use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\SkosXl;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
@@ -17,7 +18,7 @@ use App\Rdf\Triple;
 /**
  * @Document\Type(SkosXl::LABEL)
  */
-final class Label implements RdfResource
+final class Label extends AbstractRdfDocument implements RdfResource
 {
     const type = 'type';
     const modified = 'modified';
@@ -26,31 +27,26 @@ final class Label implements RdfResource
     /**
      * @var string[]
      */
-    private static $mapping = [
+    protected static $mapping = [
         self::type => Rdf::TYPE,
         self::modified => DcTerms::MODIFIED,
-        self::literalForm => SkosXl::LITERALFORM,
+        self::literalForm => SkosXl::LITERAL_FORM,
     ];
 
     /**
-     * @var VocabularyAwareResource
+     * @var Iri|null
      */
-    private $resource;
+    protected $type;
 
     /**
      * @var Iri|null
      */
-    private $type;
-
-    /**
-     * @var Iri|null
-     */
-    private $subject;
+    protected $subject;
 
     /**
      * @var Iri
      */
-    private $childSubject;
+    protected $childSubject;
 
     /**
      * Which fields can be used for projection.
@@ -60,11 +56,11 @@ final class Label implements RdfResource
      */
     private static $acceptable_fields = [
         'uri' => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
-        'literalForm' => SkosXl::LITERALFORM,
+        'literalForm' => SkosXl::LITERAL_FORM,
         /* 'isPrefLabelOf' => */
         /* 'isAltLabelOf' => */
         /* 'isHiddenLabelOf' => */
-        'labelRelation' => SkosXl::LABELRELATION,
+        'labelRelation' => SkosXl::LABEL_RELATION,
         'set' => OpenSkos::SET,
         /* 'institution' => OpenSkos::INSTITUTION, */
         'tenant' => OpenSkos::TENANT,
@@ -109,59 +105,16 @@ final class Label implements RdfResource
      * @param Iri|null                     $parentPredicate
      * @param Iri|null                     $parentSubject
      */
-    private function __construct(
+    public function __construct(
         Iri $childSubject,
         ?VocabularyAwareResource $resource = null,
         ?Iri $parentPredicate = null,
         ?Iri $parentSubject = null
     ) {
-        if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($childSubject, array_flip(self::$mapping));
-        } else {
-            $this->resource = $resource;
-        }
         $this->childSubject = $childSubject;
         $this->type = $parentPredicate;
         $this->subject = $parentSubject;
-    }
-
-    /**
-     * @return Iri
-     */
-    public function iri(): Iri
-    {
-        return $this->resource->iri();
-    }
-
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->resource->triples();
-    }
-
-    /**
-     * @param Iri $subject
-     *
-     * @return Label
-     */
-    public static function createEmpty(Iri $subject): self
-    {
-        return new self($subject);
-    }
-
-    /**
-     * @param Iri      $subject
-     * @param Triple[] $triples
-     *
-     * @return Label
-     */
-    public static function fromTriples(Iri $subject, array $triples): self
-    {
-        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
-
-        return new self($subject, $resource);
+        parent::__construct($childSubject, $resource);
     }
 
     /**

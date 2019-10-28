@@ -36,7 +36,7 @@ final class ConceptScheme implements RdfResource
      */
     private static $mapping = [
         self::type => Rdf::TYPE,
-        self::datesubmitted => DcTerms::DATESUBMITTED,
+        self::datesubmitted => DcTerms::DATE_SUBMITTED,
         self::set => OpenSkos::SET,
         self::uuid => OpenSkos::UUID,
         self::creator => Dc::CREATOR,
@@ -44,11 +44,11 @@ final class ConceptScheme implements RdfResource
         self::modified => DcTerms::MODIFIED,
         self::title => DcTerms::TITLE,
         self::description => DcTerms::DESCRIPTION,
-        self::hasTopConcept => Skos::HASTOPCONCEPT,
+        self::hasTopConcept => Skos::HAS_TOP_CONCEPT,
         self::status => OpenSkos::STATUS,
         self::dateDeleted => OpenSkos::DATE_DELETED,
-        self::deletedBy => OpenSkos::DELETEDBY,
-        self::modifiedBy => OpenSkos::MODIFIEDBY,
+        self::deletedBy => OpenSkos::DELETED_BY,
+        self::modifiedBy => OpenSkos::MODIFIED_BY,
     ];
 
     /**

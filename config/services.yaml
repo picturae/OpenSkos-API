@@ -8,6 +8,7 @@ parameters:
 
 imports:
   - { resource: './packages/databases.yaml' }
+  - { resource: './ontology/ontology.php' }
 
 services:
     # default configuration for services in *this* file
@@ -35,8 +36,10 @@ services:
   App\OpenSkos\Filters\FilterProcessor:
     autowire: true
 
-
   App\OpenSkos\Filters\SolrFilterProcessor:
+    autowire: true
+
+  App\Database\Doctrine:
     autowire: true
 
   App\Rest\ArgumentResolver\ApiFilterResolver:
@@ -45,3 +48,8 @@ services:
 
   App\OpenSkos\ApiFilter:
       autowire: true
+
+  App\Ontology\Command\GenerateOntologyCommand:
+    autowire: true
+    tags:
+      - 'console.command'

@@ -1,0 +1,12 @@
+parameters:
+  ontology.dc:
+    name: Dc
+    prefix: dc
+    namespace: 'http://purl.org/dc/elements/1.1/'
+    properties:
+      creator:
+        dataType: resource
+      contributor:
+        dataType: resource
+      title:
+        dataType: literal

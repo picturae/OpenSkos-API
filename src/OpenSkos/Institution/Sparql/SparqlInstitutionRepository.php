@@ -61,7 +61,7 @@ final class SparqlInstitutionRepository implements InstitutionRepository
     public function all(int $offset = 0, int $limit = 100): array
     {
         return $this->skosRepository->allOfType(
-            new Iri(Org::FORMALORG),
+            new Iri(Org::FORMAL_ORGANIZATION),
             $offset,
             $limit
         );
@@ -95,7 +95,7 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
-        return $this->skosRepository->findBy(new Iri(Org::FORMALORG), $predicate, $object);
+        return $this->skosRepository->findBy(new Iri(Org::FORMAL_ORGANIZATION), $predicate, $object);
     }
 
     /**
@@ -106,7 +106,7 @@ final class SparqlInstitutionRepository implements InstitutionRepository
      */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Institution
     {
-        $res = $this->skosRepository->findOneBy(new Iri(Org::FORMALORG), $predicate, $object);
+        $res = $this->skosRepository->findOneBy(new Iri(Org::FORMAL_ORGANIZATION), $predicate, $object);
 
         return $res;
     }

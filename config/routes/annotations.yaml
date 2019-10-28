@@ -40,3 +40,7 @@ relation:
 status:
     resource: ../../src/OpenSkos/Status/Controller
     type: annotation
+
+vocabulary:
+    resource: ../../src/OpenSkos/Vocabulary/Controller
+    type: annotation

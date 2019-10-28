@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Rest\ArgumentResolver;
 
 use App\OpenSkos\ApiFilter;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -13,9 +12,9 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 final class ApiFilterResolver implements ArgumentValueResolverInterface
 {
     /**
-     * Returns whether or not the given argument is supported by this resolver
+     * Returns whether or not the given argument is supported by this resolver.
      *
-     * @param Request $request
+     * @param Request          $request
      * @param ArgumentMetadata $argument
      *
      * @return bool
@@ -30,8 +29,6 @@ final class ApiFilterResolver implements ArgumentValueResolverInterface
      * @param ArgumentMetadata $argument
      *
      * @return \Generator
-     *
-     * @throws InvalidApiRequest
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {

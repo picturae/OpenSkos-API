@@ -5,8 +5,8 @@ namespace App\Ontology;
 final class Context
 {
     const prefixes = [
-        'dcmi' => Dcmi::NAME_SPACE,
         'dc' => Dc::NAME_SPACE,
+        'dcmi' => Dcmi::NAME_SPACE,
         'dcterms' => DcTerms::NAME_SPACE,
         'foaf' => Foaf::NAME_SPACE,
         'openskos' => OpenSkos::NAME_SPACE,
@@ -110,5 +110,15 @@ final class Context
         ksort($result);
 
         return $result;
+    }
+
+    /**
+     * Registers all known namespaces into EasyRdf.
+     */
+    public static function setupEasyRdf(): void
+    {
+        foreach (self::prefixes as $prefix => $namespace) {
+            \EasyRdf_Namespace::set($prefix, $namespace);
+        }
     }
 }
