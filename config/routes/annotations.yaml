@@ -17,6 +17,9 @@ conceptscheme:
     resource: ../../src/OpenSkos/ConceptScheme/Controller
     type: annotation
 
+label:
+    resource: ../../src/OpenSkos/Label/Controller
+    type: annotation
 
 concept:
     resource: ../../src/OpenSkos/Concept/Controller
@@ -36,4 +39,8 @@ relation:
 
 status:
     resource: ../../src/OpenSkos/Status/Controller
+    type: annotation
+
+vocabulary:
+    resource: ../../src/OpenSkos/Vocabulary/Controller
     type: annotation

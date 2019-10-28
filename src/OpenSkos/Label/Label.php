@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Label;
 
 use App\Ontology\DcTerms;
+use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\SkosXl;
 use App\Rdf\VocabularyAwareResource;
@@ -24,7 +25,7 @@ final class Label implements RdfResource
     private static $mapping = [
         self::type => Rdf::TYPE,
         self::modified => DcTerms::MODIFIED,
-        self::literalForm => SkosXl::LITERALFORM,
+        self::literalForm => SkosXl::LITERAL_FORM,
     ];
 
     /**
@@ -46,6 +47,47 @@ final class Label implements RdfResource
      * @var Iri
      */
     private $childSubject;
+
+    /**
+     * Which fields can be used for projection.
+     * Labels defined at: https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
+     * @var array
+     */
+    private static $acceptable_fields = [
+        'uri' => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
+        'literalForm' => SkosXl::LITERALFORM,
+        /* 'isPrefLabelOf' => */
+        /* 'isAltLabelOf' => */
+        /* 'isHiddenLabelOf' => */
+        'labelRelation' => SkosXl::LABELRELATION,
+        'set' => OpenSkos::SET,
+        /* 'institution' => OpenSkos::INSTITUTION, */
+        'tenant' => OpenSkos::TENANT,
+        'status' => OpenSkos::STATUS,
+
+        /* 'alive' => */
+        /* 'deleted' => */
+        /* 'dates' => */
+        /* 'modified' => */
+        /* 'dateSubmitted' => */
+        /* 'users' => */
+        /* 'creator' => */
+        /* 'modifiedBy' => */
+        /* 'acceptedBy' => */
+        /* 'deletedBy' => */
+    ];
+
+    /**
+     * Meta projection parameters.
+     *
+     * @var array
+     */
+    public static $meta_groups = [
+        'all' => [],
+        'skosxl' => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
+        'default' => ['uri' => ['lang' => ''], 'literalForm' => ['lang' => '']],
+    ];
 
     /**
      * When we create a label, the terms 'subject', 'predicate', 'object' can get mixed up, because the object of the parent is
@@ -164,5 +206,21 @@ final class Label implements RdfResource
     public function setChildSubject(Iri $childSubject): void
     {
         $this->childSubject = $childSubject;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAcceptableFields(): array
+    {
+        return self::$acceptable_fields;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMetaGroups(): array
+    {
+        return self::$meta_groups;
     }
 }

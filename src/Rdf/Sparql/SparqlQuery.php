@@ -106,7 +106,14 @@ final class SparqlQuery
                         } else {
                             $delimOpen = $delimClose = '"';
                         }
-                        $entityValues[] = sprintf('$f%d = %s%s%s', $nIdx, $delimOpen, $obj_val['value'], $delimClose);
+                        $entityValues[] = sprintf(
+                            '$f%d = %s%s%s%s',
+                            $nIdx,
+                            $delimOpen,
+                            $obj_val['value'],
+                            $delimClose,
+                            isset($obj_val['lang']) ? '@' . $obj_val['lang'] : ''
+                        );
                     }
                     $filterValues[] = sprintf(' FILTER ( %s )', implode(' || ', $entityValues));
                 }
@@ -187,5 +194,25 @@ QUERY_BY_TYPE_AND_PREDICATE;
                 $uuid
             )
         );
+    }
+
+    public static function describeByTypeWithoutUUID(
+        string $rdfType,
+        string $uuid
+    ): SparqlQuery {
+        /* * * * * * * * * * * * * * * * * * * * * * * * * *
+         * CAUTION: SLOW ON TYPES WITH A LOT OF RESOURCES  *
+        \* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+        $queryString = <<<QUERY_BY_TYPE_WITHOUT_UUID
+DESCRIBE ?subject
+WHERE {
+  ?subject <%s> <%s> .
+  FILTER(regex(str(?subject), ".*\\\\/%s\$" ) )
+}
+QUERY_BY_TYPE_WITHOUT_UUID;
+        $queryString = sprintf($queryString, Rdf::TYPE, $rdfType, $uuid);
+
+        return new SparqlQuery($queryString);
     }
 }

@@ -1,0 +1,12 @@
+parameters:
+  ontology.foaf:
+    name: Foaf
+    prefix: foaf
+    namespace: 'http://xmlns.com/foaf/0.1/'
+    properties:
+      Person:
+        dataType: class
+      name:
+        dataType: literal
+      mbox:
+        dataType: literal

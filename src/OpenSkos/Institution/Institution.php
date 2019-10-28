@@ -34,7 +34,7 @@ final class Institution implements RdfResource
     private static $mapping = [
         self::code => OpenSkos::CODE,
         self::name => OpenSkos::NAME,
-        self::disableSearchInOtherTenants => OpenSkos::DISABLESEARCHINOTERTENANTS,
+        self::disableSearchInOtherTenants => OpenSkos::DISABLE_SEARCH_IN_OTHER_TENANTS,
         self::organisationUnit => VCard::ORGUNIT,
         self::email => VCard::EMAIL,
         self::website => OpenSkos::WEBPAGE,
@@ -42,7 +42,7 @@ final class Institution implements RdfResource
         self::locality => VCard::LOCALITY,
         self::postalCode => VCard::PCODE,
         self::countryName => VCard::COUNTRY,
-        self::enableStatusesSystem => OpenSkos::ENABLESTATUSSESSYSTEMS,
+        self::enableStatusesSystem => OpenSkos::ENABLE_STATUSSES_SYSTEM,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
         self::type => Rdf::TYPE,
     ];
