@@ -5,4 +5,4 @@ parameters:
     namespace: 'http://www.w3.org/ns/org#'
     properties:
       FormalOrganization:
-        dataType: class
+        datatype: class

@@ -5,8 +5,8 @@ parameters:
     namespace: 'http://purl.org/dc/elements/1.1/'
     properties:
       creator:
-        dataType: resource
+        datatype: resource
       contributor:
-        dataType: resource
+        datatype: resource
       title:
-        dataType: literal
+        datatype: literal

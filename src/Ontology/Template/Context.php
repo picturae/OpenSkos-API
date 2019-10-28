@@ -15,6 +15,12 @@ final class Context
 <?php } /* foreach context as namespace */ ?>
     ];
 
+    const datatype = [
+<?php foreach ($datatype as $key => $value) { ?>
+        '<?= $key; ?>' => '<?= $value; ?>',
+<?php } /* foreach datatype as key value */ ?>
+    ];
+
     /**
      * Build a context based on short names.
      *

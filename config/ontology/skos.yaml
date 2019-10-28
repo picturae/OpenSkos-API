@@ -6,85 +6,85 @@ parameters:
     properties:
 
       Concept:
-        dataType: resource
+        datatype: resource
       ConceptScheme:
-        dataType: resource
+        datatype: resource
       inScheme:
-        dataType: resource
+        datatype: resource
       hasTopConcept:
-        dataType: literal
+        datatype: literal
       topConceptOf:
-        dataType: resource
+        datatype: resource
 
 
       # Labels
       altLabel:
-        dataType: literal
+        datatype: literal
       hiddenLabel:
-        dataType: literal
+        datatype: literal
       prefLabel:
-        dataType: literal
+        datatype: literal
 
       # Notations
       notation:
-        dataType: literal
+        datatype: literal
 
 
       # Documentation properties
       changeNote:
-        dataType: literal
+        datatype: literal
       definition:
-        dataType: literal
+        datatype: literal
       editorialNote:
-        dataType: literal
+        datatype: literal
       example:
-        dataType: literal
+        datatype: literal
       historyNote:
-        dataType: literal
+        datatype: literal
       note:
-        dataType: literal
+        datatype: literal
       scopeNote:
-        dataType: literal
+        datatype: literal
 
 
       # Semantic relations
       broader:
-        dataType: resource
+        datatype: resource
       broaderTransitive:
-        dataType: resource
+        datatype: resource
       narrower:
-        dataType: resource
+        datatype: resource
       narrowerTransitive:
-        dataType: resource
+        datatype: resource
       related:
-        dataType: resource
+        datatype: resource
       semanticRelation:
-        dataType: resource
+        datatype: resource
 
       # Concept collections
       Collection:
-        dataType: resource
+        datatype: resource
       OrderedCollection:
-        dataType: resource
+        datatype: resource
       member:
-        dataType: resource
+        datatype: resource
       memberList:
-        dataType: resource
+        datatype: resource
 
       # Mapping properties
       broadMatch:
-        dataType: resource
+        datatype: resource
       broaderMatch:
-        dataType: resource
+        datatype: resource
       closeMatch:
-        dataType: resource
+        datatype: resource
       exactMatch:
-        dataType: resource
+        datatype: resource
       mappingRelation:
-        dataType: resource
+        datatype: resource
       narrowMatch:
-        dataType: resource
+        datatype: resource
       narrowerMatch:
-        dataType: resource
+        datatype: resource
       relatedMatch:
-        dataType: resource
+        datatype: resource
