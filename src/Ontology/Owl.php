@@ -1,7 +1,7 @@
 <?php
 
-/*
- * OpenSKOS
+/**
+ * OpenSKOS.
  *
  * LICENSE
  *
@@ -11,7 +11,7 @@
  * http://www.gnu.org/licenses/gpl-3.0.txt
  *
  * @category   OpenSKOS
- * @package    OpenSKOS
+ *
  * @copyright  Copyright (c) 2015 Picturae (http://www.picturae.com)
  * @author     Picturae
  * @license    http://www.gnu.org/licenses/gpl-3.0.txt GPLv3

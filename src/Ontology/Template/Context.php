@@ -1,23 +1,18 @@
 <?php
 
+namespace App\Ontology\Template;
+
+?>
+<?= "<?php\n"; ?>
+
 namespace App\Ontology;
 
 final class Context
 {
     const prefixes = [
-        'dc' => Dc::NAME_SPACE,
-        'dcmi' => Dcmi::NAME_SPACE,
-        'dcterms' => DcTerms::NAME_SPACE,
-        'foaf' => Foaf::NAME_SPACE,
-        'openskos' => OpenSkos::NAME_SPACE,
-        'org' => Org::NAME_SPACE,
-        'owl' => Owl::NAME_SPACE,
-        'rdf' => Rdf::NAME_SPACE,
-        'rdfs' => Rdfs::NAME_SPACE,
-        'skos' => Skos::NAME_SPACE,
-        'skosxl' => SkosXl::NAME_SPACE,
-        'vcard' => VCard::NAME_SPACE,
-        'xsd' => Xsd::NAME_SPACE,
+<?php foreach ($context as $namespace) { ?>
+        '<?= $namespace['prefix']; ?>' => <?= $namespace['name']; ?>::NAME_SPACE,
+<?php } /* foreach context as namespace */ ?>
     ];
 
     /**

@@ -1,0 +1,24 @@
+parameters:
+  ontology.skosxl:
+    name: SkosXl
+    prefix: skosxl
+    namespace: 'http://www.w3.org/2008/05/skos-xl#'
+    properties:
+      Label:
+        dataType: class
+      altLabel:
+        dataType: literal
+        "rdfs:range": "skosxl:Label"
+      hiddenLabel:
+        dataType: literal
+        "rdfs:range": "skosxl:Label"
+      labelRelation:
+        dataType: resource
+        "rdfs:range": "skosxl:Label"
+        "rdfs:domain": "skosxl:Label"
+      literalForm:
+        dataType: literal
+        "rdfs:domain": "skosxl:Label"
+      prefLabel:
+        dataType: literal
+        "rdfs:range": "skosxl:Label"

@@ -24,7 +24,7 @@ final class Label implements RdfResource
     private static $mapping = [
         self::type => Rdf::TYPE,
         self::modified => DcTerms::MODIFIED,
-        self::literalForm => SkosXl::LITERALFORM,
+        self::literalForm => SkosXl::LITERAL_FORM,
     ];
 
     /**

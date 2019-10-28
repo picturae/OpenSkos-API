@@ -1,0 +1,26 @@
+parameters:
+  ontology.vcard:
+    name: VCard
+    prefix: vcard
+    namespace: 'http://www.w3.org/2006/vcard/ns#'
+    properties:
+      ORG:
+        dataType: literal
+      orgname:
+        dataType: literal
+      orgunit:
+        dataType: literal
+      URL:
+        dataType: literal
+      EMAIL:
+        dataType: literal
+      ADR:
+        dataType: literal
+      Street:
+        dataType: literal
+      Locality:
+        dataType: literal
+      Pcode:
+        dataType: literal
+      Country:
+        dataType: literal

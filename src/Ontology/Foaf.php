@@ -22,8 +22,7 @@ namespace App\Ontology;
 final class Foaf
 {
     const NAME_SPACE = 'http://xmlns.com/foaf/0.1/';
-    const NAME = 'http://xmlns.com/foaf/0.1/name';
     const PERSON = 'http://xmlns.com/foaf/0.1/Person';
-    const ORGANISATION = 'http://xmlns.com/foaf/0.1/workplaceHomepage';
+    const NAME = 'http://xmlns.com/foaf/0.1/name';
     const MBOX = 'http://xmlns.com/foaf/0.1/mbox';
 }
