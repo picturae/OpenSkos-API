@@ -170,9 +170,41 @@ class SkosResourceRepository
         return $fullSet;
     }
 
-    public function get(Iri $object)
+    public function getOneWithoutUuid(Iri $rdfType, InternalResourceId $subject)
     {
-        $sparql = SparqlQuery::describeResource($object);
+        $sparql = SparqlQuery::describeByTypeWithoutUUID((string) $rdfType, (string) $subject);
+        $triples = $this->rdfClient->describe($sparql);
+
+        if (0 === count($triples)) {
+            return null;
+        }
+
+        $groups = [];
+        foreach ($triples as $triple) {
+            $groups[$triple->getSubject()->getUri()][] = $triple;
+        }
+
+        if (1 !== count($groups)) {
+            return null;
+        }
+
+        foreach ($groups as $iriString => $group) {
+            return call_user_func($this->resourceFactory, new Iri($iriString), $group);
+        }
+
+        return null;
+    }
+
+    /**
+     * Fetches a resource directly by it's subject.
+     *
+     * @param Iri $subject
+     *
+     * @return mixed|null
+     */
+    public function get(Iri $subject)
+    {
+        $sparql = SparqlQuery::describeResource($subject);
         $triples = $this->rdfClient->describe($sparql);
 
         if (0 === count($triples)) {

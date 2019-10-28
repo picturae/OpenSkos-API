@@ -1,0 +1,14 @@
+parameters:
+  ontology.rdfs:
+    name: Rdfs
+    prefix: rdfs
+    namespace: 'http://www.w3.org/2000/01/rdf-schema#'
+    properties:
+      comment:
+        dataType: literal
+      subPropertyOf:
+        dataType: resource
+      domain:
+        dataType: resource
+      range:
+        dataType: resource

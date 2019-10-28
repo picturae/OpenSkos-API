@@ -62,7 +62,7 @@ final class SparqlConceptSchemeRepository implements ConceptSchemeRepository
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         return $this->skosRepository->allOfType(
-            new Iri(Skos::CONCEPTSCHEME),
+            new Iri(Skos::CONCEPT_SCHEME),
             $offset,
             $limit,
             $filters
@@ -97,7 +97,7 @@ final class SparqlConceptSchemeRepository implements ConceptSchemeRepository
      */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
-        return $this->skosRepository->findBy(new Iri(Skos::CONCEPTSCHEME), $predicate, $object);
+        return $this->skosRepository->findBy(new Iri(Skos::CONCEPT_SCHEME), $predicate, $object);
     }
 
     /**
@@ -108,7 +108,7 @@ final class SparqlConceptSchemeRepository implements ConceptSchemeRepository
      */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?ConceptScheme
     {
-        $res = $this->skosRepository->findOneBy(new Iri(Skos::CONCEPTSCHEME), $predicate, $object);
+        $res = $this->skosRepository->findOneBy(new Iri(Skos::CONCEPT_SCHEME), $predicate, $object);
 
         return $res;
     }
