@@ -20,6 +20,7 @@ use App\Rest\ScalarResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class RelationController
 {
@@ -136,7 +137,7 @@ final class RelationController
 
         // No resource yet = couldn't find it
         if (is_null($rawdata)) {
-            throw new BadRequestHttpException("Could not get resource with id: ${object}");
+            throw new NotFoundHttpException("Could not get resource with id: ${object}");
         }
 
         // Separate the ID
