@@ -7,6 +7,10 @@ use App\Database\Doctrine;
 use Doctrine\Common\Annotations\AnnotationReader;
 use JsonMapper;
 
+/**
+ * Produces an object with the data directly assigned to it
+ * This type of entity DOES NOT contain any triples
+ */
 abstract class AbstractEntity
 {
     /**
@@ -20,7 +24,13 @@ abstract class AbstractEntity
         $this->populate($data);
     }
 
-    public static function getTable()
+    /**
+     * Checks the annotations of our class for App\Annotation\Document\Table
+     * Returns it's value if it's present, null otherwise
+     *
+     * @return string|null
+     */
+    public static function getTable(): ?string
     {
         // Fetch all annotations
         $annotationReader = new AnnotationReader();
@@ -38,6 +48,9 @@ abstract class AbstractEntity
     }
 
     /**
+     * Writes the given data into the entity
+     * If no data was given, the data already in the entity is used to query the database
+     *
      * @param mixed $data
      *
      * @return self
@@ -88,6 +101,8 @@ abstract class AbstractEntity
     }
 
     /**
+     * Turns our the entity into an array, containing data only
+     *
      * @return array
      */
     public function __toArray(): array
