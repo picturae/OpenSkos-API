@@ -81,11 +81,6 @@ class GenerateOntologyCommand extends Command
                     if ($ontology['hasVocabulary']) {
                         $propertyDescriptor['name'] = $key;
                         $vocabulary[] = $propertyDescriptor;
-                        /* $semanticRelation = $graph->resource('openskos:semanticRelation');
-                            $semanticRelation->setType('rdf:Property');
-                            $semanticRelation->addResource('rdf:type', 'owl:ObjectProperty');
-                            $semanticRelation->addResource('rdfs:domain', 'openskos:Concept');
-                            $semanticRelation->addResource('rdfs:range', 'openskos:Concept'); */
                     }
                     continue;
                 }
@@ -130,24 +125,5 @@ class GenerateOntologyCommand extends Command
                 'dataType' => $datatype,
             ]));
         }
-
-        /* // Fetch names to build */
-        /* $generateNames = json_decode(file_get_contents(implode(DIRECTORY_SEPARATOR, [ */
-        /*     __DIR__, */
-        /*     '..', */
-        /*     'ontology.json' */
-        /* ]))); */
-
-        /* foreach( $generateNames as $className ) { */
-
-        /* } */
-
-        /* var_dump($generateNames); */
-        /* var_dump($container); */
-
-        /* $output->writeln([ */
-        /*     'Hello', */
-        /*     'world' */
-        /* ]); */
     }
 }
