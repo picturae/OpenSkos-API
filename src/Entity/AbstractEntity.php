@@ -107,7 +107,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Turns our the entity into an array, containing data only.
+     * Turns the entity into an array, containing data only.
      *
      * @return array
      */
