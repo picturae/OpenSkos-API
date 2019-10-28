@@ -9,7 +9,7 @@ use JsonMapper;
 
 /**
  * Produces an object with the data directly assigned to it
- * This type of entity DOES NOT contain any triples
+ * This type of entity DOES NOT contain any triples.
  */
 abstract class AbstractEntity
 {
@@ -26,7 +26,7 @@ abstract class AbstractEntity
 
     /**
      * Checks the annotations of our class for App\Annotation\Document\Table
-     * Returns it's value if it's present, null otherwise
+     * Returns it's value if it's present, null otherwise.
      *
      * @return string|null
      */
@@ -49,7 +49,7 @@ abstract class AbstractEntity
 
     /**
      * Writes the given data into the entity
-     * If no data was given, the data already in the entity is used to query the database
+     * If no data was given, the data already in the entity is used to query the database.
      *
      * @param mixed $data
      *
@@ -64,10 +64,16 @@ abstract class AbstractEntity
 
         // Fetch from DB if no data was given
         if (is_null($data)) {
+            // No table = no query
+            $table = static::getTable();
+            if (is_null($table)) {
+                return $this;
+            }
+
             $stmt = Doctrine::getConnection()
                 ->createQueryBuilder()
                 ->select('*')
-                ->from(static::getTable(), 't')
+                ->from($table, 't')
                 ->where('1 = 1');
 
             $searchData = array_filter($this->__toArray());
@@ -101,7 +107,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Turns our the entity into an array, containing data only
+     * Turns our the entity into an array, containing data only.
      *
      * @return array
      */
