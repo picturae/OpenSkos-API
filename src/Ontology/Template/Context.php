@@ -15,9 +15,9 @@ final class Context
 <?php } /* foreach context as namespace */ ?>
     ];
 
-    const datatype = [
-<?php foreach ($datatype as $key => $value) { ?>
-        '<?= $key; ?>' => '<?= $value; ?>',
+    const dataclass = [
+<?php foreach ($dataclass as $key => $value) { ?>
+        '<?= $key; ?>' => '\<?= $value; ?>',
 <?php } /* foreach datatype as key value */ ?>
     ];
 
@@ -55,6 +55,24 @@ final class Context
                 self::walk($value, $callback);
             }
         }
+    }
+
+    /**
+     * Detect prefix AND field from uri.
+     *
+     * @param string $uri
+     *
+     * @return array|null
+     */
+    public static function decodeUri(string $uri): ?array
+    {
+        $prefix = self::detectNamespaceFromUri($uri);
+        if (false === $prefix) {
+            return null;
+        }
+        $field = substr($uri, strlen(static::prefixes[$prefix]));
+
+        return [$prefix, $field];
     }
 
     /**

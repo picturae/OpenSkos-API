@@ -7,8 +7,10 @@ parameters:
 
       Concept:
         datatype: resource
+        dataclass: App\OpenSkos\Concept\Concept
       ConceptScheme:
         datatype: resource
+        dataclass: App\OpenSkos\ConceptScheme\ConceptScheme
       inScheme:
         datatype: resource
       hasTopConcept:

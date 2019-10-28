@@ -6,6 +6,7 @@ parameters:
     properties:
       Person:
         datatype: class
+        dataclass: App\OpenSkos\User\User
       name:
         datatype: literal
       mbox:

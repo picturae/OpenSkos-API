@@ -6,3 +6,4 @@ parameters:
     properties:
       FormalOrganization:
         datatype: class
+        dataclass: App\OpenSkos\Institution\Institution

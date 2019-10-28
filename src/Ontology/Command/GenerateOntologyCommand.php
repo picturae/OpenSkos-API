@@ -49,12 +49,30 @@ class GenerateOntologyCommand extends Command
             }
         }
 
+        // Build dataclass list
+        $dataclass = [];
+        foreach ($context as $ontology) {
+            $ontology['properties'] = $ontology['properties'] ?? [];
+            foreach ($ontology['properties'] as $key => $propertyDescriptor) {
+                if (is_string($propertyDescriptor)) {
+                    continue;
+                }
+                if (!is_array($propertyDescriptor)) {
+                    continue;
+                }
+                if (!isset($propertyDescriptor['dataclass'])) {
+                    continue;
+                }
+                $dataclass[$ontology['prefix'].':'.$key] = $propertyDescriptor['dataclass'];
+            }
+        }
+
         // Step 1: build context file
         file_put_contents("${dir}${ds}Context.php", Template::render('Context', [
-            'context'  => $context,
+            'context' => $context,
+            'dataclass' => $dataclass,
             'datatype' => $datatype,
         ]));
-
 
         // Build ontology file for referenced vocabulary
         foreach ($context as $ontology) {
@@ -124,6 +142,7 @@ class GenerateOntologyCommand extends Command
                 'vocabulary' => $vocabulary,
                 'consts' => $consts,
                 'lists' => $lists,
+                'dataclass' => $dataclass,
                 'datatype' => $datatype,
             ]));
         }

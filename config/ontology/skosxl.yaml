@@ -6,6 +6,7 @@ parameters:
     properties:
       Label:
         datatype: class
+        dataclass: App\OpenSkos\Label\Label
       altLabel:
         datatype: literal
         "rdfs:range": "skosxl:Label"
