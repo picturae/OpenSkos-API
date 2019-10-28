@@ -43,7 +43,6 @@ final class Context
      */
     private static function walk(array $arr, callable $callback): void
     {
-        /* var_dump($arr); */
         foreach ($arr as $key => $value) {
             call_user_func($callback, $value, $key);
             if (is_array($value)) {
