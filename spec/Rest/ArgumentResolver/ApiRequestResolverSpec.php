@@ -24,7 +24,7 @@ class ApiRequestResolverSpec extends ObjectBehavior
 
     public function let()
     {
-        $this->beConstructedWith($this->formatFactory);
+        $this->beConstructedWith($this->formatFactory, null);
     }
 
     public function it_resolves_pagination_from_symfony_request(

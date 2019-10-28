@@ -11,7 +11,6 @@ use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\InternalResourceId;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
