@@ -47,7 +47,7 @@ install:
   # - ./start-solr.sh &
   # - ./start-fuseki.sh &
   - mysql < openskos-create.sql
-  - ./openskos-init.sh
+  - bash openskos-init.sh
   - cd ..
   - ls
 
