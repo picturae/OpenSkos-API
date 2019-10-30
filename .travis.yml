@@ -40,6 +40,7 @@ install:
   # - chmod -R ugo+rwx data
   # - chmod -R ugo+rwx public/data
   # - sudo service apache2 restart
+  - vendor/bin/phing config
   - cd integrationtestsettings
   # - chmod +x install-test-env.sh
   # - ./install-test-env.sh
