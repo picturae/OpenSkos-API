@@ -3,8 +3,8 @@ version: "3.5"
 services:
   fpm:
     build:
-      context: ..
-      dockerfile: docker/fpm/Dockerfile
+      context: ../..
+      dockerfile: data/docker/fpm/Dockerfile
     networks:
       - default
       - openskos
