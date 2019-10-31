@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Label;
 
 use App\OpenSkos\InternalResourceId;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 
 interface LabelRepository
@@ -21,16 +22,16 @@ interface LabelRepository
     /**
      * @param Iri $iri
      *
-     * @return Label|null
+     * @return AbstractRdfDocument|null
      */
-    public function findByIri(Iri $iri): ?Label;
+    public function findByIri(Iri $iri): ?AbstractRdfDocument;
 
     /**
      * @param InternalResourceId $id
      *
-     * @return Label|null
+     * @return AbstractRdfDocument|null
      */
-    public function find(InternalResourceId $id): ?Label;
+    public function find(InternalResourceId $id): ?AbstractRdfDocument;
 
     /**
      * @param Iri                $predicate
@@ -44,9 +45,9 @@ interface LabelRepository
      * @param Iri                $predicate
      * @param InternalResourceId $object
      *
-     * @return Label|null
+     * @return AbstractRdfDocument|null
      */
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Label;
+    public function findOneBy(Iri $predicate, InternalResourceId $object): ?AbstractRdfDocument;
 
     /**
      * @param array $iris
@@ -58,7 +59,7 @@ interface LabelRepository
     /**
      * @param InternalResourceId $subject
      *
-     * @return Label|null
+     * @return AbstractRdfDocument|null
      */
-    public function getOneWithoutUuid(InternalResourceId $subject): ?Label;
+    public function getOneWithoutUuid(InternalResourceId $subject): ?AbstractRdfDocument;
 }
