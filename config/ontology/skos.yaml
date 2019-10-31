@@ -19,8 +19,11 @@ parameters:
 
       # Labels
       altLabel:
+        dataType: literal
       hiddenLabel:
+        dataType: literal
       prefLabel:
+        dataType: literal
 
 
       # Notations

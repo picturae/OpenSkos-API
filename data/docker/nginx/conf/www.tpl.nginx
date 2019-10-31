@@ -1,0 +1,47 @@
+##
+# Base configuration only for HTTP connections.
+# For HTTPS, you need to update this configuration in order to add
+# ssl related stuff
+##
+# This file is TEMPLATE. All variables like $EXAMPLE or ${EXAMPLE} must be substituded
+# the best tools for that kind of substitusion is envsubst https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
+##
+# TODO: Create production verion of that configuration.
+# Remove: debug pathes (_profiler, _wdt) from location
+# Add proper error redirects
+##
+
+server {
+    listen $PORT;
+    server_name $DOMAIN;
+
+    # Include server-related configuration
+    include www.d/*.server.nginx;
+
+    # Location that forwards all request that didn't matched locations above to FPM server
+    # Replace location path '/' to appropriate value in other nginx configruations.
+    location / {
+        try_files $uri @fpm;
+    }
+
+    # Named location to proxy HTTP request to Fast CGI server.
+    location @fpm {
+        # Include api location related configuration
+        include www.d/*.api.nginx;
+
+        # General FPM Configuration
+        set $api_root $FPM_ROOT;
+        set $api_entrypoint $FPM_ENTRYPOINT;
+        fastcgi_pass $FPM_URL;
+
+        include fastcgi_params;
+        fastcgi_param  SCRIPT_FILENAME    $api_root/$api_entrypoint;
+        fastcgi_param  SCRIPT_NAME        $api_entrypoint;
+    }
+
+    # Restrict access to any other location.
+    # location / {
+    #     return 403;
+    # }
+
+}

@@ -24,7 +24,7 @@ abstract class AbstractRdfDocument implements RdfResource
      * The key   = doctrine
      * The value = local
      *
-     * @var array
+     * @var array|null
      */
     protected static $uniqueFields = null;
 
@@ -266,11 +266,10 @@ abstract class AbstractRdfDocument implements RdfResource
 
             foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
                 if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
-                    /**
-                     * @var Iri
-                     */
+                    /** @var Iri */
                     $xlLabel = $triple->getObject();
 
+                    /** @var Label */
                     $fullLabel = $labelRepository->findByIri($xlLabel);
                     if (isset($fullLabel)) {
                         $subject = $triple->getSubject();

@@ -1,0 +1,54 @@
+sudo: true
+
+language: php
+
+php:
+  - 7.3
+
+matrix:
+  allow_failures:
+    - php: hhvm
+
+services:
+  - mysql
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install apache2 libapache2-mod-fastcgi -y
+  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo a2enmod rewrite actions fastcgi alias
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  - sudo find /etc/apache2 -print
+  - sudo cp $TRAVIS_BUILD_DIR/integrationtestsettings/openskos.conf /etc/apache2/sites-available/
+  - sudo a2dissite 000-default
+  - sudo a2ensite openskos
+  - sudo service apache2 restart
+  - sudo ps aux | egrep '(apache|httpd)'
+  # - sudo env PATH="$PATH" data/docker/scripts/ext/memcache.sh
+  # - phpenv config-add data/travis/php$(php -v | head -1 | tr '.' ' ' | awk '{print $2}').ini
+  # - php -m
+
+install:
+  - composer install --dev --prefer-dist
+  # - sudo rm -rf /var/www/html 
+  # - sudo ln -s $TRAVIS_BUILD_DIR /var/www/html
+  # - sudo usermod -a -G travis www-data
+  # - sudo groups www-data
+  # - find $TRAVIS_BUILD_DIR -type d -exec chmod ugo+x {} \;
+  # - chmod -R ugo+rwx cache
+  # - chmod -R ugo+rwx data
+  # - chmod -R ugo+rwx public/data
+  # - sudo service apache2 restart
+  - vendor/bin/phing config
+  - cd integrationtestsettings
+  - bash install-test-env.sh
+  - bash start-solr.sh &
+  - bash start-fuseki.sh &
+  - mysql < openskos-create.sql
+  - bash openskos-init.sh
+  - cd ..
+  - ls
+
+script:
+  - ./vendor/bin/grumphp run

@@ -27,6 +27,9 @@ final class Skos
     const IN_SCHEME = 'http://www.w3.org/2004/02/skos/core#inScheme';
     const HAS_TOP_CONCEPT = 'http://www.w3.org/2004/02/skos/core#hasTopConcept';
     const TOP_CONCEPT_OF = 'http://www.w3.org/2004/02/skos/core#topConceptOf';
+    const ALT_LABEL = 'http://www.w3.org/2004/02/skos/core#altLabel';
+    const HIDDEN_LABEL = 'http://www.w3.org/2004/02/skos/core#hiddenLabel';
+    const PREF_LABEL = 'http://www.w3.org/2004/02/skos/core#prefLabel';
     const NOTATION = 'http://www.w3.org/2004/02/skos/core#notation';
     const CHANGE_NOTE = 'http://www.w3.org/2004/02/skos/core#changeNote';
     const DEFINITION = 'http://www.w3.org/2004/02/skos/core#definition';
