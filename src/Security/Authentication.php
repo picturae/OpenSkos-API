@@ -29,7 +29,7 @@ class Authentication
         $token = null;
         $token = $token ?? $request->query->get('token');
         $token = $token ?? $request->headers->get('authorization');
-        if (is_null($token)) {
+        if (!is_string($token)) {
             return;
         }
 
