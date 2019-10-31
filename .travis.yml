@@ -42,10 +42,9 @@ install:
   # - sudo service apache2 restart
   - vendor/bin/phing config
   - cd integrationtestsettings
-  # - chmod +x install-test-env.sh
-  # - ./install-test-env.sh
-  # - ./start-solr.sh &
-  # - ./start-fuseki.sh &
+  - bash install-test-env.sh
+  - bash start-solr.sh &
+  - bash start-fuseki.sh &
   - mysql < openskos-create.sql
   - bash openskos-init.sh
   - cd ..
