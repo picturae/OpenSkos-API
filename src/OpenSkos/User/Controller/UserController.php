@@ -49,7 +49,7 @@ final class UserController
      * @param Connection     $connection
      * @param ApiRequest     $apiRequest
      *
-     * @throws AccessDenieHttpdException;
+     * @throws AccessDeniedHttpException
      *
      * @return ListResponse
      */
@@ -111,7 +111,7 @@ final class UserController
      * @param ApiRequest      $apiRequest
      * @param LabelRepository $labelRepository
      *
-     * @throws AccessDenieHttpdException;
+     * @throws AccessDeniedHttpException
      *
      * @return ScalarResponse
      */

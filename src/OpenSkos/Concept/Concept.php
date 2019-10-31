@@ -389,11 +389,11 @@ final class Concept implements RdfResource
 
             foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
                 if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
-                    /**
-                     * @var Iri
-                     */
+
+                    /** @var Iri */
                     $xlLabel = $triple->getObject();
 
+                    /** @var Label */
                     $fullLabel = $labelRepository->findByIri($xlLabel);
                     if (isset($fullLabel)) {
                         $subject = $triple->getSubject();
