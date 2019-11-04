@@ -120,10 +120,6 @@ final class Concept
         $apiFilter->addFilter('openskos:deletedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy'));
         $full_filter = $apiFilter->buildFilters('solr');
 
-        /* From Spec
-            searchProfile=id of a search profile. Stored in MySQL table 'search_profiles'.
-        */
-
         /*
             No specification of this made available from Meertens. And not in Solr
             collections=comma separated list of collection URIs or IDs [On Hold: Predicate not known]
@@ -132,21 +128,6 @@ final class Concept
         /* /1* Concept Schemes *1/ */
         /* $param_dates = $this->processDateStampsFromRequest($apiRequest, 'statuses'); */
         /* $interactions_filter = $solrFilterProcessor->buildInteractionsFilters($param_dates); */
-
-        $param_profile = $apiRequest->getSearchProfile();
-
-        if ($param_profile) {
-            if (0 !== count($full_filter)) {
-                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
-            }
-            $to_apply = [
-                solrFilterProcessor::ENTITY_INSTITUTION => true,
-                solrFilterProcessor::ENTITY_SET => true,
-                solrFilterProcessor::ENTITY_CONCEPTSCHEME => true,
-                solrFilterProcessor::VALUE_STATUS => true,
-            ];
-            $full_filter = $solrFilterProcessor->retrieveSearchProfile($param_profile, $to_apply);
-        }
 
         return $full_filter;
     }

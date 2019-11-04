@@ -22,7 +22,6 @@ class RoleSpec extends ObjectBehavior
         $offset = 0;
         $institutions = [];
         $sets = [];
-        $searchProfile = 0;
         $foreignUri = null;
 
         // Build the apiRequest
@@ -34,7 +33,6 @@ class RoleSpec extends ObjectBehavior
             $offset,
             $institutions,
             $sets,
-            $searchProfile,
             $foreignUri,
         );
     }

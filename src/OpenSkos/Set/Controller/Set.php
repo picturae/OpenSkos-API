@@ -44,15 +44,6 @@ final class Set
             throw new BadRequestHttpException('Sets filter is not applicable here.');
         }
 
-        $param_profile = $apiRequest->getSearchProfile();
-
-        if ($param_profile) {
-            if (0 !== count($full_filter)) {
-                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
-            }
-            $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true];
-            $full_filter = $filterProcessor->retrieveSearchProfile($param_profile, $to_apply);
-        }
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
