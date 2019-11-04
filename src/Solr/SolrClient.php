@@ -19,9 +19,6 @@ final class SolrClient
         $this->client = $client;
     }
 
-    /**
-     * @return Client
-     */
     public function getClient(): Client
     {
         return $this->client;

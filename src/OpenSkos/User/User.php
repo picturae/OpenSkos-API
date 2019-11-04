@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\User;
 
+use App\Annotation\Document;
 use App\Ontology\DcTerms;
 use App\Ontology\Foaf;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Rdf\AbstractRdfDocument;
-use App\Annotation\Document;
 
 /**
  * @Document\Table("user")

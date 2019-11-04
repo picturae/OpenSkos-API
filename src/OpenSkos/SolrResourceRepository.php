@@ -29,8 +29,8 @@ use OpenSkos2\Rdf\ResourceCollection;
 use Solarium\QueryType\Update\Query\Query as UpdateQuery;
 */
 
-use Solarium\Core\Client\Client;
 use App\OpenSkos\Exception\InvalidApiRequest;
+use Solarium\Core\Client\Client;
 
 class SolrResourceRepository
 {
@@ -73,9 +73,6 @@ class SolrResourceRepository
     //$this->isNoCommitMode = $isNoCommitMode;
     //}
 
-    /**
-     * @param Client $solr
-     */
     public function __construct(Client $solr)
     {
         $this->solr = $solr;

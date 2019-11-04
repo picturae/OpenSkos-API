@@ -80,9 +80,6 @@ class Authentication
         $this->user = $user;
     }
 
-    /**
-     * @return bool
-     */
     public function isAuthenticated(): bool
     {
         return $this->authenticated;
@@ -107,9 +104,6 @@ class Authentication
         return $this->roles;
     }
 
-    /**
-     * @return bool
-     */
     public function isAdministrator(): bool
     {
         if (!$this->isAuthenticated()) {
@@ -119,9 +113,6 @@ class Authentication
         return in_array('administrator', $this->getRoles(), true);
     }
 
-    /**
-     * @return User|null
-     */
     public function getUser(): ?User
     {
         if (!$this->isAuthenticated()) {

@@ -8,8 +8,5 @@ interface RdfResource
 {
     public function iri(): Iri;
 
-    /**
-     * @return array
-     */
     public function triples(): array;
 }

@@ -57,10 +57,7 @@ class TripleFactorySpec extends ObjectBehavior
                 foreach ($actual as $i => $triple) {
                     $expTriple = (string) ($expected[$i] ?? '<empty>');
                     if ((string) $triple !== $expTriple) {
-                        throw new FailureException(sprintf(
-                            "Expected triple\n\t%s\nat index #%d but got\n\t%s",
-                            $expTriple, $i, $triple
-                        ));
+                        throw new FailureException(sprintf("Expected triple\n\t%s\nat index #%d but got\n\t%s", $expTriple, $i, $triple));
                     }
                 }
 

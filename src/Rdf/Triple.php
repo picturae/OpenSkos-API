@@ -35,25 +35,16 @@ final class Triple
         }
     }
 
-    /**
-     * @return Iri
-     */
     public function getSubject(): Iri
     {
         return $this->subject;
     }
 
-    /**
-     * @return Iri
-     */
     public function getPredicate(): Iri
     {
         return $this->predicate;
     }
 
-    /**
-     * @return RdfTerm
-     */
     public function getObject(): RdfTerm
     {
         return $this->object;

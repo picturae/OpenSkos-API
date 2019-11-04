@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\RelationType\Controller;
 
-use App\Rest\DirectGraphResponse;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\RelationType\RelationType;
+use App\Rest\DirectGraphResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -19,8 +19,6 @@ final class RelationTypeController
 
     /**
      * Role constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -30,10 +28,6 @@ final class RelationTypeController
 
     /**
      * @Route(path="/relationtypes.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest $apiRequest
-     *
-     * @return DirectGraphResponse
      */
     public function getRelationTypes(
         ApiRequest $apiRequest
@@ -46,11 +40,6 @@ final class RelationTypeController
 
     /**
      * @Route(path="/relationtype/{id}.{format?}", methods={"GET"})
-     *
-     * @param string     $id
-     * @param ApiRequest $apiRequest
-     *
-     * @return DirectGraphResponse
      */
     public function getRelationType(
         string $id,

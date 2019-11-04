@@ -28,7 +28,6 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
     /**
      * @param EasyRdf_Graph $graph
      * @param string        $format
-     * @param array         $options
      *
      * @throws EasyRdf_Exception
      *
@@ -71,9 +70,7 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
                             $_value = $value['value'];
                         }
                     } else {
-                        throw new EasyRdf_Exception(
-                            'Unable to serialise object to JSON-LD: '.$value['type']
-                        );
+                        throw new EasyRdf_Exception('Unable to serialise object to JSON-LD: '.$value['type']);
                     }
 
                     if ('http://www.w3.org/1999/02/22-rdf-syntax-ns#type' == $property) {

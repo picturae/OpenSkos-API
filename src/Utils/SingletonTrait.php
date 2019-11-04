@@ -20,8 +20,6 @@ trait SingletonTrait
 
     /**
      * @psalm-suppress InvalidNullableReturnType
-     *
-     * @return self
      */
     public static function instance(): self
     {

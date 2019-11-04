@@ -12,11 +12,6 @@ class Doctrine
         static::getConnection($connection);
     }
 
-    /**
-     * @param Connection|null $connection
-     *
-     * @return Connection
-     */
     public static function getConnection(
         Connection $connection = null
     ): Connection {

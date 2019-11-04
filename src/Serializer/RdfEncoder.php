@@ -13,12 +13,12 @@ use App\Rdf\Format\Ntriples;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\RdfXml;
 use App\Rdf\Format\Turtle;
+use App\Rdf\Iri;
 use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
+use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use EasyRdf_Graph;
-use App\Rdf\Literal\Literal;
-use App\Rdf\Iri;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\NormalizationAwareInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
@@ -65,7 +65,6 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
      *
      * @param mixed  $data
      * @param string $format
-     * @param array  $context
      *
      * @return string
      */
@@ -139,7 +138,6 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
     /**
      * @param $triples
      *
-     * @return EasyRdf_Graph
      * @psalm-suppress InvalidMethodCall
      */
     private function tripleSetToEasyRdfGraph($triples): EasyRdf_Graph

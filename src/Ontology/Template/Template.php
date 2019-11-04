@@ -4,12 +4,6 @@ namespace App\Ontology\Template;
 
 class Template
 {
-    /**
-     * @param string     $templateName
-     * @param array|null $data
-     *
-     * @return string
-     */
     public static function render(string $templateName, array $data = null): string
     {
         ob_start();

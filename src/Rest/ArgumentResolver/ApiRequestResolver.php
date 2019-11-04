@@ -36,10 +36,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param string|null $formatName
-     * @param array|null  $headers
-     *
-     * @return RdfFormat|null
+     * @param array|null $headers
      *
      * @throws InvalidApiRequest
      */
@@ -85,9 +82,6 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
      * @return \Generator
      *
      * @throws InvalidApiRequest

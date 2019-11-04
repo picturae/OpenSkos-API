@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\OpenSkos\Institution\Controller;
 
 use App\Ontology\OpenSkos;
-use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
@@ -31,11 +31,6 @@ final class Institution
 
     /**
      * @Route(path="/institutions.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest            $apiRequest
-     * @param InstitutionRepository $repository
-     *
-     * @return ListResponse
      */
     public function institutions(
         ApiRequest $apiRequest,
@@ -64,12 +59,6 @@ final class Institution
 
     /**
      * @Route(path="/institution/{id}.{format?}", methods={"GET"})
-     *
-     * @param InternalResourceId    $id
-     * @param ApiRequest            $apiRequest
-     * @param InstitutionRepository $repository
-     *
-     * @return ScalarResponse
      */
     public function institution(
         InternalResourceId $id,

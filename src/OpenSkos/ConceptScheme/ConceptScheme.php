@@ -9,10 +9,10 @@ use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
-use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
 use App\Rdf\Triple;
+use App\Rdf\VocabularyAwareResource;
 
 final class ConceptScheme implements RdfResource
 {
@@ -81,8 +81,6 @@ final class ConceptScheme implements RdfResource
     }
 
     /**
-     * @param Iri $subject
-     *
      * @return ConceptScheme
      */
     public static function createEmpty(Iri $subject): self
@@ -91,7 +89,6 @@ final class ConceptScheme implements RdfResource
     }
 
     /**
-     * @param Iri      $subject
      * @param Triple[] $triples
      *
      * @return ConceptScheme

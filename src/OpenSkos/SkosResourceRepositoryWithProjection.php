@@ -11,12 +11,6 @@ use App\Rdf\Sparql\SparqlQuery;
 
 final class SkosResourceRepositoryWithProjection extends SkosResourceRepository
 {
-    /**
-     * @param array $iris
-     * @param array $projection
-     *
-     * @return array
-     */
     public function findManyByIriListWithProjection(array $iris, array $projection): array
     {
         $sparql = SparqlQuery::describeResources($iris);

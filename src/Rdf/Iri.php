@@ -13,8 +13,6 @@ class Iri implements RdfTerm
 
     /**
      * Literal constructor.
-     *
-     * @param string $value
      */
     public function __construct(string $value)
     {
@@ -23,17 +21,12 @@ class Iri implements RdfTerm
 
     /**
      * Output the uri as string.
-     *
-     * @return string
      */
     public function __toString(): string
     {
         return $this->uri;
     }
 
-    /**
-     * @return string
-     */
     public function getUri(): string
     {
         return $this->uri;

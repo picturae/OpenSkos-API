@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Healthcheck;
 
+use App\Annotation\Document;
 use App\Ontology\Foaf;
 use App\Ontology\Rdf;
 use App\Rdf\AbstractRdfDocument;
-use App\Annotation\Document;
 
 /**
  * @Document\Type(Foaf::PERSON)

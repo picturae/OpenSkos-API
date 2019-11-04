@@ -27,8 +27,6 @@ abstract class AbstractEntity
     /**
      * Checks the annotations of our class for App\Annotation\Document\Table
      * Returns it's value if it's present, null otherwise.
-     *
-     * @return string|null
      */
     public static function getTable(): ?string
     {
@@ -52,8 +50,6 @@ abstract class AbstractEntity
      * If no data was given, the data already in the entity is used to query the database.
      *
      * @param mixed $data
-     *
-     * @return self
      */
     public function populate($data = null): self
     {
@@ -108,8 +104,6 @@ abstract class AbstractEntity
 
     /**
      * Turns the entity into an array, containing data only.
-     *
-     * @return array
      */
     public function __toArray(): array
     {

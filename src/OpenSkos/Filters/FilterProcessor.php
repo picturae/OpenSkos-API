@@ -26,8 +26,6 @@ final class FilterProcessor
 
     /**
      * FilterProcessor constructor.
-     *
-     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -53,8 +51,6 @@ final class FilterProcessor
     }
 
     /**
-     * @param array $filters
-     *
      * @return bool
      */
     public function hasPublisher(array $filters)
@@ -71,8 +67,6 @@ final class FilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildInstitutionFilters(array $filterList)
@@ -93,8 +87,6 @@ final class FilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildSetFilters(array $filterList)
@@ -115,9 +107,6 @@ final class FilterProcessor
     }
 
     /**
-     * @param int   $profile_id
-     * @param array $to_apply
-     *
      * @return array
      */
     public function retrieveSearchProfile(int $profile_id, array $to_apply)

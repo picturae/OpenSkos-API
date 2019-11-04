@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Institution\Sparql;
 
+use App\Ontology\Org;
 use App\OpenSkos\Institution\Institution;
 use App\OpenSkos\Institution\InstitutionRepository;
-use App\Ontology\Org;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
-use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
+use App\Rdf\Sparql\Client;
 
 final class SparqlInstitutionRepository implements InstitutionRepository
 {
@@ -32,9 +32,6 @@ final class SparqlInstitutionRepository implements InstitutionRepository
 
     /**
      * SparqlInstitutionRepository constructor.
-     *
-     * @param Client             $rdfClient
-     * @param OpenSkosIriFactory $iriFactory
      */
     public function __construct(
         Client $rdfClient,
@@ -52,12 +49,6 @@ final class SparqlInstitutionRepository implements InstitutionRepository
         $this->iriFactory = $iriFactory;
     }
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100): array
     {
         return $this->skosRepository->allOfType(
@@ -67,43 +58,21 @@ final class SparqlInstitutionRepository implements InstitutionRepository
         );
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return Institution|null
-     */
     public function findByIri(Iri $iri): ?Institution
     {
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return Institution|null
-     */
     public function find(InternalResourceId $id): ?Institution
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
         return $this->skosRepository->findBy(new Iri(Org::FORMAL_ORGANIZATION), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return Institution|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Institution
     {
         $res = $this->skosRepository->findOneBy(new Iri(Org::FORMAL_ORGANIZATION), $predicate, $object);

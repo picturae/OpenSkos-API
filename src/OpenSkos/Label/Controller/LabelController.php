@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Label\Controller;
 
-use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Label\LabelRepository;
+use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\Label\LabelRepository;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,13 +30,6 @@ final class LabelController
 
     /**
      * @Route(path="/labels.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest      $apiRequest
-     * @param ApiFilter       $apiFilter
-     * @param LabelRepository $repository
-     * @param FilterProcessor $filterProcessor
-     *
-     * @return ListResponse
      */
     public function getLabels(
         ApiRequest $apiRequest,
@@ -60,12 +53,6 @@ final class LabelController
      * TODO: Fetch by UUID instead of regex.
      *
      * @Route(path="/label/{id}.{format?}", methods={"GET"})
-     *
-     * @param InternalResourceId $id
-     * @param ApiRequest         $apiRequest
-     * @param LabelRepository    $repository
-     *
-     * @return ScalarResponse
      */
     public function getLabel(
        InternalResourceId $id,

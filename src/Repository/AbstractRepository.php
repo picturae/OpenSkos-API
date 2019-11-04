@@ -9,8 +9,8 @@ use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\AbstractRdfDocument;
-use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
+use App\Rdf\Sparql\Client;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
 
@@ -53,9 +53,6 @@ abstract class AbstractRepository implements RepositoryInterface
 
     /**
      * AbstractRepository constructor.
-     *
-     * @param Client             $rdfClient
-     * @param OpenSkosIriFactory $iriFactory
      */
     public function __construct(
         Client $rdfClient,
@@ -97,21 +94,12 @@ abstract class AbstractRepository implements RepositoryInterface
 
     /**
      * Returns the connection for this repository.
-     *
-     * @return Connection
      */
     public function getConnection(): Connection
     {
         return $this->connection;
     }
 
-    /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         $results = $this->skosRepository->allOfType(
@@ -156,43 +144,21 @@ abstract class AbstractRepository implements RepositoryInterface
         return $results;
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return AbstractRdfDocument|null
-     */
     public function findByIri(Iri $iri): ?AbstractRdfDocument
     {
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return AbstractRdfDocument|null
-     */
     public function find(InternalResourceId $id): ?AbstractRdfDocument
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
         return $this->skosRepository->findBy(new Iri(static::DOCUMENT_TYPE), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return AbstractRdfDocument|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?AbstractRdfDocument
     {
         /** @var AbstractRdfDocument $res */
@@ -276,9 +242,6 @@ abstract class AbstractRepository implements RepositoryInterface
         return $res;
     }
 
-    /**
-     * @return array
-     */
     public function getAnnotations(): array
     {
         return $this->annotations;

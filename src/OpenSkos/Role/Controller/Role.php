@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Role\Controller;
 
-use App\Rest\DirectGraphResponse;
-use App\OpenSkos\ApiRequest;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
+use App\OpenSkos\ApiRequest;
+use App\Rest\DirectGraphResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -20,8 +20,6 @@ final class Role
 
     /**
      * Role constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -31,10 +29,6 @@ final class Role
 
     /**
      * @Route(path="/roles.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest $apiRequest
-     *
-     * @return DirectGraphResponse
      */
     public function role(
         ApiRequest $apiRequest

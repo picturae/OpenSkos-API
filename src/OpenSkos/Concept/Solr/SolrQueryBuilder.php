@@ -15,10 +15,7 @@ final class SolrQueryBuilder
     const BOOST_HIDDENLABEL = 10;
 
     /**
-     * @param string $searchText
      * @param $selection
-     *
-     * @return string
      */
     public function processSearchExpression(string $searchText, $selection): string
     {

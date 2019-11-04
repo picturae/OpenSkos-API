@@ -75,11 +75,6 @@ final class Level2Processor
         $this->populateData($entities, $crossLinks, $enrichmentTriples);
     }
 
-    /**
-     * @param array $entities
-     * @param array $crossLinks
-     * @param array $enrichmentTriples
-     */
     private function populateData(array $entities, array $crossLinks, array $enrichmentTriples): void
     {
         foreach ($crossLinks as $object => $co_ordinates_groups) {

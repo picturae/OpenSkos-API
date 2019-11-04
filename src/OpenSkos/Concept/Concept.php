@@ -12,10 +12,10 @@ use App\Ontology\Skos;
 use App\Ontology\SkosXl;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
-use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
 use App\Rdf\Triple;
+use App\Rdf\VocabularyAwareResource;
 
 final class Concept implements RdfResource
 {
@@ -264,9 +264,6 @@ final class Concept implements RdfResource
         }
     }
 
-    /**
-     * @return array
-     */
     public static function getAcceptableFields(): array
     {
         return self::$acceptable_fields;
@@ -280,41 +277,26 @@ final class Concept implements RdfResource
         return self::$mapping;
     }
 
-    /**
-     * @return array
-     */
     public static function getXlPredicates(): array
     {
         return self::$xlPredicates;
     }
 
-    /**
-     * @return array
-     */
     public static function getNonXlPredicates(): array
     {
         return self::$nonXlPredicates;
     }
 
-    /**
-     * @return array
-     */
     public static function getLanguageSensitive(): array
     {
         return self::$language_sensitive;
     }
 
-    /**
-     * @return array
-     */
     public static function getMetaGroups(): array
     {
         return self::$meta_groups;
     }
 
-    /**
-     * @return array
-     */
     public static function getAcceptableFieldsToXl(): array
     {
         return self::$acceptable_fields_to_xl;
@@ -341,19 +323,12 @@ final class Concept implements RdfResource
         return $this->resource->properties();
     }
 
-    /**
-     * @param string $property
-     *
-     * @return array|null
-     */
     public function getProperty(string $property): ?array
     {
         return $this->resource->getProperty($property);
     }
 
     /**
-     * @param Iri $subject
-     *
      * @return Concept
      */
     public static function createEmpty(Iri $subject): self
@@ -362,7 +337,6 @@ final class Concept implements RdfResource
     }
 
     /**
-     * @param Iri      $subject
      * @param Triple[] $triples
      *
      * @return Concept
@@ -376,8 +350,6 @@ final class Concept implements RdfResource
 
     /**
      * Loads the XL labels and replaces the default URI value with the full resource.
-     *
-     * @param LabelRepository $labelRepository
      */
     public function loadFullXlLabels(LabelRepository $labelRepository)
     {
@@ -410,8 +382,6 @@ final class Concept implements RdfResource
     /**
      * We are returning by reference, to quickly enable the data-levels functionality.
      *   Otherwise, a lot of extra hoops have to be jumped through just to add a data level.
-     *
-     * @return VocabularyAwareResource
      */
     public function &getResource(): VocabularyAwareResource
     {
