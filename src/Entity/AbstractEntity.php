@@ -84,6 +84,13 @@ abstract class AbstractEntity
             }
 
             $data = $res->fetch();
+
+            // Extra checking, the database may be case-insensitive
+            foreach ($searchData as $key => $value) {
+                if ($searchData[$key] !== $data[$key]) {
+                    return $this;
+                }
+            }
         }
 
         // Normalize data
