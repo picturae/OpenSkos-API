@@ -25,11 +25,10 @@ before_install:
   - sudo a2ensite openskos
   - sudo service apache2 restart
   - sudo ps aux | egrep '(apache|httpd)'
-  # - sudo env PATH="$PATH" data/docker/scripts/ext/memcache.sh
-  # - phpenv config-add data/travis/php$(php -v | head -1 | tr '.' ' ' | awk '{print $2}').ini
-  # - php -m
+  # TODO: clone openskos-config
 
 install:
+  # TODO: run data/deploy/deploy.sh -e travis
   - composer install --dev --prefer-dist
   # - sudo rm -rf /var/www/html 
   # - sudo ln -s $TRAVIS_BUILD_DIR /var/www/html
@@ -40,7 +39,7 @@ install:
   # - chmod -R ugo+rwx data
   # - chmod -R ugo+rwx public/data
   # - sudo service apache2 restart
-  - vendor/bin/phing config
+  # - vendor/bin/phing config
   - cd integrationtestsettings
   - bash install-test-env.sh
   - bash start-solr.sh &
@@ -48,7 +47,7 @@ install:
   - mysql < openskos-create.sql
   - bash openskos-init.sh
   - cd ..
-  - ls
+  - netstat -lnp
 
 script:
   - ./vendor/bin/grumphp run
