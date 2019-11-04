@@ -3,12 +3,12 @@
 namespace spec\App\Rest\ArgumentResolver;
 
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Exception\InvalidApiRequest;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormatFactory;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ApiRequestResolverSpec extends ObjectBehavior
 {
@@ -61,7 +61,7 @@ class ApiRequestResolverSpec extends ObjectBehavior
         );
 
         $this->resolve($request, $argumentMetadata)
-            ->shouldThrow(InvalidApiRequest::class)
+            ->shouldThrow(HttpException::class)
             ->during('current');
     }
 }

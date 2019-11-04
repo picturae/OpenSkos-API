@@ -6,7 +6,6 @@ namespace App\Rest\ArgumentResolver;
 
 use App\Database\Doctrine;
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Exception\InvalidApiRequest;
 use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\UnknownFormatException;
@@ -14,6 +13,8 @@ use App\Security\Authentication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class ApiRequestResolver implements ArgumentValueResolverInterface
 {
@@ -38,7 +39,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     /**
      * @param array|null $headers
      *
-     * @throws InvalidApiRequest
+     * @throws HttpException
      */
     private function resolveFormat(?string $formatName, $headers = null): ?RdfFormat
     {
@@ -72,7 +73,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         try {
             return $this->formatFactory->createFromName($formatName);
         } catch (UnknownFormatException $e) {
-            throw new InvalidApiRequest('Invalid Format', 0, $e);
+            throw new BadRequestHttpException('Invalid Format', $e);
         }
     }
 
@@ -84,7 +85,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     /**
      * @return \Generator
      *
-     * @throws InvalidApiRequest
+     * @throws HttpException
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
