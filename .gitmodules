@@ -1,0 +1,3 @@
+[submodule "data/deploy"]
+	path = data/deploy
+	url = git@github.com:picturae/openskos-config
