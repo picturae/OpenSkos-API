@@ -42,7 +42,7 @@ final class User extends AbstractRdfDocument
         self::role => OpenSkos::ROLE,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
         self::usertype => OpenSkos::USERTYPE,
-        /* self::apikey => OpenSkos::APIKEY, */ // TODO: make this an authenticated field
+        self::apikey => OpenSkos::APIKEY,
     ];
 
     /**
