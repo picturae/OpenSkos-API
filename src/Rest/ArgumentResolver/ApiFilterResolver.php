@@ -13,11 +13,6 @@ final class ApiFilterResolver implements ArgumentValueResolverInterface
 {
     /**
      * Returns whether or not the given argument is supported by this resolver.
-     *
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
-     * @return bool
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
@@ -25,9 +20,6 @@ final class ApiFilterResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
      * @return \Generator
      */
     public function resolve(Request $request, ArgumentMetadata $argument)

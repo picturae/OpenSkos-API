@@ -40,8 +40,6 @@ final class DatetimeLiteral implements Literal
     }
 
     /**
-     * @param string $value
-     *
      * @return DatetimeLiteral
      */
     public static function fromString(string $value): self
@@ -49,11 +47,7 @@ final class DatetimeLiteral implements Literal
         try {
             return new self(new \DateTime($value));
         } catch (\Exception $e) {
-            throw new \InvalidArgumentException(
-                "Value '$value' can be parsed to DateTimeLiteral",
-                0,
-                $e
-            );
+            throw new \InvalidArgumentException("Value '$value' can be parsed to DateTimeLiteral", 0, $e);
         }
     }
 }

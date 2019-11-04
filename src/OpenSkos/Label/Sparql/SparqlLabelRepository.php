@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\OpenSkos\Label\Sparql;
 
 use App\Ontology\SkosXl;
+use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
-use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
-use App\Rdf\Sparql\Client;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
+use App\Rdf\Sparql\Client;
 
 final class SparqlLabelRepository implements LabelRepository
 {
@@ -21,7 +22,7 @@ final class SparqlLabelRepository implements LabelRepository
     private $rdfClient;
 
     /**
-     * @var SkosResourceRepository<Label>
+     * @var SkosResourceRepository<AbstractRdfDocument>
      */
     private $skosRepository;
 
@@ -32,9 +33,6 @@ final class SparqlLabelRepository implements LabelRepository
 
     /**
      * SparqlLabelRepository constructor.
-     *
-     * @param Client             $rdfClient
-     * @param OpenSkosIriFactory $iriFactory
      */
     public function __construct(
         Client $rdfClient,
@@ -43,7 +41,7 @@ final class SparqlLabelRepository implements LabelRepository
         $this->rdfClient = $rdfClient;
 
         $this->skosRepository = new SkosResourceRepository(
-            function (Iri $iri, array $triples): Label {
+            function (Iri $iri, array $triples): AbstractRdfDocument {
                 return Label::fromTriples($iri, $triples);
             },
             $this->rdfClient
@@ -52,13 +50,6 @@ final class SparqlLabelRepository implements LabelRepository
         $this->iriFactory = $iriFactory;
     }
 
-    /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         return $this->skosRepository->allOfType(
@@ -69,61 +60,34 @@ final class SparqlLabelRepository implements LabelRepository
         );
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return Label|null
-     */
-    public function findByIri(Iri $iri): ?Label
+    public function findByIri(Iri $iri): ?AbstractRdfDocument
     {
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param array $iris
-     *
-     * @return array
-     */
     public function findManyByIriList(array $iris): array
     {
         return $this->skosRepository->findManyByIriList($iris);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return Label|null
-     */
-    public function find(InternalResourceId $id): ?Label
+    public function find(InternalResourceId $id): ?AbstractRdfDocument
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
         return $this->skosRepository->findBy(new Iri(SkosXl::LABEL), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return Label|null
-     */
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Label
+    public function findOneBy(Iri $predicate, InternalResourceId $object): ?AbstractRdfDocument
     {
         $res = $this->skosRepository->findOneBy(new Iri(SkosXl::LABEL), $predicate, $object);
 
         return $res;
     }
 
-    public function getOneWithoutUuid(InternalResourceId $uuid): ?Label
+    public function getOneWithoutUuid(InternalResourceId $uuid): ?AbstractRdfDocument
     {
         $res = $this->skosRepository->getOneWithoutUuid(new Iri(SkosXl::LABEL), $uuid);
 

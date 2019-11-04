@@ -7,10 +7,10 @@ namespace App\OpenSkos\Institution;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
-use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
 use App\Rdf\Triple;
+use App\Rdf\VocabularyAwareResource;
 
 final class Institution implements RdfResource
 {
@@ -77,8 +77,6 @@ final class Institution implements RdfResource
     }
 
     /**
-     * @param Iri $subject
-     *
      * @return Institution
      */
     public static function createEmpty(Iri $subject): self
@@ -87,7 +85,6 @@ final class Institution implements RdfResource
     }
 
     /**
-     * @param Iri      $subject
      * @param Triple[] $triples
      *
      * @return Institution

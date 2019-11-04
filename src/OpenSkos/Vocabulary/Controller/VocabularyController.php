@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Vocabulary\Controller;
 
-use App\Rest\DirectGraphResponse;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
+use App\Rest\DirectGraphResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -19,8 +19,6 @@ final class VocabularyController
 
     /**
      * Role constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -30,10 +28,6 @@ final class VocabularyController
 
     /**
      * @Route(path="/vocab.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest $apiRequest
-     *
-     * @return DirectGraphResponse
      */
     public function getRelationTypes(
         ApiRequest $apiRequest

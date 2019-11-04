@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set\Controller;
 
+use App\Ontology\OpenSkos;
+use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
-use App\Ontology\OpenSkos;
-use App\OpenSkos\ApiRequest;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class Set
 {
@@ -32,12 +32,6 @@ final class Set
 
     /**
      * @Route(path="/sets.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest      $apiRequest
-     * @param SetRepository   $repository
-     * @param FilterProcessor $filterProcessor
-     *
-     * @return ListResponse
      */
     public function sets(ApiRequest $apiRequest, SetRepository $repository, FilterProcessor $filterProcessor): ListResponse
     {
@@ -71,12 +65,6 @@ final class Set
 
     /**
      * @Route(path="/set/{id}.{format?}", methods={"GET"})
-     *
-     * @param InternalResourceId $id
-     * @param ApiRequest         $apiRequest
-     * @param SetRepository      $repository
-     *
-     * @return ScalarResponse
      */
     public function set(
         InternalResourceId $id,

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Status\Controller;
 
-use App\Rest\DirectGraphResponse;
-use App\OpenSkos\ApiRequest;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
+use App\OpenSkos\ApiRequest;
+use App\Rest\DirectGraphResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -20,8 +20,6 @@ final class StatusController
 
     /**
      * StatusController constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -31,10 +29,6 @@ final class StatusController
 
     /**
      * @Route(path="/statuses.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest $apiRequest
-     *
-     * @return DirectGraphResponse
      */
     public function status(
         ApiRequest $apiRequest

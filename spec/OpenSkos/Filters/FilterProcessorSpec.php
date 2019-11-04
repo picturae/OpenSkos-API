@@ -2,12 +2,12 @@
 
 namespace spec\App\OpenSkos\Filters;
 
-use App\OpenSkos\Filters\FilterProcessor;
-use PhpSpec\ObjectBehavior;
-use App\Ontology\OpenSkos;
 use App\Ontology\DcTerms;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use App\Ontology\OpenSkos;
+use App\OpenSkos\Filters\FilterProcessor;
 use Doctrine\DBAL\Connection;
+use PhpSpec\ObjectBehavior;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class FilterProcessorSpec extends ObjectBehavior
 {

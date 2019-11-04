@@ -36,9 +36,6 @@ final class SolrFilterProcessor
 
     /**
      * FilterProcessor constructor.
-     *
-     * @param Connection    $connection
-     * @param EasyRdfClient $rdfClient
      */
     public function __construct(
         Connection $connection,
@@ -50,8 +47,6 @@ final class SolrFilterProcessor
 
     /**
      * @param $uuid
-     *
-     * @return string|null
      *
      * @psalm-suppress UndefinedInterfaceMethod
      */
@@ -93,8 +88,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filters
-     *
      * @return bool
      */
     public function hasPublisher(array $filters)
@@ -105,8 +98,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildInstitutionFilters(array $filterList)
@@ -129,8 +120,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildSetFilters(array $filterList)
@@ -153,8 +142,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildConceptSchemeFilters(array $filterList)
@@ -188,8 +175,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildStatusesFilters(array $filterList)
@@ -220,8 +205,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildUserFilters(array $filterList)
@@ -257,8 +240,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildInteractionsFilters(array $filterList)
@@ -300,9 +281,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param int   $profile_id
-     * @param array $to_apply
-     *
      * @return array
      */
     public function retrieveSearchProfile(int $profile_id, array $to_apply)

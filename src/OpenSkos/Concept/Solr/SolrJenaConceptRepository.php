@@ -10,12 +10,12 @@ use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepositoryWithProjection;
-use App\Solr\SolrClient;
+use App\Rdf\Iri;
 use App\Rdf\Sparql\Client as RdfClient;
+use App\Solr\SolrClient;
+use Exception;
 use Solarium\QueryType\Select\Query\Query;
 use Solarium\QueryType\Select\Result\Result;
-use App\Rdf\Iri;
-use Exception;
 
 final class SolrJenaConceptRepository implements ConceptRepository
 {
@@ -46,11 +46,6 @@ final class SolrJenaConceptRepository implements ConceptRepository
 
     /**
      * SparqlConceptRepository constructor.
-     *
-     * @param RdfClient          $rdfClient
-     * @param SolrClient         $solrClient
-     * @param OpenSkosIriFactory $iriFactory
-     * @param SolrQueryBuilder   $solrQueryBuilder
      */
     public function __construct(
         RdfClient $rdfClient,
@@ -77,13 +72,10 @@ final class SolrJenaConceptRepository implements ConceptRepository
      * lucene / solr queries are possible
      * for the available fields see schema.xml.
      *
-     * @param string     $query
-     * @param int        $rows
-     * @param int        $start
-     * @param int        &$numFound     output Total number of found records
-     * @param array      $sorts
-     * @param array|null $filterQueries
-     * @param bool       $full_retrieve
+     * @param string $query
+     * @param int    &$numFound     output Total number of found records
+     * @param array  $sorts
+     * @param bool   $full_retrieve
      *
      * @return array Array of uris
      *
@@ -136,13 +128,6 @@ final class SolrJenaConceptRepository implements ConceptRepository
     }
 
     /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     * @param array $projection
-     *
-     * @return array
-     *
      * @throws Exception
      */
     public function all(int $offset = 0, int $limit = 100, array $filters = [], array $projection = []): array
@@ -173,15 +158,6 @@ final class SolrJenaConceptRepository implements ConceptRepository
     /**
      * This is my documentation.
      *
-     * @param string $searchTerm
-     * @param int    $offset
-     * @param int    $limit
-     * @param array  $filters
-     * @param array  $selection
-     * @param array  $projection
-     *
-     * @return array
-     *
      * @throws Exception
      */
     public function fullSolrSearch(string $searchTerm, int $offset = 0, int $limit = 100, array $filters = [], array $selection = [], array $projection = []): array
@@ -208,43 +184,21 @@ final class SolrJenaConceptRepository implements ConceptRepository
         return $data;
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return Concept|null
-     */
     public function findByIri(Iri $iri): ?Concept
     {
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return Concept|null
-     */
     public function find(InternalResourceId $id): ?Concept
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
         return $this->skosRepository->findBy(new Iri(Skos::CONCEPT), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return Concept|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Concept
     {
         $res = $this->skosRepository->findOneBy(new Iri(Skos::CONCEPT), $predicate, $object);

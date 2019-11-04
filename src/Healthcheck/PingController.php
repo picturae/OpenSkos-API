@@ -6,8 +6,8 @@ namespace App\Healthcheck;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 final class PingController extends AbstractController
 {
@@ -29,10 +29,6 @@ final class PingController extends AbstractController
 
     /**
      * @Route(path="/ping", methods={"GET"})
-     *
-     * @param JenaRepository $jenaRepository
-     *
-     * @return Response
      */
     public function ping(
         JenaRepository $jenaRepository

@@ -39,8 +39,6 @@ final class BooleanLiteral implements Literal
     }
 
     /**
-     * @param string $value
-     *
      * @return BooleanLiteral
      */
     public static function fromString(string $value): self

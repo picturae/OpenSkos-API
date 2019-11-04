@@ -15,10 +15,7 @@ final class SolrQueryBuilder
     const BOOST_HIDDENLABEL = 10;
 
     /**
-     * @param string $searchText
      * @param $selection
-     *
-     * @return string
      */
     public function processSearchExpression(string $searchText, $selection): string
     {
@@ -125,39 +122,39 @@ final class SolrQueryBuilder
         // @TODO Use filter queries
         $optionsQueries = [];
 
-        //status
-        if (false === strpos($searchText, 'status')) { // We dont add status query if it is in the query already.
-            if (!empty($options['status'])) {
-                $optionsQueries[] = '('
-                    .'s_status:('
-                    .implode(' OR ', array_map([$helper, 'escapePhrase'], $options['status']))
-                    .'))';
-            } else {
-                $optionsQueries[] = '-s_status:'.Concept::STATUS_DELETED;
-            }
-        }
+        /* //status */
+        /* if (false === strpos($searchText, 'status')) { // We dont add status query if it is in the query already. */
+        /*     if (!empty($options['status'])) { */
+        /*         $optionsQueries[] = '(' */
+        /*             .'s_status:(' */
+        /*             .implode(' OR ', array_map([$helper, 'escapePhrase'], $options['status'])) */
+        /*             .'))'; */
+        /*     } else { */
+        /*         $optionsQueries[] = '-s_status:'.Concept::STATUS_DELETED; */
+        /*     } */
+        /* } */
 
-        // combine
-        if (!empty($optionsQueries)) {
-            $optionsQuery = implode(' AND ', $optionsQueries);
-            if (empty($solrQuery)) {
-                $solrQuery = $optionsQuery;
-            } else {
-                // a possible bug in solr version
-                if ('-s_status:deleted' != trim($optionsQuery)) {
-                    $solrQuery .= ' AND ('.$optionsQuery.')';
-                } else {
-                    $solrQuery .= ' AND -s_status:deleted';
-                }
-            }
-        }
+        /* // combine */
+        /* if (!empty($optionsQueries)) { */
+        /*     $optionsQuery = implode(' AND ', $optionsQueries); */
+        /*     if (empty($solrQuery)) { */
+        /*         $solrQuery = $optionsQuery; */
+        /*     } else { */
+        /*         // a possible bug in solr version */
+        /*         if ('-s_status:deleted' != trim($optionsQuery)) { */
+        /*             $solrQuery .= ' AND ('.$optionsQuery.')'; */
+        /*         } else { */
+        /*             $solrQuery .= ' AND -s_status:deleted'; */
+        /*         } */
+        /*     } */
+        /* } */
 
-        //@todo: Sort parameters
-        if (!empty($options['sorts'])) {
-            $sorts = $options['sorts'];
-        } else {
-            $sorts = null;
-        }
+        /* //@todo: Sort parameters */
+        /* if (!empty($options['sorts'])) { */
+        /*     $sorts = $options['sorts']; */
+        /* } else { */
+        /*     $sorts = null; */
+        /* } */
 
         return $solrQuery;
     }

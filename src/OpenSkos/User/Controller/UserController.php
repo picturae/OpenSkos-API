@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\User\Controller;
 
-use App\Rest\ListResponse;
-use App\Rest\ScalarResponse;
+use App\Ontology\Context;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
 use App\OpenSkos\User\User;
-use App\Ontology\Context;
+use App\OpenSkos\User\UserRepository;
 use App\Rdf\Iri;
+use App\Rest\ListResponse;
+use App\Rest\ScalarResponse;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\OpenSkos\User\UserRepository;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class UserController
 {
@@ -33,8 +33,6 @@ final class UserController
 
     /**
      * Role constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -45,13 +43,7 @@ final class UserController
     /**
      * @Route(path="/users.{format?}", methods={"GET"})
      *
-     * @param UserRepository $repository
-     * @param Connection     $connection
-     * @param ApiRequest     $apiRequest
-     *
-     * @throws AccessDenieHttpdException;
-     *
-     * @return ListResponse
+     * @throws AccessDeniedHttpException
      */
     public function geAllUsers(
         UserRepository $repository,
@@ -105,15 +97,7 @@ final class UserController
     /**
      * @Route(path="/user/{id}.{format?}", methods={"GET"})
      *
-     * @param string          $id
-     * @param UserRepository  $repository
-     * @param Connection      $connection
-     * @param ApiRequest      $apiRequest
-     * @param LabelRepository $labelRepository
-     *
-     * @throws AccessDenieHttpdException;
-     *
-     * @return ScalarResponse
+     * @throws AccessDeniedHttpException
      */
     public function getOneUser(
         string $id,

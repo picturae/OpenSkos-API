@@ -70,21 +70,13 @@ final class Set implements RdfResource
         return $this->resource->triples();
     }
 
-    /**
-     * @param Iri $subject
-     *
-     * @return self
-     */
     public static function createEmpty(Iri $subject): self
     {
         return new self($subject);
     }
 
     /**
-     * @param Iri      $subject
      * @param Triple[] $triples
-     *
-     * @return self
      */
     public static function fromTriples(Iri $subject, array $triples): self
     {

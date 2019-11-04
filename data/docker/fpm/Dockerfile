@@ -11,7 +11,7 @@ RUN apt update \
     && mkdir -p /app/var \
     && docker-php-ext-install pdo pdo_mysql
 
-COPY docker/fpm/php.ini /usr/local/etc/
+COPY data/docker/fpm/php.ini /usr/local/etc/
 RUN curl https://getcomposer.org/installer | php -- --filename composer --install-dir=/usr/local/bin
 
 COPY bin bin/
