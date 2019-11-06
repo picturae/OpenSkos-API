@@ -4,6 +4,8 @@ namespace App\Security;
 
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Authentication
 {
@@ -28,8 +30,12 @@ class Authentication
     protected $user = null;
 
     public function __construct(
-        Request $request
+        Request $request = null
     ) {
+        if (is_null($request)) {
+            return;
+        }
+
         // Fetch bare token
         $token = null;
         $token = $token ?? $request->query->get('token');
@@ -138,6 +144,19 @@ class Authentication
         }
 
         return $this->user;
+    }
+
+    public function requireWritePermissions(): void
+    {
+        if (!$this->hasAuthenticationData()) {
+            throw new UnauthorizedHttpException('Basic realm="OpenSkos"');
+        }
+        if (!$this->isAuthenticated()) {
+            throw new AccessDeniedHttpException();
+        }
+        if (!$this->isAdministrator()) {
+            throw new AccessDeniedHttpException();
+        }
     }
 
     /*

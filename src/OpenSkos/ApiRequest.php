@@ -83,7 +83,9 @@ final class ApiRequest
         $this->sets = $sets;
         $this->foreignUri = $foreignUri;
 
-        if (!is_null($authentication)) {
+        if (is_null($authentication)) {
+            $this->authentication = new Authentication();
+        } else {
             $this->authentication = $authentication;
         }
 
@@ -152,7 +154,7 @@ final class ApiRequest
     }
 
     /**
-     * @return Authentication|null
+     * @return Authentication
      */
     public function getAuthentication()
     {
