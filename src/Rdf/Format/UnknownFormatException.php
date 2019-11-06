@@ -7,8 +7,6 @@ namespace App\Rdf\Format;
 final class UnknownFormatException extends \Exception
 {
     /**
-     * @param string $format
-     *
      * @return UnknownFormatException
      */
     public static function create(string $format): self

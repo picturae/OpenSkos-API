@@ -24,7 +24,7 @@ abstract class AbstractRdfDocument implements RdfResource
      * The key   = doctrine
      * The value = local
      *
-     * @var array
+     * @var array|null
      */
     protected static $uniqueFields = null;
 
@@ -55,7 +55,6 @@ abstract class AbstractRdfDocument implements RdfResource
     protected $resource;
 
     /**
-     * @param Iri                     $subject
      * @param VocabularyAwareResource $resource
      * @param AbstractRepository      $repository
      */
@@ -104,11 +103,6 @@ abstract class AbstractRdfDocument implements RdfResource
         return $this->resource->properties();
     }
 
-    /**
-     * @param string $property
-     *
-     * @return array|null
-     */
     public function getProperty(string $property): ?array
     {
         return $this->resource->getProperty($property);
@@ -117,8 +111,6 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * @param mixed $property
      * @param mixed $value
-     *
-     * @return bool
      */
     public function addProperty($property, $value): bool
     {
@@ -162,19 +154,12 @@ abstract class AbstractRdfDocument implements RdfResource
         return false;
     }
 
-    /**
-     * @param string $property
-     *
-     * @return array|null
-     */
     public function getMappedProperty(string $property): ?array
     {
         return $this->getProperty($this->getMapping()[$property]);
     }
 
     /**
-     * @param string $property
-     *
      * @return string[]|string|null
      */
     public function getMappedValue(string $property)
@@ -201,8 +186,6 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
-     * @param Iri $subject
-     *
      * @return AbstractRdfDocument
      */
     public static function createEmpty(Iri $subject): self
@@ -211,11 +194,8 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
-     * @param Iri                $subject
      * @param Triple[]           $triples
      * @param AbstractRepository $repository
-     *
-     * @return AbstractRdfDocument
      */
     public static function fromTriples(Iri $subject, array $triples, AbstractRepository $repository = null): AbstractRdfDocument
     {
@@ -225,7 +205,6 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
-     * @param Iri                $subject
      * @param array              $data
      * @param AbstractRepository $repository
      *
@@ -253,8 +232,6 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * Loads the XL labels and replaces the default URI value with the full resource.
-     *
-     * @param LabelRepository $labelRepository
      */
     public function loadFullXlLabels(LabelRepository $labelRepository): void
     {
@@ -266,11 +243,10 @@ abstract class AbstractRdfDocument implements RdfResource
 
             foreach ($this::$xlPredicates as $key => $xlLabelPredicate) {
                 if ($triple->getPredicate()->getUri() == $xlLabelPredicate) {
-                    /**
-                     * @var Iri
-                     */
+                    /** @var Iri */
                     $xlLabel = $triple->getObject();
 
+                    /** @var Label */
                     $fullLabel = $labelRepository->findByIri($xlLabel);
                     if (isset($fullLabel)) {
                         $subject = $triple->getSubject();
@@ -288,8 +264,6 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * We are returning by reference, to quickly enable the data-levels functionality.
      *   Otherwise, a lot of extra hoops have to be jumped through just to add a data level.
-     *
-     * @return VocabularyAwareResource
      */
     public function &getResource(): VocabularyAwareResource
     {

@@ -18,9 +18,6 @@ final class InternalResourceIdResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
      * @return \Generator
      */
     public function resolve(Request $request, ArgumentMetadata $argument)

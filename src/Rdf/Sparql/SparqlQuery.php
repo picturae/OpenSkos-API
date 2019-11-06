@@ -6,8 +6,8 @@ namespace App\Rdf\Sparql;
 
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
-use App\Rdf\Iri;
 use App\OpenSkos\Filters\FilterProcessor;
+use App\Rdf\Iri;
 
 final class SparqlQuery
 {
@@ -36,13 +36,6 @@ final class SparqlQuery
 
     /**
      * FIXME: Make it not static.
-     *
-     * @param Iri   $type
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return SparqlQuery
      */
     public static function describeAllOfType(
         Iri $type,
@@ -155,11 +148,7 @@ final class SparqlQuery
     }
 
     /**
-     * @param Iri $rdfType
-     * @param Iri $predicate
      * @param $object
-     *
-     * @return SparqlQuery
      */
     public static function describeByTypeAndPredicate(
         Iri $rdfType,

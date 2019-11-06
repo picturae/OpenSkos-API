@@ -28,7 +28,6 @@ class SkosResourceRepository
      * SkosResourceRepository constructor.
      *
      * @param callable(Iri, array<\App\Rdf\Triple>): T $resourceFactory
-     * @param Client                                   $rdfClient
      */
     public function __construct(
         callable $resourceFactory,
@@ -40,8 +39,6 @@ class SkosResourceRepository
 
     /**
      * Retreive the rdf client in use.
-     *
-     * @return Client
      */
     public function rdfClient(): Client
     {
@@ -50,8 +47,6 @@ class SkosResourceRepository
 
     /**
      * @param Triple[] $triples
-     *
-     * @return array
      */
     public static function groupTriples(array $triples): array
     {
@@ -64,12 +59,6 @@ class SkosResourceRepository
     }
 
     /**
-     * @param Iri   $type
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return array
      * @psalm-return array<T>
      */
     public function allOfType(
@@ -97,8 +86,6 @@ class SkosResourceRepository
     }
 
     /**
-     * @param Iri $iri
-     *
      * @return mixed
      * @psalm-return T|null
      */
@@ -113,11 +100,6 @@ class SkosResourceRepository
         return call_user_func($this->resourceFactory, $iri, $triples);
     }
 
-    /**
-     * @param array $iris
-     *
-     * @return array
-     */
     public function findManyByIriList(array $iris): array
     {
         $sparql = SparqlQuery::describeResources($iris);
@@ -136,13 +118,6 @@ class SkosResourceRepository
         return $res;
     }
 
-    /**
-     * @param Iri                $rdfType
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array
-     */
     public function findBy(Iri $rdfType, Iri $predicate, InternalResourceId $object): array
     {
         $sparql = SparqlQuery::describeByTypeAndPredicate($rdfType, $predicate, $object);
@@ -162,10 +137,6 @@ class SkosResourceRepository
     }
 
     /**
-     * @param Iri                $rdfType
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
      * @return array|mixed|null
      */
     public function findOneBy(Iri $rdfType, Iri $predicate, InternalResourceId $object)
@@ -216,6 +187,11 @@ class SkosResourceRepository
         return null;
     }
 
+    /**
+     * Fetches a resource directly by it's subject.
+     *
+     * @return mixed|null
+     */
     public function getOneWithoutUuid(Iri $rdfType, InternalResourceId $subject)
     {
         $sparql = SparqlQuery::describeByTypeWithoutUUID((string) $rdfType, (string) $subject);

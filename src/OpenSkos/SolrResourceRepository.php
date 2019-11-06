@@ -29,8 +29,8 @@ use OpenSkos2\Rdf\ResourceCollection;
 use Solarium\QueryType\Update\Query\Query as UpdateQuery;
 */
 
-use Solarium\Core\Client\Client;
 use App\OpenSkos\Exception\InvalidApiRequest;
+use Solarium\Core\Client\Client;
 
 class SolrResourceRepository
 {
@@ -73,9 +73,6 @@ class SolrResourceRepository
     //$this->isNoCommitMode = $isNoCommitMode;
     //}
 
-    /**
-     * @param Client $solr
-     */
     public function __construct(Client $solr)
     {
         $this->solr = $solr;
@@ -207,6 +204,7 @@ class SolrResourceRepository
         $solrSearchTerm = sprintf('prefLabel:"%s"', $value);
 
         // Solarium brakes stat results when we have long int, so we use ordering.
+        /** @var \Solarium\QueryType\Select\Query\Query */
         $select = $this->solr->createSelect();
 
         $select->setStart(0)
@@ -214,6 +212,7 @@ class SolrResourceRepository
             ->setFields(['prefLabel'])
             ->setQuery($solrSearchTerm);
 
+        /** @var \Solarium\QueryType\Select\Result\Result */
         $solrResult = $this->solr->select($select);
 
         $has_match = ($solrResult->count() > 0);
@@ -242,9 +241,10 @@ class SolrResourceRepository
         $start = 0,
         &$numFound = 0,
         $sorts = null,
-        array $filterQueries = null,
+        $filterQueries = null,
         $full_retrieve = false
     ) {
+        /** @var \Solarium\QueryType\Select\Query\Query */
         $select = $this->solr->createSelect();
         $select->setStart($start)
             ->setRows($rows)
@@ -264,8 +264,9 @@ class SolrResourceRepository
             }
         }
 
+        /** @var \Solarium\QueryType\Select\Result\Result */
         $solrResult = $this->solr->select($select);
-        $numFound = $solrResult->getNumFound();
+        $numFound = intval($solrResult->getNumFound());
 
         $return_data = [];
 
@@ -292,12 +293,16 @@ class SolrResourceRepository
     public function getMaxFieldValue($query, $field)
     {
         // Solarium brakes stat results when we have long int, so we use ordering.
-        $select = $this->solr->createSelect()
+        /** @var \Solarium\QueryType\Select\Query\Query */
+        $select = $this->solr->createSelect();
+
+        $select
             ->setQuery($query)
             ->setRows(1)
             ->addSort($field, 'desc')
             ->addField($field);
 
+        /** @var \Solarium\QueryType\Select\Result\Result */
         $solrResult = $this->solr->select($select);
         if (count($solrResult->getIterator()) > 0) {
             return $solrResult->getIterator()->current()->{$field};

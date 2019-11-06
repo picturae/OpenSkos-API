@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Sparql;
 
 use App\Ontology\OpenSkos;
-use App\OpenSkos\Set\SetRepository;
-use App\OpenSkos\Set\Set;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
+use App\OpenSkos\Set\Set;
+use App\OpenSkos\Set\SetRepository;
 use App\OpenSkos\SkosResourceRepository;
-use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
+use App\Rdf\Sparql\Client;
 
 final class SparqlSetRepository implements SetRepository
 {
@@ -47,10 +47,6 @@ final class SparqlSetRepository implements SetRepository
     }
 
     /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
      * @return Set[]
      */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
@@ -68,20 +64,12 @@ final class SparqlSetRepository implements SetRepository
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return Set|null
-     */
     public function find(InternalResourceId $id): ?Set
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
     /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
      * @return array
      */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
@@ -89,12 +77,6 @@ final class SparqlSetRepository implements SetRepository
         return $this->skosRepository->findBy(new Iri(OpenSkos::SET), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return Set|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Set
     {
         $res = $this->skosRepository->findOneBy(new Iri(OpenSkos::SET), $predicate, $object);

@@ -63,17 +63,6 @@ final class ApiRequest
 
     /**
      * ApiRequest constructor.
-     *
-     * @param array               $allParams
-     * @param RdfFormat|null      $format
-     * @param int                 $level
-     * @param int                 $limit
-     * @param int                 $offset
-     * @param array               $institutions
-     * @param array               $sets
-     * @param int                 $searchProfile
-     * @param string|null         $foreignUri
-     * @param Authentication|null $authentication
      */
     public function __construct(
         array $allParams = [],
@@ -109,16 +98,11 @@ final class ApiRequest
             throw new InvalidApiRequestLevel($level);
         }
         if ($limit < 0 || $offset < 0) {
-            throw new \InvalidArgumentException(
-                "Limit and offset must be zero or higher. $limit and $offset passed"
-            );
+            throw new \InvalidArgumentException("Limit and offset must be zero or higher. $limit and $offset passed");
         }
     }
 
     /**
-     * @param string      $key
-     * @param string|null $default
-     *
      * @return mixed
      */
     public function getParameter(string $key, ?string $default = null)
@@ -126,81 +110,51 @@ final class ApiRequest
         return $this->allParams[$key] ?? $default;
     }
 
-    /**
-     * @return int
-     */
     public function getLevel(): int
     {
         return $this->level;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;
     }
 
-    /**
-     * @return RdfFormat
-     */
     public function getFormat(): RdfFormat
     {
         return $this->format;
     }
 
-    /**
-     * @return array
-     */
     public function getInstitutions(): array
     {
         return $this->institutions;
     }
 
-    /**
-     * @param array $institutions
-     */
     public function setInstitutions(array $institutions): void
     {
         $this->institutions = $institutions;
     }
 
-    /**
-     * @return array
-     */
     public function getSets(): array
     {
         return $this->sets;
     }
 
-    /**
-     * @param array $sets
-     */
     public function setSets(array $sets): void
     {
         $this->sets = $sets;
     }
 
-    /**
-     * @return int
-     */
     public function getSearchProfile(): int
     {
         return $this->searchProfile;
     }
 
-    /**
-     * @param int $searchProfile
-     */
     public function setSearchProfile(int $searchProfile): void
     {
         $this->searchProfile = $searchProfile;

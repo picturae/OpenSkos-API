@@ -9,42 +9,13 @@ use App\Rdf\Iri;
 
 interface ConceptSchemeRepository
 {
-    /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filter
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100, array $filter = []): array;
 
-    /**
-     * @param Iri $iri
-     *
-     * @return ConceptScheme|null
-     */
     public function findByIri(Iri $iri): ?ConceptScheme;
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return ConceptScheme|null
-     */
     public function find(InternalResourceId $id): ?ConceptScheme;
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array;
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return ConceptScheme|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?ConceptScheme;
 }

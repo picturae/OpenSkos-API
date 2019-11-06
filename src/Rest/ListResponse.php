@@ -48,25 +48,16 @@ final class ListResponse implements SkosResponse
         return $this->docs;
     }
 
-    /**
-     * @return int
-     */
     public function getTotal(): int
     {
         return $this->total;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @return RdfFormat
-     */
     public function format(): RdfFormat
     {
         return $this->format;

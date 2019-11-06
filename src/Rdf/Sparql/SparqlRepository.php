@@ -3,11 +3,11 @@
 namespace App\Rdf\Sparql;
 
 use App\Annotation\Document;
-use App\Rdf\RdfResource;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\Iri;
+use App\Rdf\RdfResource;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 class SparqlRepository implements SparqlRepositoryInterface
@@ -40,10 +40,8 @@ class SparqlRepository implements SparqlRepositoryInterface
     /**
      * SparqlRepository constructor.
      *
-     * @param Client             $rdfClient
-     * @param OpenSkosIriFactory $iriFactory
-     * @param string             $resourceClass
-     * @param string             $resourceType
+     * @param string $resourceClass
+     * @param string $resourceType
      */
     public function __construct(
         Client $rdfClient,
@@ -85,6 +83,9 @@ class SparqlRepository implements SparqlRepositoryInterface
         $this->iriFactory = $iriFactory;
     }
 
+    /**
+     * @param class-string $classname
+     */
     private static function getType(string $classname): ?string
     {
         // Fetch all annotations
@@ -102,13 +103,6 @@ class SparqlRepository implements SparqlRepositoryInterface
         return null;
     }
 
-    /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         return $this->skosRepository->allOfType(
@@ -119,53 +113,26 @@ class SparqlRepository implements SparqlRepositoryInterface
         );
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return RdfResource|null
-     */
     public function findByIri(Iri $iri): ?RdfResource
     {
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param array $iris
-     *
-     * @return array
-     */
     public function findManyByIriList(array $iris): array
     {
         return $this->skosRepository->findManyByIriList($iris);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return RdfResource|null
-     */
     public function find(InternalResourceId $id): ?RdfResource
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
         return $this->skosRepository->findBy(new Iri($this->resourceType), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return RdfResource|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?RdfResource
     {
         return $this->skosRepository->findOneBy(new Iri($this->resourceType), $predicate, $object);

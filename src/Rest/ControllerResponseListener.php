@@ -23,8 +23,6 @@ final class ControllerResponseListener
 
     /**
      * Catch controller responses if they not native Response type.
-     *
-     * @param GetResponseForControllerResultEvent $event
      */
     public function onKernelView(GetResponseForControllerResultEvent $event): void
     {

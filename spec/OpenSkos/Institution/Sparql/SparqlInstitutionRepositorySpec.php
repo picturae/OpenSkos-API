@@ -3,8 +3,8 @@
 namespace spec\App\OpenSkos\Institution\Sparql;
 
 use App\OpenSkos\OpenSkosIriFactory;
-use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
+use App\Rdf\Sparql\Client;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

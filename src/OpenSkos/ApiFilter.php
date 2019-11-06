@@ -93,10 +93,7 @@ final class ApiFilter
     }
 
     /**
-     * @param string $predicate
-     * @param mixed  $value
-     *
-     * @return self
+     * @param mixed $value
      */
     public function addFilter(
         string $predicate,
@@ -153,8 +150,6 @@ final class ApiFilter
 
     /**
      * @param mixed $value
-     *
-     * @return bool
      */
     public static function isUuid($value): bool
     {
@@ -173,8 +168,6 @@ final class ApiFilter
      * @param string       $predicate
      * @param array|string $value
      * @param string|null  $lang
-     *
-     * @return array
      */
     private static function buildFilter($predicate, $value, $lang = null): array
     {
@@ -223,8 +216,6 @@ final class ApiFilter
 
     /**
      * @param string $type
-     *
-     * @return array
      */
     public function buildFilters($type = 'jena'): array
     {
@@ -287,8 +278,6 @@ final class ApiFilter
 
     /**
      * @param string $type
-     *
-     * @return array
      */
     public function __toArray($type = 'jena'): array
     {

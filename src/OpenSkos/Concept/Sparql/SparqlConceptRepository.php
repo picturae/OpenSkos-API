@@ -10,8 +10,8 @@ use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
-use App\Rdf\Sparql\Client;
 use App\Rdf\Iri;
+use App\Rdf\Sparql\Client;
 
 final class SparqlConceptRepository implements ConceptRepository
 {
@@ -32,9 +32,6 @@ final class SparqlConceptRepository implements ConceptRepository
 
     /**
      * SparqlConceptRepository constructor.
-     *
-     * @param Client             $rdfClient
-     * @param OpenSkosIriFactory $iriFactory
      */
     public function __construct(
         Client $rdfClient,
@@ -52,13 +49,6 @@ final class SparqlConceptRepository implements ConceptRepository
         $this->iriFactory = $iriFactory;
     }
 
-    /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         return $this->skosRepository->allOfType(
@@ -69,43 +59,21 @@ final class SparqlConceptRepository implements ConceptRepository
         );
     }
 
-    /**
-     * @param Iri $iri
-     *
-     * @return Concept|null
-     */
     public function findByIri(Iri $iri): ?Concept
     {
         return $this->skosRepository->findByIri($iri);
     }
 
-    /**
-     * @param InternalResourceId $id
-     *
-     * @return Concept|null
-     */
     public function find(InternalResourceId $id): ?Concept
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array
     {
         return $this->skosRepository->findBy(new Iri(Skos::CONCEPT), $predicate, $object);
     }
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return Concept|null
-     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Concept
     {
         $res = $this->skosRepository->findOneBy(new Iri(Skos::CONCEPT), $predicate, $object);

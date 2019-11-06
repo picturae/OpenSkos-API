@@ -14,11 +14,6 @@ use EasyRdf_Graph;
 
 final class TripleFactory
 {
-    /**
-     * @param array $arr
-     *
-     * @return RdfTerm|null
-     */
     private static function arrayToRdfTerm(array $arr): ?RdfTerm
     {
         $type = $arr['type'];
@@ -43,8 +38,6 @@ final class TripleFactory
     }
 
     /**
-     * @param EasyRdf_Graph $graph
-     *
      * @return Triple[]
      */
     public static function triplesFromGraph(EasyRdf_Graph $graph): array

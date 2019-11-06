@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set\Controller;
 
-use App\OpenSkos\Filters\FilterProcessor;
-use App\OpenSkos\Set\SetRepository;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\Set\SetRepository;
 use App\Rest\DirectGraphResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,12 +28,6 @@ final class PrefixController
 
     /**
      * @Route(path="/prefixes.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest      $apiRequest
-     * @param SetRepository   $repository
-     * @param FilterProcessor $filterProcessor
-     *
-     * @return DirectGraphResponse
      */
     public function sets(
         ApiRequest $apiRequest,

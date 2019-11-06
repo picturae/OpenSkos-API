@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept\Controller;
 
-use App\OpenSkos\DataLevels\Level2Processor;
 use App\Helper\xsdDateHelper;
-use App\OpenSkos\Concept\Solr\SolrJenaConceptRepository;
-use App\OpenSkos\Filters\SolrFilterProcessor;
 use App\Ontology\OpenSkos;
-use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Concept\Concept as SkosConcept;
+use App\OpenSkos\Concept\ConceptRepository;
+use App\OpenSkos\Concept\Solr\SolrJenaConceptRepository;
+use App\OpenSkos\DataLevels\Level2Processor;
+use App\OpenSkos\Filters\SolrFilterProcessor;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Iri;
@@ -22,7 +23,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\OpenSkos\Concept\Concept as SkosConcept;
 
 final class Concept
 {
@@ -33,8 +33,6 @@ final class Concept
 
     /**
      * Concept constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -44,11 +42,6 @@ final class Concept
 
     /**
      * Processes comma separated parameters for filters.
-     *
-     * @param ApiRequest $apiRequest
-     * @param string     $key
-     *
-     * @return array
      */
     private function processFilterFromRequest(
         ApiRequest $apiRequest,
@@ -67,11 +60,6 @@ final class Concept
     /**
      * Extracts datestamp from request strings. Only a restricted number of formats are accepted
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
-     *
-     * @param ApiRequest $apiRequest
-     * @param string     $key
-     *
-     * @return array
      */
     private function processDateStampsFromRequest(
         ApiRequest $apiRequest,
@@ -114,11 +102,7 @@ final class Concept
      * Builds the filters for a concept. Should follow
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
      *
-     * @param ApiRequest          $apiRequest
-     * @param ConceptRepository   $repository
-     * @param SolrFilterProcessor $solrFilterProcessor
-     *
-     * @return array
+     * @param ConceptRepository $repository
      */
     private function buildConceptFilters(
         ApiRequest $apiRequest,
@@ -170,11 +154,6 @@ final class Concept
     /**
      * Builds the selection parameters for a concept. Should follow
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
-     *
-     * @param ApiRequest        $apiRequest
-     * @param ConceptRepository $repository
-     *
-     * @return array
      */
     private function buildSelectionParameters(
         ApiRequest $apiRequest,
@@ -211,11 +190,6 @@ final class Concept
     /**
      * Builds the projection parameters for a concept. Should follow
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
-     *
-     * @param ApiRequest        $apiRequest
-     * @param ConceptRepository $repository
-     *
-     * @return array
      */
     private function buildProjectionParameters(
         ApiRequest $apiRequest,
@@ -275,13 +249,6 @@ final class Concept
 
     /**
      * @Route(path="/concept/{id}.{format?}", methods={"GET"})
-     *
-     * @param InternalResourceId $id
-     * @param ApiRequest         $apiRequest
-     * @param ConceptRepository  $repository
-     * @param LabelRepository    $labelRepository
-     *
-     * @return ScalarResponse
      */
     public function concept(
         InternalResourceId $id,
@@ -307,12 +274,6 @@ final class Concept
      * Version for foreign Uri's. For now, this is a wrapper for the 'native uri' functionality, but that will probably change.
      *
      * @Route(path="/concept.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest        $apiRequest
-     * @param ConceptRepository $repository
-     * @param LabelRepository   $labelRepository
-     *
-     * @return ScalarResponse
      */
     public function conceptByForeignUri(
         ApiRequest $apiRequest,
@@ -344,14 +305,6 @@ final class Concept
     /**
      * @Route(path="/concepts.{format?}", methods={"GET"})
      *
-     * @param ApiRequest                $apiRequest
-     * @param ApiFilter                 $apiFilter
-     * @param SolrJenaConceptRepository $repository
-     * @param SolrFilterProcessor       $solrFilterProcessor
-     * @param LabelRepository           $labelRepository
-     *
-     * @return ListResponse
-     *
      * @throws Exception
      */
     public function concepts(
@@ -382,12 +335,6 @@ final class Concept
 
     /**
      * @Route(path="/autocomplete.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest                $apiRequest
-     * @param SolrJenaConceptRepository $repository
-     * @param SolrFilterProcessor       $solrFilterProcessor
-     *
-     * @return ListResponse
      *
      * @throws Exception
      */

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\ConceptScheme\Controller;
 
-use App\OpenSkos\Filters\FilterProcessor;
 use App\Ontology\OpenSkos;
-use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
+use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
@@ -32,12 +32,6 @@ final class ConceptScheme
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest              $apiRequest
-     * @param ConceptSchemeRepository $repository
-     * @param FilterProcessor         $filterProcessor
-     *
-     * @return ListResponse
      */
     public function conceptschemes(
         ApiRequest $apiRequest,
@@ -78,12 +72,6 @@ final class ConceptScheme
 
     /**
      * @Route(path="/conceptscheme/{id}.{format?}", methods={"GET"})
-     *
-     * @param InternalResourceId      $id
-     * @param ApiRequest              $apiRequest
-     * @param ConceptSchemeRepository $repository
-     *
-     * @return ScalarResponse
      */
     public function conceptscheme(
         InternalResourceId $id,

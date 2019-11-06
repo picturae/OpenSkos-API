@@ -10,17 +10,17 @@ use App\Ontology\Rdf;
 use App\Ontology\SkosXl;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Relation\JenaRepository;
 use App\OpenSkos\RelationType\RelationType;
-use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 use App\Rdf\RdfTerm;
 use App\Rdf\Triple;
 use App\Rest\ScalarResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class RelationController
 {
@@ -48,9 +48,6 @@ final class RelationController
     }
 
     /**
-     * @param string $iri
-     * @param array  $data
-     *
      * @return Triple[]
      */
     public static function toTriples(string $iri, array $data): array
@@ -65,8 +62,6 @@ final class RelationController
 
     /**
      * @param Triple[] $triples
-     *
-     * @return RdfTerm|null
      */
     public static function getType(array $triples): ?RdfTerm
     {
@@ -81,8 +76,6 @@ final class RelationController
 
     /**
      * @param RdfTerm $type
-     *
-     * @return string|null
      */
     public static function getClass(?RdfTerm $type): ?string
     {
@@ -102,11 +95,6 @@ final class RelationController
 
     /**
      * @Route(path="/relations.{format?}", methods={"GET"})
-     *
-     * @param ApiRequest $apiRequest
-     * @param ApiFilter  $apiFilter
-     *
-     * @return ScalarResponse
      *
      * @throws BadRequestHttpException
      */

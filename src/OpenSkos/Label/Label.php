@@ -10,10 +10,10 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\SkosXl;
 use App\Rdf\AbstractRdfDocument;
-use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
 use App\Rdf\Triple;
+use App\Rdf\VocabularyAwareResource;
 
 /**
  * @Document\Type(SkosXl::LABEL)
@@ -99,11 +99,6 @@ final class Label extends AbstractRdfDocument implements RdfResource
      *      it's fetching for. Indeed: it can be fetched for several parents
      *
      * Label constructor.
-     *
-     * @param Iri                          $childSubject
-     * @param VocabularyAwareResource|null $resource
-     * @param Iri|null                     $parentPredicate
-     * @param Iri|null                     $parentSubject
      */
     public function __construct(
         Iri $childSubject,
@@ -117,25 +112,16 @@ final class Label extends AbstractRdfDocument implements RdfResource
         parent::__construct($childSubject, $resource);
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getType(): ?Iri
     {
         return $this->type;
     }
 
-    /**
-     * @param Iri|null $type
-     */
     public function setType(?Iri $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getSubject(): ?Iri
     {
         return $this->subject;
@@ -149,33 +135,21 @@ final class Label extends AbstractRdfDocument implements RdfResource
         $this->subject = $subject;
     }
 
-    /**
-     * @return Iri
-     */
     public function getChildSubject(): Iri
     {
         return $this->childSubject;
     }
 
-    /**
-     * @param Iri $childSubject
-     */
     public function setChildSubject(Iri $childSubject): void
     {
         $this->childSubject = $childSubject;
     }
 
-    /**
-     * @return array
-     */
     public static function getAcceptableFields(): array
     {
         return self::$acceptable_fields;
     }
 
-    /**
-     * @return array
-     */
     public static function getMetaGroups(): array
     {
         return self::$meta_groups;

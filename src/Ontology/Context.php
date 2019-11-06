@@ -32,8 +32,6 @@ final class Context
      * Build a context based on short names.
      *
      * @param array $names
-     *
-     * @return array
      */
     public static function build($names = []): array
     {
@@ -51,7 +49,6 @@ final class Context
     /**
      * array_walk_recursive, including branch nodes.
      *
-     * @param array    $arr
      * @param callable $callback Arguments: <item, key>
      */
     private static function walk(array $arr, callable $callback): void
@@ -66,10 +63,6 @@ final class Context
 
     /**
      * Detect prefix AND field from uri.
-     *
-     * @param string $uri
-     *
-     * @return array|null
      */
     public static function decodeUri(string $uri): ?array
     {
@@ -105,10 +98,6 @@ final class Context
 
     /**
      * Automatically detect namespaces from a given graph.
-     *
-     * @param \EasyRdf_Graph $graph
-     *
-     * @return array
      */
     public static function detect(\EasyRdf_Graph $graph): array
     {

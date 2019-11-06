@@ -19,9 +19,6 @@ final class StringLiteral implements Literal
 
     /**
      * StringLiteral constructor.
-     *
-     * @param string      $value
-     * @param string|null $lang
      */
     public function __construct(string $value, ?string $lang = null)
     {
@@ -34,9 +31,6 @@ final class StringLiteral implements Literal
         return $this->value;
     }
 
-    /**
-     * @return string|null
-     */
     public function lang(): ?string
     {
         return $this->lang;

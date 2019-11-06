@@ -7,10 +7,6 @@ namespace App\Rdf;
 interface ResourceRepository
 {
     /**
-     * @param Iri $iriType
-     * @param int $offset
-     * @param int $limit
-     *
      * @return RdfResource[]
      */
     public function allOfType(

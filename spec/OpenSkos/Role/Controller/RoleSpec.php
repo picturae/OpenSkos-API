@@ -2,10 +2,10 @@
 
 namespace spec\App\OpenSkos\Role\Controller;
 
-use EasyRdf_Graph as Graph;
 use App\OpenSkos\ApiRequest;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rest\DirectGraphResponse;
+use EasyRdf_Graph as Graph;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\Serializer\SerializerInterface;
 

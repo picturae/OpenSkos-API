@@ -9,8 +9,6 @@ use App\Rdf\Triple;
 interface Client
 {
     /**
-     * @param SparqlQuery $query
-     *
      * @return Triple[]
      */
     public function describe(SparqlQuery $query): array;

@@ -17,17 +17,11 @@ final class InternalResourceId
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function id(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return "$this->id";

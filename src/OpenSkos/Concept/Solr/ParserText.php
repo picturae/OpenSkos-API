@@ -122,9 +122,9 @@ class ParserText
     /**
      * Builds query for date period - like created_timestamp:[{startDate} TO {endDate}].
      *
-     * @param string $field     the field to search by
-     * @param string $startDate Use as start date (it is converted to timestamp)
-     * @param string $endDate   Use as end date (it is converted to timestamp)
+     * @param string      $field     the field to search by
+     * @param string|null $startDate Use as start date (it is converted to timestamp)
+     * @param string|null $endDate   Use as end date (it is converted to timestamp)
      *
      * @return string
      */

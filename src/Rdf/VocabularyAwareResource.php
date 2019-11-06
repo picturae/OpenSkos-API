@@ -41,11 +41,8 @@ final class VocabularyAwareResource implements RdfResource
     }
 
     /**
-     * @param Iri                  $iri
      * @param Triple[]             $triples
      * @param array<string,string> $mapping
-     *
-     * @return VocabularyAwareResource
      */
     public static function fromTriples(Iri $iri, array $triples, array $mapping = null): VocabularyAwareResource
     {
@@ -80,9 +77,6 @@ final class VocabularyAwareResource implements RdfResource
         return $this->subject;
     }
 
-    /**
-     * @return array
-     */
     public function triples(): array
     {
         return $this->triples;
@@ -96,11 +90,6 @@ final class VocabularyAwareResource implements RdfResource
         return $this->properties;
     }
 
-    /**
-     * @param string $property
-     *
-     * @return array|null
-     */
     public function getProperty(string $property): ?array
     {
         return $this->properties[$property] ?? [];
@@ -123,10 +112,7 @@ final class VocabularyAwareResource implements RdfResource
     }
 
     /**
-     * @param string      $predicate
      * @param string|null $value
-     *
-     * @return int
      */
     public function removeTriple(string $predicate, $value = null): int
     {
