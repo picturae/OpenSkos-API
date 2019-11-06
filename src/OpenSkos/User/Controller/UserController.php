@@ -56,15 +56,7 @@ final class UserController
 
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
-        if (is_null($auth)) {
-            throw new AccessDeniedHttpException();
-        }
-        if (!$auth->hasAuthenticationData()) {
-            throw new UnauthorizedHttpException('Basic realm="OpenSkos"');
-        }
-        if (!$auth->isAuthenticated()) {
-            throw new AccessDeniedHttpException();
-        }
+        $auth->requireAuthenticated();
 
         if ($auth->isAdministrator()) {
             // Administrators are allowed to see all users

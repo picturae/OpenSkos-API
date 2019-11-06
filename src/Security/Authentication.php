@@ -150,7 +150,7 @@ class Authentication
      * @throws UnauthorizedHttpException
      * @throws AccessDeniedHttpException
      */
-    public function requireWritePermissions(): void
+    public function requireAuthenticated(): void
     {
         if (!$this->hasAuthenticationData()) {
             throw new UnauthorizedHttpException('Basic realm="OpenSkos"');
@@ -158,6 +158,15 @@ class Authentication
         if (!$this->isAuthenticated()) {
             throw new AccessDeniedHttpException();
         }
+    }
+
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws AccessDeniedHttpException
+     */
+    public function requireAdministrator(): void
+    {
+        $this->requireAuthenticated();
         if (!$this->isAdministrator()) {
             throw new AccessDeniedHttpException();
         }

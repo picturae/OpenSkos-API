@@ -84,7 +84,8 @@ final class InstitutionController
         ApiRequest $apiRequest,
         InstitutionRepository $repository
     ): ScalarResponse {
-        $apiRequest->getAuthentication()->requireWritePermissions();
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
 
         $institution = $repository->findOneBy(
             new Iri(OpenSkos::CODE),
