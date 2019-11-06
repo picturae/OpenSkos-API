@@ -146,6 +146,10 @@ class Authentication
         return $this->user;
     }
 
+    /**
+     * @throws UnauthorizedHttpException
+     * @throws AccessDeniedHttpException
+     */
     public function requireWritePermissions(): void
     {
         if (!$this->hasAuthenticationData()) {
