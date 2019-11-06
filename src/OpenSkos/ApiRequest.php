@@ -52,11 +52,6 @@ final class ApiRequest
     private $foreignUri;
 
     /**
-     * @var int
-     */
-    private $searchProfile;
-
-    /**
      * @var Authentication
      */
     private $authentication;
@@ -72,7 +67,6 @@ final class ApiRequest
         int $offset = 0,
         array $institutions = [],
         array $sets = [],
-        int $searchProfile = 0,
         string $foreignUri = null,
         Authentication $authentication = null
     ) {
@@ -87,7 +81,6 @@ final class ApiRequest
         $this->limit = $limit;
         $this->institutions = $institutions;
         $this->sets = $sets;
-        $this->searchProfile = $searchProfile;
         $this->foreignUri = $foreignUri;
 
         if (!is_null($authentication)) {
@@ -148,16 +141,6 @@ final class ApiRequest
     public function setSets(array $sets): void
     {
         $this->sets = $sets;
-    }
-
-    public function getSearchProfile(): int
-    {
-        return $this->searchProfile;
-    }
-
-    public function setSearchProfile(int $searchProfile): void
-    {
-        $this->searchProfile = $searchProfile;
     }
 
     /**

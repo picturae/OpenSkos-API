@@ -101,8 +101,6 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         // at Meertens. For now it just searches on the same field as the 'native' uri
         $foreignUri = $request->query->get('uri', null);
 
-        $searchProfile = $request->query->getInt('searchProfile');
-
         $formatName = $request->query->get('format');
         if (is_null($formatName)) {
             $formatName = $request->attributes->get('format');
@@ -119,7 +117,6 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
             $request->query->getInt('offset', 0),
             $institutions,
             $sets,
-            $searchProfile,
             $foreignUri,
             new Authentication($request)
         );

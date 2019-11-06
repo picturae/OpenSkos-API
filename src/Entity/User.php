@@ -67,16 +67,6 @@ class User extends AbstractEntity
     /**
      * @var string|null
      */
-    protected $defaultSearchProfileIds;
-
-    /**
-     * @var bool
-     */
-    protected $disableSearchProfileChanging;
-
-    /**
-     * @var string|null
-     */
     protected $uri;
 
     /**
@@ -320,49 +310,6 @@ class User extends AbstractEntity
     public function getConceptSelection()
     {
         return $this->conceptSelection;
-    }
-
-    /**
-     * @param string|null $defaultSearchProfileIds
-     *
-     * @return self
-     */
-    public function setDefaultSearchProfileIds($defaultSearchProfileIds)
-    {
-        $this->defaultSearchProfileIds = $defaultSearchProfileIds;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDefaultSearchProfileIds()
-    {
-        return $this->defaultSearchProfileIds;
-    }
-
-    /**
-     * @param mixed $disableSearchProfileChanging
-     *
-     * @return self
-     */
-    public function setDisableSearchProfileChanging($disableSearchProfileChanging)
-    {
-        if ('Y' === $disableSearchProfileChanging) {
-            $disableSearchProfileChanging = true;
-        }
-        $this->disableSearchProfileChanging = (bool) $disableSearchProfileChanging;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisableSearchProfileChaning()
-    {
-        return $this->disableSearchProfileChanging;
     }
 
     /**

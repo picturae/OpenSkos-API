@@ -48,17 +48,7 @@ final class ConceptScheme
         $param_sets = $apiRequest->getSets();
         $sets_filter = $filterProcessor->buildSetFilters($param_sets);
 
-        $param_profile = $apiRequest->getSearchProfile();
-
         $full_filter = array_merge($institutions_filter, $sets_filter);
-
-        if ($param_profile) {
-            if (0 !== count($full_filter)) {
-                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
-            }
-            $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true, FilterProcessor::ENTITY_SET => true];
-            $full_filter = $filterProcessor->retrieveSearchProfile($param_profile, $to_apply);
-        }
 
         $conceptschemes = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 

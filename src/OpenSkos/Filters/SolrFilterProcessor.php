@@ -8,7 +8,6 @@ use App\EasyRdf\EasyRdfClient;
 use App\OpenSkos\Concept\Solr\ParserText;
 use App\Rdf\Sparql\SparqlQuery;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class SolrFilterProcessor
@@ -278,56 +277,5 @@ final class SolrFilterProcessor
         }
 
         return $dataOut;
-    }
-
-    /**
-     * @return array
-     */
-    public function retrieveSearchProfile(int $profile_id, array $to_apply)
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('searchOptions')
-            ->from('search_profiles')
-            ->where('id = :id')
-            ->setParameter('id', $profile_id);
-
-        $filters = [];
-
-        $res = $qb->execute();
-
-        if ($res instanceof Statement) {
-            $profile = $res->fetchAll();
-            if (0 === count($profile)) {
-                throw new BadRequestHttpException('The searchProfile id does not exist');
-            }
-            $searchOptions = unserialize($profile[0]['searchOptions']);
-
-            if (isset($to_apply[self::ENTITY_INSTITUTION]) && true === $to_apply[self::ENTITY_INSTITUTION]) {
-                if (isset($searchOptions['tenants']) && 0 !== count($searchOptions['tenants'])) {
-                    $read_filters = $this->buildInstitutionFilters($searchOptions['tenants']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::ENTITY_SET]) && true === $to_apply[self::ENTITY_SET]) {
-                if (isset($searchOptions['collections']) && 0 !== count($searchOptions['collections'])) {
-                    $read_filters = $this->buildSetFilters($searchOptions['collections']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::ENTITY_CONCEPTSCHEME]) && true === $to_apply[self::ENTITY_CONCEPTSCHEME]) {
-                if (isset($searchOptions['conceptScheme']) && 0 !== count($searchOptions['conceptScheme'])) {
-                    $read_filters = $this->buildConceptSchemeFilters($searchOptions['conceptScheme']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::VALUE_STATUS]) && true === $to_apply[self::VALUE_STATUS]) {
-                if (isset($searchOptions['status']) && 0 !== count($searchOptions['status'])) {
-                    $read_filters = $this->buildStatusesFilters($searchOptions['status']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-        }
-
-        return $filters;
     }
 }
