@@ -71,6 +71,12 @@ class Authentication
             return;
         }
 
+        // Only api users having an apikey are allowed
+        // No compare because it was already checked if given
+        if (!$user->getApikey()) {
+            return;
+        }
+
         // Fetch the user's roles
         // Verifies if the client is logged in as well
         $roles = $user->getRole();
