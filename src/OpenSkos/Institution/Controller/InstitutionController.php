@@ -76,4 +76,25 @@ final class InstitutionController
 
         return new ScalarResponse($institution, $apiRequest->getFormat());
     }
+
+    /**
+     * @Route(path="/institutions.{format?}", methods={"POST"})
+     */
+    public function postInstitution(
+        ApiRequest $apiRequest,
+        InstitutionRepository $repository
+    ): ScalarResponse {
+        $apiRequest->getAuthentication()->requireWritePermissions();
+
+        $institution = $repository->findOneBy(
+            new Iri(OpenSkos::CODE),
+            new InternalResourceId('pic')
+        );
+
+        if (null === $institution) {
+            throw new NotFoundHttpException('The institution pic could not be retreived.');
+        }
+
+        return new ScalarResponse($institution, $apiRequest->getFormat());
+    }
 }
