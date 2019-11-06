@@ -103,6 +103,7 @@ final class UserController
      * @Route(path="/user/{id}.{format?}", methods={"GET"})
      *
      * @throws AccessDeniedHttpException
+     * @throws UnauthorizedHttpException
      */
     public function getOneUser(
         string $id,
