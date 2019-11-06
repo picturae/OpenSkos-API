@@ -134,7 +134,7 @@ final class UserController
         }
 
         // An administrator is allowed to see anyone
-        if (!$auth->isAdministrator()) {
+        if ($auth->isAdministrator()) {
             $user = $repository->get(new Iri($id));
         } else {
             // We must have a user (likely, but still needs to be checked)
