@@ -32,7 +32,7 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $rdfClient;
 
     /**
-     * @var SkosResourceRepository<AbstractRdfDocument>
+     * @var SkosResourceRepository
      */
     protected $skosRepository;
 
@@ -64,28 +64,58 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->connection = $connection;
         $repository = $this;
 
-        // Fetch all annotations
-        $annotationReader = new AnnotationReader();
-        $documentReflection = new \ReflectionClass(static::DOCUMENT_CLASS);
-        $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
+        /**
+         * Fallback factory
+         * Builds an array from the triples with _id as the identifier (like in mongo).
+         *
+         * @param Iri      $iri
+         * @param Triple[] $triples
+         *
+         * @return array
+         */
+        $tripleFactory = function (Iri $iri, array $triples): array {
+            $result = ['_id' => $iri->getUri()];
+            foreach ($triples as $triple) {
+                $result[(string) $triple->getPredicate()] = $triple->getObject();
+            }
 
-        // Loop through annotations and extract data
-        foreach ($documentAnnotations as $annotation) {
-            if ($annotation instanceof Document\Table) {
-                $this->annotations['table'] = $annotation->value;
+            return $result;
+        };
+
+        if (static::DOCUMENT_CLASS) {
+            // Fetch all annotations
+            $annotationReader = new AnnotationReader();
+            $documentReflection = new \ReflectionClass(static::DOCUMENT_CLASS);
+            $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
+
+            // Loop through annotations and extract data
+            foreach ($documentAnnotations as $annotation) {
+                if ($annotation instanceof Document\Table) {
+                    $this->annotations['table'] = $annotation->value;
+                }
+                if ($annotation instanceof Document\Type) {
+                    $this->annotations['type'] = $annotation->value;
+                }
+                if ($annotation instanceof Document\UUID) {
+                    $this->annotations['uuid'] = $annotation->value;
+                }
             }
-            if ($annotation instanceof Document\Type) {
-                $this->annotations['type'] = $annotation->value;
-            }
-            if ($annotation instanceof Document\UUID) {
-                $this->annotations['uuid'] = $annotation->value;
-            }
+
+            /**
+             * Builds an object from the given triples.
+             *
+             * @param Iri      $iri
+             * @param Triple[] $triples
+             *
+             * @return AbstractRdfDocument
+             */
+            $tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
+                return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
+            };
         }
 
         $this->skosRepository = new SkosResourceRepository(
-            function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
-                return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
-            },
+            $tripleFactory,
             $this->rdfClient
         );
 
@@ -144,7 +174,10 @@ abstract class AbstractRepository implements RepositoryInterface
         return $results;
     }
 
-    public function findByIri(Iri $iri): ?AbstractRdfDocument
+    /**
+     * @return AbstractRdfDocument|null
+     */
+    public function findByIri(Iri $iri)
     {
         return $this->skosRepository->findByIri($iri);
     }
@@ -202,9 +235,16 @@ abstract class AbstractRepository implements RepositoryInterface
         return $res;
     }
 
+    public function getByUuid(InternalResourceId $uuid)
+    {
+        return $this->skosRepository->getByUuid($uuid);
+    }
+
+    // TODO: Copy doctrine data fetch into other functions
+    // TODO: Delete this function
     public function get(Iri $object)
     {
-        $res = $this->skosRepository->get($object);
+        $res = $this->skosRepository->findByIri($object);
 
         // No resource = done
         if (is_null($res)) {

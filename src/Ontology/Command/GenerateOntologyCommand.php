@@ -35,24 +35,44 @@ class GenerateOntologyCommand extends Command
         $ds = DIRECTORY_SEPARATOR;
         $context = $this->params->get('ontology');
 
-        // Step 1: build context file
-        file_put_contents("${dir}${ds}Context.php", Template::render('Context', [
-            'context' => $context,
-        ]));
-
         // Build datatype list
         $datatype = [];
         foreach ($context as $ontology) {
             $ontology['properties'] = $ontology['properties'] ?? [];
             foreach ($ontology['properties'] as $key => $propertyDescriptor) {
                 if (is_string($propertyDescriptor)) {
-                    $datatype[$ontology['prefix'].':'.$key] = 'literal';
+                    $datatype[$ontology['prefix'].':'.$propertyDescriptor] = 'literal';
                 } elseif (is_array($propertyDescriptor)) {
-                    $propertyDescriptor['dataType'] = $propertyDescriptor['dataType'] ?? 'literal';
-                    $datatype[$ontology['prefix'].':'.$key] = $propertyDescriptor['dataType'];
+                    $propertyDescriptor['datatype'] = $propertyDescriptor['datatype'] ?? 'literal';
+                    $datatype[$ontology['prefix'].':'.$key] = $propertyDescriptor['datatype'];
                 }
             }
         }
+
+        // Build dataclass list
+        $dataclass = [];
+        foreach ($context as $ontology) {
+            $ontology['properties'] = $ontology['properties'] ?? [];
+            foreach ($ontology['properties'] as $key => $propertyDescriptor) {
+                if (is_string($propertyDescriptor)) {
+                    continue;
+                }
+                if (!is_array($propertyDescriptor)) {
+                    continue;
+                }
+                if (!isset($propertyDescriptor['dataclass'])) {
+                    continue;
+                }
+                $dataclass[$ontology['prefix'].':'.$key] = $propertyDescriptor['dataclass'];
+            }
+        }
+
+        // Step 1: build context file
+        file_put_contents("${dir}${ds}Context.php", Template::render('Context', [
+            'context' => $context,
+            'dataclass' => $dataclass,
+            'datatype' => $datatype,
+        ]));
 
         // Build ontology file for referenced vocabulary
         foreach ($context as $ontology) {
@@ -122,7 +142,8 @@ class GenerateOntologyCommand extends Command
                 'vocabulary' => $vocabulary,
                 'consts' => $consts,
                 'lists' => $lists,
-                'dataType' => $datatype,
+                'dataclass' => $dataclass,
+                'datatype' => $datatype,
             ]));
         }
     }

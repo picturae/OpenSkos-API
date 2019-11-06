@@ -5,10 +5,10 @@ parameters:
     namespace: 'http://www.w3.org/2000/01/rdf-schema#'
     properties:
       comment:
-        dataType: literal
+        datatype: literal
       subPropertyOf:
-        dataType: resource
+        datatype: resource
       domain:
-        dataType: resource
+        datatype: resource
       range:
-        dataType: resource
+        datatype: resource

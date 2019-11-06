@@ -196,10 +196,8 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * @param Triple[]           $triples
      * @param AbstractRepository $repository
-     *
-     * @return AbstractRdfDocument
      */
-    public static function fromTriples(Iri $subject, array $triples, AbstractRepository $repository = null): self
+    public static function fromTriples(Iri $subject, array $triples, AbstractRepository $repository = null): AbstractRdfDocument
     {
         $resource = VocabularyAwareResource::fromTriples($subject, $triples, static::$mapping);
 

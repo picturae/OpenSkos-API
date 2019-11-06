@@ -5,20 +5,21 @@ parameters:
     namespace: 'http://www.w3.org/2008/05/skos-xl#'
     properties:
       Label:
-        dataType: class
+        datatype: class
+        dataclass: App\OpenSkos\Label\Label
       altLabel:
-        dataType: literal
+        datatype: literal
         "rdfs:range": "skosxl:Label"
       hiddenLabel:
-        dataType: literal
+        datatype: literal
         "rdfs:range": "skosxl:Label"
       labelRelation:
-        dataType: resource
+        datatype: resource
         "rdfs:range": "skosxl:Label"
         "rdfs:domain": "skosxl:Label"
       literalForm:
-        dataType: literal
+        datatype: literal
         "rdfs:domain": "skosxl:Label"
       prefLabel:
-        dataType: literal
+        datatype: literal
         "rdfs:range": "skosxl:Label"

@@ -7,7 +7,7 @@ namespace App\Ontology\Template;
 <?php
 $skipFields = [
     'name',
-    'dataType',
+    'datatype',
 ];
 ?>
 
@@ -68,7 +68,7 @@ final class <?= $name; ?>
 <?php foreach ($vocabulary as $descriptor) { ?>
         $<?= $descriptor['name']; ?> = $graph->resource(<?= Template::quoteString($prefix.':'.$descriptor['name']); ?>);
         $<?= $descriptor['name']; ?>->setType('rdf:Property');
-        $<?= $descriptor['name']; ?>->addLiteral('openskos:dataType', '<?= $descriptor['dataType'] ?? 'literal'; ?>');
+        $<?= $descriptor['name']; ?>->addLiteral('openskos:datatype', '<?= $descriptor['datatype'] ?? 'literal'; ?>');
 <?php foreach ($descriptor as $field => $values) {
     if (in_array($field, $skipFields, true)) {
         continue;
@@ -77,7 +77,7 @@ final class <?= $name; ?>
         $values = [$values];
     } ?>
 <?php foreach ($values as $value) { ?>
-        $<?= $descriptor['name']; ?>->add<?= ucfirst($dataType[$field] ?? 'literal'); ?>(<?= Template::quoteString($field); ?>, <?= Template::quoteString($value); ?>);
+        $<?= $descriptor['name']; ?>->add<?= ucfirst($datatype[$field] ?? 'literal'); ?>(<?= Template::quoteString($field); ?>, <?= Template::quoteString($value); ?>);
 <?php } /* foreach values as value */ ?>
 <?php
 } /* foreach descriptor as field => values */ ?>

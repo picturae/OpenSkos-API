@@ -44,8 +44,12 @@ final class VocabularyAwareResource implements RdfResource
      * @param Triple[]             $triples
      * @param array<string,string> $mapping
      */
-    public static function fromTriples(Iri $iri, array $triples, array $mapping): VocabularyAwareResource
+    public static function fromTriples(Iri $iri, array $triples, array $mapping = null): VocabularyAwareResource
     {
+        if (!is_array($mapping)) {
+            throw new \Exception('VocabularyAwareResource needs a (array)mapping. Got: '.gettype($mapping));
+        }
+
         $iriString = $iri->getUri();
         $obj = new self($iri, $mapping);
         foreach ($triples as $triple) {

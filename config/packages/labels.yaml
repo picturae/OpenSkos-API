@@ -12,6 +12,7 @@ services:
   App\OpenSkos\Label\Sparql\SparqlLabelRepository:
     arguments:
       $iriFactory: '@label.iri_factory'
+      $resourceClass: App\OpenSkos\Label\Label
 
   App\OpenSkos\Label\LabelRepository: '@App\OpenSkos\Label\Sparql\SparqlLabelRepository'
 

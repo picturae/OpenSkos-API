@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Label;
 
+use App\Annotation\Document;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
@@ -14,6 +15,9 @@ use App\Rdf\RdfResource;
 use App\Rdf\Triple;
 use App\Rdf\VocabularyAwareResource;
 
+/**
+ * @Document\Type(SkosXl::LABEL)
+ */
 final class Label extends AbstractRdfDocument implements RdfResource
 {
     const type = 'type';

@@ -12,7 +12,10 @@ interface RepositoryInterface
 {
     public function all(int $offset = 0, int $limit = 100, array $filter = []): array;
 
-    public function findByIri(Iri $iri): ?AbstractRdfDocument;
+    /**
+     * @return AbstractRdfDocument|array|null
+     */
+    public function findByIri(Iri $iri);
 
     public function find(InternalResourceId $id): ?AbstractRdfDocument;
 

@@ -5,22 +5,22 @@ parameters:
     namespace: 'http://www.w3.org/2006/vcard/ns#'
     properties:
       ORG:
-        dataType: literal
+        datatype: literal
       orgname:
-        dataType: literal
+        datatype: literal
       orgunit:
-        dataType: literal
+        datatype: literal
       URL:
-        dataType: literal
+        datatype: literal
       EMAIL:
-        dataType: literal
+        datatype: literal
       ADR:
-        dataType: literal
+        datatype: literal
       Street:
-        dataType: literal
+        datatype: literal
       Locality:
-        dataType: literal
+        datatype: literal
       Pcode:
-        dataType: literal
+        datatype: literal
       Country:
-        dataType: literal
+        datatype: literal

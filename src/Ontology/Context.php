@@ -20,6 +20,14 @@ final class Context
         'xsd' => Xsd::NAME_SPACE,
     ];
 
+    const dataclass = [
+        'foaf:Person' => '\App\OpenSkos\User\User',
+        'org:FormalOrganization' => '\App\OpenSkos\Institution\Institution',
+        'skos:Concept' => '\App\OpenSkos\Concept\Concept',
+        'skos:ConceptScheme' => '\App\OpenSkos\ConceptScheme\ConceptScheme',
+        'skosxl:Label' => '\App\OpenSkos\Label\Label',
+    ];
+
     /**
      * Build a context based on short names.
      *
@@ -51,6 +59,20 @@ final class Context
                 self::walk($value, $callback);
             }
         }
+    }
+
+    /**
+     * Detect prefix AND field from uri.
+     */
+    public static function decodeUri(string $uri): ?array
+    {
+        $prefix = self::detectNamespaceFromUri($uri);
+        if (false === $prefix) {
+            return null;
+        }
+        $field = substr($uri, strlen(static::prefixes[$prefix]));
+
+        return [$prefix, $field];
     }
 
     /**
