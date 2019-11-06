@@ -16,6 +16,7 @@ use App\Rest\ScalarResponse;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -44,6 +45,7 @@ final class UserController
      * @Route(path="/users.{format?}", methods={"GET"})
      *
      * @throws AccessDeniedHttpException
+     * @throws UnauthorizedHttpException
      */
     public function geAllUsers(
         UserRepository $repository,
@@ -56,6 +58,9 @@ final class UserController
         $auth = $apiRequest->getAuthentication();
         if (is_null($auth)) {
             throw new AccessDeniedHttpException();
+        }
+        if (!$auth->hasAuthenticationData()) {
+            throw new UnauthorizedHttpException('Basic realm="OpenSkos"');
         }
         if (!$auth->isAuthenticated()) {
             throw new AccessDeniedHttpException();
@@ -98,6 +103,7 @@ final class UserController
      * @Route(path="/user/{id}.{format?}", methods={"GET"})
      *
      * @throws AccessDeniedHttpException
+     * @throws UnauthorizedHttpException
      */
     public function getOneUser(
         string $id,
@@ -112,6 +118,9 @@ final class UserController
         $auth = $apiRequest->getAuthentication();
         if (is_null($auth)) {
             throw new AccessDeniedHttpException();
+        }
+        if (!$auth->hasAuthenticationData()) {
+            throw new UnauthorizedHttpException('Basic realm="OpenSkos"');
         }
         if (!$auth->isAuthenticated()) {
             throw new AccessDeniedHttpException();

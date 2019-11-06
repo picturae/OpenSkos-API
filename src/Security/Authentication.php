@@ -13,6 +13,11 @@ class Authentication
     protected $authenticated = false;
 
     /**
+     * @var bool
+     */
+    protected $hasAuthenticationData = false;
+
+    /**
      * @var string[]
      */
     protected $roles;
@@ -34,6 +39,7 @@ class Authentication
         }
 
         // The data we'll insert into the user
+        $this->hasAuthenticationData = true;
         $knownData = [];
 
         // Detect & remove prefix
@@ -46,10 +52,11 @@ class Authentication
             $prefix = strtolower($prefix[1]);
             switch ($prefix) {
                 case 'basic':
+                    unset($knownData['apikey']);
                     $decoded = base64_decode($token, true);
                     $parts = explode(':', $decoded);
                     $knownData['email'] = trim(array_shift($parts));
-                    $knownData['apikey'] = trim(implode(':', $parts));
+                    $knownData['password'] = md5(trim(implode(':', $parts)));
                     break;
             }
         }
@@ -61,6 +68,12 @@ class Authentication
         // Only api users are allowed to authenticate through this method
         $userType = $user->getType();
         if (!in_array($userType, ['both', 'api'], true)) {
+            return;
+        }
+
+        // Only api users having an apikey are allowed
+        // No compare because it was already checked if given
+        if (!$user->getApikey()) {
             return;
         }
 
@@ -83,6 +96,11 @@ class Authentication
     public function isAuthenticated(): bool
     {
         return $this->authenticated;
+    }
+
+    public function hasAuthenticationData(): bool
+    {
+        return $this->hasAuthenticationData;
     }
 
     /**
