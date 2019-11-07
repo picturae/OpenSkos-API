@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  fpm:
+    build:
+      context: .
+      dockerfile: data/docker/fpm/Dockerfile
+    networks:
+      - default
+      - openskos
+    volumes:
+      - ./:/app
+      - ./data/docker/fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+      - ./data/docker/fpm/symfony.env:/app/.env
+
+  nginx:
+    build: data/docker/nginx
+    env_file:
+      - data/docker/nginx/default.env
+    ports:
+      - 9020:80
+    volumes:
+      - ./data/docker/nginx:/app:ro
+
+networks:
+  openskos:
+    external:
+      name: openskos
