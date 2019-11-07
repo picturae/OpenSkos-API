@@ -8,10 +8,9 @@ services:
     networks:
       - default
       - openskos
-    env_file:
-      - fpm/symfony.env
     volumes:
       - ../../:/app
+      - ./fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
 
   nginx:
     build: nginx

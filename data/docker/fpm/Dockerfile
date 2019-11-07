@@ -9,7 +9,8 @@ RUN apt update \
     && docker-php-ext-enable opcache \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /app/var \
-    && docker-php-ext-install pdo pdo_mysql
+    && docker-php-ext-install pdo pdo_mysql \
+    #&& pecl install xdebug
 
 COPY data/docker/fpm/php.ini /usr/local/etc/
 RUN curl https://getcomposer.org/installer | php -- --filename composer --install-dir=/usr/local/bin
@@ -20,4 +21,5 @@ COPY src src/
 COPY public public/
 COPY vendor vendor/
 COPY composer.* ./
+COPY data/docker/fpm/symfony.env /app/.env
 
