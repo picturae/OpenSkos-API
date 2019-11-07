@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Annotation\Document;
+use App\EasyRdf\TripleFactory;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
@@ -131,22 +132,7 @@ abstract class AbstractRepository implements RepositoryInterface
     public function fromGraph(\EasyRdf_Graph $graph): ?array
     {
         $tripleFactory = $this->tripleFactory;
-
-        // Build normalized triple string
-        $tripleString = $graph->serialise('ntriples');
-        $tripleString = implode("\n", explode("\r\n", $tripleString));
-        $tripleString = implode("\n", explode("\n\r", $tripleString));
-        $tripleString = implode("\n", explode("\r", $tripleString));
-
-        // Build triple array
-        $triples = array_filter(array_map(function ($triple) {
-            return Triple::fromString($triple);
-        }, explode("\n", $tripleString)));
-        if (!count($triples)) {
-            return null;
-        }
-
-        // Group triples and build resources
+        $triples = TripleFactory::triplesFromGraph($graph);
         $grouped = $this->skosRepository::groupTriples($triples);
         foreach ($grouped as $subject => $triples) {
             $grouped[$subject] = $tripleFactory(new Iri($subject), $triples);
