@@ -9,7 +9,7 @@ RUN apt update \
     && docker-php-ext-enable opcache \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /app/var \
-    && docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-install pdo pdo_mysql
     #&& pecl install xdebug
 
 COPY data/docker/fpm/php.ini /usr/local/etc/
