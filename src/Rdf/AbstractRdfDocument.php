@@ -19,6 +19,11 @@ abstract class AbstractRdfDocument implements RdfResource
     protected static $mapping = [];
 
     /**
+     * @var string[]
+     */
+    protected static $required = [];
+
+    /**
      * Mapping between different-named fields between local and doctrine.
      *
      * The key   = doctrine

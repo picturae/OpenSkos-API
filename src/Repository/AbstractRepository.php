@@ -11,6 +11,7 @@ use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\Client;
+use App\Rdf\Triple;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
 
@@ -47,6 +48,11 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $iriFactory;
 
     /**
+     * @var callable
+     */
+    protected $tripleFactory;
+
+    /**
      * @var array
      */
     protected $annotations = [];
@@ -64,7 +70,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->connection = $connection;
         $repository = $this;
 
-        /**
+        /*
          * Fallback factory
          * Builds an array from the triples with _id as the identifier (like in mongo).
          *
@@ -73,7 +79,7 @@ abstract class AbstractRepository implements RepositoryInterface
          *
          * @return array
          */
-        $tripleFactory = function (Iri $iri, array $triples): array {
+        $this->tripleFactory = function (Iri $iri, array $triples): array {
             $result = ['_id' => $iri->getUri()];
             foreach ($triples as $triple) {
                 $result[(string) $triple->getPredicate()] = $triple->getObject();
@@ -101,7 +107,7 @@ abstract class AbstractRepository implements RepositoryInterface
                 }
             }
 
-            /**
+            /*
              * Builds an object from the given triples.
              *
              * @param Iri      $iri
@@ -109,17 +115,44 @@ abstract class AbstractRepository implements RepositoryInterface
              *
              * @return AbstractRdfDocument
              */
-            $tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
+            $this->tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
                 return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
             };
         }
 
         $this->skosRepository = new SkosResourceRepository(
-            $tripleFactory,
+            $this->tripleFactory,
             $this->rdfClient
         );
 
         $this->iriFactory = $iriFactory;
+    }
+
+    public function fromGraph(\EasyRdf_Graph $graph): ?array
+    {
+        $tripleFactory = $this->tripleFactory;
+
+        // Build normalized triple string
+        $tripleString = $graph->serialise('ntriples');
+        $tripleString = implode("\n", explode("\r\n", $tripleString));
+        $tripleString = implode("\n", explode("\n\r", $tripleString));
+        $tripleString = implode("\n", explode("\r", $tripleString));
+
+        // Build triple array
+        $triples = array_filter(array_map(function ($triple) {
+            return Triple::fromString($triple);
+        }, explode("\n", $tripleString)));
+        if (!count($triples)) {
+            return null;
+        }
+
+        // Group triples and build resources
+        $grouped = $this->skosRepository::groupTriples($triples);
+        foreach ($grouped as $subject => $triples) {
+            $grouped[$subject] = $tripleFactory(new Iri($subject), $triples);
+        }
+
+        return $grouped;
     }
 
     /**

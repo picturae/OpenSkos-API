@@ -93,67 +93,75 @@ final class InstitutionController
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        // Check if valid data was given
+        // Load data into institutions
         $graph = $apiRequest->getGraph();
-        if (!count($graph->resources())) {
+        $institutions = $repository->fromGraph($graph);
+        if (is_null($institutions)) {
             throw new BadRequestHttpException('Request body was empty or corrupt');
         }
 
-        // Pre-build checking params
-        $shortOrg = implode(':', Context::decodeUri(Org::FORMAL_ORGANIZATION) ?? []);
-        if (!strlen($shortOrg)) {
-            throw new \Exception('Could not shorten org:FormalOrganization');
-        }
+        // TODO: $institutions[]->isValid() ?! corrupt
+        // TODO: $institutions[]->exists() ? conflict
+        // TODO: $institutions[]->save()
 
-        // Validate types
-        $resources = $graph->resources();
-        foreach ($resources as $resource) {
-            // Ignore type resource
-            if (Org::FORMAL_ORGANIZATION === $resource->getUri()) {
-                continue;
-            }
+        /* var_dump('INSTITUTIONS', $institutions); */
+        /* die(); */
 
-            // Pre-built checking vars
-            $types = $resource->types();
-            foreach ($types as $index => $type) {
-                $types[$index] = implode(':', Context::decodeUri($type) ?? []);
-            }
+        /* // Pre-build checking params */
+        /* $shortOrg = implode(':', Context::decodeUri(Org::FORMAL_ORGANIZATION) ?? []); */
+        /* if (!strlen($shortOrg)) { */
+        /*     throw new \Exception('Could not shorten org:FormalOrganization'); */
+        /* } */
 
-            // No org = invalid object
-            if (!in_array($shortOrg, $types, true)) {
-                throw new BadRequestHttpException('A non-institution resource was given');
-            }
-        }
+        /* // Validate types */
+        /* $resources = $graph->resources(); */
+        /* foreach ($resources as $resource) { */
+        /*     // Ignore type resource */
+        /*     if (Org::FORMAL_ORGANIZATION === $resource->getUri()) { */
+        /*         continue; */
+        /*     } */
 
-        // Prevent insertion if one already exists
-        $institutions = $graph->allOfType(Org::FORMAL_ORGANIZATION);
-        foreach ($institutions as $institution) {
-            // Find it by iri
-            $uri = $institution->getUri();
-            $found = $repository->findByIri(new Iri($uri));
-            if (!is_null($found)) {
-                throw new ConflictHttpException('The resource already exists');
-            }
-        }
+        /*     // Pre-built checking vars */
+        /*     $types = $resource->types(); */
+        /*     foreach ($types as $index => $type) { */
+        /*         $types[$index] = implode(':', Context::decodeUri($type) ?? []); */
+        /*     } */
 
-        // Ensure all institutions have a UUID
-        foreach ($institutions as $institution) {
-            $uuid = $institution->getLiteral('openskos:uuid');
-            if (is_null($uuid)) {
-                $institution->addLiteral('openskos:uuid', @array_pop(explode('/', $institution->getUri())));
-            }
-        }
+        /*     // No org = invalid object */
+        /*     if (!in_array($shortOrg, $types, true)) { */
+        /*         throw new BadRequestHttpException('A non-institution resource was given'); */
+        /*     } */
+        /* } */
 
-        // Insert
-        $response = $repository->insertTriples($graph->serialise('ntriples'));
+        /* // Prevent insertion if one already exists */
+        /* $institutions = $graph->allOfType(Org::FORMAL_ORGANIZATION); */
+        /* foreach ($institutions as $institution) { */
+        /*     // Find it by iri */
+        /*     $uri = $institution->getUri(); */
+        /*     $found = $repository->findByIri(new Iri($uri)); */
+        /*     if (!is_null($found)) { */
+        /*         throw new ConflictHttpException('The resource already exists'); */
+        /*     } */
+        /* } */
 
-        // Build response
-        foreach ($institutions as $index => $institution) {
-            $institutions[$index] = $repository->findOneBy(
-                new Iri(OpenSkos::UUID),
-                new InternalResourceId($institution->getLiteral('openskos:uuid')->getValue())
-            );
-        }
+        /* // Ensure all institutions have a UUID */
+        /* foreach ($institutions as $institution) { */
+        /*     $uuid = $institution->getLiteral('openskos:uuid'); */
+        /*     if (is_null($uuid)) { */
+        /*         $institution->addLiteral('openskos:uuid', @array_pop(explode('/', $institution->getUri()))); */
+        /*     } */
+        /* } */
+
+        /* // Insert */
+        /* $response = $repository->insertTriples($graph->serialise('ntriples')); */
+
+        /* // Build response */
+        /* foreach ($institutions as $index => $institution) { */
+        /*     $institutions[$index] = $repository->findOneBy( */
+        /*         new Iri(OpenSkos::UUID), */
+        /*         new InternalResourceId($institution->getLiteral('openskos:uuid')->getValue()) */
+        /*     ); */
+        /* } */
 
         // Return re-fetched institutions
         return new ListResponse(

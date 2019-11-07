@@ -45,4 +45,10 @@ final class Institution extends AbstractRdfDocument
         self::type => Rdf::TYPE,
         self::uuid => OpenSkos::UUID,
     ];
+
+    protected static $required = [
+        OpenSkos::CODE,
+        OpenSkos::NAME,
+        OpenSkos::UUID,
+    ];
 }
