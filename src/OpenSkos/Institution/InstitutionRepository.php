@@ -4,20 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Institution;
 
-use App\OpenSkos\InternalResourceId;
-use App\Rdf\Iri;
+use App\Ontology\Org;
+use App\Repository\AbstractRepository;
 
-interface InstitutionRepository
+final class InstitutionRepository extends AbstractRepository
 {
-    public function all(int $offset = 0, int $limit = 100): array;
-
-    public function findByIri(Iri $iri): ?Institution;
-
-    public function find(InternalResourceId $id): ?Institution;
-
-    public function findBy(Iri $predicate, InternalResourceId $object): ?array;
-
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Institution;
-
-    public function insertTriples(string $triples): \EasyRdf_Http_Response;
+    const DOCUMENT_CLASS = Institution::class;
+    const DOCUMENT_TYPE = Org::FORMAL_ORGANIZATION;
 }

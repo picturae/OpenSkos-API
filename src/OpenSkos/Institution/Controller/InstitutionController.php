@@ -14,6 +14,7 @@ use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -95,13 +96,13 @@ final class InstitutionController
         // Check if valid data was given
         $graph = $apiRequest->getGraph();
         if (!count($graph->resources())) {
-            throw new \Exception('400 invalid data throw '.__FILE__.':'.__LINE__);
+            throw new BadRequestHttpException('Request body was empty or corrupt');
         }
 
         // Pre-build checking params
         $shortOrg = implode(':', Context::decodeUri(Org::FORMAL_ORGANIZATION) ?? []);
         if (!strlen($shortOrg)) {
-            throw new \Exception('500 internal error throw '.__FILE__.':'.__LINE__);
+            throw new \Exception('Could not shorten org:FormalOrganization');
         }
 
         // Validate types
@@ -120,7 +121,7 @@ final class InstitutionController
 
             // No org = invalid object
             if (!in_array($shortOrg, $types, true)) {
-                throw new \Exception('400 invalid data throw '.__FILE__.':'.__LINE__);
+                throw new BadRequestHttpException('A non-institution resource was given');
             }
         }
 
@@ -131,7 +132,7 @@ final class InstitutionController
             $uri = $institution->getUri();
             $found = $repository->findByIri(new Iri($uri));
             if (!is_null($found)) {
-                throw new \Exception('400 already exists throw '.__FILE__.':'.__LINE__);
+                throw new ConflictHttpException('The resource already exists');
             }
         }
 

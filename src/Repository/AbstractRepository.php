@@ -286,4 +286,9 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         return $this->annotations;
     }
+
+    public function insertTriples(string $triples): \EasyRdf_Http_Response
+    {
+        return $this->skosRepository->insertTriples($triples);
+    }
 }

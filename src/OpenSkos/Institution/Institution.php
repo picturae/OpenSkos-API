@@ -7,12 +7,9 @@ namespace App\OpenSkos\Institution;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
-use App\Rdf\Iri;
-use App\Rdf\RdfResource;
-use App\Rdf\Triple;
-use App\Rdf\VocabularyAwareResource;
+use App\Rdf\AbstractRdfDocument;
 
-final class Institution implements RdfResource
+final class Institution extends AbstractRdfDocument
 {
     const code = 'code';
     const name = 'name';
@@ -32,7 +29,7 @@ final class Institution implements RdfResource
     /**
      * @var string[]
      */
-    private static $mapping = [
+    protected static $mapping = [
         self::code => OpenSkos::CODE,
         self::name => OpenSkos::NAME,
         self::disableSearchInOtherTenants => OpenSkos::DISABLE_SEARCH_IN_OTHER_TENANTS,
@@ -48,53 +45,4 @@ final class Institution implements RdfResource
         self::type => Rdf::TYPE,
         self::uuid => OpenSkos::UUID,
     ];
-
-    /**
-     * @var VocabularyAwareResource
-     */
-    private $resource;
-
-    private function __construct(
-        Iri $subject,
-        ?VocabularyAwareResource $resource = null
-    ) {
-        if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
-        } else {
-            $this->resource = $resource;
-        }
-    }
-
-    public function iri(): Iri
-    {
-        return $this->resource->iri();
-    }
-
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->resource->triples();
-    }
-
-    /**
-     * @return Institution
-     */
-    public static function createEmpty(Iri $subject): self
-    {
-        return new self($subject);
-    }
-
-    /**
-     * @param Triple[] $triples
-     *
-     * @return Institution
-     */
-    public static function fromTriples(Iri $subject, array $triples): self
-    {
-        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
-
-        return new self($subject, $resource);
-    }
 }
