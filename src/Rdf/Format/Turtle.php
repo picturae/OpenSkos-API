@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rdf\Format;
 
-use App\Utils\SingletonTrait;
-
-final class Turtle implements RdfFormat
+final class Turtle extends AbstractRdfFormat
 {
-    use SingletonTrait;
-
     public function name(): string
     {
         return 'ttl';

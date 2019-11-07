@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Rdf\Format;
 
-use App\Utils\SingletonTrait;
-
-final class JsonLd implements RdfFormat
+final class JsonLd extends AbstractRdfFormat
 {
-    use SingletonTrait;
+    public function easyRdfName(): string
+    {
+        return 'jsonld';
+    }
 
     public function name(): string
     {

@@ -87,6 +87,8 @@ final class InstitutionController
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
+        /* var_dump($apiRequest->getGraph()->serialise('jsonld')); */
+
         $institution = $repository->findOneBy(
             new Iri(OpenSkos::CODE),
             new InternalResourceId('pic')

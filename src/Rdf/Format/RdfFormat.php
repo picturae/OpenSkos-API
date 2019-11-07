@@ -8,5 +8,7 @@ interface RdfFormat
 {
     public function name(): string;
 
+    public function easyRdfName(): string;
+
     public function contentTypeString(): string;
 }

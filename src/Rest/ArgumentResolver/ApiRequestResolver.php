@@ -10,6 +10,8 @@ use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\UnknownFormatException;
 use App\Security\Authentication;
+use EasyRdf_Format as Format;
+use EasyRdf_Graph as Graph;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -45,10 +47,10 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     {
         if (null === $formatName) {
             // Attempt using the accept header
-            if (isset($headers['accept'])) {
+            if (!is_null($headers)) {
                 // Build accept list
                 $accepts = [];
-                foreach ($headers['accept'] as $list) {
+                foreach ($headers as $list) {
                     $list = str_getcsv($list);
                     foreach ($list as $entry) {
                         if (false !== strpos($entry, ';')) {
@@ -109,16 +111,38 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
             }
         }
 
+        // Detect format of request body
+        $graph = new Graph();
+        $types = $request->headers->get('content-type', null, false);
+        if (is_string($types)) {
+            $types = [$types];
+        }
+        if (is_null($types)) {
+            $types = [];
+        }
+        if (is_array($types)) {
+            array_push($types, 'application/rdf+json');
+        }
+
+        $givenFormat = $this->resolveFormat(null, [implode(',', $types)]);
+
+        // Parse body into graph
+        $content = $request->getContent();
+        if (!is_null($givenFormat) && is_string($content) && strlen($content)) {
+            $graph->parse($content, $givenFormat->easyRdfName());
+        }
+
         yield new ApiRequest(
             $allParameters,
-            $this->resolveFormat($formatName, $request->headers->all()),
+            $this->resolveFormat($formatName, $request->headers->all()['accept'] ?? null),
             $request->query->getInt('level', 1),
             $request->query->getInt('limit', 100),
             $request->query->getInt('offset', 0),
             $institutions,
             $sets,
             $foreignUri,
-            new Authentication($request)
+            new Authentication($request),
+            $graph
         );
     }
 }
