@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Institution\Controller;
 
+use App\Ontology\Context;
 use App\Ontology\OpenSkos;
+use App\Ontology\Org;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
@@ -83,21 +85,81 @@ final class InstitutionController
     public function postInstitution(
         ApiRequest $apiRequest,
         InstitutionRepository $repository
-    ): ScalarResponse {
+    ): ListResponse {
+        Context::setupEasyRdf();
+
+        // Client permissions
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        /* var_dump($apiRequest->getGraph()->serialise('jsonld')); */
-
-        $institution = $repository->findOneBy(
-            new Iri(OpenSkos::CODE),
-            new InternalResourceId('pic')
-        );
-
-        if (null === $institution) {
-            throw new NotFoundHttpException('The institution pic could not be retreived.');
+        // Check if valid data was given
+        $graph = $apiRequest->getGraph();
+        if (!count($graph->resources())) {
+            throw new \Exception('400 invalid data throw '.__FILE__.':'.__LINE__);
         }
 
-        return new ScalarResponse($institution, $apiRequest->getFormat());
+        // Pre-build checking params
+        $shortOrg = implode(':', Context::decodeUri(Org::FORMAL_ORGANIZATION) ?? []);
+        if (!strlen($shortOrg)) {
+            throw new \Exception('500 internal error throw '.__FILE__.':'.__LINE__);
+        }
+
+        // Validate types
+        $resources = $graph->resources();
+        foreach ($resources as $resource) {
+            // Ignore type resource
+            if (Org::FORMAL_ORGANIZATION === $resource->getUri()) {
+                continue;
+            }
+
+            // Pre-built checking vars
+            $types = $resource->types();
+            foreach ($types as $index => $type) {
+                $types[$index] = implode(':', Context::decodeUri($type) ?? []);
+            }
+
+            // No org = invalid object
+            if (!in_array($shortOrg, $types, true)) {
+                throw new \Exception('400 invalid data throw '.__FILE__.':'.__LINE__);
+            }
+        }
+
+        // Prevent insertion if one already exists
+        $institutions = $graph->allOfType(Org::FORMAL_ORGANIZATION);
+        foreach ($institutions as $institution) {
+            // Find it by iri
+            $uri = $institution->getUri();
+            $found = $repository->findByIri(new Iri($uri));
+            if (!is_null($found)) {
+                throw new \Exception('400 already exists throw '.__FILE__.':'.__LINE__);
+            }
+        }
+
+        // Ensure all institutions have a UUID
+        foreach ($institutions as $institution) {
+            $uuid = $institution->getLiteral('openskos:uuid');
+            if (is_null($uuid)) {
+                $institution->addLiteral('openskos:uuid', @array_pop(explode('/', $institution->getUri())));
+            }
+        }
+
+        // Insert
+        $response = $repository->insertTriples($graph->serialise('ntriples'));
+
+        // Build response
+        foreach ($institutions as $index => $institution) {
+            $institutions[$index] = $repository->findOneBy(
+                new Iri(OpenSkos::UUID),
+                new InternalResourceId($institution->getLiteral('openskos:uuid')->getValue())
+            );
+        }
+
+        // Return re-fetched institutions
+        return new ListResponse(
+            $institutions,
+            count($institutions),
+            0,
+            $apiRequest->getFormat()
+        );
     }
 }

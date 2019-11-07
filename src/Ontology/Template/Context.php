@@ -59,6 +59,11 @@ final class Context
      */
     public static function decodeUri(string $uri): ?array
     {
+        $tokens = explode(':', $uri);
+        if (2 === (count($tokens)) && (isset(static::prefixes[$tokens[0]]))) {
+            return $tokens;
+        }
+
         $prefix = self::detectNamespaceFromUri($uri);
         if (false === $prefix) {
             return null;

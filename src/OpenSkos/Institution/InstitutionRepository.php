@@ -18,4 +18,6 @@ interface InstitutionRepository
     public function findBy(Iri $predicate, InternalResourceId $object): ?array;
 
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?Institution;
+
+    public function insertTriples(string $triples): \EasyRdf_Http_Response;
 }

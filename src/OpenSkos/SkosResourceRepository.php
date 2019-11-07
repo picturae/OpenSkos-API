@@ -213,4 +213,9 @@ class SkosResourceRepository
 
         return null;
     }
+
+    public function insertTriples(string $triples): \EasyRdf_Http_Response
+    {
+        return $this->rdfClient->insertTriples($triples);
+    }
 }

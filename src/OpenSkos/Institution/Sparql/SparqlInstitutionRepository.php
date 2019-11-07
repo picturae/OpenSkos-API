@@ -79,4 +79,9 @@ final class SparqlInstitutionRepository implements InstitutionRepository
 
         return $res;
     }
+
+    public function insertTriples(string $triples): \EasyRdf_Http_Response
+    {
+        return $this->skosRepository->insertTriples($triples);
+    }
 }

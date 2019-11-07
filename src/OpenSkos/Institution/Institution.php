@@ -26,6 +26,7 @@ final class Institution implements RdfResource
     const enableStatusesSystem = 'enableStatusesSystem';
     const enableSkosXl = 'enableSkosXl';
     const type = 'type';
+    const uuid = 'uuid';
     const disableSearchInOtherTenants = 'disableSearchInOtherTenants';
 
     /**
@@ -45,6 +46,7 @@ final class Institution implements RdfResource
         self::enableStatusesSystem => OpenSkos::ENABLE_STATUSSES_SYSTEM,
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
         self::type => Rdf::TYPE,
+        self::uuid => OpenSkos::UUID,
     ];
 
     /**
