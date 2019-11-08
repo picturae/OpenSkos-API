@@ -76,17 +76,19 @@ final class OpenSkos
      * Returns false on success (a.k.a. no errors).
      *
      * @param mixed $value
-     *
-     * @return bool|string
      */
-    public function validateUuid($value)
+    public function validateUuid($value): ?array
     {
         $regex = '/[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}/i';
         if (!preg_match($regex, $value)) {
-            return 'namespace-propertyname-regex-failed';
+            return [
+                'code' => 'openskos-uuid-validate-regex',
+                'regex' => $regex,
+                'value' => $value,
+            ];
         }
 
-        return false;
+        return null;
     }
 
     public static function vocabulary(): \EasyRdf_Graph

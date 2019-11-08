@@ -60,19 +60,21 @@ final class <?= $name; ?>
      * Returns false on success (a.k.a. no errors).
      *
      * @param mixed $value
-     *
-     * @return bool|string
      */
-    public function validate<?= ucfirst($property['name']); ?>($value)
+    public function validate<?= ucfirst($property['name']); ?>($value): ?array
     {
 <?php if (isset($property['regex'])) { ?>
         $regex = '<?= str_replace('\\', '\\\\', $property['regex']); ?>';
         if (!preg_match($regex, $value)) {
-            return 'namespace-propertyname-regex-failed';
+            return [
+                'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex',
+                'regex' => $regex,
+                'value' => $value,
+            ];
         }
 
 <?php } /* if isset property regex */ ?>
-        return false;
+        return null;
     }
 <?php } /* if property has validation */ ?>
 <?php } /* foreach property as properties */ ?>

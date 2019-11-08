@@ -157,7 +157,7 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
-     * @return Triple[]
+     * @return RdfTerm[][]
      */
     public function properties(): ?array
     {
@@ -409,7 +409,7 @@ abstract class AbstractRdfDocument implements RdfResource
             if (is_null($type)) {
                 array_push($errors, [
                     'code' => 'missing-predicate',
-                    'preficate' => Rdf::TYPE,
+                    'predicate' => Rdf::TYPE,
                 ]);
             } elseif (($type instanceof Iri) && ($type->getUri() !== $annotations['document-type'])) {
                 array_push($errors, [
@@ -426,7 +426,7 @@ abstract class AbstractRdfDocument implements RdfResource
             if (is_null($found)) {
                 array_push($errors, [
                     'code' => 'missing-predicate',
-                    'preficate' => $requiredPredicate,
+                    'predicate' => $requiredPredicate,
                 ]);
             }
         }
@@ -434,21 +434,50 @@ abstract class AbstractRdfDocument implements RdfResource
         // Validate each field to it's config
         $properties = $this->properties();
         if (is_null($properties)) {
+            // No properties = error
             array_push($errors, [
                 'code' => 'corrupt-rdf-resource-properties-null',
             ]);
         } else {
             foreach ($properties as $predicate => $propertyList) {
+                // Split uri into namespace:field
                 $tokens = Context::decodeUri($predicate);
-                if (is_null($tokens)) {
+                if (is_null($tokens) || is_null($propertyList)) {
                     continue;
                 }
 
+                // Detect the namespace class and the field's datatype
                 $namespace = Context::namespaces[$tokens[0]];
-                /* var_dump($namespace); */
-                /* $namespace = 'App\\Ontology\\' */
+                $datatype = $namespace::DATATYPES[$predicate];
+
+                // Check if namespace::validateField exists
+                $method = 'validate'.ucfirst($tokens[1]);
+                if (!method_exists($namespace, $method)) {
+                    continue;
+                }
+
+                // Loop through all properties for this predicate
+                foreach ($propertyList as $property) {
+                    // Get the property's value
+                    $value = null;
+                    if ($property instanceof Literal) {
+                        $value = $property->value();
+                    }
+                    if ($property instanceof Iri) {
+                        $value = $property->getUri();
+                    }
+
+                    // Check the value for errors
+                    $error = call_user_func([$namespace, 'validate'.ucfirst($tokens[1])], $value);
+                    if (is_null($error)) {
+                        continue;
+                    }
+
+                    // Push errors to our list
+                    array_push($errors, $error);
+                    break;
+                }
             }
-            /* var_dump($properties); */
         }
 
         return $errors;

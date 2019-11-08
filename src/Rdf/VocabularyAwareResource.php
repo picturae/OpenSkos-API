@@ -83,7 +83,7 @@ final class VocabularyAwareResource implements RdfResource
     }
 
     /**
-     * @return Triple[]
+     * @return RdfTerm[][]
      */
     public function properties(): ?array
     {

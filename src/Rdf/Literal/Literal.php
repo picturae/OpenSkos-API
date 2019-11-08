@@ -8,4 +8,9 @@ use App\Rdf\RdfTerm;
 interface Literal extends RdfTerm
 {
     public static function typeIri(): Iri;
+
+    /**
+     * @return mixed
+     */
+    public function value();
 }

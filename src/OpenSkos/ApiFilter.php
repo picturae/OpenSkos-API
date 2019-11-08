@@ -66,8 +66,8 @@ final class ApiFilter
         }
 
         // Add all filters
-        foreach ($params as $preficate => $value) {
-            $this->addFilter($preficate, $value);
+        foreach ($params as $predicate => $value) {
+            $this->addFilter($predicate, $value);
         }
     }
 
@@ -222,8 +222,8 @@ final class ApiFilter
         $output = [];
 
         // Build jena filters
-        foreach ($this->filters as $preficate => $value) {
-            $filters = $this->buildFilter($preficate, $value, $this->lang);
+        foreach ($this->filters as $predicate => $value) {
+            $filters = $this->buildFilter($predicate, $value, $this->lang);
             $output = array_merge($output, $filters);
         }
 
