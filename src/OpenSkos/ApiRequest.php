@@ -8,6 +8,7 @@ use App\OpenSkos\Exception\InvalidApiRequestLevel;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormat;
 use App\Security\Authentication;
+use EasyRdf_Graph as Graph;
 
 final class ApiRequest
 {
@@ -57,6 +58,11 @@ final class ApiRequest
     private $authentication;
 
     /**
+     * @var Graph
+     */
+    private $graph;
+
+    /**
      * ApiRequest constructor.
      */
     public function __construct(
@@ -68,7 +74,8 @@ final class ApiRequest
         array $institutions = [],
         array $sets = [],
         string $foreignUri = null,
-        Authentication $authentication = null
+        Authentication $authentication = null,
+        Graph $graph = null
     ) {
         if (null === $format) {
             $format = JsonLd::instance();
@@ -83,8 +90,16 @@ final class ApiRequest
         $this->sets = $sets;
         $this->foreignUri = $foreignUri;
 
-        if (!is_null($authentication)) {
+        if (is_null($authentication)) {
+            $this->authentication = new Authentication();
+        } else {
             $this->authentication = $authentication;
+        }
+
+        if (is_null($graph)) {
+            $this->graph = new Graph();
+        } else {
+            $this->graph = $graph;
         }
 
         if ($level < 1 || $level > 4) {
@@ -152,10 +167,18 @@ final class ApiRequest
     }
 
     /**
-     * @return Authentication|null
+     * @return Authentication
      */
     public function getAuthentication()
     {
         return $this->authentication;
+    }
+
+    /**
+     * @return Graph
+     */
+    public function getGraph()
+    {
+        return $this->graph;
     }
 }

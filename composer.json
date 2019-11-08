@@ -10,6 +10,7 @@
         "easyrdf/easyrdf": "^0.9.1",
         "ml/json-ld": "^1.1",
         "netresearch/jsonmapper": "^1.6",
+        "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.3",
         "solarium/solarium": "^5.0",
         "symfony/console": "4.2.*",

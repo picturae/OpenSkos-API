@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rdf\Format;
 
-use App\Utils\SingletonTrait;
-
-final class RdfXml implements RdfFormat
+final class RdfXml extends AbstractRdfFormat
 {
-    use SingletonTrait;
-
     public function name(): string
     {
         return 'rdf';

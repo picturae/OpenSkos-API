@@ -43,4 +43,9 @@ class EasyRdfClient implements Client
 
         return $graph;
     }
+
+    public function insertTriples(string $triples): \EasyRdf_Http_Response
+    {
+        return $this->easyRdfClient->insert($triples);
+    }
 }
