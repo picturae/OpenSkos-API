@@ -96,7 +96,7 @@ class GenerateOntologyCommand extends Command
                 if (is_array($propertyDescriptor)) {
                     $properties[] = [
                         'name' => $key,
-                        'const' => strtoupper(Template::from_camel_case($key)),
+                        'const' => strtoupper($propertyDescriptor['const'] ?? Template::from_camel_case($key)),
                     ];
                     if ($ontology['hasVocabulary']) {
                         $propertyDescriptor['name'] = $key;

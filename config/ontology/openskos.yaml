@@ -33,6 +33,8 @@ parameters:
         "rdf:type": "owl:ObjectProperty"
       uuid:
         datatype: literal
+        literaltype: "xsd:string"
+        regex: /[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}/i
         "rdf:type": "owl:ObjectProperty"
       set:
         datatype: resource

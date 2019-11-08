@@ -6,8 +6,11 @@ namespace App\Ontology\Template;
 <?= "<?php\n"; ?>
 <?php
 $skipFields = [
-    'name',
+    'const',
     'datatype',
+    'literaltype',
+    'name',
+    'regex',
 ];
 ?>
 
