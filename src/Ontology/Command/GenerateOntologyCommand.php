@@ -90,6 +90,7 @@ class GenerateOntologyCommand extends Command
                         'const' => strtoupper(Template::from_camel_case($propertyDescriptor)),
                         'hasValidation' => false,
                         'datatype' => 'literal',
+                        'literaltype' => null,
                     ];
                     continue;
                 }
@@ -102,6 +103,7 @@ class GenerateOntologyCommand extends Command
                         'hasValidation' => isset($propertyDescriptor['regex']),
                         'regex' => $propertyDescriptor['regex'] ?? null,
                         'datatype' => $propertyDescriptor['datatype'] ?? 'literal',
+                        'literaltype' => $propertyDescriptor['literaltype'] ?? null,
                     ];
                     if ($ontology['hasVocabulary']) {
                         $propertyDescriptor['name'] = $key;

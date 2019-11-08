@@ -88,6 +88,12 @@ final class OpenSkos
         }
         if ($property instanceof Literal) {
             $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()) {
+                return [
+                    'code' => 'openskos-uuid-literal-type',
+                ];
+            }
         }
         if (is_null($value)) {
             return null;

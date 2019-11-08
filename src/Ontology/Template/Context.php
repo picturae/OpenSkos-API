@@ -80,6 +80,19 @@ final class Context
     }
 
     /**
+     * Turn a uri or short notation into full uri.
+     */
+    public static function fullUri(string $uri): ?string
+    {
+        $decoded = static::decodeUri($uri);
+        if (is_null($decoded)) {
+            return null;
+        }
+
+        return static::prefixes[$decoded[0]].$decoded[1];
+    }
+
+    /**
      * Return the namespace belonging to the uri.
      *
      * @param mixed $uri

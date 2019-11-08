@@ -2,6 +2,8 @@
 
 namespace App\Ontology\Template;
 
+use App\Ontology\Context;
+
 ?>
 <?= "<?php\n"; ?>
 <?php
@@ -82,6 +84,14 @@ final class <?= $name; ?>
         }
         if ($property instanceof Literal) {
             $value = $property->value();
+<?php if (isset($property['literaltype'])) { ?>
+
+            if ('<?= Context::fullUri($property['literaltype']); ?>' !== $property->typeIri()) {
+                return [
+                    'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-literal-type',
+                ];
+            }
+<?php } /* if isset property literal type */ ?>
         }
         if (is_null($value)) {
             return null;
