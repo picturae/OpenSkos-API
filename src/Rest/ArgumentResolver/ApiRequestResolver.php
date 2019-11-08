@@ -127,6 +127,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         $givenFormat = $this->resolveFormat(null, [implode(',', $types)]);
 
         // Parse body into graph
+        // No error needs to be thrown here: empty data will throw a BadRequest later
         $content = $request->getContent();
         if (!is_null($givenFormat) && is_string($content) && strlen($content)) {
             $graph->parse($content, $givenFormat->easyRdfName());
