@@ -120,17 +120,6 @@ final class InstitutionController
             $institution->save();
         }
 
-        /* // Insert */
-        /* $response = $repository->insertTriples($graph->serialise('ntriples')); */
-
-        /* // Build response */
-        /* foreach ($institutions as $index => $institution) { */
-        /*     $institutions[$index] = $repository->findOneBy( */
-        /*         new Iri(OpenSkos::UUID), */
-        /*         new InternalResourceId($institution->getLiteral('openskos:uuid')->getValue()) */
-        /*     ); */
-        /* } */
-
         // Return re-fetched institutions
         return new ListResponse(
             $institutions,
