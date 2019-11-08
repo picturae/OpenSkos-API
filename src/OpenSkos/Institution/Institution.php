@@ -6,12 +6,13 @@ namespace App\OpenSkos\Institution;
 
 use App\Annotation\Document;
 use App\Ontology\OpenSkos;
+use App\Ontology\Org;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
 use App\Rdf\AbstractRdfDocument;
 
 /**
- * @Document\Type(Foaf::PERSON)
+ * @Document\Type(Org::FORMAL_ORGANIZATION)
  */
 final class Institution extends AbstractRdfDocument
 {

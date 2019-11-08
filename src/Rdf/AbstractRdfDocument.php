@@ -2,7 +2,7 @@
 
 namespace App\Rdf;
 
-use App\Annotation\Document;
+use App\Annotation\AbstractAnnotation;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
@@ -106,15 +106,12 @@ abstract class AbstractRdfDocument implements RdfResource
 
             // Loop through annotations and extract data
             foreach ($documentAnnotations as $annotation) {
-                if ($annotation instanceof Document\Table) {
-                    $annotations[static::class]['table'] = $annotation->value;
+                $annotationName = str_replace('\\', '-', strtolower(get_class($annotation)));
+                if ($annotation instanceof AbstractAnnotation) {
+                    $annotationName = $annotation->name();
                 }
-                if ($annotation instanceof Document\Type) {
-                    $annotations[static::class]['type'] = $annotation->value;
-                }
-                if ($annotation instanceof Document\UUID) {
-                    $annotations[static::class]['uuid'] = $annotation->value;
-                }
+
+                $annotations[static::class][$annotationName] = $annotation->value;
             }
         }
 
@@ -400,25 +397,39 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * Returns a list of errors with the current resource.
      */
-    public function errors(): ?array
+    public function errors(): array
     {
         $errors = [];
-
         $annotations = static::annotations();
 
-        foreach (static::$required as $requiredPredicate) {
-            $found = $this->getValue($requiredPredicate);
-            if (is_null($found)) {
+        // Verify document type
+        if (isset($annotations['document-type'])) {
+            $type = $this->getValue(Rdf::TYPE);
+            if (is_null($type)) {
                 array_push($errors, [
-                    'code' => 'missing-predicate-'.$requiredPredicate,
+                    'code' => 'missing-predicate',
+                    'preficate' => Rdf::TYPE,
+                ]);
+            } elseif (($type instanceof Iri) && ($type->getUri() !== $annotations['document-type'])) {
+                array_push($errors, [
+                    'code' => 'invalid-resource-type',
+                    'expected' => $annotations['document-type'],
+                    'actual' => $type->getUri(),
                 ]);
             }
         }
 
-        if (count($errors)) {
-            return $errors;
+        // Ensure required fields
+        foreach (static::$required as $requiredPredicate) {
+            $found = $this->getValue($requiredPredicate);
+            if (is_null($found)) {
+                array_push($errors, [
+                    'code' => 'missing-predicate',
+                    'preficate' => $requiredPredicate,
+                ]);
+            }
         }
 
-        return null;
+        return $errors;
     }
 }

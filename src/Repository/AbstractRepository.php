@@ -141,7 +141,7 @@ abstract class AbstractRepository implements RepositoryInterface
             $filters
         );
 
-        if (!empty($this->annotations['table'])) {
+        if (!empty($this->annotations['document-table'])) {
             $repository = $this;
             $connection = $this->getConnection();
             $documentClass = static::DOCUMENT_CLASS;
@@ -154,8 +154,8 @@ abstract class AbstractRepository implements RepositoryInterface
                 $stmt = $connection
                     ->createQueryBuilder()
                     ->select('*')
-                    ->from($this->annotations['table'], 't')
-                    ->where('t.'.($this->annotations['uuid']).' = :uuid')
+                    ->from($this->annotations['document-table'], 't')
+                    ->where('t.'.($this->annotations['document-uuid']).' = :uuid')
                     ->setParameter(':uuid', $uri)
                     ->execute();
                 if (is_int($stmt)) {
@@ -204,7 +204,7 @@ abstract class AbstractRepository implements RepositoryInterface
             return null;
         }
 
-        if (!empty($this->annotations['table'])) {
+        if (!empty($this->annotations['document-table'])) {
             $documentClass = static::DOCUMENT_CLASS;
             $documentMapping = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
@@ -215,8 +215,8 @@ abstract class AbstractRepository implements RepositoryInterface
             $stmt = $this->getConnection()
                 ->createQueryBuilder()
                 ->select('*')
-                ->from($this->annotations['table'], 't')
-                ->where('t.'.($this->annotations['uuid']).' = :uuid')
+                ->from($this->annotations['document-table'], 't')
+                ->where('t.'.($this->annotations['document-uuid']).' = :uuid')
                 ->setParameter(':uuid', $uri)
                 ->execute();
 
@@ -253,17 +253,17 @@ abstract class AbstractRepository implements RepositoryInterface
             return null;
         }
 
-        if (!empty($this->annotations['table'])) {
+        if (!empty($this->annotations['document-table'])) {
             $documentClass = static::DOCUMENT_CLASS;
             $documentMapping = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
 
-            $column = $this->annotations['uuid'];
+            $column = $this->annotations['document-uuid'];
 
             $stmt = $this->getConnection()
                 ->createQueryBuilder()
                 ->select('*')
-                ->from($this->annotations['table'], 't')
+                ->from($this->annotations['document-table'], 't')
                 ->where("t.${column} = :uuid")
                 ->setParameter(':uuid', $res->getResource()->iri()->getUri())
                 ->setMaxResults(1)
