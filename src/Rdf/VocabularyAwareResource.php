@@ -66,7 +66,7 @@ final class VocabularyAwareResource implements RdfResource
             if (!isset($obj->properties[$predicateString])) {
                 $obj->properties[$predicateString] = [];
             }
-            $obj->properties[$predicateString][0] = $triple->getObject();
+            $obj->properties[$predicateString][] = $triple->getObject();
         }
 
         return $obj;
@@ -102,7 +102,7 @@ final class VocabularyAwareResource implements RdfResource
             throw new UnknownProperty($property);
         }
 
-        $this->properties[$iri] = $object;
+        $this->properties[$iri][] = $object;
 
         $this->triples[] = new Triple(
             $this->subject,
