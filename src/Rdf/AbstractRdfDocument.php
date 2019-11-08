@@ -2,6 +2,7 @@
 
 namespace App\Rdf;
 
+use App\Annotation\Document;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
@@ -9,6 +10,7 @@ use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use App\Repository\AbstractRepository;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 abstract class AbstractRdfDocument implements RdfResource
 {
@@ -89,6 +91,34 @@ abstract class AbstractRdfDocument implements RdfResource
                 $this->addProperty(new Iri(OpenSkos::UUID), $uuid);
             }
         }
+    }
+
+    public static function annotations(): array
+    {
+        static $annotations = [];
+
+        // Build cache if needed
+        if (!isset($annotations[static::class])) {
+            // Fetch all annotations
+            $annotationReader = new AnnotationReader();
+            $documentReflection = new \ReflectionClass(static::class);
+            $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
+
+            // Loop through annotations and extract data
+            foreach ($documentAnnotations as $annotation) {
+                if ($annotation instanceof Document\Table) {
+                    $annotations[static::class]['table'] = $annotation->value;
+                }
+                if ($annotation instanceof Document\Type) {
+                    $annotations[static::class]['type'] = $annotation->value;
+                }
+                if ($annotation instanceof Document\UUID) {
+                    $annotations[static::class]['uuid'] = $annotation->value;
+                }
+            }
+        }
+
+        return $annotations[static::class];
     }
 
     /**
@@ -270,7 +300,7 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         if (is_null($type) && (!is_null($repository))) {
-            $document->addProperty(new Iri(Rdf::TYPE), new Iri($repository->getAnnotations()['type']));
+            $document->addProperty(new Iri(Rdf::TYPE), new Iri(self::annotations()['type']));
         }
 
         return $document;
@@ -373,6 +403,8 @@ abstract class AbstractRdfDocument implements RdfResource
     public function errors(): ?array
     {
         $errors = [];
+
+        $annotations = static::annotations();
 
         foreach (static::$required as $requiredPredicate) {
             $found = $this->getValue($requiredPredicate);

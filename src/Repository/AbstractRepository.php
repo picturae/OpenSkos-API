@@ -13,7 +13,6 @@ use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\Client;
 use App\Rdf\Triple;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
 
 abstract class AbstractRepository implements RepositoryInterface
@@ -90,23 +89,7 @@ abstract class AbstractRepository implements RepositoryInterface
         };
 
         if (static::DOCUMENT_CLASS) {
-            // Fetch all annotations
-            $annotationReader = new AnnotationReader();
-            $documentReflection = new \ReflectionClass(static::DOCUMENT_CLASS);
-            $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
-
-            // Loop through annotations and extract data
-            foreach ($documentAnnotations as $annotation) {
-                if ($annotation instanceof Document\Table) {
-                    $this->annotations['table'] = $annotation->value;
-                }
-                if ($annotation instanceof Document\Type) {
-                    $this->annotations['type'] = $annotation->value;
-                }
-                if ($annotation instanceof Document\UUID) {
-                    $this->annotations['uuid'] = $annotation->value;
-                }
-            }
+            $this->annotations = call_user_func([static::DOCUMENT_CLASS, 'annotations']);
 
             /*
              * Builds an object from the given triples.
@@ -299,11 +282,6 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         return $res;
-    }
-
-    public function getAnnotations(): array
-    {
-        return $this->annotations;
     }
 
     public function insertTriples(string $triples): \EasyRdf_Http_Response

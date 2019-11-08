@@ -123,6 +123,9 @@
     "gitonomy/gitlib": {
         "version": "v1.0.4"
     },
+    "jakub-onderka/php-parallel-lint": {
+        "version": "v1.0.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -221,9 +224,6 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
-    },
-    "ramsey/uuid": {
-        "version": "3.8.0"
     },
     "sebastian/comparator": {
         "version": "3.0.2"

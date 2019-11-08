@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Institution;
 
+use App\Annotation\Document;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
 use App\Rdf\AbstractRdfDocument;
 
+/**
+ * @Document\Type(Foaf::PERSON)
+ */
 final class Institution extends AbstractRdfDocument
 {
     const code = 'code';
