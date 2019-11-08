@@ -472,4 +472,31 @@ abstract class AbstractRdfDocument implements RdfResource
 
         return $errors;
     }
+
+    public function save(): ?array
+    {
+        // Refuse to save if there are errors
+        $errors = $this->errors();
+        if (count($errors)) {
+            return $errors;
+        }
+
+        // TODO: delete old data?
+
+        // We need to repository to save
+        if (is_null($this->repository)) {
+            return [[
+                'code' => 'missing-repository',
+            ]];
+        }
+
+        try {
+            $this->repository->insertTriples($this->triples());
+            return null;
+        } catch(\Exception $e) {
+            return [[
+                'code' => 'save-failed',
+            ]];
+        }
+    }
 }

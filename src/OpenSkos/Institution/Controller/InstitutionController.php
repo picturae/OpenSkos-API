@@ -115,7 +115,10 @@ final class InstitutionController
             }
         }
 
-        // TODO: $institutions[]->save()
+        // Save all given institutions
+        foreach ($institutions as $institution) {
+            $institution->save();
+        }
 
         /* // Insert */
         /* $response = $repository->insertTriples($graph->serialise('ntriples')); */
