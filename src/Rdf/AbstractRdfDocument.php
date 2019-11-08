@@ -492,8 +492,9 @@ abstract class AbstractRdfDocument implements RdfResource
 
         try {
             $this->repository->insertTriples($this->triples());
+
             return null;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return [[
                 'code' => 'save-failed',
             ]];

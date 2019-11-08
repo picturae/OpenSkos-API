@@ -128,7 +128,7 @@ final class Triple
                 $this->subject->getUri(),
                 $this->predicate->getUri(),
                 $this->object->__toString(),
-                ((method_exists($this->object,'lang') && $this->object->lang()) ? '@'.$this->object->lang() : ''),
+                ((method_exists($this->object, 'lang') && $this->object->lang()) ? '@'.$this->object->lang() : ''),
                 $this->object->typeIri()->ntripleString()
             );
         }
