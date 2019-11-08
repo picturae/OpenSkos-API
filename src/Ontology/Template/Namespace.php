@@ -12,6 +12,14 @@ $skipFields = [
     'name',
     'regex',
 ];
+
+$hasValidation = false;
+foreach ($properties as $property) {
+    if ($hasValidation) {
+        continue;
+    }
+    $hasValidation = $property['hasValidation'] ?? false;
+}
 ?>
 
 /**
@@ -32,6 +40,11 @@ $skipFields = [
  */
 
 namespace App\Ontology;
+<?php if ($hasValidation) { ?>
+
+use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
+<?php } /* if has validation */ ?>
 
 final class <?= $name; ?>
 
@@ -59,10 +72,21 @@ final class <?= $name; ?>
      * Returns the first encountered error for <?= $property['name']; ?>.
      * Returns false on success (a.k.a. no errors).
      *
-     * @param mixed $value
+     * @param Literal|Iri $value
      */
-    public function validate<?= ucfirst($property['name']); ?>($value): ?array
+    public function validate<?= ucfirst($property['name']); ?>($property): ?array
     {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
 <?php if (isset($property['regex'])) { ?>
         $regex = '<?= str_replace('\\', '\\\\', $property['regex']); ?>';
         if (!preg_match($regex, $value)) {

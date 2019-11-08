@@ -19,6 +19,9 @@
 
 namespace App\Ontology;
 
+use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
+
 final class OpenSkos
 {
     const NAME_SPACE = 'http://openskos.org/xmlns#';
@@ -75,10 +78,21 @@ final class OpenSkos
      * Returns the first encountered error for uuid.
      * Returns false on success (a.k.a. no errors).
      *
-     * @param mixed $value
+     * @param Literal|Iri $value
      */
-    public function validateUuid($value): ?array
+    public function validateUuid($property): ?array
     {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
         $regex = '/[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}/i';
         if (!preg_match($regex, $value)) {
             return [

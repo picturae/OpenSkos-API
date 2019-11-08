@@ -458,17 +458,8 @@ abstract class AbstractRdfDocument implements RdfResource
 
                 // Loop through all properties for this predicate
                 foreach ($propertyList as $property) {
-                    // Get the property's value
-                    $value = null;
-                    if ($property instanceof Literal) {
-                        $value = $property->value();
-                    }
-                    if ($property instanceof Iri) {
-                        $value = $property->getUri();
-                    }
-
                     // Check the value for errors
-                    $error = call_user_func([$namespace, 'validate'.ucfirst($tokens[1])], $value);
+                    $error = call_user_func([$namespace, 'validate'.ucfirst($tokens[1])], $property);
                     if (is_null($error)) {
                         continue;
                     }
