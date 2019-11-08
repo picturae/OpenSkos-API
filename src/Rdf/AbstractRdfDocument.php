@@ -438,8 +438,12 @@ abstract class AbstractRdfDocument implements RdfResource
                 'code' => 'corrupt-rdf-resource-properties-null',
             ]);
         } else {
-            foreach($properties as $predicate => $propertyList) {
+            foreach ($properties as $predicate => $propertyList) {
                 $tokens = Context::decodeUri($predicate);
+                if (is_null($tokens)) {
+                    continue;
+                }
+
                 $namespace = Context::namespaces[$tokens[0]];
                 /* var_dump($namespace); */
                 /* $namespace = 'App\\Ontology\\' */
