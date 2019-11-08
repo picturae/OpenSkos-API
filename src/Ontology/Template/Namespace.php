@@ -89,6 +89,8 @@ final class <?= $name; ?>
             if ('<?= Context::fullUri($property['literaltype']); ?>' !== $property->typeIri()) {
                 return [
                     'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-literal-type',
+                    'expected' => '<?= Context::fullUri($property['literaltype']); ?>',
+                    'actual' => $property->typeIri(),
                 ];
             }
 <?php } /* if isset property literal type */ ?>

@@ -92,6 +92,8 @@ final class OpenSkos
             if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()) {
                 return [
                     'code' => 'openskos-tenant-literal-type',
+                    'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                    'actual' => $property->typeIri(),
                 ];
             }
         }
@@ -120,6 +122,8 @@ final class OpenSkos
             if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()) {
                 return [
                     'code' => 'openskos-uuid-literal-type',
+                    'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                    'actual' => $property->typeIri(),
                 ];
             }
         }
@@ -157,6 +161,8 @@ final class OpenSkos
             if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()) {
                 return [
                     'code' => 'openskos-disablesearchinothertenants-literal-type',
+                    'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                    'actual' => $property->typeIri(),
                 ];
             }
         }
