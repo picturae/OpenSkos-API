@@ -82,7 +82,7 @@ final class OpenSkos
      * @param Literal|Iri $value
      *
      * @Error(code="openskos-tenant-validate-literal-type",
-     *        fields=["expected","actual"],
+     *        fields={"expected","actual"},
      *        description="Indicates the object for the tenant predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
      *     )
      */
@@ -117,11 +117,11 @@ final class OpenSkos
      * @param Literal|Iri $value
      *
      * @Error(code="openskos-uuid-validate-literal-type",
-     *        fields=["expected","actual"],
+     *        fields={"expected","actual"},
      *        description="Indicates the object for the uuid predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
      *     )
      * @Error(code="openskos-uuid-validate-regex",
-     *        fields=["regex","value"],
+     *        fields={"regex","value"},
      *        description="Indicates the object for the uuid predicate did not match the configured regex"
      *     )
      */
@@ -165,7 +165,7 @@ final class OpenSkos
      * @param Literal|Iri $value
      *
      * @Error(code="openskos-disablesearchinothertenants-validate-literal-type",
-     *        fields=["expected","actual"],
+     *        fields={"expected","actual"},
      *        description="Indicates the object for the disablesearchinothertenants predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
      *     )
      */

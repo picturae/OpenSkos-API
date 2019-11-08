@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ontology\Template;
+namespace App\Template;
 
 class Template
 {

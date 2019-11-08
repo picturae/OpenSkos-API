@@ -2,7 +2,7 @@
 
 namespace App\Ontology\Command;
 
-use App\Ontology\Template\Template;
+use App\Template\Template;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -68,7 +68,7 @@ class GenerateOntologyCommand extends Command
         }
 
         // Step 1: build context file
-        file_put_contents("${dir}${ds}Context.php", Template::render('Context', [
+        file_put_contents("${dir}${ds}Context.php", Template::render('Ontology/Context', [
             'context' => $context,
             'dataclass' => $dataclass,
             'datatype' => $datatype,
@@ -140,7 +140,7 @@ class GenerateOntologyCommand extends Command
                 }
             }
 
-            file_put_contents("${dir}${ds}${name}.php", Template::render('Namespace', [
+            file_put_contents("${dir}${ds}${name}.php", Template::render('Ontology/Namespace', [
                 'context' => $context,
                 'name' => $ontology['name'],
                 'prefix' => $ontology['prefix'],

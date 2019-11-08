@@ -123,6 +123,9 @@
     "gitonomy/gitlib": {
         "version": "v1.0.4"
     },
+    "gnugat/nomo-spaco": {
+        "version": "v0.4.3"
+    },
     "jakub-onderka/php-parallel-lint": {
         "version": "v1.0.0"
     },

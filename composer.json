@@ -8,6 +8,7 @@
         "ext-iconv": "*",
         "doctrine/common": "^2.11",
         "easyrdf/easyrdf": "^0.9.1",
+        "gnugat/nomo-spaco": "~0.4",
         "ml/json-ld": "^1.1",
         "netresearch/jsonmapper": "^1.6",
         "sensio/framework-extra-bundle": "^5.3",

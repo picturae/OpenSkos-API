@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Ontology\Template;
+namespace App\Template\Ontology;
 
 use App\Ontology\Context;
+use App\Template\Template;
 
 ?>
 <?= "<?php\n"; ?>
@@ -79,13 +80,13 @@ final class <?= $name; ?>
      *
 <?php if (isset($property['literaltype'])) { ?>
      * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type",
-     *        fields=["expected","actual"],
+     *        fields={"expected","actual"},
      *        description="Indicates the object for the <?= strtolower($property['name']); ?> predicate has a different type than '<?= Context::fullUri($property['literaltype']); ?>'"
      *     )
 <?php } /* if isset property literal type */ ?>
 <?php if (isset($property['regex'])) { ?>
      * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex",
-     *        fields=["regex","value"],
+     *        fields={"regex","value"},
      *        description="Indicates the object for the <?= strtolower($property['name']); ?> predicate did not match the configured regex"
      *     )
 <?php } /* if isset property regex */ ?>
