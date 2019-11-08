@@ -9,8 +9,10 @@ use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
+use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -63,6 +65,27 @@ final class LabelController
 
         if (null === $label) {
             throw new NotFoundHttpException("The label $id could not be retreived.");
+        }
+
+        return new ScalarResponse($label, $apiRequest->getFormat());
+    }
+
+    /**
+     * @Route(path="/label.{format?}", methods={"GET"})
+     */
+    public function getLabelByUri(
+        ApiRequest $apiRequest,
+        LabelRepository $repository
+    ): ScalarResponse {
+        $uri = $apiRequest->getParameter('uri', null);
+        if (is_null($uri)) {
+            throw new BadRequestHttpException('No uri was given');
+        }
+
+        $iri = new Iri($uri);
+        $label = $repository->findByIri($iri);
+        if (is_null($label)) {
+            throw new NotFoundHttpException("The label $uri could not be retreived.");
         }
 
         return new ScalarResponse($label, $apiRequest->getFormat());
