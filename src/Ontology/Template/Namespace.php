@@ -72,7 +72,7 @@ final class <?= $name; ?>
 
     /**
      * Returns the first encountered error for <?= $property['name']; ?>.
-     * Returns false on success (a.k.a. no errors).
+     * Returns null on success (a.k.a. no errors).
      *
      * @param Literal|Iri $value
      */

@@ -100,7 +100,7 @@ class GenerateOntologyCommand extends Command
                     $properties[] = [
                         'name' => $key,
                         'const' => strtoupper($propertyDescriptor['const'] ?? Template::from_camel_case($key)),
-                        'hasValidation' => isset($propertyDescriptor['regex']),
+                        'hasValidation' => isset($propertyDescriptor['regex']) || isset($propertyDescriptor['literaltype']),
                         'regex' => $propertyDescriptor['regex'] ?? null,
                         'datatype' => $propertyDescriptor['datatype'] ?? 'literal',
                         'literaltype' => $propertyDescriptor['literaltype'] ?? null,

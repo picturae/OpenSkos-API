@@ -75,8 +75,36 @@ final class OpenSkos
     ];
 
     /**
+     * Returns the first encountered error for tenant.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     */
+    public function validateTenant($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()) {
+                return [
+                    'code' => 'openskos-tenant-literal-type',
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the first encountered error for uuid.
-     * Returns false on success (a.k.a. no errors).
+     * Returns null on success (a.k.a. no errors).
      *
      * @param Literal|Iri $value
      */
@@ -106,6 +134,34 @@ final class OpenSkos
                 'regex' => $regex,
                 'value' => $value,
             ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for disableSearchInOtherTenants.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     */
+    public function validateDisableSearchInOtherTenants($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()) {
+                return [
+                    'code' => 'openskos-disablesearchinothertenants-literal-type',
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
         }
 
         return null;
