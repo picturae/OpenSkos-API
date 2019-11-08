@@ -369,26 +369,24 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * Returns a list of errors with the current resource.
-     *
-     * @return string[]|null
      */
     public function errors(): ?array
     {
-        /* $errors = []; */
+        $errors = [];
 
-        /* foreach(static::$required as $requiredPredicate) { */
-        /*     $found = $this->getProperty($requiredPredicate); */
-        /*     if (!count($found)) { */
-        /*         array_push($errors, [ */
-        /*             'code' => 'missing-predicate-' . $requiredPredicate, */
-        /*         ]); */
-        /*     } */
-        /*     var_dump($requiredPredicate); */
-        /*     var_dump($found); */
-        /* } */
+        foreach (static::$required as $requiredPredicate) {
+            $found = $this->getValue($requiredPredicate);
+            if (is_null($found)) {
+                array_push($errors, [
+                    'code' => 'missing-predicate-'.$requiredPredicate,
+                ]);
+            }
+        }
 
-        /* var_dump($errors); */
-        /* var_dump($this->resource); */
+        if (count($errors)) {
+            return $errors;
+        }
+
         return null;
     }
 }

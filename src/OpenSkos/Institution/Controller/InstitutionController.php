@@ -100,8 +100,22 @@ final class InstitutionController
             throw new BadRequestHttpException('Request body was empty or corrupt');
         }
 
-        // TODO: $institutions[]->isValid() ?! corrupt
-        // TODO: $institutions[]->exists() ? conflict
+        // Validate all given resources
+        $errors = [];
+        foreach ($institutions as $institution) {
+            $errors = array_merge($errors, $institution->errors());
+        }
+        if (count($errors)) {
+            throw new \Exception(json_encode($errors));
+        }
+
+        // Check if the resources already exist
+        foreach ($institutions as $institution) {
+            if ($institution->exists()) {
+                throw new ConflictHttpException('Resource [id] already exists');
+            }
+        }
+
         // TODO: $institutions[]->save()
 
         /* var_dump('INSTITUTIONS', $institutions); */
