@@ -2,6 +2,7 @@
 
 namespace App\Rdf;
 
+use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
@@ -77,6 +78,33 @@ abstract class AbstractRdfDocument implements RdfResource
         if (!is_null($repository)) {
             $this->repository = $repository;
         }
+
+        // Auto-fill uuid
+        $uuid = $this->getValue(OpenSkos::UUID);
+        if (!($uuid instanceof StringLiteral)) {
+            $iri = $this->iri()->getUri();
+            $tokens = explode('/', $iri);
+            $uuid = array_pop($tokens);
+            if (self::isUuid($uuid)) {
+                $this->addProperty(new Iri(OpenSkos::UUID), $uuid);
+            }
+        }
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private static function isUuid($value): bool
+    {
+        $retval = false;
+
+        if (is_string($value) &&
+            36 == strlen($value) &&
+            preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i', $value)) {
+            $retval = true;
+        }
+
+        return $retval;
     }
 
     /**
@@ -111,6 +139,19 @@ abstract class AbstractRdfDocument implements RdfResource
     public function getProperty(string $property): ?array
     {
         return $this->resource->getProperty($property);
+    }
+
+    public function getValue(string $property): ?RdfTerm
+    {
+        $properties = $this->getProperty($property);
+        if (is_null($properties)) {
+            return null;
+        }
+        foreach ($properties as $entry) {
+            return $entry;
+        }
+
+        return null;
     }
 
     /**
@@ -307,5 +348,47 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         return true;
+    }
+
+    /**
+     * Whether or not the resource already exists in our sparql db.
+     */
+    public function exists(): bool
+    {
+        // No repository = can't check
+        if (is_null($this->repository)) {
+            return false;
+        }
+
+        // Attempt to fetch the resource
+        $iri = $this->resource->iri();
+        $found = $this->repository->findByIri($iri);
+
+        return !is_null($found);
+    }
+
+    /**
+     * Returns a list of errors with the current resource.
+     *
+     * @return string[]|null
+     */
+    public function errors(): ?array
+    {
+        /* $errors = []; */
+
+        /* foreach(static::$required as $requiredPredicate) { */
+        /*     $found = $this->getProperty($requiredPredicate); */
+        /*     if (!count($found)) { */
+        /*         array_push($errors, [ */
+        /*             'code' => 'missing-predicate-' . $requiredPredicate, */
+        /*         ]); */
+        /*     } */
+        /*     var_dump($requiredPredicate); */
+        /*     var_dump($found); */
+        /* } */
+
+        /* var_dump($errors); */
+        /* var_dump($this->resource); */
+        return null;
     }
 }
