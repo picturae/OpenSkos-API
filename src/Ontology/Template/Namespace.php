@@ -44,6 +44,7 @@ foreach ($properties as $property) {
 namespace App\Ontology;
 <?php if ($hasValidation) { ?>
 
+use App\Annotation\Error;
 use App\Rdf\Iri;
 use App\Rdf\Literal\Literal;
 <?php } /* if has validation */ ?>
@@ -75,6 +76,19 @@ final class <?= $name; ?>
      * Returns null on success (a.k.a. no errors).
      *
      * @param Literal|Iri $value
+     *
+<?php if (isset($property['literaltype'])) { ?>
+     * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type",
+     *        fields=["expected","actual"],
+     *        description="Indicates the object for the <?= strtolower($property['name']); ?> predicate has a different type than '<?= Context::fullUri($property['literaltype']); ?>'"
+     *     )
+<?php } /* if isset property literal type */ ?>
+<?php if (isset($property['regex'])) { ?>
+     * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex",
+     *        fields=["regex","value"],
+     *        description="Indicates the object for the <?= strtolower($property['name']); ?> predicate did not match the configured regex"
+     *     )
+<?php } /* if isset property regex */ ?>
      */
     public function validate<?= ucfirst($property['name']); ?>($property): ?array
     {
@@ -86,11 +100,11 @@ final class <?= $name; ?>
             $value = $property->value();
 <?php if (isset($property['literaltype'])) { ?>
 
-            if ('<?= Context::fullUri($property['literaltype']); ?>' !== $property->typeIri()) {
+            if ('<?= Context::fullUri($property['literaltype']); ?>' !== $property->typeIri()->getUri()) {
                 return [
-                    'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-literal-type',
+                    'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type',
                     'expected' => '<?= Context::fullUri($property['literaltype']); ?>',
-                    'actual' => $property->typeIri(),
+                    'actual' => $property->typeIri()->getUri(),
                 ];
             }
 <?php } /* if isset property literal type */ ?>

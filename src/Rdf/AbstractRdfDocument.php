@@ -448,7 +448,6 @@ abstract class AbstractRdfDocument implements RdfResource
 
                 // Detect the namespace class and the field's datatype
                 $namespace = Context::namespaces[$tokens[0]];
-                $datatype = $namespace::DATATYPES[$predicate];
 
                 // Check if namespace::validateField exists
                 $method = 'validate'.ucfirst($tokens[1]);
