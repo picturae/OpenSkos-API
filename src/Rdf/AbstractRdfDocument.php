@@ -3,6 +3,7 @@
 namespace App\Rdf;
 
 use App\Annotation\AbstractAnnotation;
+use App\Ontology\Context;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
@@ -428,6 +429,22 @@ abstract class AbstractRdfDocument implements RdfResource
                     'preficate' => $requiredPredicate,
                 ]);
             }
+        }
+
+        // Validate each field to it's config
+        $properties = $this->properties();
+        if (is_null($properties)) {
+            array_push($errors, [
+                'code' => 'corrupt-rdf-resource-properties-null',
+            ]);
+        } else {
+            foreach($properties as $predicate => $propertyList) {
+                $tokens = Context::decodeUri($predicate);
+                $namespace = Context::namespaces[$tokens[0]];
+                /* var_dump($namespace); */
+                /* $namespace = 'App\\Ontology\\' */
+            }
+            /* var_dump($properties); */
         }
 
         return $errors;

@@ -39,19 +39,43 @@ final class <?= $name; ?>
     const NAME_SPACE = '<?= $namespace; ?>';
 <?php foreach ($properties as $property) { ?>
     const <?= $property['const']; ?> = '<?= $namespace.$property['name']; ?>';
-<?php } ?>
+<?php } /* foreach properties as property */?>
 <?= count($consts) ? "\n" : ''; ?>
 <?php foreach ($consts as $key => $value) { ?>
     const <?= $key; ?> = '<?= $value; ?>';
-<?php } ?>
+<?php } /* foreach consts as key value */ ?>
 <?= count($lists) ? "\n" : ''; ?>
 <?php foreach ($lists as $key => $values) { ?>
     const <?= $key; ?> = [
 <?php foreach ($values as $value) { ?>
         <?= $value; ?>,
-<?php } ?>
+<?php } /* foreach values as value */ ?>
     ];
-<?php } ?>
+<?php } /* foreach lists as key values */ ?>
+<?php foreach ($properties as $property) { ?>
+<?php if ($property['hasValidation']) { ?>
+
+    /**
+     * Returns the first encountered error for <?= $property['name']; ?>.
+     * Returns false on success (a.k.a. no errors)
+     *
+     * @param mixed $value
+     *
+     * @return bool|string
+     */
+    function validate<?= ucfirst($property['name']); ?>($value)
+    {
+<?php if (isset($property['regex'])) { ?>
+        $regex = '<?= str_replace('\\', '\\\\', $property['regex']); ?>';
+        if (!preg_match($regex, $value)) {
+                return 'namespace-propertyname-regex-failed';
+        }
+
+<?php } /* if isset property regex */ ?>
+        return false;
+    }
+<?php } /* if property has validation */ ?>
+<?php } /* foreach property as properties */ ?>
 <?php if (count($vocabulary)) { ?>
 
     public static function vocabulary(): \EasyRdf_Graph

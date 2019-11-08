@@ -21,6 +21,12 @@ final class Context
 <?php } /* foreach datatype as key value */ ?>
     ];
 
+    const namespaces = [
+<?php foreach ($context as $namespace) { ?>
+        '<?= $namespace['prefix']; ?>' => <?= $namespace['name']; ?>::class,
+<?php } /* foreach context as namespace */ ?>
+    ];
+
     /**
      * Build a context based on short names.
      *

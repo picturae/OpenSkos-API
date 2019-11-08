@@ -71,6 +71,24 @@ final class OpenSkos
         self::STATUS_DELETED,
     ];
 
+    /**
+     * Returns the first encountered error for uuid.
+     * Returns false on success (a.k.a. no errors)
+     *
+     * @param mixed $value
+     *
+     * @return bool|string
+     */
+    function validateUuid($value)
+    {
+        $regex = '/[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}/i';
+        if (!preg_match($regex, $value)) {
+                return 'namespace-propertyname-regex-failed';
+        }
+
+        return false;
+    }
+
     public static function vocabulary(): \EasyRdf_Graph
     {
         \EasyRdf_Namespace::set('dc', Dc::NAME_SPACE);

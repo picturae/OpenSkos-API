@@ -28,6 +28,22 @@ final class Context
         'skosxl:Label' => '\App\OpenSkos\Label\Label',
     ];
 
+    const namespaces = [
+        'dc' => Dc::class,
+        'dcmi' => Dcmi::class,
+        'dcterms' => DcTerms::class,
+        'foaf' => Foaf::class,
+        'openskos' => OpenSkos::class,
+        'org' => Org::class,
+        'owl' => Owl::class,
+        'rdf' => Rdf::class,
+        'rdfs' => Rdfs::class,
+        'skos' => Skos::class,
+        'skosxl' => SkosXl::class,
+        'vcard' => VCard::class,
+        'xsd' => Xsd::class,
+    ];
+
     /**
      * Build a context based on short names.
      *
