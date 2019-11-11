@@ -39,4 +39,15 @@ services:
 
     App\OpenSkos\Vocabulary\Controller\:
         resource: '../../src/OpenSkos/Vocabulary/Controller/*'
-        tags: ['controller.service_arguments']
+        tags: 
+          - controller.service_arguments
+
+    App\OpenSkos\Exception\Controller\:
+        resource: '../../src/OpenSkos/Exception/Controller/*'
+        tags: 
+          - controller.service_arguments
+
+    App\OpenSkos\Exception\Listener\:
+        resource: '../../src/OpenSkos/Exception/Listener/*'
+        tags:
+          - { name: kernel.event_listener, event: kernel.exception }

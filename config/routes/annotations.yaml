@@ -48,3 +48,7 @@ status:
 vocabulary:
     resource: ../../src/OpenSkos/Vocabulary/Controller
     type: annotation
+
+exception:
+    resource: ../../src/OpenSkos/Exception/Controller
+    type: annotation

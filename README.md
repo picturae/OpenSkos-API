@@ -30,4 +30,4 @@ Run psalm by: `vendor/bin/psalm`
 * Profit!
 
 ## Docker
-TODO
+* `docker-compose up --build`

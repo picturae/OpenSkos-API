@@ -80,16 +80,19 @@ class GenerateErrorListCommand extends Command
                 }
 
                 foreach ($annotations as $annotation) {
-                    array_push($errorAnnotations, [
-                        'method' => $reflectionMethod,
-                        'error' => $annotation,
-                    ]);
+                    array_push($errorAnnotations, array_merge(
+                        $annotation->__toArray(),
+                        [
+                            'class' => $reflectionMethod->class,
+                            'method' => $reflectionMethod->name,
+                        ]
+                    ));
                 }
             }
         }
 
         // Render the new Error annotation
-        file_put_contents("${dir}${ds}Error.php", Template::render('Annotation/Error', [
+        file_put_contents("${dir}/../Exception/list.json", Template::render('Exception/list.json', [
             'usages' => $errorAnnotations,
         ]));
     }

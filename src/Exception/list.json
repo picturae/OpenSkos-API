@@ -1,0 +1,43 @@
+{
+    "openskos-tenant-validate-literal-type" : {
+        "code": "openskos-tenant-validate-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "Indicates the object for the tenant predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateTenant"
+    },
+    "openskos-uuid-validate-literal-type" : {
+        "code": "openskos-uuid-validate-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "Indicates the object for the uuid predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateUuid"
+    },
+    "openskos-uuid-validate-regex" : {
+        "code": "openskos-uuid-validate-regex",
+        "fields": [
+            "regex",
+            "value"
+        ],
+        "description": "Indicates the object for the uuid predicate did not match the configured regex",
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateUuid"
+    },
+    "openskos-disablesearchinothertenants-validate-literal-type" : {
+        "code": "openskos-disablesearchinothertenants-validate-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "Indicates the object for the disablesearchinothertenants predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateDisableSearchInOtherTenants"
+    },
+    "EOF": null
+}
