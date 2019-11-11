@@ -2,10 +2,10 @@
 
 namespace App\Security;
 
+use App\Annotation\Error;
 use App\Entity\User;
+use App\Exception\ApiException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Authentication
 {
@@ -147,28 +147,37 @@ class Authentication
     }
 
     /**
-     * @throws UnauthorizedHttpException
-     * @throws AccessDeniedHttpException
+     * @throws ApiException
+     *
+     * @Error(code="permission-denied-invalid-credentials",
+     *        status=403,
+     * )
+     * @Error(code="permission-denied-missing-credentials",
+     *        status=401,
+     * )
      */
-    public function requireAuthenticated(): void
+    public function requireAuthenticated(string $errorCodePrefix = ''): void
     {
         if (!$this->hasAuthenticationData()) {
-            throw new UnauthorizedHttpException('Basic realm="OpenSkos"');
+            throw new ApiException($errorCodePrefix.'permission-denied-missing-credentials');
         }
         if (!$this->isAuthenticated()) {
-            throw new AccessDeniedHttpException();
+            throw new ApiException($errorCodePrefix.'permission-denied-invalid-credentials');
         }
     }
 
     /**
-     * @throws UnauthorizedHttpException
-     * @throws AccessDeniedHttpException
+     * @throws ApiException
+     *
+     * @Error(code="permission-denied-missing-role-administrator",
+     *        status=403,
+     * )
      */
-    public function requireAdministrator(): void
+    public function requireAdministrator(string $errorCodePrefix = ''): void
     {
-        $this->requireAuthenticated();
+        $this->requireAuthenticated($errorCodePrefix);
         if (!$this->isAdministrator()) {
-            throw new AccessDeniedHttpException();
+            throw new ApiException($errorCodePrefix.'permission-denied-missing-role-administrator');
         }
     }
 

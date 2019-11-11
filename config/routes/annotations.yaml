@@ -50,5 +50,5 @@ vocabulary:
     type: annotation
 
 exception:
-    resource: ../../src/OpenSkos/Exception/Controller
+    resource: ../../src/Exception/Controller
     type: annotation

@@ -5,7 +5,8 @@
             "expected",
             "actual"
         ],
-        "description": "Indicates the object for the tenant predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the tenant predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateTenant"
     },
@@ -15,7 +16,8 @@
             "expected",
             "actual"
         ],
-        "description": "Indicates the object for the uuid predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the uuid predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateUuid"
     },
@@ -25,7 +27,8 @@
             "regex",
             "value"
         ],
-        "description": "Indicates the object for the uuid predicate did not match the configured regex",
+        "description": "The object for the uuid predicate did not match the configured regex",
+        "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateUuid"
     },
@@ -35,9 +38,76 @@
             "expected",
             "actual"
         ],
-        "description": "Indicates the object for the disablesearchinothertenants predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "description": "The object for the disablesearchinothertenants predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateDisableSearchInOtherTenants"
+    },
+    "permission-denied-invalid-credentials" : {
+        "code": "permission-denied-invalid-credentials",
+        "status": 403,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAuthenticated"
+    },
+    "permission-denied-missing-credentials" : {
+        "code": "permission-denied-missing-credentials",
+        "status": 401,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAuthenticated"
+    },
+    "user-getall-permission-denied-invalid-credentials" : {
+        "status": 403,
+        "code": "user-getall-permission-denied-invalid-credentials",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getall-permission-denied-missing-user" : {
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getall-permission-denied-missing-user-uri" : {
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user-uri",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getone-permission-denied-missing-credentials" : {
+        "code": "user-getone-permission-denied-missing-credentials",
+        "status": 401,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-invalid-credentials" : {
+        "code": "user-getone-permission-denied-invalid-credentials",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-missing-user" : {
+        "code": "user-getone-permission-denied-missing-user",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-missing-user-uri" : {
+        "code": "user-getone-permission-denied-missing-user-uri",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-invalid-user" : {
+        "code": "user-getone-permission-denied-invalid-user",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-not-found-user" : {
+        "code": "user-getone-not-found-user",
+        "status": 404,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
     },
     "EOF": null
 }

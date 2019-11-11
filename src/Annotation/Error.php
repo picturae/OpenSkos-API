@@ -21,4 +21,14 @@ class Error extends AbstractAnnotation
      * @var string
      */
     public $description = '';
+
+    /**
+     * @var int
+     */
+    public $status = 500;
+
+    /**
+     * @var string
+     */
+    public $realm = '';
 }

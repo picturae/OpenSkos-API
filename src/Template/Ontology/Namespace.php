@@ -46,6 +46,7 @@ namespace App\Ontology;
 <?php if ($hasValidation) { ?>
 
 use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Rdf\Iri;
 use App\Rdf\Literal\Literal;
 <?php } /* if has validation */ ?>
@@ -80,14 +81,16 @@ final class <?= $name; ?>
      *
 <?php if (isset($property['literaltype'])) { ?>
      * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type",
+     *        status=422,
      *        fields={"expected","actual"},
-     *        description="Indicates the object for the <?= strtolower($property['name']); ?> predicate has a different type than '<?= Context::fullUri($property['literaltype']); ?>'"
+     *        description="The object for the <?= strtolower($property['name']); ?> predicate has a different type than '<?= Context::fullUri($property['literaltype']); ?>'"
      *     )
 <?php } /* if isset property literal type */ ?>
 <?php if (isset($property['regex'])) { ?>
      * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex",
+     *        status=422,
      *        fields={"regex","value"},
-     *        description="Indicates the object for the <?= strtolower($property['name']); ?> predicate did not match the configured regex"
+     *        description="The object for the <?= strtolower($property['name']); ?> predicate did not match the configured regex"
      *     )
 <?php } /* if isset property regex */ ?>
      */
@@ -102,11 +105,10 @@ final class <?= $name; ?>
 <?php if (isset($property['literaltype'])) { ?>
 
             if ('<?= Context::fullUri($property['literaltype']); ?>' !== $property->typeIri()->getUri()) {
-                return [
-                    'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type',
+                throw new ApiException('<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type', [
                     'expected' => '<?= Context::fullUri($property['literaltype']); ?>',
                     'actual' => $property->typeIri()->getUri(),
-                ];
+                ]);
             }
 <?php } /* if isset property literal type */ ?>
         }
@@ -117,11 +119,10 @@ final class <?= $name; ?>
 <?php if (isset($property['regex'])) { ?>
         $regex = '<?= str_replace('\\', '\\\\', $property['regex']); ?>';
         if (!preg_match($regex, $value)) {
-            return [
-                'code' => '<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex',
+            throw new ApiException('<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex', [
                 'regex' => $regex,
                 'value' => $value,
-            ];
+            ]);
         }
 
 <?php } /* if isset property regex */ ?>

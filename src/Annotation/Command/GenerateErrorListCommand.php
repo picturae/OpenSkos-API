@@ -80,8 +80,14 @@ class GenerateErrorListCommand extends Command
                 }
 
                 foreach ($annotations as $annotation) {
+                    $annotationData = $annotation->__toArray();
+                    if (empty($annotationData['code'])) {
+                        $annotationData['code'] = $annotationData['value'] ?? '';
+                        unset($annotationData['value']);
+                    }
+
                     array_push($errorAnnotations, array_merge(
-                        $annotation->__toArray(),
+                        $annotationData,
                         [
                             'class' => $reflectionMethod->class,
                             'method' => $reflectionMethod->name,

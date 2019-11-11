@@ -27,6 +27,7 @@ final class User extends AbstractRdfDocument
     const usertype = 'usertype';
     const apikey = 'apikey';
     const uri = 'uri';
+    const uuid = 'uuid';
 
     const dateSubmitted = 'dateSubmitted';
 
@@ -43,6 +44,7 @@ final class User extends AbstractRdfDocument
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
         self::usertype => OpenSkos::USERTYPE,
         self::apikey => OpenSkos::APIKEY,
+        self::uuid => OpenSkos::UUID,
     ];
 
     /**
