@@ -31,3 +31,35 @@ Run psalm by: `vendor/bin/psalm`
 
 ## Docker
 * `docker-compose up --build`
+
+## Editing ontology
+
+After every change, you'll need to run `php bin/console ontology:generate` and
+`php bin/console exception:errorlist`.
+
+### Adding a namespace
+
+- go to `config/ontology/`
+- copy one of the existing yaml files and give it the right name (`&lt;namespace%gt;.yaml`)
+- modify all name references inside your new file
+- add all the fields you require
+
+### Adding a field
+
+- Add your field as named entry under `properties`.
+- Configure you field's datatype
+- If more properties are needed for your field, add them with their shortname as key
+
+## Editing errors
+
+After every change, you'll need to run `php bin/console exception:errorlist` to update error
+definitions.
+
+### Adding a new error
+
+Take a look at `src/OpenSkos/User/Controller/UserController.php` for examples
+
+- Add `use App\Annotation\Error` to the top of your file
+- Add `use App\Exception\ApiException` to the top of your file
+- Add an `@Error` annotation describing your error in the docblock of your method
+- Throw a new `ApiRequest(&lt;errorcode&gt;)` and let the ExceptionListener apply your config
