@@ -135,7 +135,7 @@ final class InstitutionController
 
         // Client permissions
         $auth = $apiRequest->getAuthentication();
-        $auth->requireAdministrator('institution-create-');
+        $auth->requireAdministrator('institution-create');
 
         // Load data into institutions
         $graph = $apiRequest->getGraph();
@@ -150,7 +150,9 @@ final class InstitutionController
             $errors = array_merge($errors, $institution->errors());
         }
         if (count($errors)) {
-            throw new \Exception(json_encode($errors));
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
         }
 
         // Check if the resources already exist

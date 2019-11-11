@@ -67,7 +67,7 @@ final class UserController
 
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
-        $auth->requireAuthenticated('user-getall-');
+        $auth->requireAuthenticated('user-getall');
 
         if ($auth->isAdministrator()) {
             // Administrators are allowed to see all users

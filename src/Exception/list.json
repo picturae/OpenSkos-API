@@ -1,6 +1,34 @@
 {
-    "openskos-tenant-validate-literal-type" : {
-        "code": "openskos-tenant-validate-literal-type",
+    "internal-server-error" : {
+        "code": "internal-server-error",
+        "description": "An ApiException was thrown but no error code was given",
+        "status": 500,
+        "class": "App\\Exception\\ApiException",
+        "method": "__construct"
+    },
+    "abstract-rdf-document-missing-predicate" : {
+        "code": "abstract-rdf-document-missing-predicate",
+        "description": "A required predicate for this RDF resource is missing",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-invalid-resource-type" : {
+        "code": "abstract-rdf-document-invalid-resource-type",
+        "description": "The given resource type does not match the configured resource type for this endpoint",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
+        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
+        "description": "Properties could not be loaded from the rdf resource",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "openskos-validate-tenant-literal-type" : {
+        "code": "openskos-validate-tenant-literal-type",
         "fields": [
             "expected",
             "actual"
@@ -10,8 +38,8 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateTenant"
     },
-    "openskos-uuid-validate-literal-type" : {
-        "code": "openskos-uuid-validate-literal-type",
+    "openskos-validate-uuid-literal-type" : {
+        "code": "openskos-validate-uuid-literal-type",
         "fields": [
             "expected",
             "actual"
@@ -21,8 +49,8 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateUuid"
     },
-    "openskos-uuid-validate-regex" : {
-        "code": "openskos-uuid-validate-regex",
+    "openskos-validate-uuid-regex" : {
+        "code": "openskos-validate-uuid-regex",
         "fields": [
             "regex",
             "value"
@@ -32,8 +60,8 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateUuid"
     },
-    "openskos-disablesearchinothertenants-validate-literal-type" : {
-        "code": "openskos-disablesearchinothertenants-validate-literal-type",
+    "openskos-validate-disablesearchinothertenants-literal-type" : {
+        "code": "openskos-validate-disablesearchinothertenants-literal-type",
         "fields": [
             "expected",
             "actual"
@@ -57,12 +85,54 @@
         "class": "App\\Security\\Authentication",
         "method": "requireAuthenticated"
     },
-    "permission-denied-missing-role-administrator" : {
-        "code": "permission-denied-missing-role-administrator",
+    "authentication-permission-denied-missing-role-administrator" : {
+        "code": "authentication-permission-denied-missing-role-administrator",
         "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
         "status": 403,
         "class": "App\\Security\\Authentication",
         "method": "requireAdministrator"
+    },
+    "abstract-rdf-document-missing-predicate" : {
+        "code": "abstract-rdf-document-missing-predicate",
+        "description": "A required predicate for this RDF resource is missing",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-invalid-resource-type" : {
+        "code": "abstract-rdf-document-invalid-resource-type",
+        "description": "The given resource type does not match the configured resource type for this endpoint",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
+        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
+        "description": "Properties could not be loaded from the rdf resource",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-missing-predicate" : {
+        "code": "abstract-rdf-document-missing-predicate",
+        "description": "A required predicate for this RDF resource is missing",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-invalid-resource-type" : {
+        "code": "abstract-rdf-document-invalid-resource-type",
+        "description": "The given resource type does not match the configured resource type for this endpoint",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
+        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
+        "description": "Properties could not be loaded from the rdf resource",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
     },
     "user-getall-permission-denied-invalid-credentials" : {
         "description": "Invalid credentials were given",
@@ -127,6 +197,27 @@
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
+    "abstract-rdf-document-missing-predicate" : {
+        "code": "abstract-rdf-document-missing-predicate",
+        "description": "A required predicate for this RDF resource is missing",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-invalid-resource-type" : {
+        "code": "abstract-rdf-document-invalid-resource-type",
+        "description": "The given resource type does not match the configured resource type for this endpoint",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
+        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
+        "description": "Properties could not be loaded from the rdf resource",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
     "institution-getall-filter-institutions-not-applicable" : {
         "code": "institution-getall-filter-institutions-not-applicable",
         "description": "An institutions filter was given in the request but it is not supported on this endpoint",
@@ -188,6 +279,27 @@
         "status": 409,
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
         "method": "postInstitution"
+    },
+    "abstract-rdf-document-missing-predicate" : {
+        "code": "abstract-rdf-document-missing-predicate",
+        "description": "A required predicate for this RDF resource is missing",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-invalid-resource-type" : {
+        "code": "abstract-rdf-document-invalid-resource-type",
+        "description": "The given resource type does not match the configured resource type for this endpoint",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
+        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
+        "description": "Properties could not be loaded from the rdf resource",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
     },
     "EOF": null
 }

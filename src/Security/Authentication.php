@@ -158,29 +158,29 @@ class Authentication
      *        description="No credentials were given"
      * )
      */
-    public function requireAuthenticated(string $errorCodePrefix = ''): void
+    public function requireAuthenticated(string $errorCodePrefix = null): void
     {
         if (!$this->hasAuthenticationData()) {
-            throw new ApiException($errorCodePrefix.'permission-denied-missing-credentials');
+            throw new ApiException(($errorCodePrefix ?? 'authentication').'-permission-denied-missing-credentials');
         }
         if (!$this->isAuthenticated()) {
-            throw new ApiException($errorCodePrefix.'permission-denied-invalid-credentials');
+            throw new ApiException(($errorCodePrefix ?? 'authentication').'-permission-denied-invalid-credentials');
         }
     }
 
     /**
      * @throws ApiException
      *
-     * @Error(code="permission-denied-missing-role-administrator",
+     * @Error(code="authentication-permission-denied-missing-role-administrator",
      *        status=403,
      *        description="The requested action requires the 'administrator' role while the authenticated user does not posses it"
      * )
      */
-    public function requireAdministrator(string $errorCodePrefix = ''): void
+    public function requireAdministrator(string $errorCodePrefix = null): void
     {
-        $this->requireAuthenticated($errorCodePrefix);
+        $this->requireAuthenticated($errorCodePrefix ?? 'authentication');
         if (!$this->isAdministrator()) {
-            throw new ApiException($errorCodePrefix.'permission-denied-missing-role-administrator');
+            throw new ApiException(($errorCodePrefix ?? 'authentication').'-permission-denied-missing-role-administrator');
         }
     }
 
