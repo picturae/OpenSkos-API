@@ -2,6 +2,8 @@
 
 namespace App\Exception;
 
+use App\Annotation\Error;
+
 class ApiException extends \Exception
 {
     /**
@@ -19,8 +21,21 @@ class ApiException extends \Exception
      */
     public $data;
 
-    public function __construct(string $errorCode, array $data = null)
+    /**
+     * @param string|array $errorCode
+     *
+     * @Error(code="internal-server-error",
+     *        status=500,
+     *        description="An ApiException was thrown but no error code was given"
+     * )
+     */
+    public function __construct($errorCode, array $data = null)
     {
+        if (is_array($errorCode)) {
+            $data = $errorCode['data'] ?? null;
+            $errorCode = $errorCode['code'] ?? 'internal-server-error';
+        }
+
         $this->errorCode = $errorCode;
 
         if (!is_null($data)) {
