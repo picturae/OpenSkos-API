@@ -46,13 +46,16 @@ final class UserController
      * @throws ApiException
      *
      * @Error("user-getall-permission-denied-invalid-credentials",
-     *        status=403
+     *        status=403,
+     *        description="Invalid credentials were given"
      * )
      * @Error("user-getall-permission-denied-missing-user",
-     *        status=403
+     *        status=403,
+     *        description="The authenticated user could not be loaded"
      * )
      * @Error("user-getall-permission-denied-missing-user-uri",
-     *        status=403
+     *        status=403,
+     *        description="The uri for the authenticated user could not be loaded"
      * )
      */
     public function geAllUsers(
@@ -106,21 +109,27 @@ final class UserController
      *
      * @Error(code="user-getone-permission-denied-missing-credentials",
      *        status=401,
+     *        description="No credentials were given"
      * )
      * @Error(code="user-getone-permission-denied-invalid-credentials",
      *        status=403,
+     *        description="Invalid credentials were given"
      * )
      * @Error(code="user-getone-permission-denied-missing-user",
      *        status=403,
+     *        description="The authenticated user could not be loaded"
      * )
      * @Error(code="user-getone-permission-denied-missing-user-uri",
      *        status=403,
+     *        description="The uri for the authenticated user could not be loaded"
      * )
-     * @Error(code="user-getone-permission-denied-invalid-user",
+     * @Error(code="user-getone-permission-denied-missing-role-administrator",
      *        status=403,
+     *        description="The requested action requires the 'administrator' role while the authenticated user does not posses it"
      * )
      * @Error(code="user-getone-not-found-user",
      *        status=404,
+     *        description="The requested user could not be found"
      * )
      */
     public function getOneUser(
@@ -166,7 +175,7 @@ final class UserController
 
             // Denied if the authenticated user is not fetching itself
             if ($uri !== $id) {
-                throw new ApiException('user-getone-permission-denied-invalid-user');
+                throw new ApiException('user-getone-permission-denied-missing-role-administrator');
             }
 
             $user = $repository->get(new Iri($id));

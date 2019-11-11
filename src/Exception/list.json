@@ -1,4 +1,10 @@
 {
+    "user-getall-permission-denied-missing-user-uri" : {
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user-uri",
+        "class": "App\\Exception\\Controller\\ExceptionController",
+        "method": "getAllErrors"
+    },
     "openskos-tenant-validate-literal-type" : {
         "code": "openskos-tenant-validate-literal-type",
         "fields": [
@@ -45,29 +51,41 @@
     },
     "permission-denied-invalid-credentials" : {
         "code": "permission-denied-invalid-credentials",
+        "description": "Invalid credentials were given",
         "status": 403,
         "class": "App\\Security\\Authentication",
         "method": "requireAuthenticated"
     },
     "permission-denied-missing-credentials" : {
         "code": "permission-denied-missing-credentials",
+        "description": "No credentials were given",
         "status": 401,
         "class": "App\\Security\\Authentication",
         "method": "requireAuthenticated"
     },
+    "permission-denied-missing-role-administrator" : {
+        "code": "permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
+        "status": 403,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAdministrator"
+    },
     "user-getall-permission-denied-invalid-credentials" : {
+        "description": "Invalid credentials were given",
         "status": 403,
         "code": "user-getall-permission-denied-invalid-credentials",
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "geAllUsers"
     },
     "user-getall-permission-denied-missing-user" : {
+        "description": "The authenticated user could not be loaded",
         "status": 403,
         "code": "user-getall-permission-denied-missing-user",
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "geAllUsers"
     },
     "user-getall-permission-denied-missing-user-uri" : {
+        "description": "The uri for the authenticated user could not be loaded",
         "status": 403,
         "code": "user-getall-permission-denied-missing-user-uri",
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
@@ -75,36 +93,42 @@
     },
     "user-getone-permission-denied-missing-credentials" : {
         "code": "user-getone-permission-denied-missing-credentials",
+        "description": "No credentials were given",
         "status": 401,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
     "user-getone-permission-denied-invalid-credentials" : {
         "code": "user-getone-permission-denied-invalid-credentials",
+        "description": "Invalid credentials were given",
         "status": 403,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
     "user-getone-permission-denied-missing-user" : {
         "code": "user-getone-permission-denied-missing-user",
+        "description": "The authenticated user could not be loaded",
         "status": 403,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
     "user-getone-permission-denied-missing-user-uri" : {
         "code": "user-getone-permission-denied-missing-user-uri",
+        "description": "The uri for the authenticated user could not be loaded",
         "status": 403,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
-    "user-getone-permission-denied-invalid-user" : {
-        "code": "user-getone-permission-denied-invalid-user",
+    "user-getone-permission-denied-missing-role-administrator" : {
+        "code": "user-getone-permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
         "status": 403,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
     "user-getone-not-found-user" : {
         "code": "user-getone-not-found-user",
+        "description": "The requested user could not be found",
         "status": 404,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"

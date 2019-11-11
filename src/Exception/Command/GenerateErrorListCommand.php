@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Annotation\Command;
+namespace App\Exception\Command;
 
 use App\Annotation\Error;
 use App\Template\Template;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GenerateErrorListCommand extends Command
 {
-    protected static $defaultName = 'annotation:errorlist';
+    protected static $defaultName = 'exception:errorlist';
 
     /** @var ParameterBagInterface */
     protected $params;

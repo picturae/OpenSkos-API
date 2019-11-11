@@ -148,7 +148,7 @@ final class <?= $name; ?>
 
 <?php foreach ($vocabulary as $descriptor) { ?>
         $<?= $descriptor['name']; ?> = $graph->resource(<?= Template::quoteString($prefix.':'.$descriptor['name']); ?>);
-        $<?= $descriptor['name']; ?>->setType('rdf:Property');
+        $<?= $descriptor['name']; ?>->setType('<?= ('class' === $descriptor['datatype']) ? 'rdfs:Class' : 'rdf:Property'; ?>');
         $<?= $descriptor['name']; ?>->addLiteral('openskos:datatype', '<?= $descriptor['datatype'] ?? 'literal'; ?>');
 <?php foreach ($descriptor as $field => $values) {
     if (in_array($field, $skipFields, true)) {

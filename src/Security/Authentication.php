@@ -151,9 +151,11 @@ class Authentication
      *
      * @Error(code="permission-denied-invalid-credentials",
      *        status=403,
+     *        description="Invalid credentials were given"
      * )
      * @Error(code="permission-denied-missing-credentials",
      *        status=401,
+     *        description="No credentials were given"
      * )
      */
     public function requireAuthenticated(string $errorCodePrefix = ''): void
@@ -171,6 +173,7 @@ class Authentication
      *
      * @Error(code="permission-denied-missing-role-administrator",
      *        status=403,
+     *        description="The requested action requires the 'administrator' role while the authenticated user does not posses it"
      * )
      */
     public function requireAdministrator(string $errorCodePrefix = ''): void

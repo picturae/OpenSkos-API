@@ -57,6 +57,7 @@ final class OpenSkos
     const REPLACES = 'http://openskos.org/xmlns#replaces';
     const IN_COLLECTION = 'http://openskos.org/xmlns#inCollection';
     const IN_SET = 'http://openskos.org/xmlns#inSet';
+    const ERROR = 'http://openskos.org/xmlns#error';
 
     const STATUS_CANDIDATE = 'candidate';
     const STATUS_APPROVED = 'approved';
@@ -200,6 +201,7 @@ final class OpenSkos
         \EasyRdf_Namespace::set('dcmi', Dcmi::NAME_SPACE);
         \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
         \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
+        \EasyRdf_Namespace::set('http', Http::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
         \EasyRdf_Namespace::set('org', Org::NAME_SPACE);
         \EasyRdf_Namespace::set('owl', Owl::NAME_SPACE);
@@ -370,6 +372,10 @@ final class OpenSkos
         $inSet->setType('rdf:Property');
         $inSet->addLiteral('openskos:datatype', 'resource');
         $inSet->addResource('rdf:type', 'owl:ObjectProperty');
+
+        $error = $graph->resource('openskos:error');
+        $error->setType('rdfs:Class');
+        $error->addLiteral('openskos:datatype', 'class');
 
         return $graph;
     }
