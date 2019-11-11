@@ -55,6 +55,9 @@ After every change, you'll need to run `php bin/console ontology:generate` and
 After every change, you'll need to run `php bin/console exception:errorlist` to update error
 definitions.
 
+You can use the `/errors` endpoint to see what errors are configured. If you have access to the
+files of the instance, you can look at `src/Exception/list.json` to see the error definitions.
+
 ### Adding a new error
 
 Take a look at `src/OpenSkos/User/Controller/UserController.php` for examples
@@ -63,3 +66,4 @@ Take a look at `src/OpenSkos/User/Controller/UserController.php` for examples
 - Add `use App\Exception\ApiException` to the top of your file
 - Add an `@Error` annotation describing your error in the docblock of your method
 - Throw a new `ApiRequest(&lt;errorcode&gt;)` and let the ExceptionListener apply your config
+
