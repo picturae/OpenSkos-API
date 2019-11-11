@@ -1,10 +1,4 @@
 {
-    "user-getall-permission-denied-missing-user-uri" : {
-        "status": 403,
-        "code": "user-getall-permission-denied-missing-user-uri",
-        "class": "App\\Exception\\Controller\\ExceptionController",
-        "method": "getAllErrors"
-    },
     "openskos-tenant-validate-literal-type" : {
         "code": "openskos-tenant-validate-literal-type",
         "fields": [
@@ -132,6 +126,68 @@
         "status": 404,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
+    },
+    "institution-getall-filter-institutions-not-applicable" : {
+        "code": "institution-getall-filter-institutions-not-applicable",
+        "description": "An institutions filter was given in the request but it is not supported on this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "getInstitutions"
+    },
+    "institution-getall-filter-sets-not-applicable" : {
+        "code": "institution-getall-filter-sets-not-applicable",
+        "description": "A sets filter was given in the request but it is not supported on this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "getInstitutions"
+    },
+    "institution-getone-not-found" : {
+        "code": "institution-getone-not-found",
+        "fields": [
+            "id"
+        ],
+        "description": "The requested institution could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "getInstitution"
+    },
+    "institution-create-permission-denied-missing-credentials" : {
+        "code": "institution-create-permission-denied-missing-credentials",
+        "description": "No credentials were given",
+        "status": 401,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
+    },
+    "institution-create-permission-denied-invalid-credentials" : {
+        "code": "institution-create-permission-denied-invalid-credentials",
+        "description": "Invalid credentials were given",
+        "status": 403,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
+    },
+    "institution-create-permission-denied-missing-role-administrator" : {
+        "code": "institution-create-permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
+        "status": 403,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
+    },
+    "institution-create-empty-or-corrupt-body" : {
+        "code": "institution-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
+    },
+    "institution-create-already-exists" : {
+        "code": "institution-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 409,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
     },
     "EOF": null
 }
