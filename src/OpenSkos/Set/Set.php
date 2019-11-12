@@ -26,23 +26,25 @@ final class Set extends AbstractRdfDocument
     const publisher = 'publisher';
     const title = 'title';
     const type = 'type';
+    const uuid = 'uuid';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
-       self::tenant => OpenSkos::TENANT,
-       self::code => OpenSkos::CODE,
-       self::allow_oai => OpenSkos::ALLOW_OAI,
-       self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
-       self::oai_baseURL => OpenSkos::OAI_BASE_URL,
-       self::webpage => OpenSkos::WEBPAGE,
-       self::description => DcTerms::DESCRIPTION,
-       self::license => DcTerms::LICENSE,
-       self::publisher => DcTerms::PUBLISHER,
-       self::title => DcTerms::TITLE,
+        self::tenant => OpenSkos::TENANT,
+        self::code => OpenSkos::CODE,
+        self::allow_oai => OpenSkos::ALLOW_OAI,
+        self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
+        self::oai_baseURL => OpenSkos::OAI_BASE_URL,
+        self::webpage => OpenSkos::WEBPAGE,
+        self::description => DcTerms::DESCRIPTION,
+        self::license => DcTerms::LICENSE,
+        self::publisher => DcTerms::PUBLISHER,
+        self::title => DcTerms::TITLE,
         self::type => Rdf::TYPE,
-   ];
+        self::uuid => OpenSkos::UUID,
+    ];
 
     protected static $required = [
         OpenSkos::CODE,
