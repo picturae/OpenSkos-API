@@ -179,7 +179,7 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param string $apikey
+     * @param string|null $apikey
      *
      * @return self
      */

@@ -8,6 +8,9 @@
     },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
+        "fields": [
+            "predicate"
+        ],
         "description": "A required predicate for this RDF resource is missing",
         "status": 400,
         "class": "App\\Rdf\\AbstractRdfDocument",
@@ -94,6 +97,9 @@
     },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
+        "fields": [
+            "predicate"
+        ],
         "description": "A required predicate for this RDF resource is missing",
         "status": 400,
         "class": "App\\Rdf\\AbstractRdfDocument",
@@ -115,6 +121,9 @@
     },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
+        "fields": [
+            "predicate"
+        ],
         "description": "A required predicate for this RDF resource is missing",
         "status": 400,
         "class": "App\\Rdf\\AbstractRdfDocument",
@@ -178,6 +187,9 @@
     },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
+        "fields": [
+            "predicate"
+        ],
         "description": "A required predicate for this RDF resource is missing",
         "status": 400,
         "class": "App\\Rdf\\AbstractRdfDocument",
@@ -255,8 +267,62 @@
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
         "method": "updateInstitution"
     },
+    "set-create-empty-or-corrupt-body" : {
+        "code": "set-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-already-exists" : {
+        "code": "set-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "A set with the given iri already exists",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-tenant-does-not-exist" : {
+        "code": "set-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a set for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
+        "fields": [
+            "predicate"
+        ],
+        "description": "A required predicate for this RDF resource is missing",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-invalid-resource-type" : {
+        "code": "abstract-rdf-document-invalid-resource-type",
+        "description": "The given resource type does not match the configured resource type for this endpoint",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
+        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
+        "description": "Properties could not be loaded from the rdf resource",
+        "status": 400,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "errors"
+    },
+    "abstract-rdf-document-missing-predicate" : {
+        "code": "abstract-rdf-document-missing-predicate",
+        "fields": [
+            "predicate"
+        ],
         "description": "A required predicate for this RDF resource is missing",
         "status": 400,
         "class": "App\\Rdf\\AbstractRdfDocument",

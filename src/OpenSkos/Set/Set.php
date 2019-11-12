@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set;
 
-use App\Ontology\Dc;
+use App\Annotation\Document;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
-use App\Rdf\Iri;
-use App\Rdf\RdfResource;
-use App\Rdf\Triple;
-use App\Rdf\VocabularyAwareResource;
+use App\Ontology\Rdf;
+use App\Rdf\AbstractRdfDocument;
 
-final class Set implements RdfResource
+/**
+ * @Document\Type(OpenSkos::SET)
+ */
+final class Set extends AbstractRdfDocument
 {
     const allow_oai = 'allow_oai';
     const code = 'code';
@@ -24,64 +25,28 @@ final class Set implements RdfResource
     const license = 'license';
     const publisher = 'publisher';
     const title = 'title';
+    const type = 'type';
 
     /**
      * @var string[]
      */
-    private static $mapping = [
-        self::tenant => OpenSkos::TENANT,
-        self::code => OpenSkos::CODE,
-        self::allow_oai => OpenSkos::ALLOW_OAI,
-        self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
-        self::oai_baseURL => OpenSkos::OAI_BASE_URL,
-        self::webpage => OpenSkos::WEBPAGE,
-        self::description => DcTerms::DESCRIPTION,
-        self::license => DcTerms::LICENSE,
-        self::publisher => DcTerms::PUBLISHER,
-        self::title => DC::TITLE,
+    protected static $mapping = [
+       self::tenant => OpenSkos::TENANT,
+       self::code => OpenSkos::CODE,
+       self::allow_oai => OpenSkos::ALLOW_OAI,
+       self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
+       self::oai_baseURL => OpenSkos::OAI_BASE_URL,
+       self::webpage => OpenSkos::WEBPAGE,
+       self::description => DcTerms::DESCRIPTION,
+       self::license => DcTerms::LICENSE,
+       self::publisher => DcTerms::PUBLISHER,
+       self::title => DcTerms::TITLE,
+        self::type => Rdf::TYPE,
+   ];
+
+    protected static $required = [
+        OpenSkos::CODE,
+        OpenSkos::CONCEPT_BASE_URI,
+        OpenSkos::TENANT,
     ];
-
-    /**
-     * @var VocabularyAwareResource
-     */
-    private $resource;
-
-    private function __construct(
-        Iri $subject,
-        ?VocabularyAwareResource $resource = null
-    ) {
-        if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
-        } else {
-            $this->resource = $resource;
-        }
-    }
-
-    public function iri(): Iri
-    {
-        return $this->resource->iri();
-    }
-
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->resource->triples();
-    }
-
-    public static function createEmpty(Iri $subject): self
-    {
-        return new self($subject);
-    }
-
-    /**
-     * @param Triple[] $triples
-     */
-    public static function fromTriples(Iri $subject, array $triples): self
-    {
-        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
-
-        return new self($subject, $resource);
-    }
 }
