@@ -30,6 +30,105 @@
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "errors"
     },
+    "dcterms-validate-created-literal-type" : {
+        "code": "dcterms-validate-created-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the created predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateCreated"
+    },
+    "dcterms-validate-date-literal-type" : {
+        "code": "dcterms-validate-date-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the date predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateDate"
+    },
+    "dcterms-validate-dateaccepted-literal-type" : {
+        "code": "dcterms-validate-dateaccepted-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the dateaccepted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateDateAccepted"
+    },
+    "dcterms-validate-dateapproved-literal-type" : {
+        "code": "dcterms-validate-dateapproved-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the dateapproved predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateDateApproved"
+    },
+    "dcterms-validate-datecopyrighted-literal-type" : {
+        "code": "dcterms-validate-datecopyrighted-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the datecopyrighted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateDateCopyrighted"
+    },
+    "dcterms-validate-datesubmitted-literal-type" : {
+        "code": "dcterms-validate-datesubmitted-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the datesubmitted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateDateSubmitted"
+    },
+    "dcterms-validate-description-literal-type" : {
+        "code": "dcterms-validate-description-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the description predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateDescription"
+    },
+    "dcterms-validate-license-literal-type" : {
+        "code": "dcterms-validate-license-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the license predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateLicense"
+    },
+    "dcterms-validate-title-literal-type" : {
+        "code": "dcterms-validate-title-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateTitle"
+    },
     "openskos-validate-tenant-literal-type" : {
         "code": "openskos-validate-tenant-literal-type",
         "fields": [
@@ -40,6 +139,28 @@
         "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateTenant"
+    },
+    "openskos-validate-tenant-regex" : {
+        "code": "openskos-validate-tenant-regex",
+        "fields": [
+            "regex",
+            "value"
+        ],
+        "description": "The object for the tenant predicate did not match the configured regex",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateTenant"
+    },
+    "openskos-validate-datedeleted-literal-type" : {
+        "code": "openskos-validate-datedeleted-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the datedeleted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateDateDeleted"
     },
     "openskos-validate-uuid-literal-type" : {
         "code": "openskos-validate-uuid-literal-type",
@@ -63,6 +184,17 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateUuid"
     },
+    "openskos-validate-name-literal-type" : {
+        "code": "openskos-validate-name-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the name predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateName"
+    },
     "openskos-validate-disablesearchinothertenants-literal-type" : {
         "code": "openskos-validate-disablesearchinothertenants-literal-type",
         "fields": [
@@ -73,6 +205,105 @@
         "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateDisableSearchInOtherTenants"
+    },
+    "openskos-validate-enablestatussessystem-literal-type" : {
+        "code": "openskos-validate-enablestatussessystem-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the enablestatussessystem predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateEnableStatussesSystem"
+    },
+    "openskos-validate-allow_oai-literal-type" : {
+        "code": "openskos-validate-allow_oai-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the allow_oai predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateAllow_oai"
+    },
+    "openskos-validate-oai_baseurl-literal-type" : {
+        "code": "openskos-validate-oai_baseurl-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the oai_baseurl predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateOai_baseURL"
+    },
+    "openskos-validate-conceptbaseuri-literal-type" : {
+        "code": "openskos-validate-conceptbaseuri-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the conceptbaseuri predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateConceptBaseUri"
+    },
+    "openskos-validate-licenceurl-literal-type" : {
+        "code": "openskos-validate-licenceurl-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the licenceurl predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateLicenceURL"
+    },
+    "openskos-validate-webpage-literal-type" : {
+        "code": "openskos-validate-webpage-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the webpage predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateWebpage"
+    },
+    "openskos-validate-enableskosxl-literal-type" : {
+        "code": "openskos-validate-enableskosxl-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the enableskosxl predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateEnableskosxl"
+    },
+    "openskos-validate-apikey-literal-type" : {
+        "code": "openskos-validate-apikey-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the apikey predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateApikey"
+    },
+    "openskos-validate-errorcode-literal-type" : {
+        "code": "openskos-validate-errorcode-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the errorcode predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateErrorCode"
     },
     "permission-denied-invalid-credentials" : {
         "code": "permission-denied-invalid-credentials",

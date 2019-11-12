@@ -88,6 +88,11 @@ final class OpenSkos
      *        fields={"expected","actual"},
      *        description="The object for the tenant predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
      *     )
+     * @Error(code="openskos-validate-tenant-regex",
+     *        status=422,
+     *        fields={"regex","value"},
+     *        description="The object for the tenant predicate did not match the configured regex"
+     *     )
      */
     public function validateTenant($property): ?array
     {
@@ -103,6 +108,55 @@ final class OpenSkos
                     'code' => 'openskos-validate-tenant-literal-type',
                     'data' => [
                         'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        $regex = '/[a-z]{1,4}/';
+        if (!preg_match($regex, $value)) {
+            return [
+                'code' => 'openskos-validate-tenant-regex',
+                'data' => [
+                    'regex' => $regex,
+                    'value' => $value,
+                ],
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for dateDeleted.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-datedeleted-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the datedeleted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateDateDeleted($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-datedeleted-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
                         'actual' => $property->typeIri()->getUri(),
                     ],
                 ];
@@ -170,6 +224,44 @@ final class OpenSkos
     }
 
     /**
+     * Returns the first encountered error for name.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-name-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the name predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateName($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-name-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the first encountered error for disableSearchInOtherTenants.
      * Returns null on success (a.k.a. no errors).
      *
@@ -195,6 +287,348 @@ final class OpenSkos
                     'code' => 'openskos-validate-disablesearchinothertenants-literal-type',
                     'data' => [
                         'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for enableStatussesSystem.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-enablestatussessystem-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the enablestatussessystem predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
+     *     )
+     */
+    public function validateEnableStatussesSystem($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-enablestatussessystem-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for allow_oai.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-allow_oai-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the allow_oai predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
+     *     )
+     */
+    public function validateAllow_oai($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-allow_oai-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for oai_baseURL.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-oai_baseurl-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the oai_baseurl predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateOai_baseURL($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-oai_baseurl-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for conceptBaseUri.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-conceptbaseuri-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the conceptbaseuri predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateConceptBaseUri($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-conceptbaseuri-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for licenceURL.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-licenceurl-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the licenceurl predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateLicenceURL($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-licenceurl-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for webpage.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-webpage-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the webpage predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateWebpage($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-webpage-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for enableskosxl.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-enableskosxl-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the enableskosxl predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
+     *     )
+     */
+    public function validateEnableskosxl($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-enableskosxl-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for apikey.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-apikey-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the apikey predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateApikey($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-apikey-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for errorCode.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-errorcode-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the errorcode predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateErrorCode($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-errorcode-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
                         'actual' => $property->typeIri()->getUri(),
                     ],
                 ];
