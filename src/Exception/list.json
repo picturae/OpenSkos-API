@@ -525,28 +525,15 @@
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "postSet"
     },
-    "abstract-rdf-document-missing-predicate" : {
-        "code": "abstract-rdf-document-missing-predicate",
+    "set-base-uri-does-not-match-code" : {
+        "code": "set-base-uri-does-not-match-code",
         "fields": [
-            "predicate"
+            "code",
+            "base-uri"
         ],
-        "description": "A required predicate for this RDF resource is missing",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-invalid-resource-type" : {
-        "code": "abstract-rdf-document-invalid-resource-type",
-        "description": "The given resource type does not match the configured resource type for this endpoint",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
-        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
-        "description": "Properties could not be loaded from the rdf resource",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
+        "description": "The given openskos:code does not match the end of the given openskos:conceptBaseUri",
+        "status": 422,
+        "class": "App\\OpenSkos\\Set\\Set",
         "method": "errors"
     },
     "abstract-rdf-document-missing-predicate" : {
