@@ -233,10 +233,27 @@
         "fields": [
             "iri"
         ],
-        "description": "The body passed to this endpoint was either missing or corrupt",
+        "description": "An institution with the given iri already exists",
         "status": 409,
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
         "method": "postInstitution"
+    },
+    "institution-update-empty-or-corrupt-body" : {
+        "code": "institution-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "updateInstitution"
+    },
+    "institution-update-does-not-exist" : {
+        "code": "institution-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The institution with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "updateInstitution"
     },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",

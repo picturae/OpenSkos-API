@@ -114,7 +114,7 @@ final class InstitutionController
      * )
      * @Error(code="institution-create-already-exists",
      *        status=409,
-     *        description="The body passed to this endpoint was either missing or corrupt",
+     *        description="An institution with the given iri already exists",
      *        fields={"iri"}
      * )
      */
@@ -133,6 +133,15 @@ final class InstitutionController
             throw new ApiException('institution-create-empty-or-corrupt-body');
         }
 
+        // Check if the resources already exist
+        foreach ($institutions as $institution) {
+            if ($institution->exists()) {
+                throw new ApiException('institution-create-already-exists', [
+                    'iri' => $institution->iri()->getUri(),
+                ]);
+            }
+        }
+
         // Validate all given resources
         $errors = [];
         foreach ($institutions as $institution) {
@@ -141,15 +150,6 @@ final class InstitutionController
         if (count($errors)) {
             foreach ($errors as $error) {
                 throw new ApiException($error);
-            }
-        }
-
-        // Check if the resources already exist
-        foreach ($institutions as $institution) {
-            if ($institution->exists()) {
-                throw new ApiException('institution-create-already-exists', [
-                    'iri' => $institution->iri()->getUri(),
-                ]);
             }
         }
 
@@ -182,14 +182,69 @@ final class InstitutionController
         // Fetch the institution we're deleting
         /** @var AbstractRdfDocument $institution */
         $institution = $this->getInstitution($id, $apiRequest, $repository)->doc();
-        if (is_null($institution)) {
-            die('No institution');
-        }
 
         $institution->delete();
 
         return new ScalarResponse(
             $institution,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/institutions.{format?}", methods={"PUT"})
+     *
+     * @Error(code="institution-update-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="institution-update-does-not-exist",
+     *        status=400,
+     *        description="The institution with the given iri does not exist",
+     *        fields={"iri"}
+     * )
+     */
+    public function updateInstitution(
+        ApiRequest $apiRequest,
+        InstitutionRepository $repository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Load data into institutions
+        $graph = $apiRequest->getGraph();
+        $institutions = $repository->fromGraph($graph);
+        if (is_null($institutions)) {
+            throw new ApiException('institution-update-empty-or-corrupt-body');
+        }
+
+        // Validate all given resources
+        $errors = [];
+        foreach ($institutions as $institution) {
+            if (!$institution->exists()) {
+                throw new ApiException('institution-update-does-not-exist', [
+                    'iri' => $institution->iri()->getUri(),
+                ]);
+            }
+            $errors = array_merge($errors, $institution->errors());
+        }
+        if (count($errors)) {
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
+        }
+
+        // Rebuild all given institutions
+        foreach ($institutions as $institution) {
+            $institution->delete();
+            $institution->save();
+        }
+
+        return new ListResponse(
+            $institutions,
+            count($institutions),
+            0,
             $apiRequest->getFormat()
         );
     }
