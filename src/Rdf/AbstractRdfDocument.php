@@ -79,6 +79,12 @@ abstract class AbstractRdfDocument implements RdfResource
             $this->resource = $resource;
         }
 
+        // Auto-fill rdf:type
+        $annotations = static::annotations();
+        if (is_null($this->getValue(Rdf::TYPE)) && isset($annotations['document-type'])) {
+            $this->addProperty(new Iri(Rdf::TYPE), new Iri($annotations['document-type']));
+        }
+
         if (!is_null($repository)) {
             $this->repository = $repository;
         }
@@ -299,7 +305,7 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         if (is_null($type) && (!is_null($repository))) {
-            $document->addProperty(new Iri(Rdf::TYPE), new Iri(self::annotations()['type']));
+            $document->addProperty(new Iri(Rdf::TYPE), new Iri(static::annotations()['document-type']));
         }
 
         return $document;
@@ -401,7 +407,8 @@ abstract class AbstractRdfDocument implements RdfResource
      *
      * @Error(code="abstract-rdf-document-missing-predicate",
      *        status=400,
-     *        description="A required predicate for this RDF resource is missing"
+     *        description="A required predicate for this RDF resource is missing",
+     *        fields={"predicate"}
      * )
      * @Error(code="abstract-rdf-document-invalid-resource-type",
      *        status=400,
