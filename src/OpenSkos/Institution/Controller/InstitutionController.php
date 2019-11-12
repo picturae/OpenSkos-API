@@ -135,7 +135,7 @@ final class InstitutionController
 
         // Client permissions
         $auth = $apiRequest->getAuthentication();
-        $auth->requireAdministrator('institution-create');
+        $auth->requireAdministrator();
 
         // Load data into institutions
         $graph = $apiRequest->getGraph();
@@ -176,5 +176,17 @@ final class InstitutionController
             0,
             $apiRequest->getFormat()
         );
+    }
+
+    /**
+     * @Route(path="/institutions.{format?}", methods={"POST"})
+     */
+    public function putInstitution(
+        ApiRequest $apiRequest,
+        InstitutionRepository $repository
+    ): ?ScalarResponse {
+        Context::setupEasyRdf();
+
+        return null;
     }
 }

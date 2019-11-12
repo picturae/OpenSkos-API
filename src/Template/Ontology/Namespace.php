@@ -139,9 +139,7 @@ final class <?= $name; ?>
 
     public static function vocabulary(): \EasyRdf_Graph
     {
-<?php foreach ($context as $descriptor) { ?>
-        \EasyRdf_Namespace::set(<?= Template::quoteString($descriptor['prefix']); ?>, <?= $descriptor['name']; ?>::NAME_SPACE);
-<?php } /* foreach */ ?>
+        Context::setupEasyRdf();
 
         // Define graph structure
         $graph = new \EasyRdf_Graph('openskos.org');

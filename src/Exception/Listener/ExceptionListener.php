@@ -31,11 +31,10 @@ final class ExceptionListener
 
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
-        /* // No fancy formatting in debug mode */
-        /* // TODO: this might still be needed */
-        /* if ($this->debug) { */
-        /*     return; */
-        /* } */
+        // No fancy formatting in debug mode
+        if ($this->debug) {
+            return;
+        }
 
         // Fetch the thrown exception
         $exception = $event->getException();
