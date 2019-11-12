@@ -221,27 +221,6 @@
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
         "method": "getInstitution"
     },
-    "institution-create-permission-denied-missing-credentials" : {
-        "code": "institution-create-permission-denied-missing-credentials",
-        "description": "No credentials were given",
-        "status": 401,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "postInstitution"
-    },
-    "institution-create-permission-denied-invalid-credentials" : {
-        "code": "institution-create-permission-denied-invalid-credentials",
-        "description": "Invalid credentials were given",
-        "status": 403,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "postInstitution"
-    },
-    "institution-create-permission-denied-missing-role-administrator" : {
-        "code": "institution-create-permission-denied-missing-role-administrator",
-        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
-        "status": 403,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "postInstitution"
-    },
     "institution-create-empty-or-corrupt-body" : {
         "code": "institution-create-empty-or-corrupt-body",
         "description": "The body passed to this endpoint was either missing or corrupt",

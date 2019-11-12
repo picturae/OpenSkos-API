@@ -494,6 +494,18 @@ abstract class AbstractRdfDocument implements RdfResource
         return $errors;
     }
 
+    public function delete()
+    {
+        // We need to repository to save
+        if (is_null($this->repository)) {
+            return [[
+                'code' => 'missing-repository',
+            ]];
+        }
+
+        $this->repository->delete($this->iri());
+    }
+
     public function save(): ?array
     {
         // Refuse to save if there are errors

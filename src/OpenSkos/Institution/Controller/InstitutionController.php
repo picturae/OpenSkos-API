@@ -11,6 +11,7 @@ use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -91,6 +92,10 @@ final class InstitutionController
         );
 
         if (null === $institution) {
+            $institution = $repository->getByUuid($id);
+        }
+
+        if (null === $institution) {
             throw new ApiException('institution-getone-not-found', [
                 'id' => $id->__toString(),
             ]);
@@ -103,19 +108,6 @@ final class InstitutionController
      * @Route(path="/institutions.{format?}", methods={"POST"})
      *
      * @throws ApiException
-     *
-     * @Error(code="institution-create-permission-denied-missing-credentials",
-     *        status=401,
-     *        description="No credentials were given"
-     * )
-     * @Error(code="institution-create-permission-denied-invalid-credentials",
-     *        status=403,
-     *        description="Invalid credentials were given"
-     * )
-     * @Error(code="institution-create-permission-denied-missing-role-administrator",
-     *        status=403,
-     *        description="The requested action requires the 'administrator' role while the authenticated user does not posses it"
-     * )
      *
      * @Error(code="institution-create-empty-or-corrupt-body",
      *        status=400,
@@ -179,14 +171,31 @@ final class InstitutionController
     }
 
     /**
-     * @Route(path="/institutions.{format?}", methods={"POST"})
+     * @Route(path="/institution/{id}.{format?}", methods={"DELETE"})
      */
-    public function putInstitution(
+    public function deleteInstitution(
+        InternalResourceId $id,
         ApiRequest $apiRequest,
         InstitutionRepository $repository
     ): ?ScalarResponse {
         Context::setupEasyRdf();
 
-        return null;
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Fetch the institution we're deleting
+        /** @var AbstractRdfDocument $institution */
+        $institution = $this->getInstitution($id, $apiRequest, $repository)->doc();
+        if (is_null($institution)) {
+            die('No institution');
+        }
+
+        $institution->delete();
+
+        return new ScalarResponse(
+            $institution,
+            $apiRequest->getFormat()
+        );
     }
 }

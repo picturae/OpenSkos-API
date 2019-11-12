@@ -221,4 +221,11 @@ class SkosResourceRepository
     {
         return $this->rdfClient->insertTriples($triples);
     }
+
+    public function deleteSubject(Iri $subject)
+    {
+        $sparql = SparqlQuery::deleteSubject($subject->getUri());
+
+        return $this->rdfClient->delete($sparql);
+    }
 }

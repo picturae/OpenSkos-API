@@ -17,21 +17,15 @@ final class ExceptionListener
      */
     private $debug = false;
 
-    /**
-     * @var array
-     */
-    private $knownErrors = [];
-
     public function __construct(
         ParameterBagInterface $params
     ) {
-        $this->knownErrors = json_decode(file_get_contents(__DIR__.'/../list.json'), true);
         /* $this->debug = !!$params->get('kernel.debug'); */
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
-        // No fancy formatting in debug mode
+        // No json response in debug mode
         if ($this->debug) {
             return;
         }
@@ -61,19 +55,13 @@ final class ExceptionListener
 
         /** @var ApiException $exception */
         $errorCode = $exception->errorCode;
-        $errorConfig = $this->knownErrors[$errorCode] ?? [];
+        $errorConfig = $exception->config;
         $errorConfig['fields'] = $errorConfig['fields'] ?? [];
         $errorData = $exception->data;
-        $statusCode = $errorConfig['status'] ?? $exception->getCode();
-
-        // Status fallback
-        if (!$statusCode) {
-            $statusCode = 500;
-        }
 
         // Basic JSON response
         $response = new Response();
-        $response->setStatusCode(intval($statusCode));
+        $response->setStatusCode($exception->status);
         $response->headers->set('Content-Type', 'application/json');
 
         // Handle 401
@@ -82,18 +70,11 @@ final class ExceptionListener
         }
 
         // Base response data
-        $responseData = [
-            'status' => $statusCode,
+        $responseData = array_merge($exception->data, [
+            'status' => $exception->status,
             'code' => $errorCode,
-            'description' => $errorConfig['description'] ?? '',
-        ];
-
-        // Include configured fields
-        foreach ($errorConfig['fields'] as $field) {
-            if (isset($errorData[$field])) {
-                $responseData[$field] = $errorData[$field];
-            }
-        }
+            'description' => $exception->description,
+        ]);
 
         // Encode & respond
         $response->setContent(json_encode(array_filter($responseData)));

@@ -17,9 +17,35 @@ class ApiException extends \Exception
     public $errorCode = 'unknown-error';
 
     /**
+     * @var string
+     */
+    public $description = '';
+
+    /**
      * @var array
      */
-    public $data;
+    public $data = [];
+
+    /**
+     * @var array
+     */
+    public $fields = [];
+
+    /**
+     * @var array
+     */
+    public $config = [];
+
+    protected static function knownErrors(): array
+    {
+        static $known = null;
+
+        if (is_null($known)) {
+            $known = json_decode(file_get_contents(__DIR__.'/list.json'), true);
+        }
+
+        return $known;
+    }
 
     /**
      * @param string|array $errorCode
@@ -38,10 +64,31 @@ class ApiException extends \Exception
 
         $this->errorCode = $errorCode;
 
-        if (!is_null($data)) {
-            $this->data = $data;
+        parent::__construct($errorCode.': '.json_encode($data));
+
+        $knownErrors = static::knownErrors();
+        if (isset($knownErrors[$errorCode])) {
+            $this->config = $knownErrors[$errorCode];
         }
 
-        parent::__construct($errorCode.': '.json_encode($data));
+        if (isset($this->config['status'])) {
+            $this->status = $this->config['status'];
+        }
+
+        if (isset($this->config['description'])) {
+            $this->description = $this->config['description'];
+        }
+
+        if (isset($this->config['fields'])) {
+            $this->fields = $this->config['fields'];
+        }
+
+        if (!is_null($data)) {
+            foreach ($this->fields as $field) {
+                if (isset($data[$field])) {
+                    $this->data[$field] = $data[$field];
+                }
+            }
+        }
     }
 }
