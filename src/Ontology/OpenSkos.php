@@ -208,8 +208,6 @@ final class OpenSkos
 
     public static function vocabulary(): \EasyRdf_Graph
     {
-        Context::setupEasyRdf();
-
         // Define graph structure
         $graph = new \EasyRdf_Graph('openskos.org');
 

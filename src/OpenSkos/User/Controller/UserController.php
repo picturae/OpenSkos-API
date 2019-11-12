@@ -6,7 +6,6 @@ namespace App\OpenSkos\User\Controller;
 
 use App\Annotation\Error;
 use App\Exception\ApiException;
-use App\Ontology\Context;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
@@ -59,8 +58,6 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
-        Context::setupEasyRdf();
-
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
         $auth->requireAuthenticated();
@@ -127,8 +124,6 @@ final class UserController
         ApiRequest $apiRequest,
         LabelRepository $labelRepository
     ): ScalarResponse {
-        Context::setupEasyRdf();
-
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
         $auth->requireAuthenticated();

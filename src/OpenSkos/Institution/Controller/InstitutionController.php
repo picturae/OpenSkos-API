@@ -6,7 +6,6 @@ namespace App\OpenSkos\Institution\Controller;
 
 use App\Annotation\Error;
 use App\Exception\ApiException;
-use App\Ontology\Context;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Institution\InstitutionRepository;
@@ -123,8 +122,6 @@ final class InstitutionController
         ApiRequest $apiRequest,
         InstitutionRepository $repository
     ): ListResponse {
-        Context::setupEasyRdf();
-
         // Client permissions
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
@@ -177,9 +174,7 @@ final class InstitutionController
         InternalResourceId $id,
         ApiRequest $apiRequest,
         InstitutionRepository $repository
-    ): ?ScalarResponse {
-        Context::setupEasyRdf();
-
+    ): ScalarResponse {
         // Client permissions
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
