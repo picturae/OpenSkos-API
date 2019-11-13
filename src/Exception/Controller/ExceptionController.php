@@ -46,10 +46,11 @@ final class ExceptionController
             }
             $resource = $graph->resource('http://error/'.$code);
             $resource->setType('openskos:error');
+            $resource->addLiteral('openskos:errorCode', $error['code']);
             $resource->addLiteral('http:sc', $error['status'] ?? 500);
 
             if (isset($error['description'])) {
-                $resource->addLiteral('rdf:comment', $error['description']);
+                $resource->addLiteral('dcterms:description', $error['description']);
             }
 
             $error['fields'] = $error['fields'] ?? [];

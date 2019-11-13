@@ -4,59 +4,124 @@ parameters:
     prefix: dcterms
     namespace: 'http://purl.org/dc/terms/'
     properties:
-      - abstract
-      - accessRights
-      - accrualMethod
-      - accrualPeriodicity
-      - accrualPolicy
-      - alternative
-      - audience
-      - available
-      - bibliographicCitation
-      - conformsTo
-      - contributor
-      - coverage
-      - created
-      - creator
-      - date
-      - dateAccepted
-      - dateApproved
-      - dateCopyrighted
-      - dateSubmitted
-      - description
-      - educationLevel
-      - extent
-      - format
-      - hasFormat
-      - hasPart
-      - hasVersion
-      - identifier
-      - instructionalMethod
-      - isFormatOf
-      - isPartOf
-      - isReferencedBy
-      - isReplacedBy
-      - isRequiredBy
-      - issued
-      - isVersionOf
-      - language
-      - license
-      - mediator
-      - medium
-      - modified
-      - provenance
-      - publisher
-      - references
-      - relation
-      - replaces
-      - requires
-      - rights
-      - rightsHolder
-      - source
-      - spatial
-      - subject
-      - tableOfContents
-      - temporal
-      - title
-      - type
-      - valid
+      abstract:
+        datatype: literal
+      accessRights:
+        datatype: literal
+      accrualMethod:
+        datatype: literal
+      accrualPeriodicity:
+        datatype: literal
+      accrualPolicy:
+        datatype: literal
+      alternative:
+        datatype: literal
+      audience:
+        datatype: literal
+      available:
+        datatype: literal
+      bibliographicCitation:
+        datatype: literal
+      conformsTo:
+        datatype: literal
+      contributor:
+        datatype: literal
+      coverage:
+        datatype: literal
+      created:
+        datatype: literal
+        literaltype: "xsd:datetime"
+      creator:
+        datatype: literal
+      date:
+        datatype: literal
+        literaltype: "xsd:datetime"
+      dateAccepted:
+        datatype: literal
+        literaltype: "xsd:datetime"
+      dateApproved:
+        datatype: literal
+        literaltype: "xsd:datetime"
+      dateCopyrighted:
+        datatype: literal
+        literaltype: "xsd:datetime"
+      dateSubmitted:
+        datatype: literal
+        literaltype: "xsd:datetime"
+      description:
+        datatype: literal
+        literaltype: "xsd:string"
+      educationLevel:
+        datatype: literal
+      extent:
+        datatype: literal
+      format:
+        datatype: literal
+      hasFormat:
+        datatype: literal
+      hasPart:
+        datatype: literal
+      hasVersion:
+        datatype: literal
+      identifier:
+        datatype: literal
+      instructionalMethod:
+        datatype: literal
+      isFormatOf:
+        datatype: literal
+      isPartOf:
+        datatype: literal
+      isReferencedBy:
+        datatype: literal
+      isReplacedBy:
+        datatype: literal
+      isRequiredBy:
+        datatype: literal
+      issued:
+        datatype: literal
+      isVersionOf:
+        datatype: literal
+      language:
+        datatype: literal
+      license:
+        datatype: literal
+        literaltype: "xsd:string"
+      mediator:
+        datatype: literal
+      medium:
+        datatype: literal
+      modified:
+        datatype: literal
+      provenance:
+        datatype: literal
+      publisher:
+        datatype: literal
+      references:
+        datatype: literal
+      relation:
+        datatype: literal
+      replaces:
+        datatype: literal
+      requires:
+        datatype: literal
+      rights:
+        datatype: literal
+      rightsHolder:
+        datatype: literal
+      source:
+        datatype: literal
+      spatial:
+        datatype: literal
+      subject:
+        datatype: literal
+      tableOfContents:
+        datatype: literal
+      temporal:
+        datatype: literal
+      title:
+        datatype: literal
+        literaltype: "xsd:string"
+      type:
+        datatype: literal
+      valid:
+        datatype: literal

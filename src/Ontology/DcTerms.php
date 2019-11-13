@@ -19,6 +19,10 @@
 
 namespace App\Ontology;
 
+use App\Annotation\Error;
+use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
+
 final class DcTerms
 {
     const NAME_SPACE = 'http://purl.org/dc/terms/';
@@ -78,4 +82,346 @@ final class DcTerms
     const TITLE = 'http://purl.org/dc/terms/title';
     const TYPE = 'http://purl.org/dc/terms/type';
     const VALID = 'http://purl.org/dc/terms/valid';
+
+    /**
+     * Returns the first encountered error for created.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-created-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the created predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateCreated($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-created-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for date.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-date-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the date predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateDate($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-date-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for dateAccepted.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-dateaccepted-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the dateaccepted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateDateAccepted($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-dateaccepted-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for dateApproved.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-dateapproved-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the dateapproved predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateDateApproved($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-dateapproved-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for dateCopyrighted.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-datecopyrighted-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the datecopyrighted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateDateCopyrighted($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-datecopyrighted-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for dateSubmitted.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-datesubmitted-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the datesubmitted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateDateSubmitted($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-datesubmitted-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for description.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-description-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the description predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateDescription($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-description-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for license.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-license-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the license predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateLicense($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-license-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for title.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-title-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the title predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateTitle($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-title-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
 }

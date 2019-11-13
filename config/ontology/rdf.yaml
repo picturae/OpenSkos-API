@@ -6,3 +6,5 @@ parameters:
     properties:
       type:
         datatype: resource
+      Property:
+        datatype: resource
