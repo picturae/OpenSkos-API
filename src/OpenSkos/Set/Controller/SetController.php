@@ -70,7 +70,7 @@ final class SetController
      *
      * @Error(code="set-getone-not-found",
      *        status=404,
-     *        description="The requested institution could not be found",
+     *        description="The requested set could not be found",
      *        fields={"iri"}
      * )
      */
@@ -122,7 +122,7 @@ final class SetController
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        // Load data into institutions
+        // Load data into sets
         $graph = $apiRequest->getGraph();
         $sets = $setRepository->fromGraph($graph);
         if (is_null($sets)) {
@@ -163,7 +163,7 @@ final class SetController
             }
         }
 
-        // Save all given institutions
+        // Save all given sets
         foreach ($sets as $set) {
             $set->save();
         }

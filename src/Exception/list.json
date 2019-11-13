@@ -510,7 +510,7 @@
         "fields": [
             "iri"
         ],
-        "description": "The requested institution could not be found",
+        "description": "The requested set could not be found",
         "status": 404,
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "getSet"
