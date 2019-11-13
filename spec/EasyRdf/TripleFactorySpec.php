@@ -16,7 +16,7 @@ class TripleFactorySpec extends ObjectBehavior
     public function it_can_transform_easy_rdf_graph_to_triples()
     {
         $graphString = file_get_contents(__DIR__.'/example.ttl');
-        $graph = new EasyRdf_Graph();
+        $graph       = new EasyRdf_Graph();
         $graph->parse($graphString, 'turtle');
 
         $testData = $this::triplesFromGraph($graph);
@@ -53,7 +53,7 @@ class TripleFactorySpec extends ObjectBehavior
     public function getMatchers(): array
     {
         return [
-            'beTriples' => function (array $actual, array $expected) {
+            'beTriples'                => function (array $actual, array $expected) {
                 foreach ($actual as $i => $triple) {
                     $expTriple = (string) ($expected[$i] ?? '<empty>');
                     if ((string) $triple !== $expTriple) {

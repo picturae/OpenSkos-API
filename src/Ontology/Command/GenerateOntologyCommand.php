@@ -31,8 +31,8 @@ class GenerateOntologyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dir = dirname(__DIR__);
-        $ds = DIRECTORY_SEPARATOR;
+        $dir     = dirname(__DIR__);
+        $ds      = DIRECTORY_SEPARATOR;
         $context = $this->params->get('ontology');
 
         // Build datatype list
@@ -43,7 +43,7 @@ class GenerateOntologyCommand extends Command
                 if (is_string($propertyDescriptor)) {
                     $datatype[$ontology['prefix'].':'.$propertyDescriptor] = 'literal';
                 } elseif (is_array($propertyDescriptor)) {
-                    $propertyDescriptor['datatype'] = $propertyDescriptor['datatype'] ?? 'literal';
+                    $propertyDescriptor['datatype']         = $propertyDescriptor['datatype'] ?? 'literal';
                     $datatype[$ontology['prefix'].':'.$key] = $propertyDescriptor['datatype'];
                 }
             }
@@ -69,9 +69,9 @@ class GenerateOntologyCommand extends Command
 
         // Step 1: build context file
         file_put_contents("${dir}${ds}Context.php", Template::render('Ontology/Context', [
-            'context' => $context,
+            'context'   => $context,
             'dataclass' => $dataclass,
-            'datatype' => $datatype,
+            'datatype'  => $datatype,
         ]));
 
         // Build ontology file for referenced vocabulary
@@ -79,18 +79,18 @@ class GenerateOntologyCommand extends Command
             $name = $ontology['name'];
 
             // Normalize property descriptors
-            $properties = [];
-            $vocabulary = [];
+            $properties                = [];
+            $vocabulary                = [];
             $ontology['hasVocabulary'] = $ontology['hasVocabulary'] ?? false;
             foreach ($ontology['properties'] as $key => $propertyDescriptor) {
                 // Handle string property descriptor
                 if (is_string($propertyDescriptor)) {
                     $properties[] = [
-                        'name' => $propertyDescriptor,
-                        'const' => strtoupper(Template::from_camel_case($propertyDescriptor)),
+                        'name'          => $propertyDescriptor,
+                        'const'         => strtoupper(Template::from_camel_case($propertyDescriptor)),
                         'hasValidation' => false,
-                        'datatype' => 'literal',
-                        'literaltype' => null,
+                        'datatype'      => 'literal',
+                        'literaltype'   => null,
                     ];
                     continue;
                 }
@@ -98,32 +98,32 @@ class GenerateOntologyCommand extends Command
                 // Handle more complex property
                 if (is_array($propertyDescriptor)) {
                     $properties[] = [
-                        'name' => $key,
-                        'const' => strtoupper($propertyDescriptor['const'] ?? Template::from_camel_case($key)),
+                        'name'          => $key,
+                        'const'         => strtoupper($propertyDescriptor['const'] ?? Template::from_camel_case($key)),
                         'hasValidation' => isset($propertyDescriptor['regex']) || isset($propertyDescriptor['literaltype']),
-                        'regex' => $propertyDescriptor['regex'] ?? null,
-                        'datatype' => $propertyDescriptor['datatype'] ?? 'literal',
-                        'literaltype' => $propertyDescriptor['literaltype'] ?? null,
+                        'regex'         => $propertyDescriptor['regex'] ?? null,
+                        'datatype'      => $propertyDescriptor['datatype'] ?? 'literal',
+                        'literaltype'   => $propertyDescriptor['literaltype'] ?? null,
                     ];
                     if ($ontology['hasVocabulary']) {
                         $propertyDescriptor['name'] = $key;
-                        $vocabulary[] = $propertyDescriptor;
+                        $vocabulary[]               = $propertyDescriptor;
                     }
                     continue;
                 }
             }
 
             // Custom consts
-            $consts = [];
-            $lists = [];
+            $consts            = [];
+            $lists             = [];
             $ontology['const'] = $ontology['const'] ?? [];
             foreach ($ontology['const'] as $constName => $constDescriptor) {
                 $constName = strtoupper($constName);
                 switch ($constDescriptor['type']) {
                     case 'list':
                         foreach ($ontology[$constDescriptor['source']] as $constValue) {
-                            $upper = strtoupper($constDescriptor['source'].'_'.$constValue);
-                            $consts[$upper] = $constValue;
+                            $upper               = strtoupper($constDescriptor['source'].'_'.$constValue);
+                            $consts[$upper]      = $constValue;
                             $lists[$constName][] = 'self::'.$upper;
                         }
                         break;
@@ -135,23 +135,25 @@ class GenerateOntologyCommand extends Command
             foreach ($ontology['list'] as $listName => $listDescriptor) {
                 $listName = strtoupper($listName);
                 foreach ($listDescriptor as $listValue) {
-                    $upper = strtoupper($listValue);
+                    $upper              = strtoupper($listValue);
                     $lists[$listName][] = 'self::'.$upper;
                 }
             }
 
             file_put_contents("${dir}${ds}${name}.php", Template::render('Ontology/Namespace', [
-                'context' => $context,
-                'name' => $ontology['name'],
-                'prefix' => $ontology['prefix'],
-                'namespace' => $ontology['namespace'],
+                'context'    => $context,
+                'name'       => $ontology['name'],
+                'prefix'     => $ontology['prefix'],
+                'namespace'  => $ontology['namespace'],
                 'properties' => $properties,
                 'vocabulary' => $vocabulary,
-                'consts' => $consts,
-                'lists' => $lists,
-                'dataclass' => $dataclass,
-                'datatype' => $datatype,
+                'consts'     => $consts,
+                'lists'      => $lists,
+                'dataclass'  => $dataclass,
+                'datatype'   => $datatype,
             ]));
         }
+
+        // TODO: 'vendor/bin/php-cs-fixer' '--allow-risky=yes' '--config=.php_cs' '--verbose' 'fix' src/Ontology/*.php
     }
 }

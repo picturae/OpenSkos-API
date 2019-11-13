@@ -51,7 +51,7 @@ final class VocabularyAwareResource implements RdfResource
         }
 
         $iriString = $iri->getUri();
-        $obj = new self($iri, $mapping);
+        $obj       = new self($iri, $mapping);
         foreach ($triples as $triple) {
             if ($triple->getSubject()->getUri() !== $iriString) {
                 // TODO: Should we skip, log or throw an exception?

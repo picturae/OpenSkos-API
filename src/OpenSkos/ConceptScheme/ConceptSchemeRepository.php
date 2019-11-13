@@ -10,5 +10,5 @@ use App\Repository\AbstractRepository;
 final class ConceptSchemeRepository extends AbstractRepository
 {
     const DOCUMENT_CLASS = ConceptScheme::class;
-    const DOCUMENT_TYPE = Skos::CONCEPT_SCHEME;
+    const DOCUMENT_TYPE  = Skos::CONCEPT_SCHEME;
 }

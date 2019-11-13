@@ -15,14 +15,14 @@ class RoleSpec extends ObjectBehavior
     {
         // Define request parameters
         $formatFactory = RdfFormatFactory::loadDefault();
-        $format = $formatFactory->createFromName('rdf');
+        $format        = $formatFactory->createFromName('rdf');
         $allParameters = [];
-        $level = 1;
-        $limit = 100;
-        $offset = 0;
-        $institutions = [];
-        $sets = [];
-        $foreignUri = null;
+        $level         = 1;
+        $limit         = 100;
+        $offset        = 0;
+        $institutions  = [];
+        $sets          = [];
+        $foreignUri    = null;
 
         // Build the apiRequest
         return new ApiRequest(

@@ -21,11 +21,11 @@ namespace App\Ontology;
 
 final class SkosXl
 {
-    const NAME_SPACE = 'http://www.w3.org/2008/05/skos-xl#';
-    const LABEL = 'http://www.w3.org/2008/05/skos-xl#Label';
-    const ALT_LABEL = 'http://www.w3.org/2008/05/skos-xl#altLabel';
-    const HIDDEN_LABEL = 'http://www.w3.org/2008/05/skos-xl#hiddenLabel';
+    const NAME_SPACE     = 'http://www.w3.org/2008/05/skos-xl#';
+    const LABEL          = 'http://www.w3.org/2008/05/skos-xl#Label';
+    const ALT_LABEL      = 'http://www.w3.org/2008/05/skos-xl#altLabel';
+    const HIDDEN_LABEL   = 'http://www.w3.org/2008/05/skos-xl#hiddenLabel';
     const LABEL_RELATION = 'http://www.w3.org/2008/05/skos-xl#labelRelation';
-    const LITERAL_FORM = 'http://www.w3.org/2008/05/skos-xl#literalForm';
-    const PREF_LABEL = 'http://www.w3.org/2008/05/skos-xl#prefLabel';
+    const LITERAL_FORM   = 'http://www.w3.org/2008/05/skos-xl#literalForm';
+    const PREF_LABEL     = 'http://www.w3.org/2008/05/skos-xl#prefLabel';
 }

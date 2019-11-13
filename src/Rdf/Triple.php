@@ -29,9 +29,9 @@ final class Triple
         Iri $predicate,
         RdfTerm $object
     ) {
-        $this->subject = $subject;
+        $this->subject   = $subject;
         $this->predicate = $predicate;
-        $this->object = $object;
+        $this->object    = $object;
 
         if (!($object instanceof Iri || $object instanceof Literal)) {
             throw new \InvalidArgumentException('Object must be Iri|Literal got: '.get_class($object));
@@ -60,9 +60,9 @@ final class Triple
         }
 
         // Build the regex
-        $iri = '[a-z\\:\\/0-9\\-\\.#@]+';
-        $lit = $iri;
-        $lang = '[a-z]{2}';
+        $iri   = '[a-z\\:\\/0-9\\-\\.#@]+';
+        $lit   = $iri;
+        $lang  = '[a-z]{2}';
         $regex = '/'.
             '<(?<subject>'.$iri.')>'.
             ' '.
@@ -83,13 +83,13 @@ final class Triple
             return null;
         }
 
-        $subject = new Iri($matches['subject']);
+        $subject   = new Iri($matches['subject']);
         $predicate = new Iri($matches['predicate']);
 
-        $literal = strlen($matches['literal']) ? $matches['literal'] : null;
-        $language = strlen($matches['language']) ? $matches['language'] : null;
+        $literal     = strlen($matches['literal']) ? $matches['literal'] : null;
+        $language    = strlen($matches['language']) ? $matches['language'] : null;
         $literalType = strlen($matches['literalType']) ? $matches['literalType'] : 'http://www.w3.org/2001/XMLSchema#string';
-        $object = strlen($matches['object']) ? $matches['object'] : null;
+        $object      = strlen($matches['object']) ? $matches['object'] : null;
 
         if ($object) {
             return new static($subject, $predicate, new Iri($object));

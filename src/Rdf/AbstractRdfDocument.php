@@ -92,9 +92,9 @@ abstract class AbstractRdfDocument implements RdfResource
         // Auto-fill uuid
         $uuid = $this->getValue(OpenSkos::UUID);
         if (!($uuid instanceof StringLiteral)) {
-            $iri = $this->iri()->getUri();
+            $iri    = $this->iri()->getUri();
             $tokens = explode('/', $iri);
-            $uuid = array_pop($tokens);
+            $uuid   = array_pop($tokens);
             if (self::isUuid($uuid)) {
                 $this->addProperty(new Iri(OpenSkos::UUID), $uuid);
             }
@@ -108,8 +108,8 @@ abstract class AbstractRdfDocument implements RdfResource
         // Build cache if needed
         if (!isset($annotations[static::class])) {
             // Fetch all annotations
-            $annotationReader = new AnnotationReader();
-            $documentReflection = new \ReflectionClass(static::class);
+            $annotationReader    = new AnnotationReader();
+            $documentReflection  = new \ReflectionClass(static::class);
             $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
 
             // Loop through annotations and extract data
@@ -396,7 +396,7 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         // Attempt to fetch the resource
-        $iri = $this->resource->iri();
+        $iri   = $this->resource->iri();
         $found = $this->repository->findByIri($iri);
 
         return !is_null($found);
@@ -421,7 +421,7 @@ abstract class AbstractRdfDocument implements RdfResource
      */
     public function errors(string $errorPrefix = null): array
     {
-        $errors = [];
+        $errors      = [];
         $annotations = static::annotations();
         $errorPrefix = $errorPrefix ?? 'abstract-rdf-document';
 
@@ -440,7 +440,7 @@ abstract class AbstractRdfDocument implements RdfResource
                     'code' => $errorPrefix.'-invalid-resource-type',
                     'data' => [
                         'expected' => $annotations['document-type'],
-                        'actual' => $type->getUri(),
+                        'actual'   => $type->getUri(),
                     ],
                 ]);
             }

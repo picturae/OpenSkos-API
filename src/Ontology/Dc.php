@@ -21,8 +21,8 @@ namespace App\Ontology;
 
 final class Dc
 {
-    const NAME_SPACE = 'http://purl.org/dc/elements/1.1/';
-    const CREATOR = 'http://purl.org/dc/elements/1.1/creator';
+    const NAME_SPACE  = 'http://purl.org/dc/elements/1.1/';
+    const CREATOR     = 'http://purl.org/dc/elements/1.1/creator';
     const CONTRIBUTOR = 'http://purl.org/dc/elements/1.1/contributor';
-    const TITLE = 'http://purl.org/dc/elements/1.1/title';
+    const TITLE       = 'http://purl.org/dc/elements/1.1/title';
 }

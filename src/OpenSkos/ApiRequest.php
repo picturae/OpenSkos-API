@@ -81,14 +81,14 @@ final class ApiRequest
             $format = JsonLd::instance();
         }
 
-        $this->allParams = $allParams;
-        $this->format = $format;
-        $this->level = $level;
-        $this->offset = $offset;
-        $this->limit = $limit;
+        $this->allParams    = $allParams;
+        $this->format       = $format;
+        $this->level        = $level;
+        $this->offset       = $offset;
+        $this->limit        = $limit;
         $this->institutions = $institutions;
-        $this->sets = $sets;
-        $this->foreignUri = $foreignUri;
+        $this->sets         = $sets;
+        $this->foreignUri   = $foreignUri;
 
         if (is_null($authentication)) {
             $this->authentication = new Authentication();

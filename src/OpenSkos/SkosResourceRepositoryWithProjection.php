@@ -13,19 +13,19 @@ final class SkosResourceRepositoryWithProjection extends SkosResourceRepository
 {
     public function findManyByIriListWithProjection(array $iris, array $projection): array
     {
-        $sparql = SparqlQuery::describeResources($iris);
+        $sparql  = SparqlQuery::describeResources($iris);
         $triples = $this->rdfClient->describe($sparql);
         if (0 === count($triples)) {
             return [];
         }
 
         $fields_to_project = [];
-        $do_projection = false;
+        $do_projection     = false;
         //Extract which fields we want to use from the projection parameters
         $acceptable_fields = Concept::getAcceptableFields();
         foreach ($projection as $key => $param) {
             if (isset($acceptable_fields[$key])) {
-                $do_projection = true;
+                $do_projection                               = true;
                 $fields_to_project[$acceptable_fields[$key]] = $param['lang'];
             }
         }
@@ -34,7 +34,7 @@ final class SkosResourceRepositoryWithProjection extends SkosResourceRepository
         $groups = [];
         foreach ($triples as $triple) {
             $predicate = $triple->getPredicate()->getUri();
-            $object = $triple->getObject();
+            $object    = $triple->getObject();
             if (!$do_projection || isset($fields_to_project[$predicate])) {
                 if (('' === $fields_to_project[$predicate]) ||
                      ($object instanceof StringLiteral && $fields_to_project[$predicate] === $object->lang())) {

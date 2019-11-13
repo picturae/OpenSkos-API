@@ -20,16 +20,16 @@ use App\Rdf\VocabularyAwareResource;
  */
 final class Label extends AbstractRdfDocument implements RdfResource
 {
-    const type = 'type';
-    const modified = 'modified';
+    const type        = 'type';
+    const modified    = 'modified';
     const literalForm = 'literalForm';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
-        self::type => Rdf::TYPE,
-        self::modified => DcTerms::MODIFIED,
+        self::type        => Rdf::TYPE,
+        self::modified    => DcTerms::MODIFIED,
         self::literalForm => SkosXl::LITERAL_FORM,
     ];
 
@@ -55,13 +55,13 @@ final class Label extends AbstractRdfDocument implements RdfResource
      * @var array
      */
     private static $acceptable_fields = [
-        'uri' => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
+        'uri'         => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
         'literalForm' => SkosXl::LITERAL_FORM,
         /* 'isPrefLabelOf' => */
         /* 'isAltLabelOf' => */
         /* 'isHiddenLabelOf' => */
         'labelRelation' => SkosXl::LABEL_RELATION,
-        'set' => OpenSkos::SET,
+        'set'           => OpenSkos::SET,
         /* 'institution' => OpenSkos::INSTITUTION, */
         'tenant' => OpenSkos::TENANT,
         'status' => OpenSkos::STATUS,
@@ -84,8 +84,8 @@ final class Label extends AbstractRdfDocument implements RdfResource
      * @var array
      */
     public static $meta_groups = [
-        'all' => [],
-        'skosxl' => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
+        'all'     => [],
+        'skosxl'  => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
         'default' => ['uri' => ['lang' => ''], 'literalForm' => ['lang' => '']],
     ];
 
@@ -107,8 +107,8 @@ final class Label extends AbstractRdfDocument implements RdfResource
         ?Iri $parentSubject = null
     ) {
         $this->childSubject = $childSubject;
-        $this->type = $parentPredicate;
-        $this->subject = $parentSubject;
+        $this->type         = $parentPredicate;
+        $this->subject      = $parentSubject;
         parent::__construct($childSubject, $resource);
     }
 

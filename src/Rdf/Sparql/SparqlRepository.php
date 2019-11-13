@@ -69,9 +69,9 @@ class SparqlRepository implements SparqlRepositoryInterface
             throw new \Exception('SparqlRepository can not be initialized without resource type');
         }
 
-        $this->rdfClient = $rdfClient;
+        $this->rdfClient     = $rdfClient;
         $this->resourceClass = $resourceClass;
-        $this->resourceType = $resourceType;
+        $this->resourceType  = $resourceType;
 
         $this->skosRepository = new SkosResourceRepository(
             function (Iri $iri, array $triples) use ($resourceClass): RdfResource {
@@ -89,8 +89,8 @@ class SparqlRepository implements SparqlRepositoryInterface
     private static function getType(string $classname): ?string
     {
         // Fetch all annotations
-        $annotationReader = new AnnotationReader();
-        $documentReflection = new \ReflectionClass($classname);
+        $annotationReader    = new AnnotationReader();
+        $documentReflection  = new \ReflectionClass($classname);
         $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
 
         // Loop through annotations and return the table

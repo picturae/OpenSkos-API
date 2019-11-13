@@ -24,7 +24,7 @@ final class SparqlQuery
         string $sparql,
         array $variables = []
     ) {
-        $this->sparql = $sparql;
+        $this->sparql    = $sparql;
         $this->variables = $variables;
     }
 
@@ -70,7 +70,7 @@ final class SparqlQuery
             $groupedFilters = [];
 
             foreach ($filters as $f_key => $f_val) {
-                $entity = $f_val['entity'];
+                $entity    = $f_val['entity'];
                 $predicate = $f_val['predicate'];
 
                 if (!isset($groupedFilters[$entity])) {
@@ -83,9 +83,9 @@ final class SparqlQuery
                 $groupedFilters[$entity][$predicate][] = $f_val;
             }
 
-            $nIdx = 0;
+            $nIdx             = 0;
             $filterPredicates = [];
-            $filterValues = [];
+            $filterValues     = [];
 
             foreach ($groupedFilters as $entity_key => $entity_val) {
                 $entityValues = [];
@@ -94,7 +94,7 @@ final class SparqlQuery
                     $filterPredicates[] = sprintf('<%s> $f%d ', $pred_key, $nIdx);
                     foreach ($pred_val as $obj_key => $obj_val) {
                         if (FilterProcessor::TYPE_URI == $obj_val['type']) {
-                            $delimOpen = '<';
+                            $delimOpen  = '<';
                             $delimClose = '>';
                         } else {
                             $delimOpen = $delimClose = '"';
@@ -141,7 +141,7 @@ final class SparqlQuery
     public static function describeResources(
         array $subjects
     ): SparqlQuery {
-        $uris = array_map(function ($v) { return sprintf('?subject = <%s> ', $v); }, $subjects);
+        $uris  = array_map(function ($v) { return sprintf('?subject = <%s> ', $v); }, $subjects);
         $query = sprintf('DESCRIBE ?subject WHERE {?subject ?predicate ?object . FILTER ( %s ) }', join(' || ', $uris));
 
         return new SparqlQuery($query);

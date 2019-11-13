@@ -31,8 +31,8 @@ abstract class AbstractEntity
     public static function getTable(): ?string
     {
         // Fetch all annotations
-        $annotationReader = new AnnotationReader();
-        $documentReflection = new \ReflectionClass(static::class);
+        $annotationReader    = new AnnotationReader();
+        $documentReflection  = new \ReflectionClass(static::class);
         $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
 
         // Loop through annotations and return the table

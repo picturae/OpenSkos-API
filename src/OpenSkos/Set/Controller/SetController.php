@@ -48,7 +48,7 @@ final class SetController
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions = $apiRequest->getInstitutions();
-        $full_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
+        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
@@ -125,7 +125,7 @@ final class SetController
 
         // Load data into sets
         $graph = $apiRequest->getGraph();
-        $sets = $setRepository->fromGraph($graph);
+        $sets  = $setRepository->fromGraph($graph);
         if (is_null($sets)) {
             throw new ApiException('set-create-empty-or-corrupt-body');
         }
@@ -153,7 +153,7 @@ final class SetController
         // Ensure the tenants exist
         foreach ($sets as $set) {
             $tenantCode = $set->getValue(OpenSkos::TENANT)->value();
-            $tenant = $institutionRepository->findOneBy(
+            $tenant     = $institutionRepository->findOneBy(
                 new Iri(OpenSkos::CODE),
                 new InternalResourceId($tenantCode)
             );
@@ -234,7 +234,7 @@ final class SetController
 
         // Load data into sets
         $graph = $apiRequest->getGraph();
-        $sets = $setRepository->fromGraph($graph);
+        $sets  = $setRepository->fromGraph($graph);
         if (is_null($sets)) {
             throw new ApiException('set-update-empty-or-corrupt-body');
         }
@@ -258,7 +258,7 @@ final class SetController
         // Ensure the tenants exist
         foreach ($sets as $set) {
             $tenantCode = $set->getValue(OpenSkos::TENANT)->value();
-            $tenant = $institutionRepository->findOneBy(
+            $tenant     = $institutionRepository->findOneBy(
                 new Iri(OpenSkos::CODE),
                 new InternalResourceId($tenantCode)
             );

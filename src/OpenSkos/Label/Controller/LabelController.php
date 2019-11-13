@@ -40,7 +40,7 @@ final class LabelController
         FilterProcessor $filterProcessor
     ): ListResponse {
         $full_filter = $apiFilter->buildFilters();
-        $labels = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
+        $labels      = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
             $labels,
@@ -82,7 +82,7 @@ final class LabelController
             throw new BadRequestHttpException('No uri was given');
         }
 
-        $iri = new Iri($uri);
+        $iri   = new Iri($uri);
         $label = $repository->findByIri($iri);
         if (is_null($label)) {
             throw new NotFoundHttpException("The label $uri could not be retreived.");

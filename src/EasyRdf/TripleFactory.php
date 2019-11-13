@@ -16,7 +16,7 @@ final class TripleFactory
 {
     private static function arrayToRdfTerm(array $arr): ?RdfTerm
     {
-        $type = $arr['type'];
+        $type  = $arr['type'];
         $value = $arr['value'];
         if (null === $type || null === $value) {
             return null;

@@ -9,28 +9,28 @@ use Symfony\Component\HttpFoundation\Request;
 final class ApiFilter
 {
     const aliases = [
-        'acceptedBy' => 'openskos:acceptedBy',
-        'creator' => 'dcterms:creator',
-        'dateAccepted' => 'dcterms:dateAccepted',
+        'acceptedBy'    => 'openskos:acceptedBy',
+        'creator'       => 'dcterms:creator',
+        'dateAccepted'  => 'dcterms:dateAccepted',
         'dateSubmitted' => 'dcterms:dateSubmitted',
-        'deleted' => 'openskos:deleted',
-        'deletedBy' => 'openskos:deletedBy',
-        'institutions' => 'openskos:tenant',
-        'literalForm' => 'skosxl:literalForm',
-        'modified' => 'dcterms:modified',
-        'modifiedBy' => 'openskos:modifiedBy',
-        'sets' => 'openskos:set',
-        'status' => 'openskos:status',
-        'tenant' => 'openskos:tenant',
+        'deleted'       => 'openskos:deleted',
+        'deletedBy'     => 'openskos:deletedBy',
+        'institutions'  => 'openskos:tenant',
+        'literalForm'   => 'skosxl:literalForm',
+        'modified'      => 'dcterms:modified',
+        'modifiedBy'    => 'openskos:modifiedBy',
+        'sets'          => 'openskos:set',
+        'status'        => 'openskos:status',
+        'tenant'        => 'openskos:tenant',
     ];
 
     const types = [
-        'default' => 'csv',
-        'dcterms:dateAccepted' => 'xsd:duration',
+        'default'               => 'csv',
+        'dcterms:dateAccepted'  => 'xsd:duration',
         'dcterms:dateSubmitted' => 'xsd:duration',
-        'dcterms:modified' => 'xsd:duration',
-        'openskos:deleted' => 'xsd:duration',
-        'openskos:status' => OpenSkos::STATUSES,
+        'dcterms:modified'      => 'xsd:duration',
+        'openskos:deleted'      => 'xsd:duration',
+        'openskos:status'       => OpenSkos::STATUSES,
     ];
 
     const entity = [
@@ -42,7 +42,7 @@ final class ApiFilter
     ];
 
     const TYPE_STRING = 'string';
-    const TYPE_URI = 'uri';
+    const TYPE_URI    = 'uri';
 
     /**
      * @var array
@@ -75,7 +75,7 @@ final class ApiFilter
     {
         $tokens = explode(':', $predicate);
         $prefix = array_shift($tokens);
-        $field = implode(':', $tokens);
+        $field  = implode(':', $tokens);
 
         return Context::prefixes[$prefix].$field;
     }
@@ -190,24 +190,24 @@ final class ApiFilter
         }
 
         // Build the right predicate
-        $entity = static::entity[$predicate] ?? 'subject';
+        $entity    = static::entity[$predicate] ?? 'subject';
         $predicate = static::fullUri($predicate);
 
         // Add url or string to the output
         if (filter_var($value, FILTER_VALIDATE_URL)) {
             $output[] = [
                 'predicate' => $predicate,
-                'value' => $value,
-                'type' => static::TYPE_URI,
-                'entity' => $entity,
+                'value'     => $value,
+                'type'      => static::TYPE_URI,
+                'entity'    => $entity,
             ];
         } else {
             $output[] = [
                 'predicate' => $predicate,
-                'value' => $value,
-                'type' => static::TYPE_STRING,
-                'entity' => $entity,
-                'lang' => $lang,
+                'value'     => $value,
+                'type'      => static::TYPE_STRING,
+                'entity'    => $entity,
+                'lang'      => $lang,
             ];
         }
 
@@ -224,7 +224,7 @@ final class ApiFilter
         // Build jena filters
         foreach ($this->filters as $predicate => $value) {
             $filters = $this->buildFilter($predicate, $value, $this->lang);
-            $output = array_merge($output, $filters);
+            $output  = array_merge($output, $filters);
         }
 
         switch ($type) {
@@ -232,18 +232,18 @@ final class ApiFilter
             // That's why we build in jena-mode
             case 'solr':
                 $solrFilters = [];
-                $ucfirstfn = create_function('$c', 'return ucfirst($c);');
+                $ucfirstfn   = create_function('$c', 'return ucfirst($c);');
 
                 foreach ($output as $jenaFilter) {
                     // Fetch short predicate and data type
                     $predicate = static::fromFullUri($jenaFilter['predicate']);
-                    $datatype = static::types[$predicate] ?? 'csv';
+                    $datatype  = static::types[$predicate] ?? 'csv';
 
                     // Build solr field
                     $filterField = null;
-                    $tokens = explode(':', $predicate);
-                    $prefix = array_shift($tokens);
-                    $shortfield = implode(':', $tokens);
+                    $tokens      = explode(':', $predicate);
+                    $prefix      = array_shift($tokens);
+                    $shortfield  = implode(':', $tokens);
                     switch ($datatype) {
                         case 'xsd:duration':
                             $filterField = 'd_'.$shortfield;
@@ -256,8 +256,8 @@ final class ApiFilter
                     }
 
                     // Register the filters
-                    $filterValue = $jenaFilter['value'];
-                    $filterName = lcfirst(str_replace(' ', '', ucwords(str_replace(':', ' ', $predicate.':filter'))));
+                    $filterValue                = $jenaFilter['value'];
+                    $filterName                 = lcfirst(str_replace(' ', '', ucwords(str_replace(':', ' ', $predicate.':filter'))));
                     $solrFilters[$filterName][] = "${filterField}:\"${filterValue}\"";
                 }
 

@@ -37,13 +37,13 @@ class GenerateErrorListCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $dir = dirname(__DIR__);
-        $ds = DIRECTORY_SEPARATOR;
+        $ds  = DIRECTORY_SEPARATOR;
 
         // Fetch all classes in our app
         $fileRepository = new FileRepository();
-        $parserFactory = new ParserFactory();
+        $parserFactory  = new ParserFactory();
         $fqcnRepository = new FqcnRepository($fileRepository, $parserFactory);
-        $classes = $fqcnRepository->findIn(dirname(dirname(__DIR__)));
+        $classes        = $fqcnRepository->findIn(dirname(dirname(__DIR__)));
 
         // Prepare the annotation reader
         $annotationReader = new AnnotationReader();
@@ -52,7 +52,7 @@ class GenerateErrorListCommand extends Command
         $errorAnnotations = [];
 
         $knownMethods = [];
-        $knownErrors = [];
+        $knownErrors  = [];
 
         // Loop through classes
         foreach ($classes as $class) {
@@ -98,7 +98,7 @@ class GenerateErrorListCommand extends Command
                     }
 
                     if (isset($knownErrors[$annotationData['code']])) {
-                        $code = $annotationData['code'];
+                        $code   = $annotationData['code'];
                         $origin = $knownErrors[$annotationData['code']];
                         throw new \Exception("Duplicate error '${code}' in $methodFullName, first defined for $origin");
                     } else {
@@ -108,7 +108,7 @@ class GenerateErrorListCommand extends Command
                     array_push($errorAnnotations, array_merge(
                         $annotationData,
                         [
-                            'class' => $reflectionMethod->class,
+                            'class'  => $reflectionMethod->class,
                             'method' => $reflectionMethod->name,
                         ]
                     ));

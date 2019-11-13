@@ -68,7 +68,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->rdfClient = $rdfClient;
 
         $this->connection = $connection;
-        $repository = $this;
+        $repository       = $this;
 
         /*
          * Fallback factory
@@ -115,8 +115,8 @@ abstract class AbstractRepository implements RepositoryInterface
     public function fromGraph(\EasyRdf_Graph $graph): ?array
     {
         $tripleFactory = $this->tripleFactory;
-        $triples = TripleFactory::triplesFromGraph($graph);
-        $grouped = $this->skosRepository::groupTriples($triples);
+        $triples       = TripleFactory::triplesFromGraph($graph);
+        $grouped       = $this->skosRepository::groupTriples($triples);
         foreach ($grouped as $subject => $triples) {
             $grouped[$subject] = $tripleFactory(new Iri($subject), $triples);
         }
@@ -142,10 +142,10 @@ abstract class AbstractRepository implements RepositoryInterface
         );
 
         if (!empty($this->annotations['document-table'])) {
-            $repository = $this;
-            $connection = $this->getConnection();
+            $repository    = $this;
+            $connection    = $this->getConnection();
             $documentClass = static::DOCUMENT_CLASS;
-            $documentType = static::DOCUMENT_TYPE;
+            $documentType  = static::DOCUMENT_TYPE;
 
             foreach ($results as $user) {
                 $uri = $user->getResource()->iri()->getUri();
@@ -205,8 +205,8 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         if (!empty($this->annotations['document-table'])) {
-            $documentClass = static::DOCUMENT_CLASS;
-            $documentMapping = $documentClass::getMapping();
+            $documentClass          = static::DOCUMENT_CLASS;
+            $documentMapping        = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
 
             $uri = $res->getResource()->iri()->getUri();
@@ -254,8 +254,8 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         if (!empty($this->annotations['document-table'])) {
-            $documentClass = static::DOCUMENT_CLASS;
-            $documentMapping = $documentClass::getMapping();
+            $documentClass          = static::DOCUMENT_CLASS;
+            $documentMapping        = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
 
             $column = $this->annotations['document-uuid'];

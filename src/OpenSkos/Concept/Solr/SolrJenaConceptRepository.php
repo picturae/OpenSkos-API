@@ -53,8 +53,8 @@ final class SolrJenaConceptRepository implements ConceptRepository
         OpenSkosIriFactory $iriFactory,
         SolrQueryBuilder $solrQueryBuilder
     ) {
-        $this->rdfClient = $rdfClient;
-        $this->solrClient = $solrClient;
+        $this->rdfClient        = $rdfClient;
+        $this->solrClient       = $solrClient;
         $this->solrQueryBuilder = $solrQueryBuilder;
 
         $this->skosRepository = new SkosResourceRepositoryWithProjection(
@@ -110,7 +110,7 @@ final class SolrJenaConceptRepository implements ConceptRepository
 
         /** @var Result $solrResult */
         $solrResult = $client->select($select);
-        $numFound = $solrResult->getNumFound();
+        $numFound   = $solrResult->getNumFound();
 
         $return_data = [];
 

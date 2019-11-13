@@ -10,8 +10,8 @@ use Solarium\Core\Query\Helper as QueryHelper;
 final class SolrQueryBuilder
 {
     //Taken from the Openskos Editor
-    const BOOST_PREFLABEL = 40;
-    const BOOST_ALTLABEL = 20;
+    const BOOST_PREFLABEL   = 40;
+    const BOOST_ALTLABEL    = 20;
     const BOOST_HIDDENLABEL = 10;
 
     /**
@@ -52,7 +52,7 @@ final class SolrQueryBuilder
         }
 
         $searchTextPlain = preg_replace('#\ #', '\\ ', $searchText);
-        $prefix = 'a_';
+        $prefix          = 'a_';
 
         /*
          * This is currently not specified in the open-api docs, but I've added it as an undocumented feature copied from old openskos
@@ -70,7 +70,7 @@ final class SolrQueryBuilder
         if (0 !== count($selection)) {
             foreach ($selection['labels'] as $label) {
                 // boost important labels
-                $boost = '';
+                $boost      = '';
                 $searchText = $searchTextPlain;
                 if ('prefLabel' === $label['type']) {
                     $boost = '^'.self::BOOST_PREFLABEL;

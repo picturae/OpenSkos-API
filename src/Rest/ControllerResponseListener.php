@@ -44,7 +44,7 @@ final class ControllerResponseListener
             return;
         }
 
-        $content = $this->serializer->serialize($triples, $res->format()->name());
+        $content      = $this->serializer->serialize($triples, $res->format()->name());
         $httpResponse = new Response(
             $content,
             Response::HTTP_OK,

@@ -17,7 +17,7 @@ final class Person extends AbstractRdfDocument
 {
     const type = 'type';
     const name = 'name';
-    const uri = 'uri';
+    const uri  = 'uri';
 
     /**
      * @var string[]

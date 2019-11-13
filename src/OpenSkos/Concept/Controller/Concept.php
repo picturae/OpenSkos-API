@@ -49,7 +49,7 @@ final class Concept
     ): array {
         /* Concept Schemes */
         $filter = [];
-        $param = $apiRequest->getParameter($key);
+        $param  = $apiRequest->getParameter($key);
         if (isset($param)) {
             $filter = preg_split('/\s*,\s*/', $param, -1, PREG_SPLIT_NO_EMPTY);
         }
@@ -65,7 +65,7 @@ final class Concept
         ApiRequest $apiRequest,
         string $key
     ): array {
-        $datesOut = [];
+        $datesOut      = [];
         $xsdDateHelper = new xsdDateHelper();
 
         $dateParams = ['dateSubmitted', 'modified', 'dateAccepted', 'openskos:deleted'];
@@ -76,7 +76,7 @@ final class Concept
                 $dates = preg_split('/\s*,\s*/', $param, -1, PREG_SPLIT_NO_EMPTY);
                 if (count($dates) > 0) {
                     $rowOut = [];
-                    $date1 = $dates[0];
+                    $date1  = $dates[0];
                     if (!$xsdDateHelper->isValidXsdDateTime($date1)) {
                         throw new BadRequestHttpException('Dates must be a valid xsd:DateTime or xsdDuration');
                     } else {
@@ -141,7 +141,7 @@ final class Concept
         ConceptRepository $repository
     ): array {
         $selectionParameters = ['labels' => []];
-        $sel = $apiRequest->getParameter('fields', '');
+        $sel                 = $apiRequest->getParameter('fields', '');
 
         if (isset($sel)) {
             $sel = preg_split('/\s*,\s*/', $sel, -1, PREG_SPLIT_NO_EMPTY);
@@ -151,7 +151,7 @@ final class Concept
             foreach ($sel as $param) {
                 if (preg_match('/^(pref|alt|hidden|)(label)\(*(\w{0,3})\)*$/i', $param, $capture)) {
                     $label = sprintf('%sLabel', $capture[1]);
-                    $lang = $capture[3];
+                    $lang  = $capture[3];
 
                     $selectionParameters['labels'][$capture[0]] = ['type' => $label, 'lang' => $lang];
                 } elseif ('notation' === $param) {
@@ -179,21 +179,21 @@ final class Concept
         /* Levels are dealt with elsewhere; they are applicable to more that just concepts */
 
         $projectionParameters = [];
-        $props = $apiRequest->getParameter('props', '');
+        $props                = $apiRequest->getParameter('props', '');
 
         if (isset($props)) {
             $props = preg_split('/\s*,\s*/', $props, -1, PREG_SPLIT_NO_EMPTY);
         }
 
-        $acceptable_fields = SkosConcept::getAcceptableFields();
+        $acceptable_fields  = SkosConcept::getAcceptableFields();
         $language_sensitive = SkosConcept::getLanguageSensitive();
-        $meta_groups = SkosConcept::getMetaGroups();
+        $meta_groups        = SkosConcept::getMetaGroups();
         if (isset($props) && is_iterable($props)) {
             foreach ($props as $param) {
                 //The language flag might be buried in brackets
                 if (preg_match('/^([a-zA-Z:]*)\(*?(\w{0,3}?)\)*?$/i', $param, $capture)) {
                     $field = $capture[1];
-                    $lang = $capture[2];
+                    $lang  = $capture[2];
                     if (in_array($field, $language_sensitive, true) && '' !== $lang) {
                         //@Todo: Not going work
                         $projectionParameters[$field] = ['lang' => $lang];
@@ -327,7 +327,7 @@ final class Concept
     ): ListResponse {
         $full_filter = $this->buildConceptFilters($apiRequest, $apiFilter, $solrFilterProcessor);
 
-        $full_selection = $this->buildSelectionParameters($apiRequest, $repository);
+        $full_selection  = $this->buildSelectionParameters($apiRequest, $repository);
         $full_projection = $this->buildProjectionParameters($apiRequest, $repository);
 
         $searchText = $apiRequest->getParameter('text', '*');

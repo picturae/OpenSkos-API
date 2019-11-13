@@ -58,7 +58,7 @@ class ApiException extends \Exception
     public function __construct($errorCode, array $data = null)
     {
         if (is_array($errorCode)) {
-            $data = $errorCode['data'] ?? null;
+            $data      = $errorCode['data'] ?? null;
             $errorCode = $errorCode['code'] ?? 'internal-server-error';
         }
 

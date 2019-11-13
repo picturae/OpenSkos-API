@@ -127,7 +127,7 @@ final class InstitutionController
         $auth->requireAdministrator();
 
         // Load data into institutions
-        $graph = $apiRequest->getGraph();
+        $graph        = $apiRequest->getGraph();
         $institutions = $repository->fromGraph($graph);
         if (is_null($institutions)) {
             throw new ApiException('institution-create-empty-or-corrupt-body');
@@ -220,7 +220,7 @@ final class InstitutionController
         $auth->requireAdministrator();
 
         // Load data into institutions
-        $graph = $apiRequest->getGraph();
+        $graph        = $apiRequest->getGraph();
         $institutions = $repository->fromGraph($graph);
         if (is_null($institutions)) {
             throw new ApiException('institution-update-empty-or-corrupt-body');

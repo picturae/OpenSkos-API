@@ -63,7 +63,7 @@ class RdfEncoderSpec extends ObjectBehavior
 
     public function it_can_serialise_to_rdfxml()
     {
-        $res = $this->encode($this->triples, 'rdfxml');
+        $res      = $this->encode($this->triples, 'rdfxml');
         $expected = <<<XML
 <?xml version="1.0" encoding="utf-8" ?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"

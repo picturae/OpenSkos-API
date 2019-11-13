@@ -17,35 +17,35 @@ use App\Rdf\Literal\Literal;
  */
 final class Set extends AbstractRdfDocument
 {
-    const allow_oai = 'allow_oai';
-    const code = 'code';
+    const allow_oai      = 'allow_oai';
+    const code           = 'code';
     const conceptBaseUri = 'conceptBaseUri';
-    const oai_baseURL = 'oai_baseURL';
-    const tenant = 'tenant';
-    const webpage = 'webpage';
-    const description = 'description';
-    const license = 'license';
-    const publisher = 'publisher';
-    const title = 'title';
-    const type = 'type';
-    const uuid = 'uuid';
+    const oai_baseURL    = 'oai_baseURL';
+    const tenant         = 'tenant';
+    const webpage        = 'webpage';
+    const description    = 'description';
+    const license        = 'license';
+    const publisher      = 'publisher';
+    const title          = 'title';
+    const type           = 'type';
+    const uuid           = 'uuid';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
-        self::tenant => OpenSkos::TENANT,
-        self::code => OpenSkos::CODE,
-        self::allow_oai => OpenSkos::ALLOW_OAI,
+        self::tenant         => OpenSkos::TENANT,
+        self::code           => OpenSkos::CODE,
+        self::allow_oai      => OpenSkos::ALLOW_OAI,
         self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
-        self::oai_baseURL => OpenSkos::OAI_BASE_URL,
-        self::webpage => OpenSkos::WEBPAGE,
-        self::description => DcTerms::DESCRIPTION,
-        self::license => DcTerms::LICENSE,
-        self::publisher => DcTerms::PUBLISHER,
-        self::title => DcTerms::TITLE,
-        self::type => Rdf::TYPE,
-        self::uuid => OpenSkos::UUID,
+        self::oai_baseURL    => OpenSkos::OAI_BASE_URL,
+        self::webpage        => OpenSkos::WEBPAGE,
+        self::description    => DcTerms::DESCRIPTION,
+        self::license        => DcTerms::LICENSE,
+        self::publisher      => DcTerms::PUBLISHER,
+        self::title          => DcTerms::TITLE,
+        self::type           => Rdf::TYPE,
+        self::uuid           => OpenSkos::UUID,
     ];
 
     protected static $required = [
@@ -88,7 +88,7 @@ final class Set extends AbstractRdfDocument
             return [[
                 'code' => $errorPrefix.'-base-uri-does-not-match-code',
                 'data' => [
-                    'code' => $code,
+                    'code'     => $code,
                     'base-uri' => $id,
                 ],
             ]];

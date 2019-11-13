@@ -46,11 +46,11 @@ class Authentication
 
         // The data we'll insert into the user
         $this->hasAuthenticationData = true;
-        $knownData = [];
+        $knownData                   = [];
 
         // Detect & remove prefix
         preg_match('/^(bearer|basic) /i', $token, $prefix);
-        $token = preg_replace('/^(bearer|basic) /i', '', $token);
+        $token               = preg_replace('/^(bearer|basic) /i', '', $token);
         $knownData['apikey'] = $token;
 
         // Handle special prefixes
@@ -59,9 +59,9 @@ class Authentication
             switch ($prefix) {
                 case 'basic':
                     unset($knownData['apikey']);
-                    $decoded = base64_decode($token, true);
-                    $parts = explode(':', $decoded);
-                    $knownData['email'] = trim(array_shift($parts));
+                    $decoded               = base64_decode($token, true);
+                    $parts                 = explode(':', $decoded);
+                    $knownData['email']    = trim(array_shift($parts));
                     $knownData['password'] = md5(trim(implode(':', $parts)));
                     break;
             }
@@ -92,7 +92,7 @@ class Authentication
 
         // This code running means the client is verified
         $this->authenticated = true;
-        $this->roles = $roles;
+        $this->roles         = $roles;
 
         // Remove the password from the user
         $user->setPassword(null);

@@ -12,13 +12,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 final class FilterProcessor
 {
     //Filter Types
-    const TYPE_URI = 'uri';
-    const TYPE_UUID = 'uuid';
+    const TYPE_URI    = 'uri';
+    const TYPE_UUID   = 'uuid';
     const TYPE_STRING = 'string';
 
     //Group for filter
-    const ENTITY_INSTITUTION = 'institution';
-    const ENTITY_SET = 'set';
+    const ENTITY_INSTITUTION   = 'institution';
+    const ENTITY_SET           = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
 
     private $connection;

@@ -10,5 +10,5 @@ use App\Repository\AbstractRepository;
 final class SetRepository extends AbstractRepository
 {
     const DOCUMENT_CLASS = Set::class;
-    const DOCUMENT_TYPE = OpenSkos::SET;
+    const DOCUMENT_TYPE  = OpenSkos::SET;
 }
