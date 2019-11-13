@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\ConceptScheme;
 
+use App\Annotation\Document;
 use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
-use App\Rdf\Iri;
-use App\Rdf\RdfResource;
-use App\Rdf\Triple;
-use App\Rdf\VocabularyAwareResource;
+use App\Rdf\AbstractRdfDocument;
 
-final class ConceptScheme implements RdfResource
+/**
+ * @Document\Type(Skos::CONCEPT_SCHEME)
+ */
+final class ConceptScheme extends AbstractRdfDocument
 {
     const type = 'type';
     const datesubmitted = 'datesubmitted';
@@ -34,7 +35,7 @@ final class ConceptScheme implements RdfResource
     /**
      * @var string[]
      */
-    private static $mapping = [
+    protected static $mapping = [
         self::type => Rdf::TYPE,
         self::datesubmitted => DcTerms::DATE_SUBMITTED,
         self::set => OpenSkos::SET,
@@ -50,53 +51,4 @@ final class ConceptScheme implements RdfResource
         self::deletedBy => OpenSkos::DELETED_BY,
         self::modifiedBy => OpenSkos::MODIFIED_BY,
     ];
-
-    /**
-     * @var VocabularyAwareResource
-     */
-    private $resource;
-
-    private function __construct(
-        Iri $subject,
-        ?VocabularyAwareResource $resource = null
-    ) {
-        if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
-        } else {
-            $this->resource = $resource;
-        }
-    }
-
-    public function iri(): Iri
-    {
-        return $this->resource->iri();
-    }
-
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->resource->triples();
-    }
-
-    /**
-     * @return ConceptScheme
-     */
-    public static function createEmpty(Iri $subject): self
-    {
-        return new self($subject);
-    }
-
-    /**
-     * @param Triple[] $triples
-     *
-     * @return ConceptScheme
-     */
-    public static function fromTriples(Iri $subject, array $triples): self
-    {
-        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
-
-        return new self($subject, $resource);
-    }
 }

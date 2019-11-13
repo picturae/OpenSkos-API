@@ -15,8 +15,6 @@ services:
     arguments:
       $namespace: 'http://tenant'
 
-  App\OpenSkos\ConceptScheme\Sparql\SparqlConceptSchemeRepository:
+  App\OpenSkos\ConceptScheme\ConceptSchemeRepository:
     arguments:
       $iriFactory: '@concept_scheme.iri_factory'
-
-  App\OpenSkos\ConceptScheme\ConceptSchemeRepository: '@App\OpenSkos\ConceptScheme\Sparql\SparqlConceptSchemeRepository'
