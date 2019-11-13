@@ -25,7 +25,7 @@ final class BooleanLiteral implements Literal
 
     public static function typeIri(): Iri
     {
-        return new Iri('http://www.w3.org/2001/XMLSchema#bool');
+        return new Iri('http://www.w3.org/2001/XMLSchema#boolean');
     }
 
     /**

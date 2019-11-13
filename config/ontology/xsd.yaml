@@ -6,3 +6,9 @@ parameters:
     properties:
       nonNegativeInteger:
         datatype: class
+      boolean:
+        datatype: class
+      string:
+        datatype: class
+      datetime:
+        datatype: class

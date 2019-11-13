@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Annotation\Document;
+use App\EasyRdf\TripleFactory;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\Client;
-use Doctrine\Common\Annotations\AnnotationReader;
+use App\Rdf\Triple;
 use Doctrine\DBAL\Connection;
 
 abstract class AbstractRepository implements RepositoryInterface
@@ -47,6 +48,11 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $iriFactory;
 
     /**
+     * @var callable
+     */
+    protected $tripleFactory;
+
+    /**
      * @var array
      */
     protected $annotations = [];
@@ -64,7 +70,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->connection = $connection;
         $repository = $this;
 
-        /**
+        /*
          * Fallback factory
          * Builds an array from the triples with _id as the identifier (like in mongo).
          *
@@ -73,7 +79,7 @@ abstract class AbstractRepository implements RepositoryInterface
          *
          * @return array
          */
-        $tripleFactory = function (Iri $iri, array $triples): array {
+        $this->tripleFactory = function (Iri $iri, array $triples): array {
             $result = ['_id' => $iri->getUri()];
             foreach ($triples as $triple) {
                 $result[(string) $triple->getPredicate()] = $triple->getObject();
@@ -83,25 +89,9 @@ abstract class AbstractRepository implements RepositoryInterface
         };
 
         if (static::DOCUMENT_CLASS) {
-            // Fetch all annotations
-            $annotationReader = new AnnotationReader();
-            $documentReflection = new \ReflectionClass(static::DOCUMENT_CLASS);
-            $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
+            $this->annotations = call_user_func([static::DOCUMENT_CLASS, 'annotations']);
 
-            // Loop through annotations and extract data
-            foreach ($documentAnnotations as $annotation) {
-                if ($annotation instanceof Document\Table) {
-                    $this->annotations['table'] = $annotation->value;
-                }
-                if ($annotation instanceof Document\Type) {
-                    $this->annotations['type'] = $annotation->value;
-                }
-                if ($annotation instanceof Document\UUID) {
-                    $this->annotations['uuid'] = $annotation->value;
-                }
-            }
-
-            /**
+            /*
              * Builds an object from the given triples.
              *
              * @param Iri      $iri
@@ -109,17 +99,29 @@ abstract class AbstractRepository implements RepositoryInterface
              *
              * @return AbstractRdfDocument
              */
-            $tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
+            $this->tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
                 return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
             };
         }
 
         $this->skosRepository = new SkosResourceRepository(
-            $tripleFactory,
+            $this->tripleFactory,
             $this->rdfClient
         );
 
         $this->iriFactory = $iriFactory;
+    }
+
+    public function fromGraph(\EasyRdf_Graph $graph): ?array
+    {
+        $tripleFactory = $this->tripleFactory;
+        $triples = TripleFactory::triplesFromGraph($graph);
+        $grouped = $this->skosRepository::groupTriples($triples);
+        foreach ($grouped as $subject => $triples) {
+            $grouped[$subject] = $tripleFactory(new Iri($subject), $triples);
+        }
+
+        return $grouped;
     }
 
     /**
@@ -139,7 +141,7 @@ abstract class AbstractRepository implements RepositoryInterface
             $filters
         );
 
-        if (!empty($this->annotations['table'])) {
+        if (!empty($this->annotations['document-table'])) {
             $repository = $this;
             $connection = $this->getConnection();
             $documentClass = static::DOCUMENT_CLASS;
@@ -152,8 +154,8 @@ abstract class AbstractRepository implements RepositoryInterface
                 $stmt = $connection
                     ->createQueryBuilder()
                     ->select('*')
-                    ->from($this->annotations['table'], 't')
-                    ->where('t.'.($this->annotations['uuid']).' = :uuid')
+                    ->from($this->annotations['document-table'], 't')
+                    ->where('t.'.($this->annotations['document-uuid']).' = :uuid')
                     ->setParameter(':uuid', $uri)
                     ->execute();
                 if (is_int($stmt)) {
@@ -202,7 +204,7 @@ abstract class AbstractRepository implements RepositoryInterface
             return null;
         }
 
-        if (!empty($this->annotations['table'])) {
+        if (!empty($this->annotations['document-table'])) {
             $documentClass = static::DOCUMENT_CLASS;
             $documentMapping = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
@@ -213,8 +215,8 @@ abstract class AbstractRepository implements RepositoryInterface
             $stmt = $this->getConnection()
                 ->createQueryBuilder()
                 ->select('*')
-                ->from($this->annotations['table'], 't')
-                ->where('t.'.($this->annotations['uuid']).' = :uuid')
+                ->from($this->annotations['document-table'], 't')
+                ->where('t.'.($this->annotations['document-uuid']).' = :uuid')
                 ->setParameter(':uuid', $uri)
                 ->execute();
 
@@ -251,17 +253,17 @@ abstract class AbstractRepository implements RepositoryInterface
             return null;
         }
 
-        if (!empty($this->annotations['table'])) {
+        if (!empty($this->annotations['document-table'])) {
             $documentClass = static::DOCUMENT_CLASS;
             $documentMapping = $documentClass::getMapping();
             $documentReverseMapping = array_flip($documentMapping);
 
-            $column = $this->annotations['uuid'];
+            $column = $this->annotations['document-uuid'];
 
             $stmt = $this->getConnection()
                 ->createQueryBuilder()
                 ->select('*')
-                ->from($this->annotations['table'], 't')
+                ->from($this->annotations['document-table'], 't')
                 ->where("t.${column} = :uuid")
                 ->setParameter(':uuid', $res->getResource()->iri()->getUri())
                 ->setMaxResults(1)
@@ -282,12 +284,10 @@ abstract class AbstractRepository implements RepositoryInterface
         return $res;
     }
 
-    public function getAnnotations(): array
-    {
-        return $this->annotations;
-    }
-
-    public function insertTriples(string $triples): \EasyRdf_Http_Response
+    /**
+     * @param Triple[] $triples
+     */
+    public function insertTriples(array $triples): \EasyRdf_Http_Response
     {
         return $this->skosRepository->insertTriples($triples);
     }

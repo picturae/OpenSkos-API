@@ -6,7 +6,6 @@ namespace App\OpenSkos\Institution\Controller;
 
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
-use App\Ontology\Org;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
@@ -93,66 +92,32 @@ final class InstitutionController
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        // Check if valid data was given
+        // Load data into institutions
         $graph = $apiRequest->getGraph();
-        if (!count($graph->resources())) {
+        $institutions = $repository->fromGraph($graph);
+        if (is_null($institutions)) {
             throw new BadRequestHttpException('Request body was empty or corrupt');
         }
 
-        // Pre-build checking params
-        $shortOrg = implode(':', Context::decodeUri(Org::FORMAL_ORGANIZATION) ?? []);
-        if (!strlen($shortOrg)) {
-            throw new \Exception('Could not shorten org:FormalOrganization');
-        }
-
-        // Validate types
-        $resources = $graph->resources();
-        foreach ($resources as $resource) {
-            // Ignore type resource
-            if (Org::FORMAL_ORGANIZATION === $resource->getUri()) {
-                continue;
-            }
-
-            // Pre-built checking vars
-            $types = $resource->types();
-            foreach ($types as $index => $type) {
-                $types[$index] = implode(':', Context::decodeUri($type) ?? []);
-            }
-
-            // No org = invalid object
-            if (!in_array($shortOrg, $types, true)) {
-                throw new BadRequestHttpException('A non-institution resource was given');
-            }
-        }
-
-        // Prevent insertion if one already exists
-        $institutions = $graph->allOfType(Org::FORMAL_ORGANIZATION);
+        // Validate all given resources
+        $errors = [];
         foreach ($institutions as $institution) {
-            // Find it by iri
-            $uri = $institution->getUri();
-            $found = $repository->findByIri(new Iri($uri));
-            if (!is_null($found)) {
-                throw new ConflictHttpException('The resource already exists');
-            }
+            $errors = array_merge($errors, $institution->errors());
+        }
+        if (count($errors)) {
+            throw new \Exception(json_encode($errors));
         }
 
-        // Ensure all institutions have a UUID
+        // Check if the resources already exist
         foreach ($institutions as $institution) {
-            $uuid = $institution->getLiteral('openskos:uuid');
-            if (is_null($uuid)) {
-                $institution->addLiteral('openskos:uuid', @array_pop(explode('/', $institution->getUri())));
+            if ($institution->exists()) {
+                throw new ConflictHttpException('Resource [id] already exists');
             }
         }
 
-        // Insert
-        $response = $repository->insertTriples($graph->serialise('ntriples'));
-
-        // Build response
-        foreach ($institutions as $index => $institution) {
-            $institutions[$index] = $repository->findOneBy(
-                new Iri(OpenSkos::UUID),
-                new InternalResourceId($institution->getLiteral('openskos:uuid')->getValue())
-            );
+        // Save all given institutions
+        foreach ($institutions as $institution) {
+            $institution->save();
         }
 
         // Return re-fetched institutions

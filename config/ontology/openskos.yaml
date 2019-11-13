@@ -11,6 +11,7 @@ parameters:
         "rdfs:comment": "The type of data that's supposed to go in the described field"
       tenant:
         datatype: literal
+        literaltype: "xsd:string"
         "rdf:type": "owl:ObjectProperty"
         "rdfs:comment": "A reference to an org:FormalOrganization by it's openskos:code field"
       status:
@@ -33,6 +34,8 @@ parameters:
         "rdf:type": "owl:ObjectProperty"
       uuid:
         datatype: literal
+        literaltype: "xsd:string"
+        regex: /[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}/i
         "rdf:type": "owl:ObjectProperty"
       set:
         datatype: resource
@@ -52,6 +55,7 @@ parameters:
         "rdf:type": "owl:ObjectProperty"
       disableSearchInOtherTenants:
         datatype: literal
+        literaltype: "xsd:boolean"
         "rdf:type": "owl:ObjectProperty"
       enableStatussesSystem:
         datatype: literal

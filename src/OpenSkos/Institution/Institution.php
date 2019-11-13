@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Institution;
 
+use App\Annotation\Document;
 use App\Ontology\OpenSkos;
+use App\Ontology\Org;
 use App\Ontology\Rdf;
 use App\Ontology\VCard;
 use App\Rdf\AbstractRdfDocument;
 
+/**
+ * @Document\Type(Org::FORMAL_ORGANIZATION)
+ */
 final class Institution extends AbstractRdfDocument
 {
     const code = 'code';
@@ -44,5 +49,11 @@ final class Institution extends AbstractRdfDocument
         self::enableSkosXl => OpenSkos::ENABLESKOSXL,
         self::type => Rdf::TYPE,
         self::uuid => OpenSkos::UUID,
+    ];
+
+    protected static $required = [
+        OpenSkos::CODE,
+        OpenSkos::NAME,
+        OpenSkos::UUID,
     ];
 }

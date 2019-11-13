@@ -53,3 +53,8 @@ services:
     autowire: true
     tags:
       - 'console.command'
+
+  App\Annotation\Command\GenerateErrorListCommand:
+    autowire: true
+    tags:
+      - 'console.command'

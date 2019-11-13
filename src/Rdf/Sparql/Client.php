@@ -13,5 +13,8 @@ interface Client
      */
     public function describe(SparqlQuery $query): array;
 
-    public function insertTriples(string $triples): \EasyRdf_Http_Response;
+    /**
+     * @param Triple[] $triples
+     */
+    public function insertTriples(array $triples): \EasyRdf_Http_Response;
 }

@@ -14,6 +14,7 @@ use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
+use App\Rdf\RdfTerm;
 use App\Rdf\Triple;
 use App\Rdf\VocabularyAwareResource;
 
@@ -316,7 +317,7 @@ final class Concept implements RdfResource
     }
 
     /**
-     * @return Triple[]
+     * @return RdfTerm[][]|null
      */
     public function properties(): ?array
     {

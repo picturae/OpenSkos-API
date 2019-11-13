@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ontology\Template;
+namespace App\Template\Ontology;
 
 ?>
 <?= "<?php\n"; ?>
@@ -19,6 +19,12 @@ final class Context
 <?php foreach ($dataclass as $key => $value) { ?>
         '<?= $key; ?>' => '\<?= $value; ?>',
 <?php } /* foreach datatype as key value */ ?>
+    ];
+
+    const namespaces = [
+<?php foreach ($context as $namespace) { ?>
+        '<?= $namespace['prefix']; ?>' => <?= $namespace['name']; ?>::class,
+<?php } /* foreach context as namespace */ ?>
     ];
 
     /**
@@ -71,6 +77,19 @@ final class Context
         $field = substr($uri, strlen(static::prefixes[$prefix]));
 
         return [$prefix, $field];
+    }
+
+    /**
+     * Turn a uri or short notation into full uri.
+     */
+    public static function fullUri(string $uri): ?string
+    {
+        $decoded = static::decodeUri($uri);
+        if (is_null($decoded)) {
+            return null;
+        }
+
+        return static::prefixes[$decoded[0]].$decoded[1];
     }
 
     /**

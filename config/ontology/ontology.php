@@ -21,5 +21,5 @@ return function (ContainerConfigurator $configurator) use ($container) {
         return $descriptor[0];
     }, $files);
 
-    $container->setParameter('ontology', $names);
+    $container->setParameter($group, $names);
 };

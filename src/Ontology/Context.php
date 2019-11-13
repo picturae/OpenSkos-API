@@ -28,6 +28,22 @@ final class Context
         'skosxl:Label' => '\App\OpenSkos\Label\Label',
     ];
 
+    const namespaces = [
+        'dc' => Dc::class,
+        'dcmi' => Dcmi::class,
+        'dcterms' => DcTerms::class,
+        'foaf' => Foaf::class,
+        'openskos' => OpenSkos::class,
+        'org' => Org::class,
+        'owl' => Owl::class,
+        'rdf' => Rdf::class,
+        'rdfs' => Rdfs::class,
+        'skos' => Skos::class,
+        'skosxl' => SkosXl::class,
+        'vcard' => VCard::class,
+        'xsd' => Xsd::class,
+    ];
+
     /**
      * Build a context based on short names.
      *
@@ -78,6 +94,19 @@ final class Context
         $field = substr($uri, strlen(static::prefixes[$prefix]));
 
         return [$prefix, $field];
+    }
+
+    /**
+     * Turn a uri or short notation into full uri.
+     */
+    public static function fullUri(string $uri): ?string
+    {
+        $decoded = static::decodeUri($uri);
+        if (is_null($decoded)) {
+            return null;
+        }
+
+        return static::prefixes[$decoded[0]].$decoded[1];
     }
 
     /**
