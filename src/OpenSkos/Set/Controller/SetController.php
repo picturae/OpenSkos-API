@@ -12,6 +12,7 @@ use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -172,6 +173,112 @@ final class SetController
             $sets,
             0,
             $apiRequest->getOffset(),
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/set/{id}.{format?}", methods={"DELETE"})
+     *
+     * @throws ApiException
+     */
+    public function deleteSet(
+        InternalResourceId $id,
+        ApiRequest $apiRequest,
+        SetRepository $repository
+    ): ScalarResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Fetch the institution we're deleting
+        /** @var AbstractRdfDocument $set */
+        $set = $this->getSet($id, $apiRequest, $repository)->doc();
+
+        $set->delete();
+
+        return new ScalarResponse(
+            $set,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/sets.{format?}", methods={"PUT"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="set-update-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="set-update-does-not-exist",
+     *        status=400,
+     *        description="The set with the given iri does not exist",
+     *        fields={"iri"}
+     * )
+     * @Error(code="set-update-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to update a set for does not exist",
+     *        fields={"tenant"}
+     * )
+     */
+    public function putSet(
+        ApiRequest $apiRequest,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Load data into institutions
+        $graph = $apiRequest->getGraph();
+        $sets = $setRepository->fromGraph($graph);
+        if (is_null($sets)) {
+            throw new ApiException('set-update-empty-or-corrupt-body');
+        }
+
+        // Validate all given resources
+        $errors = [];
+        foreach ($sets as $set) {
+            if (!$set->exists()) {
+                throw new ApiException('set-update-does-not-exist', [
+                    'iri' => $set->iri()->getUri(),
+                ]);
+            }
+            $errors = array_merge($errors, $set->errors());
+        }
+        if (count($errors)) {
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
+        }
+
+        // Ensure the tenants exist
+        foreach ($sets as $set) {
+            $tenantCode = $set->getValue(OpenSkos::TENANT)->value();
+            $tenant = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('set-update-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
+
+        // Rebuild all given institutions
+        foreach ($sets as $set) {
+            $set->delete();
+            $set->save();
+        }
+
+        return new ListResponse(
+            $sets,
+            count($sets),
+            0,
             $apiRequest->getFormat()
         );
     }

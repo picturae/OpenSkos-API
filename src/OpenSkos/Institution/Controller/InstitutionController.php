@@ -185,7 +185,10 @@ final class InstitutionController
         /** @var AbstractRdfDocument $institution */
         $institution = $this->getInstitution($id, $apiRequest, $repository)->doc();
 
-        $institution->delete();
+        $errors = $institution->delete();
+        if ($errors) {
+            throw $errors[0];
+        }
 
         return new ScalarResponse(
             $institution,
@@ -241,8 +244,15 @@ final class InstitutionController
 
         // Rebuild all given institutions
         foreach ($institutions as $institution) {
-            $institution->delete();
-            $institution->save();
+            $errors = $institution->delete();
+            if ($errors) {
+                throw $errors[0];
+            }
+
+            $errors = $institution->save();
+            if ($errors) {
+                throw $errors[0];
+            }
         }
 
         return new ListResponse(

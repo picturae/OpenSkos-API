@@ -501,18 +501,32 @@ abstract class AbstractRdfDocument implements RdfResource
         return $errors;
     }
 
-    public function delete()
+    /**
+     * @Error(code="rdf-document-delete-missing-repository",
+     *        status=500,
+     *        description="No repository is known to the document requested to be deleted"
+     * )
+     */
+    public function delete(): ?array
     {
         // We need to repository to save
         if (is_null($this->repository)) {
             return [[
-                'code' => 'missing-repository',
+                'code' => 'rdf-document-delete-missing-repository',
             ]];
         }
 
         $this->repository->delete($this->iri());
+
+        return null;
     }
 
+    /**
+     * @Error(code="rdf-document-save-missing-repository",
+     *        status=500,
+     *        description="No repository is known to the document requested to be saved"
+     * )
+     */
     public function save(): ?array
     {
         // Refuse to save if there are errors
@@ -526,7 +540,7 @@ abstract class AbstractRdfDocument implements RdfResource
         // We need to repository to save
         if (is_null($this->repository)) {
             return [[
-                'code' => 'missing-repository',
+                'code' => 'rdf-document-save-missing-repository',
             ]];
         }
 
