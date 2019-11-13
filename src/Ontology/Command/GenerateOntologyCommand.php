@@ -3,6 +3,11 @@
 namespace App\Ontology\Command;
 
 use App\Template\Template;
+use PhpCsFixer\Config;
+use PhpCsFixer\Console\ConfigurationResolver;
+use PhpCsFixer\Error\ErrorsManager;
+use PhpCsFixer\Runner\Runner;
+use PhpCsFixer\ToolInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -154,6 +159,41 @@ class GenerateOntologyCommand extends Command
             ]));
         }
 
-        // TODO: 'vendor/bin/php-cs-fixer' '--allow-risky=yes' '--config=.php_cs' '--verbose' 'fix' src/Ontology/*.php
+        $config   = require "${dir}/../../.php_cs";
+        $resolver = new ConfigurationResolver(
+            new Config(),
+            [
+                'allow-risky'       => 'yes',
+                'config'            => '.php_cs',
+                'dry-run'           => false,
+                'rules'             => json_encode($config->getRules()),
+                'path'              => glob('src/Ontology/*.php'),
+                'path-mode'         => 'override',
+                'using-cache'       => false,
+                'cache-file'        => false,
+                'format'            => false,
+                'diff'              => false,
+                'diff-format'       => false,
+                'stop-on-violation' => false,
+                'verbosity'         => false,
+                'show-progress'     => false,
+            ],
+            "${dir}/../..",
+            new ToolInfo()
+        );
+        $runner   = new Runner(
+            $resolver->getFinder(),
+            $resolver->getFixers(),
+            $resolver->getDiffer(),
+            null,
+            new ErrorsManager(),
+            $resolver->getLinter(),
+            $resolver->isDryRun(),
+            $resolver->getCacheManager(),
+            $resolver->getDirectory(),
+            $resolver->shouldStopOnViolation()
+        );
+
+        $runner->fix();
     }
 }

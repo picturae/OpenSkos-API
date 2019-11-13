@@ -53,6 +53,7 @@ final class ConceptScheme extends AbstractRdfDocument
     ];
 
     protected static $required = [
+        DcTerms::TITLE,
         OpenSkos::SET,
         OpenSkos::TENANT,
     ];
