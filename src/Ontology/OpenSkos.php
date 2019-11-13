@@ -20,6 +20,7 @@
 namespace App\Ontology;
 
 use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Rdf\Iri;
 use App\Rdf\Literal\Literal;
 
@@ -56,6 +57,7 @@ final class OpenSkos
     const REPLACES = 'http://openskos.org/xmlns#replaces';
     const IN_COLLECTION = 'http://openskos.org/xmlns#inCollection';
     const IN_SET = 'http://openskos.org/xmlns#inSet';
+    const ERROR = 'http://openskos.org/xmlns#error';
 
     const STATUS_CANDIDATE = 'candidate';
     const STATUS_APPROVED = 'approved';
@@ -82,8 +84,9 @@ final class OpenSkos
      * @param Literal|Iri $value
      *
      * @Error(code="openskos-tenant-validate-literal-type",
+     *        status=422,
      *        fields={"expected","actual"},
-     *        description="Indicates the object for the tenant predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *        description="The object for the tenant predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
      *     )
      */
     public function validateTenant($property): ?array
@@ -96,11 +99,10 @@ final class OpenSkos
             $value = $property->value();
 
             if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
-                return [
-                    'code' => 'openskos-tenant-validate-literal-type',
+                throw new ApiException('openskos-tenant-validate-literal-type', [
                     'expected' => 'http://www.w3.org/2001/XMLSchema#string',
                     'actual' => $property->typeIri()->getUri(),
-                ];
+                ]);
             }
         }
         if (is_null($value)) {
@@ -117,12 +119,14 @@ final class OpenSkos
      * @param Literal|Iri $value
      *
      * @Error(code="openskos-uuid-validate-literal-type",
+     *        status=422,
      *        fields={"expected","actual"},
-     *        description="Indicates the object for the uuid predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *        description="The object for the uuid predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
      *     )
      * @Error(code="openskos-uuid-validate-regex",
+     *        status=422,
      *        fields={"regex","value"},
-     *        description="Indicates the object for the uuid predicate did not match the configured regex"
+     *        description="The object for the uuid predicate did not match the configured regex"
      *     )
      */
     public function validateUuid($property): ?array
@@ -135,11 +139,10 @@ final class OpenSkos
             $value = $property->value();
 
             if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
-                return [
-                    'code' => 'openskos-uuid-validate-literal-type',
+                throw new ApiException('openskos-uuid-validate-literal-type', [
                     'expected' => 'http://www.w3.org/2001/XMLSchema#string',
                     'actual' => $property->typeIri()->getUri(),
-                ];
+                ]);
             }
         }
         if (is_null($value)) {
@@ -148,11 +151,10 @@ final class OpenSkos
 
         $regex = '/[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}/i';
         if (!preg_match($regex, $value)) {
-            return [
-                'code' => 'openskos-uuid-validate-regex',
+            throw new ApiException('openskos-uuid-validate-regex', [
                 'regex' => $regex,
                 'value' => $value,
-            ];
+            ]);
         }
 
         return null;
@@ -165,8 +167,9 @@ final class OpenSkos
      * @param Literal|Iri $value
      *
      * @Error(code="openskos-disablesearchinothertenants-validate-literal-type",
+     *        status=422,
      *        fields={"expected","actual"},
-     *        description="Indicates the object for the disablesearchinothertenants predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
+     *        description="The object for the disablesearchinothertenants predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
      *     )
      */
     public function validateDisableSearchInOtherTenants($property): ?array
@@ -179,11 +182,10 @@ final class OpenSkos
             $value = $property->value();
 
             if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()->getUri()) {
-                return [
-                    'code' => 'openskos-disablesearchinothertenants-validate-literal-type',
+                throw new ApiException('openskos-disablesearchinothertenants-validate-literal-type', [
                     'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
                     'actual' => $property->typeIri()->getUri(),
-                ];
+                ]);
             }
         }
         if (is_null($value)) {
@@ -199,6 +201,7 @@ final class OpenSkos
         \EasyRdf_Namespace::set('dcmi', Dcmi::NAME_SPACE);
         \EasyRdf_Namespace::set('dcterms', DcTerms::NAME_SPACE);
         \EasyRdf_Namespace::set('foaf', Foaf::NAME_SPACE);
+        \EasyRdf_Namespace::set('http', Http::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
         \EasyRdf_Namespace::set('org', Org::NAME_SPACE);
         \EasyRdf_Namespace::set('owl', Owl::NAME_SPACE);
@@ -369,6 +372,10 @@ final class OpenSkos
         $inSet->setType('rdf:Property');
         $inSet->addLiteral('openskos:datatype', 'resource');
         $inSet->addResource('rdf:type', 'owl:ObjectProperty');
+
+        $error = $graph->resource('openskos:error');
+        $error->setType('rdfs:Class');
+        $error->addLiteral('openskos:datatype', 'class');
 
         return $graph;
     }

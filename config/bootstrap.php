@@ -1,8 +1,10 @@
 <?php
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\Dotenv\Dotenv;
 
-require dirname(__DIR__).'/vendor/autoload.php';
+$loader = require dirname(__DIR__).'/vendor/autoload.php';
 
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
@@ -14,6 +16,9 @@ if (is_array($env = @include dirname(__DIR__).'/.env.local.php')) {
     // load all the .env files
     (new Dotenv(false))->loadEnv(dirname(__DIR__).'/.env');
 }
+
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+AnnotationReader::addGlobalIgnoredName('required');
 
 $_SERVER += $_ENV;
 $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: 'dev';

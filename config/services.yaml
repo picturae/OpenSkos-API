@@ -54,7 +54,19 @@ services:
     tags:
       - 'console.command'
 
-  App\Annotation\Command\GenerateErrorListCommand:
+  App\Exception\Command\GenerateErrorListCommand:
     autowire: true
     tags:
       - 'console.command'
+
+  App\Exception\Controller\:
+      autowire: true
+      resource: '../src/Exception/Controller/*'
+      tags:
+        - controller.service_arguments
+
+  App\Exception\Listener\:
+      autowire: true
+      resource: '../src/Exception/Listener/*'
+      tags:
+        - { name: kernel.event_listener, event: kernel.exception }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Annotation\Command;
+namespace App\Exception\Command;
 
 use App\Annotation\Error;
 use App\Template\Template;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class GenerateErrorListCommand extends Command
 {
-    protected static $defaultName = 'annotation:errorlist';
+    protected static $defaultName = 'exception:errorlist';
 
     /** @var ParameterBagInterface */
     protected $params;
@@ -80,16 +80,25 @@ class GenerateErrorListCommand extends Command
                 }
 
                 foreach ($annotations as $annotation) {
-                    array_push($errorAnnotations, [
-                        'method' => $reflectionMethod,
-                        'error' => $annotation,
-                    ]);
+                    $annotationData = $annotation->__toArray();
+                    if (empty($annotationData['code'])) {
+                        $annotationData['code'] = $annotationData['value'] ?? '';
+                        unset($annotationData['value']);
+                    }
+
+                    array_push($errorAnnotations, array_merge(
+                        $annotationData,
+                        [
+                            'class' => $reflectionMethod->class,
+                            'method' => $reflectionMethod->name,
+                        ]
+                    ));
                 }
             }
         }
 
         // Render the new Error annotation
-        file_put_contents("${dir}${ds}Error.php", Template::render('Annotation/Error', [
+        file_put_contents("${dir}/../Exception/list.json", Template::render('Exception/list.json', [
             'usages' => $errorAnnotations,
         ]));
     }

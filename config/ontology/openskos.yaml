@@ -105,6 +105,9 @@ parameters:
         datatype: resource
         "rdf:type": "owl:ObjectProperty"
 
+      error:
+        datatype: class
+
     const:
       statuses:
         type: list

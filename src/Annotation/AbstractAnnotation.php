@@ -32,4 +32,9 @@ abstract class AbstractAnnotation
 
         return str_replace('\\', '-', strtolower($class));
     }
+
+    public function __toArray(): array
+    {
+        return array_filter(get_object_vars($this));
+    }
 }

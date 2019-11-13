@@ -39,4 +39,5 @@ services:
 
     App\OpenSkos\Vocabulary\Controller\:
         resource: '../../src/OpenSkos/Vocabulary/Controller/*'
-        tags: ['controller.service_arguments']
+        tags: 
+          - controller.service_arguments
