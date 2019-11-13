@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\ConceptScheme\Controller;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
@@ -12,8 +14,6 @@ use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -32,6 +32,13 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"GET"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="conceptscheme-getall-has-publisher-filter",
+     *        status=400,
+     *        description="The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concept Schemes)"
+     * )
      */
     public function conceptschemes(
         ApiRequest $apiRequest,
@@ -42,7 +49,7 @@ final class ConceptSchemeController
         $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         if ($filterProcessor->hasPublisher($institutions_filter)) {
-            throw new BadRequestHttpException('The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concept Schemes).');
+            throw new ApiException('conceptscheme-getall-has-publisher-filter');
         }
 
         $param_sets = $apiRequest->getSets();
@@ -62,6 +69,14 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptscheme/{id}.{format?}", methods={"GET"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="conceptscheme-getone-not-found",
+     *        status=404,
+     *        description="The requested ConceptScheme could not be retreived",
+     *        fields={"iri"}
+     * )
      */
     public function conceptscheme(
         InternalResourceId $id,
@@ -74,7 +89,9 @@ final class ConceptSchemeController
         );
 
         if (null === $conceptscheme) {
-            throw new NotFoundHttpException("The conceptscheme $id could not be retreived.");
+            throw new ApiException('conceptscheme-getone-not-found', [
+                'iri' => $id->id(),
+            ]);
         }
 
         return new ScalarResponse($conceptscheme, $apiRequest->getFormat());

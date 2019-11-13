@@ -522,5 +522,22 @@
         "class": "App\\OpenSkos\\Set\\Set",
         "method": "errors"
     },
+    "conceptscheme-getall-has-publisher-filter" : {
+        "code": "conceptscheme-getall-has-publisher-filter",
+        "description": "The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concept Schemes)",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "conceptschemes"
+    },
+    "conceptscheme-getone-not-found" : {
+        "code": "conceptscheme-getone-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The requested ConceptScheme could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "conceptscheme"
+    },
     "EOF": null
 }
