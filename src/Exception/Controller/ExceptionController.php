@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exception\Controller;
 
-use App\Ontology\Context;
 use App\OpenSkos\ApiRequest;
 use App\Rest\DirectGraphResponse;
 use EasyRdf_Graph as Graph;
@@ -39,8 +38,6 @@ final class ExceptionController
     public function getAllErrors(
         ApiRequest $apiRequest
     ): DirectGraphResponse {
-        Context::setupEasyRdf();
-
         $graph = new Graph();
 
         foreach ($this->knownErrors as $code => $error) {

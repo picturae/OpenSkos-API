@@ -238,4 +238,17 @@ QUERY_BY_TYPE_WITHOUT_UUID;
 
         return new SparqlQuery($queryString);
     }
+
+    public static function deleteSubject(
+        string $subject
+    ): SparqlQuery {
+        $queryString = <<<QUERY_DELETE_SUBJECT_WITH_TYPE
+DELETE WHERE {
+    <%s> ?predicate ?object .
+}
+QUERY_DELETE_SUBJECT_WITH_TYPE;
+        $queryString = sprintf($queryString, $subject);
+
+        return new SparqlQuery($queryString);
+    }
 }

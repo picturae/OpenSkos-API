@@ -46,7 +46,6 @@ namespace App\Ontology;
 <?php if ($hasValidation) { ?>
 
 use App\Annotation\Error;
-use App\Exception\ApiException;
 use App\Rdf\Iri;
 use App\Rdf\Literal\Literal;
 <?php } /* if has validation */ ?>
@@ -80,14 +79,14 @@ final class <?= $name; ?>
      * @param Literal|Iri $value
      *
 <?php if (isset($property['literaltype'])) { ?>
-     * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type",
+     * @Error(code="<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-literal-type",
      *        status=422,
      *        fields={"expected","actual"},
      *        description="The object for the <?= strtolower($property['name']); ?> predicate has a different type than '<?= Context::fullUri($property['literaltype']); ?>'"
      *     )
 <?php } /* if isset property literal type */ ?>
 <?php if (isset($property['regex'])) { ?>
-     * @Error(code="<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex",
+     * @Error(code="<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-regex",
      *        status=422,
      *        fields={"regex","value"},
      *        description="The object for the <?= strtolower($property['name']); ?> predicate did not match the configured regex"
@@ -105,10 +104,13 @@ final class <?= $name; ?>
 <?php if (isset($property['literaltype'])) { ?>
 
             if ('<?= Context::fullUri($property['literaltype']); ?>' !== $property->typeIri()->getUri()) {
-                throw new ApiException('<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-literal-type', [
-                    'expected' => '<?= Context::fullUri($property['literaltype']); ?>',
-                    'actual' => $property->typeIri()->getUri(),
-                ]);
+                return [
+                    'code' => '<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-literal-type',
+                    'data' => [
+                        'expected' => '<?= Context::fullUri($property['literaltype']); ?>',
+                        'actual' => $property->typeIri()->getUri(),
+                    ],
+                ];
             }
 <?php } /* if isset property literal type */ ?>
         }
@@ -119,10 +121,13 @@ final class <?= $name; ?>
 <?php if (isset($property['regex'])) { ?>
         $regex = '<?= str_replace('\\', '\\\\', $property['regex']); ?>';
         if (!preg_match($regex, $value)) {
-            throw new ApiException('<?= strtolower($name); ?>-<?= strtolower($property['name']); ?>-validate-regex', [
-                'regex' => $regex,
-                'value' => $value,
-            ]);
+            return [
+                'code' => '<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-regex',
+                'data' => [
+                    'regex' => $regex,
+                    'value' => $value,
+                ],
+            ];
         }
 
 <?php } /* if isset property regex */ ?>
@@ -134,10 +139,6 @@ final class <?= $name; ?>
 
     public static function vocabulary(): \EasyRdf_Graph
     {
-<?php foreach ($context as $descriptor) { ?>
-        \EasyRdf_Namespace::set(<?= Template::quoteString($descriptor['prefix']); ?>, <?= $descriptor['name']; ?>::NAME_SPACE);
-<?php } /* foreach */ ?>
-
         // Define graph structure
         $graph = new \EasyRdf_Graph('openskos.org');
 

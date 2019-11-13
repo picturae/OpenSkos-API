@@ -55,4 +55,20 @@ class EasyRdfClient implements Client
 
         return $this->easyRdfClient->insert($tripleString);
     }
+
+    public function delete(SparqlQuery $query): bool
+    {
+        $result = $this->easyRdfClient->update($query->rawSparql());
+        $status = $result->getStatus();
+
+        if ($status < 200) {
+            return false;
+        }
+
+        if ($status >= 300) {
+            return false;
+        }
+
+        return true;
+    }
 }

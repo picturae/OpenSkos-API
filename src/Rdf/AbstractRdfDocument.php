@@ -3,6 +3,7 @@
 namespace App\Rdf;
 
 use App\Annotation\AbstractAnnotation;
+use App\Annotation\Error;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
@@ -397,25 +398,43 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * Returns a list of errors with the current resource.
+     *
+     * @Error(code="abstract-rdf-document-missing-predicate",
+     *        status=400,
+     *        description="A required predicate for this RDF resource is missing"
+     * )
+     * @Error(code="abstract-rdf-document-invalid-resource-type",
+     *        status=400,
+     *        description="The given resource type does not match the configured resource type for this endpoint"
+     * )
+     * @Error(code="abstract-rdf-document-corrupt-rdf-resource-properties-null",
+     *        status=400,
+     *        description="Properties could not be loaded from the rdf resource"
+     * )
      */
-    public function errors(): array
+    public function errors(string $errorPrefix = null): array
     {
         $errors = [];
         $annotations = static::annotations();
+        $errorPrefix = $errorPrefix ?? 'abstract-rdf-document';
 
         // Verify document type
         if (isset($annotations['document-type'])) {
             $type = $this->getValue(Rdf::TYPE);
             if (is_null($type)) {
                 array_push($errors, [
-                    'code' => 'missing-predicate',
-                    'predicate' => Rdf::TYPE,
+                    'code' => $errorPrefix.'-missing-predicate',
+                    'data' => [
+                        'predicate' => Rdf::TYPE,
+                    ],
                 ]);
             } elseif (($type instanceof Iri) && ($type->getUri() !== $annotations['document-type'])) {
                 array_push($errors, [
-                    'code' => 'invalid-resource-type',
-                    'expected' => $annotations['document-type'],
-                    'actual' => $type->getUri(),
+                    'code' => $errorPrefix.'-invalid-resource-type',
+                    'data' => [
+                        'expected' => $annotations['document-type'],
+                        'actual' => $type->getUri(),
+                    ],
                 ]);
             }
         }
@@ -425,8 +444,10 @@ abstract class AbstractRdfDocument implements RdfResource
             $found = $this->getValue($requiredPredicate);
             if (is_null($found)) {
                 array_push($errors, [
-                    'code' => 'missing-predicate',
-                    'predicate' => $requiredPredicate,
+                    'code' => $errorPrefix.'-missing-predicate',
+                    'data' => [
+                        'predicate' => $requiredPredicate,
+                    ],
                 ]);
             }
         }
@@ -436,7 +457,7 @@ abstract class AbstractRdfDocument implements RdfResource
         if (is_null($properties)) {
             // No properties = error
             array_push($errors, [
-                'code' => 'corrupt-rdf-resource-properties-null',
+                'code' => $errorPrefix.'-corrupt-rdf-resource-properties-null',
             ]);
         } else {
             foreach ($properties as $predicate => $propertyList) {
@@ -471,6 +492,18 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         return $errors;
+    }
+
+    public function delete()
+    {
+        // We need to repository to save
+        if (is_null($this->repository)) {
+            return [[
+                'code' => 'missing-repository',
+            ]];
+        }
+
+        $this->repository->delete($this->iri());
     }
 
     public function save(): ?array

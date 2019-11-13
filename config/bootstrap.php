@@ -1,5 +1,6 @@
 <?php
 
+use App\Ontology\Context;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\Dotenv\Dotenv;
@@ -19,6 +20,7 @@ if (is_array($env = @include dirname(__DIR__).'/.env.local.php')) {
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 AnnotationReader::addGlobalIgnoredName('required');
+Context::setupEasyRdf();
 
 $_SERVER += $_ENV;
 $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: 'dev';

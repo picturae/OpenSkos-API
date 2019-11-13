@@ -291,4 +291,9 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         return $this->skosRepository->insertTriples($triples);
     }
+
+    public function delete(Iri $subject)
+    {
+        return $this->skosRepository->deleteSubject($subject);
+    }
 }

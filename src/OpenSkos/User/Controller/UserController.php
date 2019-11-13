@@ -6,7 +6,6 @@ namespace App\OpenSkos\User\Controller;
 
 use App\Annotation\Error;
 use App\Exception\ApiException;
-use App\Ontology\Context;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
@@ -45,10 +44,6 @@ final class UserController
      *
      * @throws ApiException
      *
-     * @Error("user-getall-permission-denied-invalid-credentials",
-     *        status=403,
-     *        description="Invalid credentials were given"
-     * )
      * @Error("user-getall-permission-denied-missing-user",
      *        status=403,
      *        description="The authenticated user could not be loaded"
@@ -63,11 +58,9 @@ final class UserController
         Connection $connection,
         ApiRequest $apiRequest
     ): ListResponse {
-        Context::setupEasyRdf();
-
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
-        $auth->requireAuthenticated('user-getall-');
+        $auth->requireAuthenticated();
 
         if ($auth->isAdministrator()) {
             // Administrators are allowed to see all users
@@ -107,14 +100,6 @@ final class UserController
      *
      * @throws ApiException
      *
-     * @Error(code="user-getone-permission-denied-missing-credentials",
-     *        status=401,
-     *        description="No credentials were given"
-     * )
-     * @Error(code="user-getone-permission-denied-invalid-credentials",
-     *        status=403,
-     *        description="Invalid credentials were given"
-     * )
      * @Error(code="user-getone-permission-denied-missing-user",
      *        status=403,
      *        description="The authenticated user could not be loaded"
@@ -139,16 +124,9 @@ final class UserController
         ApiRequest $apiRequest,
         LabelRepository $labelRepository
     ): ScalarResponse {
-        Context::setupEasyRdf();
-
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
-        if (!$auth->hasAuthenticationData()) {
-            throw new ApiException('user-getone-permission-denied-missing-credentials');
-        }
-        if (!$auth->isAuthenticated()) {
-            throw new ApiException('user-getone-permission-denied-invalid-credentials');
-        }
+        $auth->requireAuthenticated();
 
         // Prepend known user prefix if it doesn't start with 'http'
         if (array_key_exists('USER_IRI_PREFIX', $_ENV)) {
