@@ -208,7 +208,7 @@ final class InstitutionController
      *        fields={"iri"}
      * )
      */
-    public function updateInstitution(
+    public function putInstitution(
         ApiRequest $apiRequest,
         InstitutionRepository $repository
     ): ListResponse {
