@@ -15,8 +15,6 @@ services:
     arguments:
       $namespace: 'http://tenant'
 
-  App\OpenSkos\Set\Sparql\SparqlSetRepository:
+  App\OpenSkos\Set\SetRepository:
     arguments:
       $iriFactory: '@set.iri_factory'
-
-  App\OpenSkos\Set\SetRepository: '@App\OpenSkos\Set\Sparql\SparqlSetRepository'

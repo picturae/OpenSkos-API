@@ -169,6 +169,8 @@ final class InstitutionController
 
     /**
      * @Route(path="/institution/{id}.{format?}", methods={"DELETE"})
+     *
+     * @throws ApiException
      */
     public function deleteInstitution(
         InternalResourceId $id,
@@ -193,6 +195,8 @@ final class InstitutionController
 
     /**
      * @Route(path="/institutions.{format?}", methods={"PUT"})
+     *
+     * @throws ApiException
      *
      * @Error(code="institution-update-empty-or-corrupt-body",
      *        status=400,

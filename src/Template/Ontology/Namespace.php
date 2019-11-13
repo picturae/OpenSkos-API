@@ -11,6 +11,7 @@ use App\Template\Template;
 $skipFields = [
     'const',
     'datatype',
+    'dataclass',
     'literaltype',
     'name',
     'regex',

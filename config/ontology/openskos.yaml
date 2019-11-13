@@ -39,6 +39,7 @@ parameters:
         "rdf:type": "owl:ObjectProperty"
       set:
         datatype: resource
+        dataclass: App\OpenSkos\Set\Set
         "rdf:type": "owl:ObjectProperty"
       role:
         datatype: literal

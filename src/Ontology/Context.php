@@ -23,6 +23,7 @@ final class Context
 
     const dataclass = [
         'foaf:Person' => '\App\OpenSkos\User\User',
+        'openskos:set' => '\App\OpenSkos\Set\Set',
         'org:FormalOrganization' => '\App\OpenSkos\Institution\Institution',
         'skos:Concept' => '\App\OpenSkos\Concept\Concept',
         'skos:ConceptScheme' => '\App\OpenSkos\ConceptScheme\ConceptScheme',
