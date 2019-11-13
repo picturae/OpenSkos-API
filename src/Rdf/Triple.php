@@ -123,13 +123,15 @@ final class Triple
 
             return $retVal;
         } elseif ($this->object instanceof Literal) {
+            $hasLang = method_exists($this->object, 'lang') && $this->object->lang();
+
             return sprintf(
-                '<%s> <%s> "%s"%s^^%s',
+                '<%s> <%s> "%s"%s%s',
                 $this->subject->getUri(),
                 $this->predicate->getUri(),
                 $this->object->__toString(),
-                ((method_exists($this->object, 'lang') && $this->object->lang()) ? '@'.$this->object->lang() : ''),
-                $this->object->typeIri()->ntripleString()
+                $hasLang ? '@'.$this->object->lang() : '',
+                $hasLang ? '' : ('^^'.$this->object->typeIri()->ntripleString())
             );
         }
 

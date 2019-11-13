@@ -44,6 +44,16 @@
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "save"
     },
+    "rdf-document-save-exception" : {
+        "code": "rdf-document-save-exception",
+        "fields": [
+            "message"
+        ],
+        "description": "The insert threw an exception",
+        "status": 500,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "save"
+    },
     "dcterms-validate-created-literal-type" : {
         "code": "dcterms-validate-created-literal-type",
         "fields": [
@@ -538,6 +548,43 @@
         "status": 404,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
         "method": "conceptscheme"
+    },
+    "conceptscheme-create-empty-or-corrupt-body" : {
+        "code": "conceptscheme-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postSet"
+    },
+    "conceptscheme-create-already-exists" : {
+        "code": "conceptscheme-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "A ConceptScheme with the given iri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postSet"
+    },
+    "conceptscheme-create-tenant-does-not-exist" : {
+        "code": "conceptscheme-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a ConceptScheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postSet"
+    },
+    "conceptscheme-create-set-does-not-exist" : {
+        "code": "conceptscheme-create-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to create a ConceptScheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postSet"
     },
     "EOF": null
 }

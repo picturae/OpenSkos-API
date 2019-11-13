@@ -10,7 +10,9 @@ use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -95,5 +97,108 @@ final class ConceptSchemeController
         }
 
         return new ScalarResponse($conceptscheme, $apiRequest->getFormat());
+    }
+
+    /**
+     * @Route(path="/conceptschemes.{format?}", methods={"POST"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="conceptscheme-create-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="conceptscheme-create-already-exists",
+     *        status=409,
+     *        description="A ConceptScheme with the given iri already exists",
+     *        fields={"iri"}
+     * )
+     * @Error(code="conceptscheme-create-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to create a ConceptScheme for does not exist",
+     *        fields={"tenant"}
+     * )
+     * @Error(code="conceptscheme-create-set-does-not-exist",
+     *        status=400,
+     *        description="The given set to create a ConceptScheme for does not exist",
+     *        fields={"set"}
+     * )
+     */
+    public function postSet(
+        ApiRequest $apiRequest,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Load data into sets
+        $graph = $apiRequest->getGraph();
+        $conceptSchemes = $conceptSchemeRepository->fromGraph($graph);
+        if (is_null($conceptSchemes)) {
+            throw new ApiException('conceptscheme-create-empty-or-corrupt-body');
+        }
+
+        // Check if the resources already exist
+        foreach ($conceptSchemes as $conceptScheme) {
+            if ($conceptScheme->exists()) {
+                throw new ApiException('conceptscheme-create-already-exists', [
+                    'iri' => $conceptScheme->iri()->getUri(),
+                ]);
+            }
+        }
+
+        // Validate all given resources
+        $errors = [];
+        foreach ($conceptSchemes as $conceptScheme) {
+            $errors = array_merge($errors, $conceptScheme->errors());
+        }
+        if (count($errors)) {
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
+        }
+
+        // Ensure the tenants exist
+        foreach ($conceptSchemes as $conceptScheme) {
+            $tenantCode = $conceptScheme->getValue(OpenSkos::TENANT)->value();
+            $tenant = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('conceptscheme-create-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
+
+        // Ensure the sets exist
+        foreach ($conceptSchemes as $conceptScheme) {
+            $setIri = $conceptScheme->getValue(OpenSkos::SET)->getUri();
+            $set = $setRepository->findByIri(new Iri($setIri));
+            if (is_null($set)) {
+                throw new ApiException('conceptscheme-create-set-does-not-exist', [
+                    'set' => $setIri,
+                ]);
+            }
+        }
+
+        // Save all given conceptSchemes
+        foreach ($conceptSchemes as $conceptScheme) {
+            $errors = $conceptScheme->save();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
+        }
+
+        return new ListResponse(
+            $conceptSchemes,
+            0,
+            $apiRequest->getOffset(),
+            $apiRequest->getFormat()
+        );
     }
 }

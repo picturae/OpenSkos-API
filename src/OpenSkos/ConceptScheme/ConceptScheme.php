@@ -51,4 +51,9 @@ final class ConceptScheme extends AbstractRdfDocument
         self::deletedBy => OpenSkos::DELETED_BY,
         self::modifiedBy => OpenSkos::MODIFIED_BY,
     ];
+
+    protected static $required = [
+        OpenSkos::SET,
+        OpenSkos::TENANT,
+    ];
 }
