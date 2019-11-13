@@ -486,7 +486,7 @@
         "description": "The body passed to this endpoint was either missing or corrupt",
         "status": 400,
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "updateInstitution"
+        "method": "putInstitution"
     },
     "institution-update-does-not-exist" : {
         "code": "institution-update-does-not-exist",
@@ -496,7 +496,24 @@
         "description": "The institution with the given iri does not exist",
         "status": 400,
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "updateInstitution"
+        "method": "putInstitution"
+    },
+    "set-getall-sets-filter" : {
+        "code": "set-getall-sets-filter",
+        "description": "A 'sets' filter was given but is not applicable to this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getSets"
+    },
+    "set-getone-not-found" : {
+        "code": "set-getone-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The requested institution could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getSet"
     },
     "set-create-empty-or-corrupt-body" : {
         "code": "set-create-empty-or-corrupt-body",

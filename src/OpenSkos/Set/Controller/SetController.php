@@ -15,8 +15,6 @@ use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -35,6 +33,13 @@ final class SetController
 
     /**
      * @Route(path="/sets.{format?}", methods={"GET"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="set-getall-sets-filter",
+     *        status=400,
+     *        description="A 'sets' filter was given but is not applicable to this endpoint"
+     * )
      */
     public function getSets(
         ApiRequest $apiRequest,
@@ -46,8 +51,8 @@ final class SetController
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
-        if (isset($param_sets) && 0 !== count($param_sets)) {
-            throw new BadRequestHttpException('Sets filter is not applicable here.');
+        if (isset($param_sets) && (0 !== count($param_sets))) {
+            throw new ApiException('set-getall-sets-filter');
         }
 
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
@@ -62,6 +67,12 @@ final class SetController
 
     /**
      * @Route(path="/set/{id}.{format?}", methods={"GET"})
+     *
+     * @Error(code="set-getone-not-found",
+     *        status=404,
+     *        description="The requested institution could not be found",
+     *        fields={"iri"}
+     * )
      */
     public function getSet(
         InternalResourceId $id,
@@ -74,7 +85,9 @@ final class SetController
         );
 
         if (null === $set) {
-            throw new NotFoundHttpException("The institution $id could not be retreived.");
+            throw new ApiException('set-getone-not-found', [
+                'iri' => $id->id(),
+            ]);
         }
 
         return new ScalarResponse($set, $apiRequest->getFormat());
