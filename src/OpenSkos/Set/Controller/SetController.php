@@ -191,7 +191,7 @@ final class SetController
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        // Fetch the institution we're deleting
+        // Fetch the set we're deleting
         /** @var AbstractRdfDocument $set */
         $set = $this->getSet($id, $apiRequest, $repository)->doc();
 
@@ -232,7 +232,7 @@ final class SetController
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        // Load data into institutions
+        // Load data into sets
         $graph = $apiRequest->getGraph();
         $sets = $setRepository->fromGraph($graph);
         if (is_null($sets)) {
@@ -269,7 +269,7 @@ final class SetController
             }
         }
 
-        // Rebuild all given institutions
+        // Rebuild all given sets
         foreach ($sets as $set) {
             $set->delete();
             $set->save();
