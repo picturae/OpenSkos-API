@@ -271,8 +271,10 @@ final class SetController
 
         // Rebuild all given sets
         foreach ($sets as $set) {
-            $set->delete();
-            $set->save();
+            $errors = $set->update();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
         }
 
         return new ListResponse(

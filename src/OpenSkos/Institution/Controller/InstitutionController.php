@@ -244,12 +244,7 @@ final class InstitutionController
 
         // Rebuild all given institutions
         foreach ($institutions as $institution) {
-            $errors = $institution->delete();
-            if ($errors) {
-                throw new ApiException($errors[0]);
-            }
-
-            $errors = $institution->save();
+            $errors = $institution->update();
             if ($errors) {
                 throw new ApiException($errors[0]);
             }

@@ -37,6 +37,23 @@
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "delete"
     },
+    "rdf-document-update-missing-repository" : {
+        "code": "rdf-document-update-missing-repository",
+        "description": "No repository is known to the document requested to be updated",
+        "status": 500,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "update"
+    },
+    "rdf-document-update-does-not-exist" : {
+        "code": "rdf-document-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The document requested to be updated does not exist",
+        "status": 404,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "update"
+    },
     "rdf-document-save-missing-repository" : {
         "code": "rdf-document-save-missing-repository",
         "description": "No repository is known to the document requested to be saved",

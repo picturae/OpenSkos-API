@@ -522,6 +522,55 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
+     * @Error(code="rdf-document-update-missing-repository",
+     *        status=500,
+     *        description="No repository is known to the document requested to be updated"
+     * )
+     * @Error(code="rdf-document-update-does-not-exist",
+     *        status=404,
+     *        description="The document requested to be updated does not exist",
+     *        fields={"iri"}
+     * )
+     */
+    public function update(): ?array
+    {
+        // No repository = can't check
+        if (is_null($this->repository)) {
+            return [[
+                'code' => 'rdf-document-update-missing-repository',
+            ]];
+        }
+
+        // Fetch the resource
+        $iri   = $this->resource->iri();
+        $found = $this->repository->findByIri($iri);
+        if (!$found) {
+            return [[
+                'code' => 'rdf-document-update-does-not-exist',
+                'data' => [
+                    'iri' => $iri->getUri(),
+                ],
+            ]];
+        }
+
+        // TODO: check updatefields
+
+        // Delete everything
+        $deleteErrors = $this->delete();
+        if ($deleteErrors) {
+            return $deleteErrors;
+        }
+
+        // Re-insert the document
+        $saveErrors = $this->save();
+        if ($saveErrors) {
+            return $saveErrors;
+        }
+
+        return null;
+    }
+
+    /**
      * @Error(code="rdf-document-save-missing-repository",
      *        status=500,
      *        description="No repository is known to the document requested to be saved"
