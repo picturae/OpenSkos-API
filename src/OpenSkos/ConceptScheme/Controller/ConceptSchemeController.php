@@ -13,6 +13,7 @@ use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -80,7 +81,7 @@ final class ConceptSchemeController
      *        fields={"iri"}
      * )
      */
-    public function conceptscheme(
+    public function getConceptScheme(
         InternalResourceId $id,
         ApiRequest $apiRequest,
         ConceptSchemeRepository $repository
@@ -198,6 +199,129 @@ final class ConceptSchemeController
             $conceptSchemes,
             0,
             $apiRequest->getOffset(),
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/conceptscheme/{id}.{format?}", methods={"DELETE"})
+     *
+     * @throws ApiException
+     */
+    public function deleteConceptScheme(
+        InternalResourceId $id,
+        ApiRequest $apiRequest,
+        ConceptSchemeRepository $repository
+    ): ScalarResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Fetch the set we're deleting
+        /** @var AbstractRdfDocument $conceptScheme */
+        $conceptScheme = $this->getConceptScheme($id, $apiRequest, $repository)->doc();
+
+        $conceptScheme->delete();
+
+        return new ScalarResponse(
+            $conceptScheme,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/conceptschemes.{format?}", methods={"PUT"})
+     *
+     * @Error(code="conceptscheme-update-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="conceptscheme-update-does-not-exist",
+     *        status=400,
+     *        description="The set with the given iri does not exist",
+     *        fields={"iri"}
+     * )
+     * @Error(code="conceptscheme-update-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to update a conceptscheme for does not exist",
+     *        fields={"tenant"}
+     * )
+     * @Error(code="conceptscheme-update-set-does-not-exist",
+     *        status=400,
+     *        description="The given set to update a conceptscheme for does not exist",
+     *        fields={"set"}
+     * )
+     */
+    public function putConceptScheme(
+        ApiRequest $apiRequest,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Load data into concept schemes
+        $graph           = $apiRequest->getGraph();
+        $conceptschemes  = $conceptSchemeRepository->fromGraph($graph);
+        if (is_null($conceptschemes)) {
+            throw new ApiException('conceptscheme-update-empty-or-corrupt-body');
+        }
+
+        // Validate all given resources
+        $errors = [];
+        foreach ($conceptschemes as $conceptscheme) {
+            if (!$conceptscheme->exists()) {
+                throw new ApiException('conceptscheme-update-does-not-exist', [
+                    'iri' => $conceptscheme->iri()->getUri(),
+                ]);
+            }
+            $errors = array_merge($errors, $conceptscheme->errors());
+        }
+        if (count($errors)) {
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
+        }
+
+        // Ensure the tenants exist
+        foreach ($conceptschemes as $conceptscheme) {
+            $tenantCode = $conceptscheme->getValue(OpenSkos::TENANT)->value();
+            $tenant     = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('conceptscheme-update-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
+
+        // Ensure the sets exist
+        foreach ($conceptschemes as $conceptscheme) {
+            $setIri = $conceptscheme->getValue(OpenSkos::SET);
+            $set    = $setRepository->findByIri($setIri);
+            if (is_null($set)) {
+                throw new ApiException('conceptscheme-update-set-does-not-exist', [
+                    'set' => $setIri->getUri(),
+                ]);
+            }
+        }
+
+        // Rebuild all given ConceptSchemes
+        foreach ($conceptschemes as $conceptscheme) {
+            $errors = $conceptscheme->update();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
+        }
+
+        return new ListResponse(
+            $conceptschemes,
+            count($conceptschemes),
+            0,
             $apiRequest->getFormat()
         );
     }

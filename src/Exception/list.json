@@ -564,7 +564,7 @@
         "description": "The requested ConceptScheme could not be retreived",
         "status": 404,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "conceptscheme"
+        "method": "getConceptScheme"
     },
     "conceptscheme-create-empty-or-corrupt-body" : {
         "code": "conceptscheme-create-empty-or-corrupt-body",
@@ -602,6 +602,43 @@
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
         "method": "postSet"
+    },
+    "conceptscheme-update-empty-or-corrupt-body" : {
+        "code": "conceptscheme-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-does-not-exist" : {
+        "code": "conceptscheme-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-tenant-does-not-exist" : {
+        "code": "conceptscheme-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-set-does-not-exist" : {
+        "code": "conceptscheme-update-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
     "EOF": null
 }
