@@ -10,6 +10,7 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
+use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
@@ -202,49 +203,70 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
+     * Adds a property to the list or properties
+     * Duplicate properties are added, not overwritten.
+     *
      * @param mixed $property
      * @param mixed $value
      */
     public function addProperty($property, $value): bool
     {
-        if (is_string($property)) {
-            if (!array_key_exists($property, static::$mapping)) {
+        if ($property instanceof Iri) {
+            $iri = $property;
+        } elseif (is_string($property)) {
+            if (!isset(static::$mapping[$property])) {
                 return false;
             }
+            $iri = new Iri(static::$mapping[$property]);
+        } else {
+            return false;
         }
 
         if ($value instanceof RdfTerm) {
-            if ($property instanceof Iri) {
-                $iri = $property;
-            } else {
-                $mapped = static::$mapping['property'];
-                if (is_null($mapped)) {
-                    return false;
-                }
-                $iri = new Iri($mapped);
-            }
             $this->getResource()->addProperty($iri, $value);
 
             return true;
         }
 
-        if (is_string($value)) {
-            if ($property instanceof Iri) {
-                $iri = $property;
-            } else {
-                $mapped = static::$mapping[$property];
-                if (is_null($mapped)) {
-                    return false;
-                }
-                $iri = new Iri($mapped);
-            }
-            $term = new StringLiteral($value);
-            $this->getResource()->addProperty($iri, $term);
+        $term = null;
 
-            return true;
+        if (is_bool($value)) {
+            $term = new BooleanLiteral($value);
+        } elseif (is_string($value)) {
+            $term = new StringLiteral($value);
+        } elseif ($value instanceof \DateTime) {
+            $term = new DatetimeLiteral($value);
+        } else {
+            return false;
         }
 
-        return false;
+        $this->getResource()->addProperty($iri, $term);
+
+        return true;
+    }
+
+    /**
+     * Sets (overrides) a value.
+     *
+     * @param mixed $property
+     * @param mixed $value
+     */
+    public function setValue($property, $value): bool
+    {
+        if ($property instanceof Iri) {
+            $iri = $property;
+        } elseif (is_string($property)) {
+            if (!isset(static::$mapping[$property])) {
+                return false;
+            }
+            $iri = new Iri(static::$mapping[$property]);
+        } else {
+            return false;
+        }
+
+        $this->resource->removeTriple($iri->getUri());
+
+        return $this->addProperty($iri, $value);
     }
 
     public function getMappedProperty(string $property): ?array
@@ -565,7 +587,7 @@ abstract class AbstractRdfDocument implements RdfResource
             ]];
         }
 
-        // Copy updatable fields over found
+        // Copy updatable fields into found
         foreach (static::$updateFields as $field) {
             $found->getResource()->removeTriple($field);
             $newProperties = $this->getProperty($field) ?? [];
@@ -575,18 +597,18 @@ abstract class AbstractRdfDocument implements RdfResource
             }
         }
 
-        // Delete everything
-        $deleteErrors = $this->delete();
-        if ($deleteErrors) {
-            return $deleteErrors;
-        }
-
         // Copy resulting data into $this
         foreach ($this->triples() as $triple) {
             $this->resource->removeTriple($triple->getPredicate()->getUri());
         }
         foreach ($found->triples() as $triple) {
             $this->addProperty($triple->getPredicate(), $triple->getObject());
+        }
+
+        // Delete everything
+        $deleteErrors = $this->delete();
+        if ($deleteErrors) {
+            return $deleteErrors;
         }
 
         // Re-insert the document

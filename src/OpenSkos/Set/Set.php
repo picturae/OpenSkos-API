@@ -6,6 +6,7 @@ namespace App\OpenSkos\Set;
 
 use App\Annotation\Document;
 use App\Annotation\Error;
+use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
@@ -29,12 +30,20 @@ final class Set extends AbstractRdfDocument
     const title          = 'title';
     const type           = 'type';
     const uuid           = 'uuid';
+    const modifiedBy     = 'modifiedBy';
+    const datesubmitted  = 'datesubmitted';
+    const creator        = 'creator';
+    const modified       = 'modified';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
         self::tenant         => OpenSkos::TENANT,
+        self::datesubmitted  => DcTerms::DATE_SUBMITTED,
+        self::creator        => Dc::CREATOR,
+        self::modifiedBy     => OpenSkos::MODIFIED_BY,
+        self::modified       => DcTerms::MODIFIED,
         self::code           => OpenSkos::CODE,
         self::allow_oai      => OpenSkos::ALLOW_OAI,
         self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
@@ -56,6 +65,7 @@ final class Set extends AbstractRdfDocument
 
     protected static $updateFields = [
         DcTerms::TITLE,
+        OpenSkos::MODIFIED_BY,
     ];
 
     /**

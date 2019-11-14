@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\ConceptScheme\Controller;
 
 use App\Annotation\Error;
+use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
@@ -261,6 +262,8 @@ final class ConceptSchemeController
         // Client permissions
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
+        /** @var User $user */
+        $user = $auth->getUser();
 
         // Load data into concept schemes
         $graph           = $apiRequest->getGraph();
@@ -311,7 +314,9 @@ final class ConceptSchemeController
         }
 
         // Rebuild all given ConceptSchemes
+        $modifier = new Iri(OpenSkos::MODIFIED_BY);
         foreach ($conceptschemes as $conceptscheme) {
+            $conceptscheme->setValue($modifier, $user->getUri());
             $errors = $conceptscheme->update();
             if ($errors) {
                 throw new ApiException($errors[0]);

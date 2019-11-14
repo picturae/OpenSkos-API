@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Controller;
 
 use App\Annotation\Error;
+use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
@@ -231,6 +232,8 @@ final class SetController
         // Client permissions
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
+        /** @var User $user */
+        $user = $auth->getUser();
 
         // Load data into sets
         $graph = $apiRequest->getGraph();
@@ -270,7 +273,9 @@ final class SetController
         }
 
         // Rebuild all given sets
+        $modifier = new Iri(OpenSkos::MODIFIED_BY);
         foreach ($sets as $set) {
+            $set->setValue($modifier, $user->getUri());
             $errors = $set->update();
             if ($errors) {
                 throw new ApiException($errors[0]);
