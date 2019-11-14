@@ -5,14 +5,17 @@ namespace App\Rdf;
 use App\Annotation\AbstractAnnotation;
 use App\Annotation\Error;
 use App\Ontology\Context;
+use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
+use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use App\Repository\AbstractRepository;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ramsey\Uuid\Uuid;
 
 abstract class AbstractRdfDocument implements RdfResource
 {
@@ -63,6 +66,11 @@ abstract class AbstractRdfDocument implements RdfResource
      * @var VocabularyAwareResource
      */
     protected $resource;
+
+    /**
+     * @var string[]
+     */
+    protected static $updateFields = [];
 
     /**
      * @param VocabularyAwareResource $resource
@@ -132,6 +140,10 @@ abstract class AbstractRdfDocument implements RdfResource
     private static function isUuid($value): bool
     {
         $retval = false;
+
+        if ($value instanceof StringLiteral) {
+            $value = $value->value();
+        }
 
         if (is_string($value) &&
             36 == strlen($value) &&
@@ -544,7 +556,7 @@ abstract class AbstractRdfDocument implements RdfResource
         // Fetch the resource
         $iri   = $this->resource->iri();
         $found = $this->repository->findByIri($iri);
-        if (!$found) {
+        if (is_null($found)) {
             return [[
                 'code' => 'rdf-document-update-does-not-exist',
                 'data' => [
@@ -553,12 +565,28 @@ abstract class AbstractRdfDocument implements RdfResource
             ]];
         }
 
-        // TODO: check updatefields
+        // Copy updatable fields over found
+        foreach (static::$updateFields as $field) {
+            $found->getResource()->removeTriple($field);
+            $newProperties = $this->getProperty($field) ?? [];
+            $iri           = new Iri($field);
+            foreach ($newProperties as $value) {
+                $found->addProperty($iri, $value);
+            }
+        }
 
         // Delete everything
         $deleteErrors = $this->delete();
         if ($deleteErrors) {
             return $deleteErrors;
+        }
+
+        // Copy resulting data into $this
+        foreach ($this->triples() as $triple) {
+            $this->resource->removeTriple($triple->getPredicate()->getUri());
+        }
+        foreach ($found->triples() as $triple) {
+            $this->addProperty($triple->getPredicate(), $triple->getObject());
         }
 
         // Re-insert the document
@@ -589,13 +617,30 @@ abstract class AbstractRdfDocument implements RdfResource
             return $errors;
         }
 
-        // TODO: delete old data?
-
         // We need to repository to save
         if (is_null($this->repository)) {
             return [[
                 'code' => 'rdf-document-save-missing-repository',
             ]];
+        }
+
+        // Generate uuid if missing
+        if (!self::isUuid($this->getValue(OpenSkos::UUID))) {
+            $this->addProperty(new Iri(OpenSkos::UUID), new StringLiteral(Uuid::uuid4()->toString()));
+        }
+
+        // Fetch available keys
+        $availablePredicates = array_keys($this->resource->properties() ?? []);
+
+        // Add 'submitted' field
+        if (in_array(DcTerms::DATE_SUBMITTED, $availablePredicates, true) and is_null($this->getValue(DcTerms::DATE_SUBMITTED))) {
+            $this->addProperty(new Iri(DcTerms::DATE_SUBMITTED), new DatetimeLiteral(new \DateTime()));
+        }
+
+        // Update 'modified' field
+        if (in_array(DcTerms::MODIFIED, $availablePredicates, true)) {
+            $this->resource->removeTriple(DcTerms::MODIFIED);
+            $this->addProperty(new Iri(DcTerms::MODIFIED), new DatetimeLiteral(new \DateTime()));
         }
 
         try {

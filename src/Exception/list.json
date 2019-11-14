@@ -159,6 +159,17 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateLicense"
     },
+    "dcterms-validate-modified-literal-type" : {
+        "code": "dcterms-validate-modified-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the modified predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateModified"
+    },
     "dcterms-validate-title-literal-type" : {
         "code": "dcterms-validate-title-literal-type",
         "fields": [

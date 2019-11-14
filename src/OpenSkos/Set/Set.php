@@ -54,6 +54,10 @@ final class Set extends AbstractRdfDocument
         OpenSkos::TENANT,
     ];
 
+    protected static $updateFields = [
+        DcTerms::TITLE,
+    ];
+
     /**
      * Extends the regular error checking.
      *

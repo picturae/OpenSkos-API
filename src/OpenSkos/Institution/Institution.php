@@ -56,4 +56,18 @@ final class Institution extends AbstractRdfDocument
         OpenSkos::NAME,
         OpenSkos::UUID,
     ];
+
+    protected static $updateFields = [
+        OpenSkos::DISABLE_SEARCH_IN_OTHER_TENANTS,
+        OpenSkos::ENABLESKOSXL,
+        OpenSkos::ENABLE_STATUSSES_SYSTEM,
+        OpenSkos::NAME,
+        OpenSkos::WEBPAGE,
+        VCard::ADR,
+        VCard::COUNTRY,
+        VCard::EMAIL,
+        VCard::LOCALITY,
+        VCard::ORGUNIT,
+        VCard::PCODE,
+    ];
 }
