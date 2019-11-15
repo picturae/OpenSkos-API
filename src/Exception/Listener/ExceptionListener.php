@@ -40,7 +40,7 @@ final class ExceptionListener
             $response->headers->replace($exception->getHeaders());
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(json_encode([
-                'code'    => $exception->getCode(),
+                'code'    => $exception->getCode() ?: 500,
                 'message' => $exception->getMessage(),
             ]));
             $event->setResponse($response);
