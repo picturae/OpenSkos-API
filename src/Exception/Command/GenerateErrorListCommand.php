@@ -51,6 +51,9 @@ class GenerateErrorListCommand extends Command
         // All error annotations will be store here
         $errorAnnotations = [];
 
+        $knownMethods = [];
+        $knownErrors = [];
+
         // Loop through classes
         foreach ($classes as $class) {
             try {
@@ -62,6 +65,14 @@ class GenerateErrorListCommand extends Command
             // Fetch and loop through methods
             $methods = $reflectionClass->getMethods();
             foreach ($methods as $reflectionMethod) {
+                // Prevent inheritance from double-throwing a method
+                $methodFullName = $reflectionMethod->class.'->'.$reflectionMethod->name;
+                if (isset($knownMethods[$methodFullName])) {
+                    continue;
+                } else {
+                    $knownMethods[$methodFullName] = true;
+                }
+
                 // Fetch the method's anotations
                 try {
                     $annotations = $annotationReader->getMethodAnnotations($reflectionMethod);
@@ -84,6 +95,14 @@ class GenerateErrorListCommand extends Command
                     if (empty($annotationData['code'])) {
                         $annotationData['code'] = $annotationData['value'] ?? '';
                         unset($annotationData['value']);
+                    }
+
+                    if (isset($knownErrors[$annotationData['code']])) {
+                        $code = $annotationData['code'];
+                        $origin = $knownErrors[$annotationData['code']];
+                        throw new \Exception("Duplicate error '${code}' in $methodFullName, first defined for $origin");
+                    } else {
+                        $knownErrors[$annotationData['code']] = $methodFullName;
                     }
 
                     array_push($errorAnnotations, array_merge(

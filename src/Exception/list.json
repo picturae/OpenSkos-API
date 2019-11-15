@@ -30,6 +30,20 @@
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "errors"
     },
+    "rdf-document-delete-missing-repository" : {
+        "code": "rdf-document-delete-missing-repository",
+        "description": "No repository is known to the document requested to be deleted",
+        "status": 500,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "delete"
+    },
+    "rdf-document-save-missing-repository" : {
+        "code": "rdf-document-save-missing-repository",
+        "description": "No repository is known to the document requested to be saved",
+        "status": 500,
+        "class": "App\\Rdf\\AbstractRdfDocument",
+        "method": "save"
+    },
     "dcterms-validate-created-literal-type" : {
         "code": "dcterms-validate-created-literal-type",
         "fields": [
@@ -326,54 +340,6 @@
         "class": "App\\Security\\Authentication",
         "method": "requireAdministrator"
     },
-    "abstract-rdf-document-missing-predicate" : {
-        "code": "abstract-rdf-document-missing-predicate",
-        "fields": [
-            "predicate"
-        ],
-        "description": "A required predicate for this RDF resource is missing",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-invalid-resource-type" : {
-        "code": "abstract-rdf-document-invalid-resource-type",
-        "description": "The given resource type does not match the configured resource type for this endpoint",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
-        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
-        "description": "Properties could not be loaded from the rdf resource",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-missing-predicate" : {
-        "code": "abstract-rdf-document-missing-predicate",
-        "fields": [
-            "predicate"
-        ],
-        "description": "A required predicate for this RDF resource is missing",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-invalid-resource-type" : {
-        "code": "abstract-rdf-document-invalid-resource-type",
-        "description": "The given resource type does not match the configured resource type for this endpoint",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
-        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
-        "description": "Properties could not be loaded from the rdf resource",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
     "user-getall-permission-denied-missing-user" : {
         "description": "The authenticated user could not be loaded",
         "status": 403,
@@ -415,30 +381,6 @@
         "status": 404,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
-    },
-    "abstract-rdf-document-missing-predicate" : {
-        "code": "abstract-rdf-document-missing-predicate",
-        "fields": [
-            "predicate"
-        ],
-        "description": "A required predicate for this RDF resource is missing",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-invalid-resource-type" : {
-        "code": "abstract-rdf-document-invalid-resource-type",
-        "description": "The given resource type does not match the configured resource type for this endpoint",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
-        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
-        "description": "Properties could not be loaded from the rdf resource",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
     },
     "institution-getall-filter-institutions-not-applicable" : {
         "code": "institution-getall-filter-institutions-not-applicable",
@@ -542,6 +484,33 @@
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "postSet"
     },
+    "set-update-empty-or-corrupt-body" : {
+        "code": "set-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
+    },
+    "set-update-does-not-exist" : {
+        "code": "set-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
+    },
+    "set-update-tenant-does-not-exist" : {
+        "code": "set-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a set for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
+    },
     "set-base-uri-does-not-match-code" : {
         "code": "set-base-uri-does-not-match-code",
         "fields": [
@@ -551,30 +520,6 @@
         "description": "The given openskos:code does not match the end of the given openskos:conceptBaseUri",
         "status": 422,
         "class": "App\\OpenSkos\\Set\\Set",
-        "method": "errors"
-    },
-    "abstract-rdf-document-missing-predicate" : {
-        "code": "abstract-rdf-document-missing-predicate",
-        "fields": [
-            "predicate"
-        ],
-        "description": "A required predicate for this RDF resource is missing",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-invalid-resource-type" : {
-        "code": "abstract-rdf-document-invalid-resource-type",
-        "description": "The given resource type does not match the configured resource type for this endpoint",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
-        "method": "errors"
-    },
-    "abstract-rdf-document-corrupt-rdf-resource-properties-null" : {
-        "code": "abstract-rdf-document-corrupt-rdf-resource-properties-null",
-        "description": "Properties could not be loaded from the rdf resource",
-        "status": 400,
-        "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "errors"
     },
     "EOF": null
