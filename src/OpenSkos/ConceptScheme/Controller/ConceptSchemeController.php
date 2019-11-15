@@ -316,7 +316,7 @@ final class ConceptSchemeController
         // Rebuild all given ConceptSchemes
         $modifier = new Iri(OpenSkos::MODIFIED_BY);
         foreach ($conceptschemes as $conceptscheme) {
-            $conceptscheme->setValue($modifier, $user->getUri());
+            $conceptscheme->setValue($modifier, $user->iri());
             $errors = $conceptscheme->update();
             if ($errors) {
                 throw new ApiException($errors[0]);

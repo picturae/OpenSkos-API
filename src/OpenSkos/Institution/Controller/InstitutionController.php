@@ -248,7 +248,7 @@ final class InstitutionController
         // Rebuild all given institutions
         $modifier = new Iri(OpenSkos::MODIFIED_BY);
         foreach ($institutions as $institution) {
-            $institution->setValue($modifier, $user->getUri());
+            $institution->setValue($modifier, $user->iri());
             $errors = $institution->update();
             if ($errors) {
                 throw new ApiException($errors[0]);
