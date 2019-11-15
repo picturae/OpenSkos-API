@@ -71,6 +71,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.15",
         "jakub-onderka/php-parallel-lint": "^1.0",
+        "jan-swiecki/simple-annotations": "^0.3.1",
         "phpro/grumphp": "^0.15.0",
         "phpspec/phpspec": "^5.1",
         "phpstan/phpstan": "^0.11.6",

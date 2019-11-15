@@ -129,6 +129,9 @@
     "jakub-onderka/php-parallel-lint": {
         "version": "v1.0.0"
     },
+    "jan-swiecki/simple-annotations": {
+        "version": "0.3.1"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
