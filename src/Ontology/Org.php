@@ -21,6 +21,6 @@ namespace App\Ontology;
 
 final class Org
 {
-    const NAME_SPACE = 'http://www.w3.org/ns/org#';
+    const NAME_SPACE          = 'http://www.w3.org/ns/org#';
     const FORMAL_ORGANIZATION = 'http://www.w3.org/ns/org#FormalOrganization';
 }

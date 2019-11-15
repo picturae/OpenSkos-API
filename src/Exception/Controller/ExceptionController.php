@@ -28,7 +28,7 @@ final class ExceptionController
     public function __construct(
         SerializerInterface $serializer
     ) {
-        $this->serializer = $serializer;
+        $this->serializer  = $serializer;
         $this->knownErrors = json_decode(file_get_contents(__DIR__.'/../list.json'), true);
     }
 

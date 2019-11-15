@@ -25,7 +25,7 @@ final class RdfFormatFactory
         array $formats
     ) {
         foreach ($formats as $format) {
-            $this->formats[$format->name()] = $format;
+            $this->formats[$format->name()]            = $format;
             $this->mimes[$format->contentTypeString()] = $format;
         }
     }

@@ -35,7 +35,7 @@ final class PingController extends AbstractController
     ): Response {
         // Fetch composer data for the version
         $projectDir = $this->appKernel->getProjectDir();
-        $composer = json_decode(file_get_contents(
+        $composer   = json_decode(file_get_contents(
             $projectDir.DIRECTORY_SEPARATOR.'composer.json'
         ));
 
@@ -87,14 +87,14 @@ final class PingController extends AbstractController
         }
 
         return new Response(json_encode([
-            'name' => 'openskos-api',
-            'status' => $status,
-            'version' => $composer->version ?? 'n/a',
-            'license' => $composer->license ?? 'proprietary',
+            'name'      => 'openskos-api',
+            'status'    => $status,
+            'version'   => $composer->version ?? 'n/a',
+            'license'   => $composer->license ?? 'proprietary',
             'copyright' => [
-                'holder' => 'Picturae',
+                'holder'    => 'Picturae',
                 'published' => 2019,
-                'revised' => 2019,
+                'revised'   => 2019,
             ],
         ]), 200, [
             'Content-Type' => 'application/json',

@@ -26,7 +26,7 @@ final class Level2Processor
                     if ($triple->getPredicate()->getUri() == $predicate) {
                         //Cross-link the object id's, so we can subsitute later
 
-                        $objectUri = $triple->getObject()->getUri();
+                        $objectUri   = $triple->getObject()->getUri();
                         $co_ordinate = sprintf('%d,%d,%s', $position, $triplesKey, $predicate);
                         if (!isset($crosslink[$objectUri])) {
                             $crosslink[$objectUri] = [];
@@ -69,7 +69,7 @@ final class Level2Processor
 
         $crossLinks = $this->crossLinkEntities($entities, $to_enrich);
 
-        $iris = array_keys($crossLinks);
+        $iris              = array_keys($crossLinks);
         $enrichmentTriples = $repository->findManyByIriList($iris);
 
         $this->populateData($entities, $crossLinks, $enrichmentTriples);

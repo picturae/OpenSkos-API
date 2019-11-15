@@ -266,7 +266,7 @@ class SolrResourceRepository
 
         /** @var \Solarium\QueryType\Select\Result\Result */
         $solrResult = $this->solr->select($select);
-        $numFound = intval($solrResult->getNumFound());
+        $numFound   = intval($solrResult->getNumFound());
 
         $return_data = [];
 

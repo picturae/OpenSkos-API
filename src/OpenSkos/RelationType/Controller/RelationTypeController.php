@@ -46,9 +46,9 @@ final class RelationTypeController
         ApiRequest $apiRequest
     ): DirectGraphResponse {
         // Build source data
-        $graph = RelationType::vocabulary();
+        $graph        = RelationType::vocabulary();
         $relationtype = null;
-        $options = [
+        $options      = [
             $graph->resource($id),
             $graph->resource('openskos:'.$id),
         ];

@@ -33,7 +33,7 @@ class SkosResourceRepository
         callable $resourceFactory,
         Client $rdfClient
     ) {
-        $this->rdfClient = $rdfClient;
+        $this->rdfClient       = $rdfClient;
         $this->resourceFactory = $resourceFactory;
     }
 
@@ -91,7 +91,7 @@ class SkosResourceRepository
      */
     public function findByIri(Iri $iri)
     {
-        $sparql = SparqlQuery::describeResource($iri);
+        $sparql  = SparqlQuery::describeResource($iri);
         $triples = $this->rdfClient->describe($sparql);
         if (0 === count($triples)) {
             return null;
@@ -102,7 +102,7 @@ class SkosResourceRepository
 
     public function findManyByIriList(array $iris): array
     {
-        $sparql = SparqlQuery::describeResources($iris);
+        $sparql  = SparqlQuery::describeResources($iris);
         $triples = $this->rdfClient->describe($sparql);
         if (0 === count($triples)) {
             return [];
@@ -120,7 +120,7 @@ class SkosResourceRepository
 
     public function findBy(Iri $rdfType, Iri $predicate, InternalResourceId $object): array
     {
-        $sparql = SparqlQuery::describeByTypeAndPredicate($rdfType, $predicate, $object);
+        $sparql  = SparqlQuery::describeByTypeAndPredicate($rdfType, $predicate, $object);
         $triples = $this->rdfClient->describe($sparql);
         if (0 === count($triples)) {
             return [];
@@ -158,13 +158,13 @@ class SkosResourceRepository
     public function getByUuid(InternalResourceId $subject)
     {
         // Indexed
-        $sparql = SparqlQuery::describeSubjectFromUuid((string) $subject);
+        $sparql  = SparqlQuery::describeSubjectFromUuid((string) $subject);
         $triples = $this->rdfClient->describe($sparql);
 
         // Fallback by filter
         // TODO: add UUID field to all resources
         if (!count($triples)) {
-            $sparql = SparqlQuery::describeWithoutUuid((string) $subject);
+            $sparql  = SparqlQuery::describeWithoutUuid((string) $subject);
             $triples = $this->rdfClient->describe($sparql);
         }
 
@@ -194,7 +194,7 @@ class SkosResourceRepository
      */
     public function getOneWithoutUuid(Iri $rdfType, InternalResourceId $subject)
     {
-        $sparql = SparqlQuery::describeByTypeWithoutUUID((string) $rdfType, (string) $subject);
+        $sparql  = SparqlQuery::describeByTypeWithoutUUID((string) $rdfType, (string) $subject);
         $triples = $this->rdfClient->describe($sparql);
 
         if (0 === count($triples)) {

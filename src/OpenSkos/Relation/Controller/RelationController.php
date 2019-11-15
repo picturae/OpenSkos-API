@@ -38,7 +38,7 @@ final class RelationController
         SerializerInterface $serializer
     ) {
         $this->serializer = $serializer;
-        $this->whitelist = array_merge(
+        $this->whitelist  = array_merge(
             [Rdf::TYPE],
             RelationType::vocabularyFields(),
             [OpenSkos::TENANT],
@@ -82,7 +82,7 @@ final class RelationController
         if (is_null($type)) {
             return null;
         }
-        $uri = $type->__toString();
+        $uri    = $type->__toString();
         $tokens = Context::decodeUri($uri);
         if (is_null($tokens)) {
             return null;
@@ -137,14 +137,14 @@ final class RelationController
 
         // Remove non-whitelisted fields
         $whitelist = $this->whitelist;
-        $triples = array_filter(array_map(function (Triple $triple) use ($whitelist) {
+        $triples   = array_filter(array_map(function (Triple $triple) use ($whitelist) {
             $field = $triple->getPredicate()->getUri();
 
             return in_array($field, $whitelist, true) ? $triple : null;
         }, $triples));
 
         // Fetch the classname for the rdf type
-        $type = static::getType($triples);
+        $type  = static::getType($triples);
         $class = static::getClass($type);
         if (is_null($class)) {
             throw new BadRequestHttpException("Could not get class for resource type: ${type}");

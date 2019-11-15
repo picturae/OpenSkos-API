@@ -12,6 +12,9 @@ return PhpCsFixer\Config::create()
         'strict_param' => true,
         'array_syntax' => ['syntax' => 'short'],
         'single_line_throw' => false,
+        'binary_operator_spaces' => [
+            'default' => 'align',
+        ],
     ])
     ->setFinder($finder)
 ;

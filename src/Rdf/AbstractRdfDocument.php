@@ -92,9 +92,9 @@ abstract class AbstractRdfDocument implements RdfResource
         // Auto-fill uuid
         $uuid = $this->getValue(OpenSkos::UUID);
         if (!($uuid instanceof StringLiteral)) {
-            $iri = $this->iri()->getUri();
+            $iri    = $this->iri()->getUri();
             $tokens = explode('/', $iri);
-            $uuid = array_pop($tokens);
+            $uuid   = array_pop($tokens);
             if (self::isUuid($uuid)) {
                 $this->addProperty(new Iri(OpenSkos::UUID), $uuid);
             }
@@ -108,8 +108,8 @@ abstract class AbstractRdfDocument implements RdfResource
         // Build cache if needed
         if (!isset($annotations[static::class])) {
             // Fetch all annotations
-            $annotationReader = new AnnotationReader();
-            $documentReflection = new \ReflectionClass(static::class);
+            $annotationReader    = new AnnotationReader();
+            $documentReflection  = new \ReflectionClass(static::class);
             $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
 
             // Loop through annotations and extract data
@@ -396,7 +396,7 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         // Attempt to fetch the resource
-        $iri = $this->resource->iri();
+        $iri   = $this->resource->iri();
         $found = $this->repository->findByIri($iri);
 
         return !is_null($found);
@@ -421,7 +421,7 @@ abstract class AbstractRdfDocument implements RdfResource
      */
     public function errors(string $errorPrefix = null): array
     {
-        $errors = [];
+        $errors      = [];
         $annotations = static::annotations();
         $errorPrefix = $errorPrefix ?? 'abstract-rdf-document';
 
@@ -440,7 +440,7 @@ abstract class AbstractRdfDocument implements RdfResource
                     'code' => $errorPrefix.'-invalid-resource-type',
                     'data' => [
                         'expected' => $annotations['document-type'],
-                        'actual' => $type->getUri(),
+                        'actual'   => $type->getUri(),
                     ],
                 ]);
             }
@@ -517,6 +517,55 @@ abstract class AbstractRdfDocument implements RdfResource
         }
 
         $this->repository->delete($this->iri());
+
+        return null;
+    }
+
+    /**
+     * @Error(code="rdf-document-update-missing-repository",
+     *        status=500,
+     *        description="No repository is known to the document requested to be updated"
+     * )
+     * @Error(code="rdf-document-update-does-not-exist",
+     *        status=404,
+     *        description="The document requested to be updated does not exist",
+     *        fields={"iri"}
+     * )
+     */
+    public function update(): ?array
+    {
+        // No repository = can't check
+        if (is_null($this->repository)) {
+            return [[
+                'code' => 'rdf-document-update-missing-repository',
+            ]];
+        }
+
+        // Fetch the resource
+        $iri   = $this->resource->iri();
+        $found = $this->repository->findByIri($iri);
+        if (!$found) {
+            return [[
+                'code' => 'rdf-document-update-does-not-exist',
+                'data' => [
+                    'iri' => $iri->getUri(),
+                ],
+            ]];
+        }
+
+        // TODO: check updatefields
+
+        // Delete everything
+        $deleteErrors = $this->delete();
+        if ($deleteErrors) {
+            return $deleteErrors;
+        }
+
+        // Re-insert the document
+        $saveErrors = $this->save();
+        if ($saveErrors) {
+            return $saveErrors;
+        }
 
         return null;
     }

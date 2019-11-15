@@ -24,7 +24,7 @@ abstract class AbstractAnnotation
 
     public static function name(): string
     {
-        $class = static::class;
+        $class  = static::class;
         $prefix = 'App\\Annotation\\';
         if (substr($class, 0, strlen($prefix)) == $prefix) {
             $class = substr($class, strlen($prefix));

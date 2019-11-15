@@ -22,5 +22,5 @@ namespace App\Ontology;
 final class Http
 {
     const NAME_SPACE = 'http://www.w3.org/2011/http#';
-    const SC = 'http://www.w3.org/2011/http#sc';
+    const SC         = 'http://www.w3.org/2011/http#sc';
 }

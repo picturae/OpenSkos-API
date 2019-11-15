@@ -37,7 +37,7 @@ final class PrefixController
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
 
         $param_institutions = $apiRequest->getInstitutions();
-        $full_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
+        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
@@ -47,7 +47,7 @@ final class PrefixController
 
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
-        $graph = new \EasyRdf_Graph();
+        $graph     = new \EasyRdf_Graph();
         $resources = $graph->resource('prefixes');
 
         foreach ($sets as $set) {

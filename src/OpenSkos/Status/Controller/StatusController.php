@@ -37,7 +37,7 @@ final class StatusController
         \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
 
         // Define graph structure
-        $graph = new \EasyRdf_Graph('openskos.org');
+        $graph    = new \EasyRdf_Graph('openskos.org');
         $statuses = $graph->resource('openskos:status');
         $statuses->setType('openskos:status');
 

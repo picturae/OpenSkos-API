@@ -33,9 +33,9 @@ class ApiRequestResolverSpec extends ObjectBehavior
         $request = new Request(
             [
                 'format' => 'json-ld',
-                'limit' => '123',
+                'limit'  => '123',
                 'offset' => '12',
-                'level' => '1',
+                'level'  => '1',
             ]
         );
 
@@ -54,9 +54,9 @@ class ApiRequestResolverSpec extends ObjectBehavior
         $request = new Request(
             [
                 'format' => 'unknown-format',
-                'limit' => '123',
+                'limit'  => '123',
                 'offset' => '12',
-                'level' => '1',
+                'level'  => '1',
             ]
         );
 

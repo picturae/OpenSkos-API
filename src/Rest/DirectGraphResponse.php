@@ -22,7 +22,7 @@ final class DirectGraphResponse implements SkosResponse
         \EasyRdf_Graph $graph,
         RdfFormat $format
     ) {
-        $this->graph = $graph;
+        $this->graph  = $graph;
         $this->format = $format;
     }
 

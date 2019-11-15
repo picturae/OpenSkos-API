@@ -47,14 +47,14 @@ final class ConceptSchemeController
         ConceptSchemeRepository $repository,
         FilterProcessor $filterProcessor
     ): ListResponse {
-        $param_institutions = $apiRequest->getInstitutions();
+        $param_institutions  = $apiRequest->getInstitutions();
         $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         if ($filterProcessor->hasPublisher($institutions_filter)) {
             throw new ApiException('conceptscheme-getall-has-publisher-filter');
         }
 
-        $param_sets = $apiRequest->getSets();
+        $param_sets  = $apiRequest->getSets();
         $sets_filter = $filterProcessor->buildSetFilters($param_sets);
 
         $full_filter = array_merge($institutions_filter, $sets_filter);
@@ -135,7 +135,7 @@ final class ConceptSchemeController
         $auth->requireAdministrator();
 
         // Load data into sets
-        $graph = $apiRequest->getGraph();
+        $graph          = $apiRequest->getGraph();
         $conceptSchemes = $conceptSchemeRepository->fromGraph($graph);
         if (is_null($conceptSchemes)) {
             throw new ApiException('conceptscheme-create-empty-or-corrupt-body');
@@ -164,7 +164,7 @@ final class ConceptSchemeController
         // Ensure the tenants exist
         foreach ($conceptSchemes as $conceptScheme) {
             $tenantCode = $conceptScheme->getValue(OpenSkos::TENANT)->value();
-            $tenant = $institutionRepository->findOneBy(
+            $tenant     = $institutionRepository->findOneBy(
                 new Iri(OpenSkos::CODE),
                 new InternalResourceId($tenantCode)
             );
@@ -178,7 +178,7 @@ final class ConceptSchemeController
         // Ensure the sets exist
         foreach ($conceptSchemes as $conceptScheme) {
             $setIri = $conceptScheme->getValue(OpenSkos::SET)->getUri();
-            $set = $setRepository->findByIri(new Iri($setIri));
+            $set    = $setRepository->findByIri(new Iri($setIri));
             if (is_null($set)) {
                 throw new ApiException('conceptscheme-create-set-does-not-exist', [
                     'set' => $setIri,

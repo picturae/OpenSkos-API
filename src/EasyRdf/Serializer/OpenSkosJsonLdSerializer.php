@@ -42,13 +42,13 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
         }
 
         $ld_graph = new \ML\JsonLD\Graph();
-        $nodes = []; // cache for id-to-node association
+        $nodes    = []; // cache for id-to-node association
 
         foreach ($graph->toRdfPhp() as $resource => $properties) {
             if (array_key_exists($resource, $nodes)) {
                 $node = $nodes[$resource];
             } else {
-                $node = $ld_graph->createNode($resource);
+                $node             = $ld_graph->createNode($resource);
                 $nodes[$resource] = $node;
             }
 
@@ -58,7 +58,7 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
                         if (array_key_exists($value['value'], $nodes)) {
                             $_value = $nodes[$value['value']];
                         } else {
-                            $_value = $ld_graph->createNode($value['value']);
+                            $_value                 = $ld_graph->createNode($value['value']);
                             $nodes[$value['value']] = $_value;
                         }
                     } elseif ('literal' == $value['type']) {
@@ -86,8 +86,8 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
         $data = $ld_graph->toJsonLd();
 
         $compact_context = $options['context'] ?? null;
-        $pretty = $options['pretty'] ?? false;
-        $syntax = $options['syntax'] ?? 'compact';
+        $pretty          = $options['pretty']  ?? false;
+        $syntax          = $options['syntax']  ?? 'compact';
 
         if ('compact' === $syntax) {
             $dataOut = \ML\JsonLD\JsonLD::$syntax($data, $compact_context);

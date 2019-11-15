@@ -5,46 +5,46 @@ namespace App\Ontology;
 final class Context
 {
     const prefixes = [
-        'dc' => Dc::NAME_SPACE,
-        'dcmi' => Dcmi::NAME_SPACE,
-        'dcterms' => DcTerms::NAME_SPACE,
-        'foaf' => Foaf::NAME_SPACE,
-        'http' => Http::NAME_SPACE,
+        'dc'       => Dc::NAME_SPACE,
+        'dcmi'     => Dcmi::NAME_SPACE,
+        'dcterms'  => DcTerms::NAME_SPACE,
+        'foaf'     => Foaf::NAME_SPACE,
+        'http'     => Http::NAME_SPACE,
         'openskos' => OpenSkos::NAME_SPACE,
-        'org' => Org::NAME_SPACE,
-        'owl' => Owl::NAME_SPACE,
-        'rdf' => Rdf::NAME_SPACE,
-        'rdfs' => Rdfs::NAME_SPACE,
-        'skos' => Skos::NAME_SPACE,
-        'skosxl' => SkosXl::NAME_SPACE,
-        'vcard' => VCard::NAME_SPACE,
-        'xsd' => Xsd::NAME_SPACE,
+        'org'      => Org::NAME_SPACE,
+        'owl'      => Owl::NAME_SPACE,
+        'rdf'      => Rdf::NAME_SPACE,
+        'rdfs'     => Rdfs::NAME_SPACE,
+        'skos'     => Skos::NAME_SPACE,
+        'skosxl'   => SkosXl::NAME_SPACE,
+        'vcard'    => VCard::NAME_SPACE,
+        'xsd'      => Xsd::NAME_SPACE,
     ];
 
     const dataclass = [
-        'foaf:Person' => '\App\OpenSkos\User\User',
-        'openskos:set' => '\App\OpenSkos\Set\Set',
+        'foaf:Person'            => '\App\OpenSkos\User\User',
+        'openskos:set'           => '\App\OpenSkos\Set\Set',
         'org:FormalOrganization' => '\App\OpenSkos\Institution\Institution',
-        'skos:Concept' => '\App\OpenSkos\Concept\Concept',
-        'skos:ConceptScheme' => '\App\OpenSkos\ConceptScheme\ConceptScheme',
-        'skosxl:Label' => '\App\OpenSkos\Label\Label',
+        'skos:Concept'           => '\App\OpenSkos\Concept\Concept',
+        'skos:ConceptScheme'     => '\App\OpenSkos\ConceptScheme\ConceptScheme',
+        'skosxl:Label'           => '\App\OpenSkos\Label\Label',
     ];
 
     const namespaces = [
-        'dc' => Dc::class,
-        'dcmi' => Dcmi::class,
-        'dcterms' => DcTerms::class,
-        'foaf' => Foaf::class,
-        'http' => Http::class,
+        'dc'       => Dc::class,
+        'dcmi'     => Dcmi::class,
+        'dcterms'  => DcTerms::class,
+        'foaf'     => Foaf::class,
+        'http'     => Http::class,
         'openskos' => OpenSkos::class,
-        'org' => Org::class,
-        'owl' => Owl::class,
-        'rdf' => Rdf::class,
-        'rdfs' => Rdfs::class,
-        'skos' => Skos::class,
-        'skosxl' => SkosXl::class,
-        'vcard' => VCard::class,
-        'xsd' => Xsd::class,
+        'org'      => Org::class,
+        'owl'      => Owl::class,
+        'rdf'      => Rdf::class,
+        'rdfs'     => Rdfs::class,
+        'skos'     => Skos::class,
+        'skosxl'   => SkosXl::class,
+        'vcard'    => VCard::class,
+        'xsd'      => Xsd::class,
     ];
 
     /**
@@ -139,7 +139,7 @@ final class Context
     public static function detect(\EasyRdf_Graph $graph): array
     {
         $result = [];
-        $known = self::prefixes;
+        $known  = self::prefixes;
 
         // Walk through the whole graph
         // CAUTION: this may result in a performance hit

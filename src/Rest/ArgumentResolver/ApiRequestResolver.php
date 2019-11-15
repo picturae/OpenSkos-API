@@ -35,7 +35,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         ?Doctrine $connection
     ) {
         $this->formatFactory = $formatFactory;
-        $this->connection = $connection;
+        $this->connection    = $connection;
     }
 
     /**

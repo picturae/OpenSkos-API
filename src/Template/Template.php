@@ -31,8 +31,8 @@ class Template
     public static function from_camel_case($str): string
     {
         $func = create_function('$c', 'return strtolower($c[1]) . "_" . strtolower($c[2]);');
-        $str = preg_replace_callback('/([a-z])([A-Z])/', $func, $str);
-        $str = lcfirst($str);
+        $str  = preg_replace_callback('/([a-z])([A-Z])/', $func, $str);
+        $str  = lcfirst($str);
 
         return $str;
     }

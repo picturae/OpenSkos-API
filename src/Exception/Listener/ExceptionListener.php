@@ -40,7 +40,7 @@ final class ExceptionListener
             $response->headers->replace($exception->getHeaders());
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(json_encode([
-                'code' => $exception->getCode(),
+                'code'    => $exception->getCode(),
                 'message' => $exception->getMessage(),
             ]));
             $event->setResponse($response);
@@ -54,10 +54,10 @@ final class ExceptionListener
         }
 
         /** @var ApiException $exception */
-        $errorCode = $exception->errorCode;
-        $errorConfig = $exception->config;
+        $errorCode             = $exception->errorCode;
+        $errorConfig           = $exception->config;
         $errorConfig['fields'] = $errorConfig['fields'] ?? [];
-        $errorData = $exception->data;
+        $errorData             = $exception->data;
 
         // Basic JSON response
         $response = new Response();
@@ -71,8 +71,8 @@ final class ExceptionListener
 
         // Base response data
         $responseData = array_merge($exception->data, [
-            'status' => $exception->status,
-            'code' => $errorCode,
+            'status'      => $exception->status,
+            'code'        => $errorCode,
             'description' => $exception->description,
         ]);
 

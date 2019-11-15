@@ -34,8 +34,8 @@ final class ListResponse implements SkosResponse
         int $offset,
         RdfFormat $format
     ) {
-        $this->docs = $docs;
-        $this->total = $total;
+        $this->docs   = $docs;
+        $this->total  = $total;
         $this->offset = $offset;
         $this->format = $format;
     }

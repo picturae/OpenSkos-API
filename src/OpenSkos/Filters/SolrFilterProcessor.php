@@ -13,15 +13,15 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 final class SolrFilterProcessor
 {
     //Filter Types
-    const TYPE_URI = 'uri';
-    const TYPE_UUID = 'uuid';
+    const TYPE_URI    = 'uri';
+    const TYPE_UUID   = 'uuid';
     const TYPE_STRING = 'string';
 
     //Group for filter
-    const ENTITY_INSTITUTION = 'institution';
-    const ENTITY_SET = 'set';
+    const ENTITY_INSTITUTION   = 'institution';
+    const ENTITY_SET           = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
-    const VALUE_STATUS = 'status';
+    const VALUE_STATUS         = 'status';
 
     /**
      * @var Connection
@@ -41,7 +41,7 @@ final class SolrFilterProcessor
         EasyRdfClient $rdfClient
     ) {
         $this->connection = $connection;
-        $this->rdfClient = $rdfClient;
+        $this->rdfClient  = $rdfClient;
     }
 
     /**
@@ -147,7 +147,7 @@ final class SolrFilterProcessor
     {
         $dataOut = [];
 
-        $nIdx = 0;
+        $nIdx             = 0;
         $filtersAsStrings = [];
 
         foreach ($filterList as $filter) {
@@ -179,9 +179,9 @@ final class SolrFilterProcessor
     public function buildStatusesFilters(array $filterList)
     {
         $acceptableStatuses = ['none', 'candidate', 'approved', 'redirected', 'not_compliant', 'rejected', 'obsolete', 'deleted'];
-        $dataOut = [];
+        $dataOut            = [];
 
-        $nIdx = 0;
+        $nIdx             = 0;
         $filtersAsStrings = [];
 
         foreach ($filterList as $filter) {
@@ -209,11 +209,11 @@ final class SolrFilterProcessor
     public function buildUserFilters(array $filterList)
     {
         $userParams = [
-            'creator' => 's_creator',
+            'creator'             => 's_creator',
             'openskos:acceptedBy' => 's_acceptedBy',
             /* The following fields are copied from OpenSkos 2.2, but do not seem to work in solr! */
             'openskos:modifiedBy' => 's_contributor',
-            'openskos:deletedBy' => 's_deletedBy',
+            'openskos:deletedBy'  => 's_deletedBy',
         ];
 
         $dataOut = [];
@@ -250,15 +250,15 @@ final class SolrFilterProcessor
         $parser = new ParserText();
 
         $dateParams = [
-            'dateSubmitted' => 'd_dateSubmitted',
-            'modified' => 'd_modified',
-            'dateAccepted' => 'd_dateAccepted',
+            'dateSubmitted'    => 'd_dateSubmitted',
+            'modified'         => 'd_modified',
+            'dateAccepted'     => 'd_dateAccepted',
             'openskos:deleted' => 'd_dateDeleted',
         ];
 
         $dataOut = [];
 
-        $nIdx = 0;
+        $nIdx             = 0;
         $filtersAsStrings = [];
 
         foreach ($dateParams as $param => $solrField) {

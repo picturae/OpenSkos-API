@@ -23,7 +23,7 @@ final class StringLiteral implements Literal
     public function __construct(string $value, ?string $lang = null)
     {
         $this->value = $value;
-        $this->lang = $lang;
+        $this->lang  = $lang;
     }
 
     public function value(): string

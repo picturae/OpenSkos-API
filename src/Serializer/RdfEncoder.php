@@ -43,10 +43,10 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
         $this->formatFactory = $formatFactory;
 
         $this->formatMap = [
-            JsonLd::instance()->name() => 'jsonld',
-            RdfXml::instance()->name() => 'rdfxml',
+            JsonLd::instance()->name()   => 'jsonld',
+            RdfXml::instance()->name()   => 'rdfxml',
             Ntriples::instance()->name() => 'ntriples',
-            Turtle::instance()->name() => 'turtle',
+            Turtle::instance()->name()   => 'turtle',
         ];
     }
 
@@ -101,8 +101,8 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
             $processed_data = $serialiser->serialise($graph, 'jsonld', [
                 'compact' => true,
                 'context' => $context,
-                'pretty' => $pretty,
-                'syntax' => $syntax,
+                'pretty'  => $pretty,
+                'syntax'  => $syntax,
             ]);
 
             $serialised_data = $processed_data;
@@ -157,7 +157,7 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
         foreach ($triples as $triple) {
             if ($triple instanceof Label) {
                 $tripleSubject = $triple->getSubject();
-                $labelSubject = $triple->getChildSubject();
+                $labelSubject  = $triple->getChildSubject();
 
                 $this->serializeLevelOfTriples($graph, $triple->triples(), $recursionLevel + 1);
 
@@ -173,9 +173,9 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
                 }
                 continue;
             }
-            $subject = $triple->getSubject();
+            $subject   = $triple->getSubject();
             $predicate = $triple->getPredicate();
-            $object = $triple->getObject();
+            $object    = $triple->getObject();
 
             if ($object instanceof Literal) {
                 $graph->addLiteral(

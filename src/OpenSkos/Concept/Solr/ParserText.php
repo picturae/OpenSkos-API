@@ -131,7 +131,7 @@ class ParserText
     public function buildDatePeriodQuery($field, $startDate, $endDate)
     {
         $isStartDateSpecified = !empty($startDate);
-        $isEndDateSpecified = !empty($endDate);
+        $isEndDateSpecified   = !empty($endDate);
         if (!$isStartDateSpecified && !$isEndDateSpecified) {
             return '';
         }

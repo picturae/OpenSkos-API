@@ -28,7 +28,7 @@ final class ScalarResponse implements SkosResponse
     public function __construct(
         RdfResource $doc, RdfFormat $format
     ) {
-        $this->doc = $doc;
+        $this->doc    = $doc;
         $this->format = $format;
     }
 

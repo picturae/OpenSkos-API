@@ -10,5 +10,5 @@ use App\Repository\AbstractRepository;
 final class JenaRepository extends AbstractRepository
 {
     const DOCUMENT_CLASS = Person::class;
-    const DOCUMENT_TYPE = Foaf::PERSON;
+    const DOCUMENT_TYPE  = Foaf::PERSON;
 }
