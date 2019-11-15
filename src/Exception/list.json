@@ -357,15 +357,15 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateErrorCode"
     },
-    "permission-denied-invalid-credentials" : {
-        "code": "permission-denied-invalid-credentials",
+    "authentication-permission-denied-invalid-credentials" : {
+        "code": "authentication-permission-denied-invalid-credentials",
         "description": "Invalid credentials were given",
         "status": 403,
         "class": "App\\Security\\Authentication",
         "method": "requireAuthenticated"
     },
-    "permission-denied-missing-credentials" : {
-        "code": "permission-denied-missing-credentials",
+    "authentication-permission-denied-missing-credentials" : {
+        "code": "authentication-permission-denied-missing-credentials",
         "description": "No credentials were given",
         "status": 401,
         "class": "App\\Security\\Authentication",

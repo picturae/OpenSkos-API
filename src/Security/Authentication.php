@@ -149,11 +149,11 @@ class Authentication
     /**
      * @throws ApiException
      *
-     * @Error(code="permission-denied-invalid-credentials",
+     * @Error(code="authentication-permission-denied-invalid-credentials",
      *        status=403,
      *        description="Invalid credentials were given"
      * )
-     * @Error(code="permission-denied-missing-credentials",
+     * @Error(code="authentication-permission-denied-missing-credentials",
      *        status=401,
      *        description="No credentials were given"
      * )
