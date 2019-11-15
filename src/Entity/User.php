@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Annotation\Document;
+use App\Rdf\Iri;
 
 /**
  * @Document\Table("user")
@@ -73,6 +74,11 @@ class User extends AbstractEntity
      * @var bool
      */
     protected $enableSkosXl;
+
+    public function iri(): Iri
+    {
+        return new Iri($this->getUri() ?? '');
+    }
 
     /**
      * @param int $id

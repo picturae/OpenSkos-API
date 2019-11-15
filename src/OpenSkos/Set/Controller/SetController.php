@@ -275,7 +275,7 @@ final class SetController
         // Rebuild all given sets
         $modifier = new Iri(OpenSkos::MODIFIED_BY);
         foreach ($sets as $set) {
-            $set->setValue($modifier, $user->getUri());
+            $set->setValue($modifier, $user->iri());
             $errors = $set->update();
             if ($errors) {
                 throw new ApiException($errors[0]);
