@@ -57,4 +57,9 @@ final class ConceptScheme extends AbstractRdfDocument
         OpenSkos::SET,
         OpenSkos::TENANT,
     ];
+
+    protected static $updateFields = [
+        DcTerms::TITLE,
+        OpenSkos::MODIFIED_BY,
+    ];
 }

@@ -142,7 +142,7 @@ final class VocabularyAwareResource implements RdfResource
                     unset($this->properties[$predicate]);
                 }
             } else {
-                unset($this->properties[$predicate]);
+                $this->properties[$predicate] = null;
             }
         }
 

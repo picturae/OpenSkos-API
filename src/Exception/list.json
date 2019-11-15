@@ -159,6 +159,17 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateLicense"
     },
+    "dcterms-validate-modified-literal-type" : {
+        "code": "dcterms-validate-modified-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the modified predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "status": 422,
+        "class": "App\\Ontology\\DcTerms",
+        "method": "validateModified"
+    },
     "dcterms-validate-title-literal-type" : {
         "code": "dcterms-validate-title-literal-type",
         "fields": [
@@ -346,15 +357,15 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateErrorCode"
     },
-    "permission-denied-invalid-credentials" : {
-        "code": "permission-denied-invalid-credentials",
+    "authentication-permission-denied-invalid-credentials" : {
+        "code": "authentication-permission-denied-invalid-credentials",
         "description": "Invalid credentials were given",
         "status": 403,
         "class": "App\\Security\\Authentication",
         "method": "requireAuthenticated"
     },
-    "permission-denied-missing-credentials" : {
-        "code": "permission-denied-missing-credentials",
+    "authentication-permission-denied-missing-credentials" : {
+        "code": "authentication-permission-denied-missing-credentials",
         "description": "No credentials were given",
         "status": 401,
         "class": "App\\Security\\Authentication",
@@ -564,7 +575,7 @@
         "description": "The requested ConceptScheme could not be retreived",
         "status": 404,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "conceptscheme"
+        "method": "getConceptScheme"
     },
     "conceptscheme-create-empty-or-corrupt-body" : {
         "code": "conceptscheme-create-empty-or-corrupt-body",
@@ -602,6 +613,43 @@
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
         "method": "postSet"
+    },
+    "conceptscheme-update-empty-or-corrupt-body" : {
+        "code": "conceptscheme-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-does-not-exist" : {
+        "code": "conceptscheme-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-tenant-does-not-exist" : {
+        "code": "conceptscheme-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-set-does-not-exist" : {
+        "code": "conceptscheme-update-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
     "EOF": null
 }

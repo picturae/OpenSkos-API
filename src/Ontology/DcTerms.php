@@ -388,6 +388,44 @@ final class DcTerms
     }
 
     /**
+     * Returns the first encountered error for modified.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="dcterms-validate-modified-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the modified predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *     )
+     */
+    public function validateModified($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'dcterms-validate-modified-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the first encountered error for title.
      * Returns null on success (a.k.a. no errors).
      *

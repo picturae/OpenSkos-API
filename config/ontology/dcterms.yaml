@@ -92,6 +92,7 @@ parameters:
         datatype: literal
       modified:
         datatype: literal
+        literaltype: "xsd:datetime"
       provenance:
         datatype: literal
       publisher:
