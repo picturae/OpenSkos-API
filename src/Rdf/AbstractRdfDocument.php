@@ -526,6 +526,11 @@ abstract class AbstractRdfDocument implements RdfResource
      *        status=500,
      *        description="No repository is known to the document requested to be saved"
      * )
+     * @Error(code="rdf-document-save-exception",
+     *        status=500,
+     *        description="The insert threw an exception",
+     *        fields={"message"}
+     * )
      */
     public function save(): ?array
     {
@@ -551,6 +556,9 @@ abstract class AbstractRdfDocument implements RdfResource
         } catch (\Exception $e) {
             return [[
                 'code' => 'save-failed',
+                'data' => [
+                    'message' => $e->getMessage(),
+                ],
             ]];
         }
     }

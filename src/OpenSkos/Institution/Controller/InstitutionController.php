@@ -187,7 +187,7 @@ final class InstitutionController
 
         $errors = $institution->delete();
         if ($errors) {
-            throw $errors[0];
+            throw new ApiException($errors[0]);
         }
 
         return new ScalarResponse(
@@ -246,12 +246,12 @@ final class InstitutionController
         foreach ($institutions as $institution) {
             $errors = $institution->delete();
             if ($errors) {
-                throw $errors[0];
+                throw new ApiException($errors[0]);
             }
 
             $errors = $institution->save();
             if ($errors) {
-                throw $errors[0];
+                throw new ApiException($errors[0]);
             }
         }
 
