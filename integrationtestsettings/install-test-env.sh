@@ -1,6 +1,6 @@
 #!/bin/sh
 SOLR_VERSION=7.5.0
-JENA_VERSION=2.6.0
+JENA_VERSION=2.3.0
 
 #install apache2
 
