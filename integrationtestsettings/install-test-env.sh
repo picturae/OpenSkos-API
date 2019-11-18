@@ -2,10 +2,7 @@
 
 #install apache2
 
-cp  ${TRAVIS_BUILD_DIR}/integrationtestsettings/application.ini ${TRAVIS_BUILD_DIR}/application/configs/application.ini
-
 # install solr:
-
 mkdir -p /tmp/solr || exit $?
 cd /tmp/solr || exit $?
 # wget "https://archive.apache.org/dist/lucene/solr/6.3.0/solr-6.3.0.zip"  || exit $?
