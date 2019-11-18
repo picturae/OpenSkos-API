@@ -6,8 +6,8 @@ mysql < ../data/travis/database.sql || exit $?
 
 sleep 30
 echo "Loading Jena data"
-curl -X POST -d '@../data/travis/database.ttl' \
-  -H 'Content-Type: text/turtle; charset=utf-8' \
+curl -X POST -d "INSERT { $(cat ../data/travis/database.ttl) } WHERE {}" \
+  -H 'Content-Type: application/sparql-update; charset=utf-8' \
   http://localhost:3030/openskos/update || exit $?
 
 cat /opt/apache-jena-fuseki/logs/fuseki*.log
