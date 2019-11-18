@@ -26,6 +26,7 @@ chmod +x /opt/apache-jena-fuseki/fuseki-server /opt/apache-jena-fuseki/bin/*  ||
 mkdir -p /opt/apache-jena-fuseki/run  || exit $?
 cp -r ${TRAVIS_BUILD_DIR}/data/travis/jena/configuration /opt/apache-jena-fuseki/run/configuration || exit $?
 mkdir /opt/apache-jena-fuseki/logs || exit $?
+mkdir -p /fuseki/databases/openskos || exit $?
 chmod 755 ${TRAVIS_BUILD_DIR}/integrationtestsettings/start-fuseki.sh || exit $?
 
 #mysql
