@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# sleep 30
+sleep 30
+
+mysql < ../data/travis/database.sql
+curl -X POST -d '@../data/travis/database.ttl' http://localhost:3030/openskos/update
 
 # cat /opt/apache-jena-fuseki/logs/fuseki*.log
 # ps -ef
@@ -25,4 +28,4 @@
 
 # php conceptscheme_or_skoscollection.php --tenant=example --key=xxx --setUri=http://set01/set01abc --uri=http://scheme02/ --description="test scheme 2" --uuid=scheme02abc  --title="test scheme 02"  --restype=scheme create
 
-# cd ${TRAVIS_BUILD_DIR}
+cd ${TRAVIS_BUILD_DIR}

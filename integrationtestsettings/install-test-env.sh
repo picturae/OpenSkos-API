@@ -25,7 +25,7 @@ mv /opt/apache-jena-fuseki-2.3.0 /opt/apache-jena-fuseki
 chmod -R ugo+rw /opt/apache-jena-fuseki 
 chmod +x /opt/apache-jena-fuseki/fuseki-server /opt/apache-jena-fuseki/bin/* 
 mkdir -p /opt/apache-jena-fuseki/run 
-cp -r ${TRAVIS_BUILD_DIR}/data/fuseki/configuration /opt/apache-jena-fuseki/run/configuration
+cp -r ${TRAVIS_BUILD_DIR}/data/travis/jena/configuration /opt/apache-jena-fuseki/run/configuration
 mkdir /opt/apache-jena-fuseki/logs
 chmod 755 ${TRAVIS_BUILD_DIR}/integrationtestsettings/start-fuseki.sh
 
