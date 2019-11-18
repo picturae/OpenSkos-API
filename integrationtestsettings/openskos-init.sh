@@ -8,7 +8,7 @@ sleep 30
 echo "Loading Jena data"
 curl -X POST -d '@../data/travis/database.ttl' http://localhost:3030/openskos/update || exit $?
 
-# cat /opt/apache-jena-fuseki/logs/fuseki*.log
+cat /opt/apache-jena-fuseki/logs/fuseki*.log
 # ps -ef
 
 # wget -O - "http://localhost:8983/solr/openskos/select?indent=on&q=*:*&wt=json"
