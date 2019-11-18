@@ -43,8 +43,8 @@ install:
   # - vendor/bin/phing config
   - cd integrationtestsettings
   - bash install-test-env.sh
-  - bash start-solr.sh &
-  - bash start-fuseki.sh &
+  - sudo bash start-solr.sh &
+  - sudo bash start-fuseki.sh &
   - bash openskos-init.sh
   - cd ..
   - netstat -lnp
