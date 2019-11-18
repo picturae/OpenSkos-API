@@ -1,9 +1,12 @@
 #!/bin/bash
 
 sleep 30
+echo "Loading SQL data"
+mysql < ../data/travis/database.sql || exit $?
 
-mysql < ../data/travis/database.sql
-curl -X POST -d '@../data/travis/database.ttl' http://localhost:3030/openskos/update
+sleep 30
+echo "Loading Jena data"
+curl -X POST -d '@../data/travis/database.ttl' http://localhost:3030/openskos/update || exit $?
 
 # cat /opt/apache-jena-fuseki/logs/fuseki*.log
 # ps -ef
