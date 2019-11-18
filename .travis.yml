@@ -36,9 +36,9 @@ install:
   - sudo usermod -a -G travis www-data
   - sudo groups www-data
   - find $TRAVIS_BUILD_DIR -type d -exec chmod ugo+x {} \;
-  - chmod -R ugo+rwx cache
+  # - chmod -R ugo+rwx cache
   - chmod -R ugo+rwx data
-  - chmod -R ugo+rwx public/data
+  # - chmod -R ugo+rwx public/data
   - sudo service apache2 restart
   # - vendor/bin/phing config
   - cd integrationtestsettings
