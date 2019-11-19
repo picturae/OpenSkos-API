@@ -2,11 +2,17 @@
 
 sleep 30
 echo "Loading SQL data"
-mysql < ../data/travis/database.sql || exit $?
+mysql < ../data/travis/mysql/schema.sql || exit $?
+# mysql < ../data/travis/mysql/job.sql || exit $?
+# mysql < ../data/travis/mysql/max-numeric-notation.sql || exit $?
+# mysql < ../data/travis/mysql/namespace.sql || exit $?
+# mysql < ../data/travis/mysql/notations.sql || exit $?
+# mysql < ../data/travis/mysql/search-profiles.sql || exit $?
+mysql < ../data/travis/mysql/user.sql || exit $?
 
 sleep 30
 echo "Loading Jena data"
-curl -X POST -d "INSERT { $(cat ../data/travis/database.ttl) } WHERE {}" \
+curl -X POST -d "INSERT { $(cat ../data/travis/jena/data.ttl) } WHERE {}" \
   -H 'Content-Type: application/sparql-update; charset=utf-8' \
   http://localhost:3030/openskos/update || exit $?
 
