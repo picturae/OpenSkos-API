@@ -16,3 +16,4 @@
 
 data/deploy/
 data/solr/data/
+*.bak
