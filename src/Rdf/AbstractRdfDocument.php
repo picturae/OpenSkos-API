@@ -8,6 +8,7 @@ use App\Ontology\Context;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
+use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Literal\BooleanLiteral;
@@ -429,11 +430,23 @@ abstract class AbstractRdfDocument implements RdfResource
             return false;
         }
 
-        // Attempt to fetch the resource
+        // Attempt to fetch the resource by iri
         $iri   = $this->resource->iri();
         $found = $this->repository->findByIri($iri);
+        if (!is_null($found)) {
+            return true;
+        }
 
-        return !is_null($found);
+        // Attempt to fetch the resource by UUID
+        $uuid = $this->getValue(OpenSkos::UUID);
+        if (!is_null($uuid)) {
+            $found = $this->repository->getByUuid(new InternalResourceId($uuid->__toString()));
+            if (!is_null($found)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
