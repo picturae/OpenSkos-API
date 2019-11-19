@@ -105,7 +105,7 @@ final class SetController
      *        description="The body passed to this endpoint was either missing or corrupt"
      * )
      * @Error(code="set-create-already-exists",
-     *        status=400,
+     *        status=409,
      *        description="A set with the given iri already exists",
      *        fields={"iri"}
      * )

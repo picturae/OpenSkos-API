@@ -508,7 +508,7 @@
             "iri"
         ],
         "description": "A set with the given iri already exists",
-        "status": 400,
+        "status": 409,
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "postSet"
     },
