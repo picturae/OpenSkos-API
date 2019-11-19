@@ -505,9 +505,20 @@
     "set-create-already-exists" : {
         "code": "set-create-already-exists",
         "fields": [
-            "iri"
+            "iri",
+            "uuid"
         ],
-        "description": "A set with the given iri already exists",
+        "description": "A set with the given iri or uuid already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-already-exists-duplicate-base-uri" : {
+        "code": "set-create-already-exists-duplicate-base-uri",
+        "fields": [
+            "baseUri"
+        ],
+        "description": "A set with the given baseUri already exists",
         "status": 409,
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "postSet"
