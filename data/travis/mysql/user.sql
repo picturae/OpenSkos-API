@@ -1,3 +1,5 @@
+USE `openskos`;
+
 INSERT IGNORE INTO `user` (
   `id`,
   `email`,
