@@ -1,4 +1,4 @@
-INSERT INTO `user` (
+INSERT IGNORE INTO `user` (
   `id`,
   `email`,
   `name`,
@@ -14,7 +14,7 @@ INSERT INTO `user` (
   `disableSearchProfileChanging`,
   `uri`,
   `enableSkosXl`
-) VALUES (
+) VALUES
   (
     1,
     'r.bron@picturae.com',
@@ -49,4 +49,4 @@ INSERT INTO `user` (
     'http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706',
     NULL
   )
-);
+;
