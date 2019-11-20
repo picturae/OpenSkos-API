@@ -8,6 +8,7 @@ use App\Annotation\Error;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\Filters\FilterProcessor;
@@ -36,30 +37,19 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"GET"})
-     *
-     * @throws ApiException
-     *
-     * @Error(code="conceptscheme-getall-has-publisher-filter",
-     *        status=400,
-     *        description="The search by Publisher URI for institutions could not be retrieved (Predicate is not used in Jena Store for Concept Schemes)"
-     * )
      */
-    public function conceptschemes(
+    public function getConceptschemes(
+        ApiFilter $apiFilter,
         ApiRequest $apiRequest,
         ConceptSchemeRepository $repository,
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions  = $apiRequest->getInstitutions();
-        $institutions_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
 
-        if ($filterProcessor->hasPublisher($institutions_filter)) {
-            throw new ApiException('conceptscheme-getall-has-publisher-filter');
-        }
-
-        $param_sets  = $apiRequest->getSets();
-        $sets_filter = $filterProcessor->buildSetFilters($param_sets);
-
-        $full_filter = array_merge($institutions_filter, $sets_filter);
+        // TODO: Don't use non-default filters anymore
+        $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
+        $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
+        $full_filter = $apiFilter->buildFilters();
 
         $conceptschemes = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 

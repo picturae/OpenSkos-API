@@ -83,8 +83,12 @@ final class Context
     /**
      * Detect prefix AND field from uri.
      */
-    public static function decodeUri(string $uri): ?array
+    public static function decodeUri(?string $uri): ?array
     {
+        if (is_null($uri)) {
+            return null;
+        }
+
         $tokens = explode(':', $uri);
         if (2 === (count($tokens)) && (isset(static::prefixes[$tokens[0]]))) {
             return $tokens;
