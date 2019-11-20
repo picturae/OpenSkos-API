@@ -70,7 +70,7 @@ final class Context
         }
 
         $tokens = explode(':', $uri);
-        if (2 === (count($tokens)) && (isset(static::prefixes[$tokens[0]]))) {
+        if (2 === (count($tokens)) && (isset(static::prefixes[$tokens[0]])) && ($tokens[0] !== 'http')) {
             return $tokens;
         }
 
