@@ -4,6 +4,8 @@ namespace App\OpenSkos;
 
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\Set\SetRepository;
+use App\Rdf\Iri;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ApiFilter
@@ -30,6 +32,7 @@ final class ApiFilter
         'dcterms:dateSubmitted' => 'xsd:duration',
         'dcterms:modified'      => 'xsd:duration',
         'openskos:deleted'      => 'xsd:duration',
+        'openskos:set'          => 'openskos:set',
         'openskos:status'       => OpenSkos::STATUSES,
     ];
 
@@ -54,9 +57,17 @@ final class ApiFilter
      */
     private $lang = null;
 
+    /**
+     * @var SetRepository
+     */
+    private $setRepository;
+
     public function __construct(
-        Request $request
+        Request $request,
+        SetRepository $setRepository
     ) {
+        $this->setRepository = $setRepository;
+
         $params = $request->query->get('filter', []);
 
         // Extract filter language
@@ -122,13 +133,24 @@ final class ApiFilter
             }
         }
 
-        // Handle csv
-        if ('csv' === $type && is_string($value)) {
-            $value = str_getcsv($value);
+        switch ($type) {
+            case 'openskos:set':
+                // TODO: fetch sets & use the found iri
+                $set = $this->setRepository->findOneBy(
+                    new Iri(OpenSkos::CODE),
+                    new InternalResourceId($value)
+                );
+                if (!is_null($set)) {
+                    $value = $set->iri()->getUri();
+                }
+                break;
+            case 'xsd:duration':
+                // TODO: validate datetime
+                break;
         }
 
         // Register the filter
-        $this->filters[$predicate] = $value;
+        $this->filters[$predicate][] = $value;
 
         return $this;
     }
