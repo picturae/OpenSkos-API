@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Healthcheck;
 
+use App\Annotation\OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -29,6 +30,12 @@ final class PingController extends AbstractController
 
     /**
      * @Route(path="/ping", methods={"GET"})
+     *
+     * @OA\Summary("Healthcheck end basic information")
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Json()
+     * )
      */
     public function ping(
         JenaRepository $jenaRepository

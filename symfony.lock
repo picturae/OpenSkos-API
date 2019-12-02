@@ -126,6 +126,9 @@
     "gnugat/nomo-spaco": {
         "version": "v0.4.3"
     },
+    "harmbandstra/swagger-ui-bundle": {
+        "version": "4.2.0"
+    },
     "jakub-onderka/php-parallel-lint": {
         "version": "v1.0.0"
     },
@@ -188,6 +191,9 @@
     },
     "openlss/lib-array2xml": {
         "version": "0.5.1"
+    },
+    "php": {
+        "version": "7.3"
     },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
@@ -266,6 +272,9 @@
     },
     "solarium/solarium": {
         "version": "5.0.3"
+    },
+    "swagger-api/swagger-ui": {
+        "version": "v3.24.3"
     },
     "symfony/cache": {
         "version": "v4.2.8"

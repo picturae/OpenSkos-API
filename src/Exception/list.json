@@ -586,7 +586,7 @@
         "description": "The body passed to this endpoint was either missing or corrupt",
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-create-already-exists" : {
         "code": "conceptscheme-create-already-exists",
@@ -596,7 +596,7 @@
         "description": "A ConceptScheme with the given iri already exists",
         "status": 409,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-create-tenant-does-not-exist" : {
         "code": "conceptscheme-create-tenant-does-not-exist",
@@ -606,7 +606,7 @@
         "description": "The given tenant to create a ConceptScheme for does not exist",
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-create-set-does-not-exist" : {
         "code": "conceptscheme-create-set-does-not-exist",
@@ -616,7 +616,7 @@
         "description": "The given set to create a ConceptScheme for does not exist",
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-update-empty-or-corrupt-body" : {
         "code": "conceptscheme-update-empty-or-corrupt-body",

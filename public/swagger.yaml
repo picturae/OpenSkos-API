@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title      : "OpenSkos API"
+  description: "TODO: DESCRIPTION"
+  version    : "2.3"
+
+servers:
+  - url: "http://api.openskos.local"
+    description: "Default local development server"
+
+paths:
+  /errors.{format}:
+    get:
+      summary: ""
+  /relationtypes.{format}:
+    get:
+      summary: ""
+  /relationtype/{id}.{format}:
+    get:
+      summary: ""
+  /vocab.{format}:
+    get:
+      summary: ""
+  /roles.{format}:
+    get:
+      summary: ""
+  /concept/{id}.{format}:
+    get:
+      summary: ""
+  /concept.{format}:
+    get:
+      summary: ""
+  /concepts.{format}:
+    get:
+      summary: ""
+  /autocomplete.{format}:
+    get:
+      summary: ""
+  /labels.{format}:
+    get:
+      summary: ""
+  /label/{id}.{format}:
+    get:
+      summary: ""
+  /label.{format}:
+    get:
+      summary: ""
+  /users.{format}:
+    get:
+      summary: "Returns a list of all users you're allowed to see"
+  /user/{id}.{format}:
+    get:
+      summary: ""
+  /statuses.{format}:
+    get:
+      summary: ""
+  /institutions.{format}:
+    get:
+      summary: ""
+    post:
+      summary: ""
+    put:
+      summary: ""
+  /institution/{id}.{format}:
+    get:
+      summary: ""
+    delete:
+      summary: ""
+  /prefixes.{format}:
+    get:
+      summary: ""
+  /sets.{format}:
+    get:
+      summary: ""
+    post:
+      summary: ""
+    put:
+      summary: ""
+  /set/{id}.{format}:
+    get:
+      summary: ""
+    delete:
+      summary: ""
+  /relations.{format}:
+    get:
+      summary: ""
+  /conceptschemes.{format}:
+    get:
+      summary: ""
+    post:
+      summary: ""
+    put:
+      summary: ""
+  /conceptscheme/{id}.{format}:
+    get:
+      summary: ""
+    delete:
+      summary: ""
+  /ping:
+    get:
+      summary: "Healthcheck end basic information"
+      responses:
+        '200':
+          content:
+            application/json:
+              description: ""
