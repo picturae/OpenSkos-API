@@ -26,4 +26,7 @@ final class Xsd
     const BOOLEAN              = 'http://www.w3.org/2001/XMLSchema#boolean';
     const STRING               = 'http://www.w3.org/2001/XMLSchema#string';
     const DATETIME             = 'http://www.w3.org/2001/XMLSchema#datetime';
+
+    const literaltypes = [
+    ];
 }

@@ -25,4 +25,7 @@ final class Foaf
     const PERSON     = 'http://xmlns.com/foaf/0.1/Person';
     const NAME       = 'http://xmlns.com/foaf/0.1/name';
     const MBOX       = 'http://xmlns.com/foaf/0.1/mbox';
+
+    const literaltypes = [
+    ];
 }

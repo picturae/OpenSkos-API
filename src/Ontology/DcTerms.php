@@ -83,6 +83,19 @@ final class DcTerms
     const TYPE                   = 'http://purl.org/dc/terms/type';
     const VALID                  = 'http://purl.org/dc/terms/valid';
 
+    const literaltypes = [
+        'http://purl.org/dc/terms/created'         => 'xsd:datetime',
+        'http://purl.org/dc/terms/date'            => 'xsd:datetime',
+        'http://purl.org/dc/terms/dateAccepted'    => 'xsd:datetime',
+        'http://purl.org/dc/terms/dateApproved'    => 'xsd:datetime',
+        'http://purl.org/dc/terms/dateCopyrighted' => 'xsd:datetime',
+        'http://purl.org/dc/terms/dateSubmitted'   => 'xsd:datetime',
+        'http://purl.org/dc/terms/description'     => 'xsd:string',
+        'http://purl.org/dc/terms/license'         => 'xsd:string',
+        'http://purl.org/dc/terms/modified'        => 'xsd:datetime',
+        'http://purl.org/dc/terms/title'           => 'xsd:string',
+    ];
+
     /**
      * Returns the first encountered error for created.
      * Returns null on success (a.k.a. no errors).

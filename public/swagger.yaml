@@ -5,136 +5,193 @@ info:
   version    : "2.3"
 
 servers:
-  - url: "http://api.openskos.local"
-    description: "Default local development server"
+  - "url": "http://api.openskos.local"
+    "description": "Default local development server"
 
 paths:
   /errors.{format}:
     get:
-      summary: ""
+      "summary": ""
   /relationtypes.{format}:
     get:
-      summary: ""
+      "summary": ""
   /relationtype/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
   /vocab.{format}:
     get:
-      summary: ""
+      "summary": ""
   /roles.{format}:
     get:
-      summary: ""
+      "summary": ""
   /concept/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
   /concept.{format}:
     get:
-      summary: ""
+      "summary": ""
   /concepts.{format}:
     get:
-      summary: ""
+      "summary": ""
+    post:
+      "summary": "Create one or more new concepts"
+      "parameters":
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+        - "type": "object"
+          "name": "@context"
+          "in": "body"
+        - "type": "array"
+          "items":
+            "type": "object"
+            "properties":
+              "@id":
+                "type": "string"
+              "@type":
+                "type": "string"
+                "example": "skos:Concept"
+              "openskos:uuid":
+                "type": "string"
+              "openskos:tenant":
+                "type": "string"
+              "dcterms:title":
+                "type": "string"
+          "name": "@graph"
+          "in": "body"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                        "@type":
+                          "type": "string"
+                          "example": "skos:Concept"
+                        "openskos:uuid":
+                          "type": "string"
+                        "openskos:tenant":
+                          "type": "string"
+                        "dcterms:title":
+                          "type": "string"
   /autocomplete.{format}:
     get:
-      summary: ""
+      "summary": ""
   /labels.{format}:
     get:
-      summary: ""
+      "summary": ""
   /label/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
   /label.{format}:
     get:
-      summary: ""
+      "summary": ""
   /users.{format}:
     get:
-      summary: ""
+      "summary": ""
   /user/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
   /statuses.{format}:
     get:
-      summary: ""
+      "summary": ""
   /institutions.{format}:
     get:
-      summary: ""
+      "summary": ""
     post:
-      summary: ""
+      "summary": ""
     put:
-      summary: ""
+      "summary": ""
   /institution/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
     delete:
-      summary: ""
+      "summary": ""
   /prefixes.{format}:
     get:
-      summary: ""
+      "summary": ""
   /sets.{format}:
     get:
-      summary: ""
+      "summary": ""
     post:
-      summary: ""
+      "summary": ""
     put:
-      summary: ""
+      "summary": ""
   /set/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
     delete:
-      summary: ""
+      "summary": ""
   /relations.{format}:
     get:
-      summary: ""
+      "summary": ""
   /conceptschemes.{format}:
     get:
-      summary: ""
+      "summary": ""
     post:
-      summary: ""
+      "summary": ""
     put:
-      summary: ""
+      "summary": ""
   /conceptscheme/{id}.{format}:
     get:
-      summary: ""
+      "summary": ""
     delete:
-      summary: ""
+      "summary": ""
   /ping:
     get:
-      summary: "Healthcheck end basic information"
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  name:
-                    type: "string"
-                    example: "openskos-api"
-                    description: "Name of the whole api being called"
-                  status:
-                    type: "string"
-                    example: "ok"
-                    description: "Status of the api"
-                  version:
-                    type: "string"
-                    example: "2.3"
-                    description: "Version of the api"
-                  license:
-                    type: "string"
-                    example: "MIT"
-                    description: "License the api operates under"
-                  copyright:
-                    type: "object"
-                    properties:
-                      holder:
-                        type: "string"
-                        example: "Picturae"
-                        description: "Holder of the copyright"
-                      published:
-                        type: "integer"
-                        format: "int64"
-                        description: "The year the copyright was published"
-                      revised:
-                        type: "integer"
-                        format: "int64"
-                        description: "The year the copyright was revised"
-                    description: "Copyright information"
+      "summary": "Healthcheck end basic information"
+      "responses":
+        "'200'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "name":
+                    "type": "string"
+                    "example": "openskos-api"
+                    "description": "Name of the whole api being called"
+                  "status":
+                    "type": "string"
+                    "example": "ok"
+                    "description": "Status of the api"
+                  "version":
+                    "type": "string"
+                    "example": "2.3"
+                    "description": "Version of the api"
+                  "license":
+                    "type": "string"
+                    "example": "MIT"
+                    "description": "License the api operates under"
+                  "copyright":
+                    "type": "object"
+                    "properties":
+                      "holder":
+                        "type": "string"
+                        "example": "Picturae"
+                        "description": "Holder of the copyright"
+                      "published":
+                        "type": "integer"
+                        "format": "int64"
+                        "description": "The year the copyright was published"
+                      "revised":
+                        "type": "integer"
+                        "format": "int64"
+                        "description": "The year the copyright was revised"
+                    "description": "Copyright information"

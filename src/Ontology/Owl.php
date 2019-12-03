@@ -23,4 +23,7 @@ final class Owl
 {
     const NAME_SPACE      = 'http://www.w3.org/2002/07/owl#';
     const OBJECT_PROPERTY = 'http://www.w3.org/2002/07/owl#objectProperty';
+
+    const literaltypes = [
+    ];
 }

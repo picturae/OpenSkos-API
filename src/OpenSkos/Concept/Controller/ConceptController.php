@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept\Controller;
 
+use App\Annotation\OA;
 use App\Helper\xsdDateHelper;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiFilter;
@@ -231,7 +232,7 @@ final class ConceptController
     /**
      * @Route(path="/concept/{id}.{format?}", methods={"GET"})
      */
-    public function concept(
+    public function getConcept(
         InternalResourceId $id,
         ApiRequest $apiRequest,
         ConceptRepository $repository,
@@ -256,7 +257,7 @@ final class ConceptController
      *
      * @Route(path="/concept.{format?}", methods={"GET"})
      */
-    public function conceptByForeignUri(
+    public function getConceptByForeignUri(
         ApiRequest $apiRequest,
         ConceptRepository $repository,
         LabelRepository $labelRepository
@@ -288,7 +289,7 @@ final class ConceptController
      *
      * @throws Exception
      */
-    public function concepts(
+    public function getAllConcepts(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
         SolrJenaConceptRepository $repository,
@@ -312,6 +313,47 @@ final class ConceptController
             $apiRequest->getOffset(),
             $apiRequest->getFormat()
         );
+    }
+
+    /**
+     * @Route(path="/concepts.{format?}", methods={"POST"})
+     *
+     * @OA\Summary("Create one or more new concepts")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\JsonRdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @throws Exception
+     */
+    public function postConcept(
+        ApiRequest $apiRequest,
+        ApiFilter $apiFilter,
+        SolrJenaConceptRepository $repository,
+        SolrFilterProcessor $solrFilterProcessor,
+        LabelRepository $labelRepository
+    ): ListResponse {
+        return $this->getAllConcepts($apiRequest, $apiFilter, $repository, $solrFilterProcessor, $labelRepository);
     }
 
     /**

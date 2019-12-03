@@ -75,7 +75,8 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         try {
             return $this->formatFactory->createFromName($formatName);
         } catch (UnknownFormatException $e) {
-            throw new BadRequestHttpException('Invalid Format', $e);
+            return $this->resolveFormat(null, $headers);
+            /* throw new BadRequestHttpException('Invalid Format', $e); */
         }
     }
 

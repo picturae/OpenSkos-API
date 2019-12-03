@@ -8,7 +8,6 @@ use App\Rdf\Format\RdfFormatFactory;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ApiRequestResolverSpec extends ObjectBehavior
 {
@@ -60,8 +59,8 @@ class ApiRequestResolverSpec extends ObjectBehavior
             ]
         );
 
-        $this->resolve($request, $argumentMetadata)
-            ->shouldThrow(HttpException::class)
-            ->during('current');
+        $apiRequest = $this->resolve($request, $argumentMetadata);
+
+        $apiRequest->getFormat()->shouldBeAnInstanceOf(JsonLd::class);
     }
 }

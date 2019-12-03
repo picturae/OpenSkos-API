@@ -86,7 +86,11 @@ class GenerateSwaggerCommand extends Command
                 $key = '-';
             }
             if (is_string($value)) {
-                $output .= str_repeat($skipIndent ? '' : '  ', $indent).$key.': "'.str_replace('"', '\\"', $value)."\"\n";
+                if ('-' === $key) {
+                    $output .= str_repeat($skipIndent ? '' : '  ', $indent).'- "'.str_replace('"', '\\"', $value)."\"\n";
+                } else {
+                    $output .= str_repeat($skipIndent ? '' : '  ', $indent)."\"${key}\": \"".str_replace('"', '\\"', $value)."\"\n";
+                }
             }
             if (is_object($value)) {
                 if (method_exists($value, '__toArray')) {
@@ -103,7 +107,7 @@ class GenerateSwaggerCommand extends Command
                     $output .= str_repeat($skipIndent ? '' : '  ', $indent).$key.' ';
                     $output .= $this->array2yaml($value, $indent + 1, 1) ?? '';
                 } else {
-                    $output .= str_repeat($skipIndent ? '' : '  ', $indent).$key.":\n";
+                    $output .= str_repeat($skipIndent ? '' : '  ', $indent)."\"{$key}\":\n";
                     $output .= $this->array2yaml($value, $indent + 1) ?? '';
                 }
             }
@@ -154,6 +158,8 @@ class GenerateSwaggerCommand extends Command
                 continue;
             }
 
+            // TODO: read class annotations to detect params
+
             // Fetch and loop through methods
             $methods = $reflectionClass->getMethods();
             foreach ($methods as $reflectionMethod) {
@@ -182,7 +188,6 @@ class GenerateSwaggerCommand extends Command
                 $data             = new \stdClass();
                 $data->summary    = '';
 
-                /* var_dump($methodFullName); */
                 foreach ($annotations as $annotation) {
                     // Route annotation
                     if ($annotation instanceof Route) {
@@ -206,6 +211,10 @@ class GenerateSwaggerCommand extends Command
                         unset($annotationData['code']);
                         $data->responses            = [];
                         $data->responses["'$code'"] = $annotationData;
+                    }
+
+                    if ($annotation instanceof OA\Request) {
+                        $data->parameters = $annotation->parameters;
                     }
                 }
 

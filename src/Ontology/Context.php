@@ -104,9 +104,27 @@ final class Context
     }
 
     /**
+     * Returns the literal type for a field (or null).
+     */
+    public static function literaltype(?string $uri): ?string
+    {
+        $decoded = static::decodeUri($uri);
+        if (is_null($decoded)) {
+            return null;
+        }
+
+        // Namespace not known = done
+        if (!isset(static::namespaces[$decoded[0]])) {
+            return null;
+        }
+
+        return static::namespaces[$decoded[0]]::literaltypes[static::fullUri($uri) ?? ''] ?? null;
+    }
+
+    /**
      * Turn a uri or short notation into full uri.
      */
-    public static function fullUri(string $uri): ?string
+    public static function fullUri(?string $uri): ?string
     {
         $decoded = static::decodeUri($uri);
         if (is_null($decoded)) {
