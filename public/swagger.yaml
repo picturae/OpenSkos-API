@@ -47,7 +47,7 @@ paths:
       summary: ""
   /users.{format}:
     get:
-      summary: "Returns a list of all users you're allowed to see"
+      summary: ""
   /user/{id}.{format}:
     get:
       summary: ""
@@ -103,4 +103,38 @@ paths:
         '200':
           content:
             application/json:
-              description: ""
+              schema:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                    example: "openskos-api"
+                    description: "Name of the whole api being called"
+                  status:
+                    type: "string"
+                    example: "ok"
+                    description: "Status of the api"
+                  version:
+                    type: "string"
+                    example: "2.3"
+                    description: "Version of the api"
+                  license:
+                    type: "string"
+                    example: "MIT"
+                    description: "License the api operates under"
+                  copyright:
+                    type: "object"
+                    properties:
+                      holder:
+                        type: "string"
+                        example: "Picturae"
+                        description: "Holder of the copyright"
+                      published:
+                        type: "integer"
+                        format: "int64"
+                        description: "The year the copyright was published"
+                      revised:
+                        type: "integer"
+                        format: "int64"
+                        description: "The year the copyright was revised"
+                    description: "Copyright information"

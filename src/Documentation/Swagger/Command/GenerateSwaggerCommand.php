@@ -96,6 +96,9 @@ class GenerateSwaggerCommand extends Command
                 }
             }
             if (is_array($value)) {
+                if (!count($value)) {
+                    continue;
+                }
                 if ('-' === $key) {
                     $output .= str_repeat($skipIndent ? '' : '  ', $indent).$key.' ';
                     $output .= $this->array2yaml($value, $indent + 1, 1) ?? '';
@@ -198,26 +201,12 @@ class GenerateSwaggerCommand extends Command
                     if ($annotation instanceof OA\Response) {
                         $annotationData = $annotation->__toArray();
                         $code           = $annotationData['code'];
+                        $fields         = $annotationData['fields'] ?? [];
+                        unset($annotationData['fields']);
                         unset($annotationData['code']);
                         $data->responses            = [];
                         $data->responses["'$code'"] = $annotationData;
                     }
-
-                    /* if (isset($knownErrors[$annotationData['code']])) { */
-                    /*     $code   = $annotationData['code']; */
-                    /*     $origin = $knownErrors[$annotationData['code']]; */
-                    /*     throw new \Exception("Duplicate error '${code}' in $methodFullName, first defined for $origin"); */
-                    /* } else { */
-                    /*     $knownErrors[$annotationData['code']] = $methodFullName; */
-                    /* } */
-
-                    /* array_push($errorAnnotations, array_merge( */
-                    /*     $annotationData, */
-                    /*     [ */
-                    /*         'class'  => $reflectionMethod->class, */
-                    /*         'method' => $reflectionMethod->name, */
-                    /*     ] */
-                    /* )); */
                 }
 
                 if (!count($annotatedMethods)) {
