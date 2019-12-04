@@ -394,7 +394,7 @@ final class ConceptController
         // Load data into sets
         $graph    = $apiRequest->getGraph();
         $concepts = $conceptRepository->fromGraph($graph);
-        if (is_null($concepts)) {
+        if (is_null($concepts)||(!count($concepts))) {
             throw new ApiException('concept-create-empty-or-corrupt-body');
         }
 

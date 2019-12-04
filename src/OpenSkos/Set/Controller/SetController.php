@@ -132,7 +132,7 @@ final class SetController
         // Load data into sets
         $graph = $apiRequest->getGraph();
         $sets  = $setRepository->fromGraph($graph);
-        if (is_null($sets)) {
+        if (is_null($sets)||(!count($sets))) {
             throw new ApiException('set-create-empty-or-corrupt-body');
         }
 
@@ -256,7 +256,7 @@ final class SetController
         // Load data into sets
         $graph = $apiRequest->getGraph();
         $sets  = $setRepository->fromGraph($graph);
-        if (is_null($sets)) {
+        if (is_null($sets)||(!count($sets))) {
             throw new ApiException('set-update-empty-or-corrupt-body');
         }
 

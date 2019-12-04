@@ -129,7 +129,7 @@ final class ConceptSchemeController
         // Load data into sets
         $graph          = $apiRequest->getGraph();
         $conceptSchemes = $conceptSchemeRepository->fromGraph($graph);
-        if (is_null($conceptSchemes)) {
+        if (is_null($conceptSchemes)||(!count($conceptSchemes))) {
             throw new ApiException('conceptscheme-create-empty-or-corrupt-body');
         }
 
@@ -258,7 +258,7 @@ final class ConceptSchemeController
         // Load data into concept schemes
         $graph           = $apiRequest->getGraph();
         $conceptschemes  = $conceptSchemeRepository->fromGraph($graph);
-        if (is_null($conceptschemes)) {
+        if (is_null($conceptschemes)||(!count($conceptschemes))) {
             throw new ApiException('conceptscheme-update-empty-or-corrupt-body');
         }
 
