@@ -26,14 +26,8 @@ final class ApiFilter
         'tenant'        => 'openskos:tenant',
     ];
 
-    const types = [
-        'default'               => 'csv',
-        'dcterms:dateAccepted'  => 'xsd:duration',
-        'dcterms:dateSubmitted' => 'xsd:duration',
-        'dcterms:modified'      => 'xsd:duration',
-        'openskos:deleted'      => 'xsd:duration',
-        'openskos:set'          => 'openskos:set',
-        'openskos:status'       => OpenSkos::STATUSES,
+    const enums = [
+        'openskos:status' => OpenSkos::STATUSES,
     ];
 
     const entity = [
@@ -123,15 +117,15 @@ final class ApiFilter
             return $this;
         }
 
-        // Detect field type
-        $type = static::types[$predicate] ?? static::types['default'];
-
         // Disallow unknown enum
-        if (is_array($type)) {
-            if (!in_array($value, $type, true)) {
+        if (isset(static::enums[$predicate])) {
+            if (!in_array($value, static::enums[$predicate], true)) {
                 return $this;
             }
         }
+
+        // Detect field type
+        $type = Context::literaltype($predicate) ?? 'csv';
 
         switch ($type) {
             case 'openskos:set':
@@ -143,9 +137,6 @@ final class ApiFilter
                 if (!is_null($set)) {
                     $value = $set->iri()->getUri();
                 }
-                break;
-            case 'xsd:duration':
-                // TODO: validate datetime
                 break;
         }
 
@@ -244,7 +235,7 @@ final class ApiFilter
                 foreach ($output as $jenaFilter) {
                     // Fetch short predicate and data type
                     $predicate = static::fromFullUri($jenaFilter['predicate']);
-                    $datatype  = static::types[$predicate] ?? 'csv';
+                    $datatype  = Context::literaltype($predicate) ?? 'csv';
                     if (is_null($predicate)) {
                         continue;
                     }
@@ -256,6 +247,7 @@ final class ApiFilter
                     $shortfield  = implode(':', $tokens);
                     switch ($datatype) {
                         case 'xsd:duration':
+                        case 'xsd:datetime':
                             $filterField = 'd_'.$shortfield;
                             break;
                         case 'csv':
