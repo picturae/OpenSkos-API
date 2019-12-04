@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace App\OpenSkos\Concept\Controller;
 
 use App\Annotation\OA;
+use App\EasyRdf\TripleFactory;
 use App\Helper\xsdDateHelper;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Concept\Concept as SkosConcept;
 use App\OpenSkos\Concept\ConceptRepository;
-use App\OpenSkos\Concept\Solr\SolrJenaConceptRepository;
 use App\OpenSkos\DataLevels\Level2Processor;
 use App\OpenSkos\Filters\SolrFilterProcessor;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
+use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -292,7 +294,7 @@ final class ConceptController
     public function getAllConcepts(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
-        SolrJenaConceptRepository $repository,
+        ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor,
         LabelRepository $labelRepository
     ): ListResponse {
@@ -349,10 +351,37 @@ final class ConceptController
     public function postConcept(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
-        SolrJenaConceptRepository $repository,
+        ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor,
         LabelRepository $labelRepository
     ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Load data into concepts
+        $graph          = $apiRequest->getGraph();
+        $groupedTriples = SkosResourceRepository::groupTriples(TripleFactory::triplesFromGraph($graph));
+        $concepts       = array_map(function (array $triples, string $subject) {
+            return Concept::fromTriples(new Iri($subject), $triples);
+        }, $groupedTriples, array_keys($groupedTriples));
+
+        /* foreach ($concepts as $concept) { */
+        /*     var_dump($concept, $concept->exists()); */
+        /* } */
+
+        /* var_dump($concepts); */
+
+        /* $conceptSchemes = $conceptSchemeRepository->fromGraph($graph); */
+        /* if (is_null($conceptSchemes)) { */
+        /* throw new ApiException('conceptscheme-create-empty-or-corrupt-body'); */
+        /* } */
+
+        /* var_dump($graph); */
+
+        /* var_dump($auth); */
+        /* die(); */
+
         return $this->getAllConcepts($apiRequest, $apiFilter, $repository, $solrFilterProcessor, $labelRepository);
     }
 
@@ -364,7 +393,7 @@ final class ConceptController
     public function autocomplete(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
-        SolrJenaConceptRepository $repository,
+        ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor
     ): ListResponse {
         $full_filter = $this->buildConceptFilters($apiRequest, $apiFilter, $solrFilterProcessor);

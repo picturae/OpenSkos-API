@@ -46,21 +46,4 @@ class ApiRequestResolverSpec extends ObjectBehavior
         $apiRequest->getLimit()->shouldBe(123);
         $apiRequest->getOffset()->shouldBe(12);
     }
-
-    public function it_throws_an_exception_when_cant_resolve_format(
-        ArgumentMetadata $argumentMetadata
-    ) {
-        $request = new Request(
-            [
-                'format' => 'unknown-format',
-                'limit'  => '123',
-                'offset' => '12',
-                'level'  => '1',
-            ]
-        );
-
-        $apiRequest = $this->resolve($request, $argumentMetadata);
-
-        $apiRequest->getFormat()->shouldBeAnInstanceOf(JsonLd::class);
-    }
 }

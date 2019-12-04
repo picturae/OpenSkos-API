@@ -2,69 +2,42 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos\Concept\Solr;
+namespace App\Repository;
 
-use App\Ontology\Skos;
-use App\OpenSkos\Concept\Concept;
-use App\OpenSkos\Concept\ConceptRepository;
-use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
-use App\OpenSkos\SkosResourceRepositoryWithProjection;
-use App\Rdf\Iri;
 use App\Rdf\Sparql\Client as RdfClient;
 use App\Solr\SolrClient;
+use App\Solr\SolrQueryBuilder;
+use Doctrine\DBAL\Connection;
 use Exception;
 use Solarium\QueryType\Select\Query\Query;
 use Solarium\QueryType\Select\Result\Result;
 
-final class SolrJenaConceptRepository implements ConceptRepository
+abstract class AbstractSolrRepository extends AbstractRepository
 {
     /**
      * @var SolrClient
      */
-    private $solrClient;
-
-    /**
-     * @var RdfClient
-     */
-    private $rdfClient;
-
-    /**
-     * @var SkosResourceRepositoryWithProjection
-     */
-    private $skosRepository;
-
-    /**
-     * @var OpenSkosIriFactory
-     */
-    private $iriFactory;
+    protected $solrClient;
 
     /**
      * @var SolrQueryBuilder
      */
-    private $solrQueryBuilder;
+    protected $solrQueryBuilder;
 
     /**
-     * SparqlConceptRepository constructor.
+     * AbstractSolrRepository constructor.
      */
     public function __construct(
         RdfClient $rdfClient,
-        SolrClient $solrClient,
         OpenSkosIriFactory $iriFactory,
+        Connection $connection,
+        SolrClient $solrClient,
         SolrQueryBuilder $solrQueryBuilder
     ) {
-        $this->rdfClient        = $rdfClient;
+        parent::__construct($rdfClient, $iriFactory, $connection);
         $this->solrClient       = $solrClient;
         $this->solrQueryBuilder = $solrQueryBuilder;
-
-        $this->skosRepository = new SkosResourceRepositoryWithProjection(
-            function (Iri $iri, array $triples): Concept {
-                return Concept::fromTriples($iri, $triples);
-            },
-            $this->rdfClient
-        );
-
-        $this->iriFactory = $iriFactory;
     }
 
     /**
@@ -134,13 +107,13 @@ final class SolrJenaConceptRepository implements ConceptRepository
     {
         $numfound = 0;
 
-        $conceptFilter = array_merge($filters,
+        $rdfTypeFilter = array_merge($filters,
             [
-                'rdfTypeFilter' => sprintf('s_rdfType:"%s"', Skos::CONCEPT),
+                'rdfTypeFilter' => sprintf('s_rdfType:"%s"', static::DOCUMENT_TYPE),
             ]
         );
 
-        $matchingIris = $this->search('*:*', $limit, $offset, $numfound, null, $conceptFilter);
+        $matchingIris = $this->search('*:*', $limit, $offset, $numfound, null, $rdfTypeFilter);
 
         if (0 !== count($matchingIris)) {
             if (0 !== count($projection)) {
@@ -164,16 +137,16 @@ final class SolrJenaConceptRepository implements ConceptRepository
     {
         $numfound = 0;
 
-        $conceptFilter = array_merge($filters,
+        $rdfTypeFilter = array_merge($filters,
             [
-                'rdfTypeFilter' => sprintf('s_rdfType:"%s"', Skos::CONCEPT),
+                'rdfTypeFilter' => sprintf('s_rdfType:"%s"', static::DOCUMENT_TYPE),
             ]
         );
 
         //TODO: Projection Params
         $searchExpression = $this->solrQueryBuilder->processSearchExpression($searchTerm, $selection);
 
-        $matchingIris = $this->search($searchExpression, $limit, $offset, $numfound, null, $conceptFilter);
+        $matchingIris = $this->search($searchExpression, $limit, $offset, $numfound, null, $rdfTypeFilter);
 
         if (0 !== count($matchingIris)) {
             $data = $this->skosRepository->findManyByIriListWithProjection($matchingIris, $projection);
@@ -182,27 +155,5 @@ final class SolrJenaConceptRepository implements ConceptRepository
         }
 
         return $data;
-    }
-
-    public function findByIri(Iri $iri): ?Concept
-    {
-        return $this->skosRepository->findByIri($iri);
-    }
-
-    public function find(InternalResourceId $id): ?Concept
-    {
-        return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
-    }
-
-    public function findBy(Iri $predicate, InternalResourceId $object): ?array
-    {
-        return $this->skosRepository->findBy(new Iri(Skos::CONCEPT), $predicate, $object);
-    }
-
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Concept
-    {
-        $res = $this->skosRepository->findOneBy(new Iri(Skos::CONCEPT), $predicate, $object);
-
-        return $res;
     }
 }
