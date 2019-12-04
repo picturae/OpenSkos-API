@@ -459,7 +459,6 @@ final class ConceptController
             0,
             $apiRequest->getFormat()
         );
-        /* return $this->getAllConcepts($apiRequest, $apiFilter, $repository, $solrFilterProcessor, $labelRepository); */
     }
 
     /**
