@@ -678,10 +678,9 @@ abstract class AbstractRdfDocument implements RdfResource
             $this->addProperty(new Iri(DcTerms::MODIFIED), new DatetimeLiteral(new \DateTime()));
         }
 
+        // Insert into jena
         try {
             $this->repository->insertTriples($this->triples());
-
-            return null;
         } catch (\Exception $e) {
             return [[
                 'code' => 'save-failed',
@@ -690,5 +689,7 @@ abstract class AbstractRdfDocument implements RdfResource
                 ],
             ]];
         }
+
+        return null;
     }
 }

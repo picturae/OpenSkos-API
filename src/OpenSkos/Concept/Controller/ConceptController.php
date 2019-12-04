@@ -6,6 +6,7 @@ namespace App\OpenSkos\Concept\Controller;
 
 use App\Annotation\Error;
 use App\Annotation\OA;
+use App\Entity\User;
 use App\Exception\ApiException;
 use App\Helper\xsdDateHelper;
 use App\Ontology\OpenSkos;
@@ -448,6 +449,126 @@ final class ConceptController
         // Save all given conceptSchemes
         foreach ($concepts as $concept) {
             $errors = $concept->save();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
+        }
+
+        return new ListResponse(
+            $concepts,
+            count($concepts),
+            0,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/concepts.{format?}", methods={"PUT"})
+     *
+     * @Error(code="concept-update-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="concept-update-does-not-exist",
+     *        status=400,
+     *        description="The set with the given iri does not exist",
+     *        fields={"iri"}
+     * )
+     * @Error(code="concept-update-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to update a Concept for does not exist",
+     *        fields={"tenant"}
+     * )
+     * @Error(code="concept-update-set-does-not-exist",
+     *        status=400,
+     *        description="The given set to update a Concept for does not exist",
+     *        fields={"set"}
+     * )
+     * @Error(code="concept-update-concept-does-not-exist",
+     *        status=400,
+     *        description="The given conceptscheme to create a Concept for does not exist",
+     *        fields={"conceptscheme"}
+     * )
+     */
+    public function putConcept(
+        ApiRequest $apiRequest,
+        ConceptRepository $conceptRepository,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+        /** @var User $user */
+        $user = $auth->getUser();
+
+        // Load data into concept schemes
+        $graph     = $apiRequest->getGraph();
+        $concepts  = $conceptRepository->fromGraph($graph);
+        if (is_null($concepts)||(!count($concepts))) {
+            throw new ApiException('concept-update-empty-or-corrupt-body');
+        }
+
+        // Validate all given resources
+        $errors = [];
+        foreach ($concepts as $concept) {
+            if (!$concept->exists()) {
+                throw new ApiException('concept-update-does-not-exist', [
+                    'iri' => $concept->iri()->getUri(),
+                ]);
+            }
+            $errors = array_merge($errors, $concept->errors());
+        }
+        if (count($errors)) {
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
+        }
+
+        // Ensure the tenants exist
+        foreach ($concepts as $concept) {
+            $tenantCode = $concept->getValue(OpenSkos::TENANT)->value();
+            $tenant     = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('conceptscheme-update-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
+
+        // Ensure the sets exist
+        foreach ($concepts as $concept) {
+            $setIri = $concept->getValue(OpenSkos::SET)->getUri();
+            $set    = $setRepository->findByIri(new Iri($setIri));
+            if (is_null($set)) {
+                throw new ApiException('concept-update-set-does-not-exist', [
+                    'set' => $setIri,
+                ]);
+            }
+        }
+
+        // Ensure the concepts exist
+        foreach ($concepts as $concept) {
+            $conceptSchemes = $concept->getProperty(Skos::IN_SCHEME);
+            foreach ($conceptSchemes as $conceptSchemeIri) {
+                $conceptScheme = $conceptSchemeRepository->findByIri($conceptSchemeIri);
+                if (is_null($conceptScheme)) {
+                    throw new ApiException('concept-update-conceptscheme-does-not-exist', [
+                        'conceptscheme' => $conceptSchemeIri->getUri(),
+                    ]);
+                }
+            }
+        }
+
+        // Rebuild all given Concepts
+        $modifier = new Iri(OpenSkos::MODIFIED_BY);
+        foreach ($concepts as $concept) {
+            $concept->setValue($modifier, $user->iri());
+            $errors = $concept->update();
             if ($errors) {
                 throw new ApiException($errors[0]);
             }

@@ -4,17 +4,73 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Ontology\DcTerms;
+use App\Ontology\OpenSkos;
+use App\Ontology\Rdf;
+use App\Ontology\Skos;
+use App\Ontology\SkosXl;
 use App\OpenSkos\OpenSkosIriFactory;
+use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
 use App\Rdf\Sparql\Client as RdfClient;
+use App\Rdf\Triple;
 use App\Solr\SolrClient;
 use App\Solr\SolrQueryBuilder;
 use Doctrine\DBAL\Connection;
 use Exception;
 use Solarium\QueryType\Select\Query\Query;
 use Solarium\QueryType\Select\Result\Result;
+use Solarium\QueryType\Update\Query\Document;
+use Solarium\QueryType\Update\Query\Query as UpdateQuery;
 
 abstract class AbstractSolrRepository extends AbstractRepository
 {
+    /**
+     * These namespaces will be indexed to solr, if the value contains a language
+     * it will be added to the fieldname as.
+     *
+     * s_notation (never has an language)
+     * s_prefLabel_nl
+     * s_prefLabel_en
+     *
+     * @TODO We now have old fields mapping + this one. Don't need them both.
+     *
+     * @var array
+     */
+    //->setFields(['uri', 'prefLabel', 'inScheme', 'scopeNote', 'status'])
+    protected $mapping = [
+        Skos::PREF_LABEL             => ['s_prefLabel', 't_prefLabel', 'a_prefLabel', 'sort_s_prefLabel', 'prefLabel'],
+        Skos::ALT_LABEL              => ['s_altLabel', 't_altLabel', 'a_altLabel', 'sort_s_altLabel'],
+        Skos::HIDDEN_LABEL           => ['s_hiddenLabel', 't_hiddenLabel', 'a_hiddenLabel', 'sort_s_hiddenLabel'],
+        Skos::DEFINITION             => ['t_definition', 'a_definition', 'definition'],
+        Skos::EXAMPLE                => ['t_example', 'a_example'],
+        Skos::CHANGE_NOTE            => ['t_changeNote', 'a_changeNote'],
+        Skos::EDITORIAL_NOTE         => ['t_editorialNote', 'a_editorialNote'],
+        Skos::HISTORY_NOTE           => ['t_historyNote', 'a_historyNote'],
+        Skos::SCOPE_NOTE             => ['t_scopeNote', 'a_scopeNote', 'scopeNote'],
+        Skos::NOTATION               => ['s_notation', 't_notation', 'a_notation'],
+        Skos::IN_SCHEME              => ['s_inScheme', 'inScheme'],
+        OpenSkos::IN_SKOS_COLLECTION => ['s_inSkosCollection', 'inSkosCollection'],
+        OpenSkos::STATUS             => ['s_status', 'status'],
+        OpenSkos::SET                => ['s_set'],
+        OpenSkos::TENANT             => ['s_tenant'],
+        OpenSkos::UUID               => ['s_uuid'],
+        OpenSkos::TO_BE_CHECKED      => ['b_toBeChecked'],
+        DcTerms::CREATOR             => ['s_creator'],
+        DcTerms::DATE_SUBMITTED      => ['d_dateSubmited'],
+        DcTerms::CONTRIBUTOR         => ['s_contributor'],
+        DcTerms::MODIFIED            => ['d_modified', 'sort_d_modified_earliest'],
+        OpenSkos::ACCEPTED_BY        => ['s_acceptedBy'],
+        DcTerms::DATE_ACCEPTED       => ['d_dateAccepted'],
+        OpenSkos::DELETED_BY         => ['s_deletedBy'],
+        OpenSkos::DATE_DELETED       => ['d_dateDeleted'],
+        SkosXl::LITERAL_FORM         => ['a_skosXlLiteralForm'],
+        Rdf::TYPE                    => ['s_rdfType'],
+        SkosXl::PREF_LABEL           => ['s_prefLabelXl'],
+        SkosXl::ALT_LABEL            => ['s_altLabelXl'],
+        SkosXl::HIDDEN_LABEL         => ['s_hiddenLabelXl'],
+    ];
+
     /**
      * @var SolrClient
      */
@@ -155,5 +211,52 @@ abstract class AbstractSolrRepository extends AbstractRepository
         }
 
         return $data;
+    }
+
+    /**
+     * @param Triple[] $triples
+     */
+    public function insertTriples(array $triples): \EasyRdf_Http_Response
+    {
+        $client      = $this->solrClient->getClient();
+        /** @var UpdateQuery $updateQuery */
+        $updateQuery = $client->createUpdate();
+        $grouped     = $this->skosRepository::groupTriples($triples);
+        if (!count($grouped)) {
+            die('TODO: throw exception');
+        }
+
+        foreach ($grouped as $uri => $triples) {
+            /** @var Document $document */
+            $document = $updateQuery->createDocument();
+            $document->setField('uri', $uri);
+
+            foreach ($triples as $triple) {
+                $predicate = $triple->getPredicate()->getUri();
+                if (!isset($this->mapping[$predicate])) {
+                    continue;
+                }
+
+                $value = $triple->getObject();
+                if ($value instanceof Iri) {
+                    $value = $value->getUri();
+                }
+                if ($value instanceof Literal) {
+                    $value = $value->value();
+                }
+
+                $fields = $this->mapping[$predicate];
+                foreach ($fields as $field) {
+                    $document->addField($field, $value);
+                }
+            }
+
+            $updateQuery->addDocument($document);
+        }
+
+        $updateQuery->addCommit(true);
+        $client->update($updateQuery);
+
+        return parent::insertTriples($triples);
     }
 }

@@ -90,6 +90,8 @@ paths:
                           "type": "string"
                         "dcterms:title":
                           "type": "string"
+    put:
+      "summary": ""
   /autocomplete.{format}:
     get:
       "summary": ""
