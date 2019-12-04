@@ -13,10 +13,23 @@ class Iri implements RdfTerm
 
     /**
      * Literal constructor.
+     *
+     * @param mixed $value
      */
-    public function __construct(string $value)
+    public function __construct($value)
     {
-        $this->uri = $value;
+        if (is_string($value)) {
+            $this->uri = $value;
+        } elseif ($value instanceof Iri) {
+            $this->uri = $value->getUri();
+        } else {
+            $exceptionString = 'Invalid type for $value, expected string|Iri but got ';
+            $type            = gettype($value);
+            if ('object' === $type) {
+                $type .= '('.get_class($value).')';
+            }
+            throw new \Exception($exceptionString.$type);
+        }
     }
 
     /**

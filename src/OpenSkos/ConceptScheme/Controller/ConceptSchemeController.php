@@ -188,8 +188,8 @@ final class ConceptSchemeController
 
         return new ListResponse(
             $conceptSchemes,
+            count($conceptSchemes),
             0,
-            $apiRequest->getOffset(),
             $apiRequest->getFormat()
         );
     }

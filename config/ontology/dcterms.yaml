@@ -30,24 +30,24 @@ parameters:
         datatype: literal
       created:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       creator:
         datatype: literal
       date:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       dateAccepted:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       dateApproved:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       dateCopyrighted:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       dateSubmitted:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       description:
         datatype: literal
         literaltype: "xsd:string"
@@ -92,7 +92,7 @@ parameters:
         datatype: literal
       modified:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       provenance:
         datatype: literal
       publisher:

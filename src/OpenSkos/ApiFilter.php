@@ -247,7 +247,7 @@ final class ApiFilter
                     $shortfield  = implode(':', $tokens);
                     switch ($datatype) {
                         case 'xsd:duration':
-                        case 'xsd:datetime':
+                        case 'xsd:dateTime':
                             $filterField = 'd_'.$shortfield;
                             break;
                         case 'csv':

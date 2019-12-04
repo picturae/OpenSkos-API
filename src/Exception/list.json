@@ -378,6 +378,53 @@
         "class": "App\\Security\\Authentication",
         "method": "requireAdministrator"
     },
+    "concept-create-empty-or-corrupt-body" : {
+        "code": "concept-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-already-exists" : {
+        "code": "concept-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "A Concept with the given iri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-tenant-does-not-exist" : {
+        "code": "concept-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-set-does-not-exist" : {
+        "code": "concept-create-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-conceptscheme-does-not-exist" : {
+        "code": "concept-create-conceptscheme-does-not-exist",
+        "fields": [
+            "conceptscheme"
+        ],
+        "description": "The given conceptscheme to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
     "user-getall-permission-denied-missing-user" : {
         "description": "The authenticated user could not be loaded",
         "status": 403,

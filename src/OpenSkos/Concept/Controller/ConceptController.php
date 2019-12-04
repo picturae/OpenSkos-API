@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept\Controller;
 
+use App\Annotation\Error;
 use App\Annotation\OA;
-use App\EasyRdf\TripleFactory;
+use App\Exception\ApiException;
 use App\Helper\xsdDateHelper;
 use App\Ontology\OpenSkos;
+use App\Ontology\Skos;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Concept\Concept as SkosConcept;
 use App\OpenSkos\Concept\ConceptRepository;
+use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\DataLevels\Level2Processor;
 use App\OpenSkos\Filters\SolrFilterProcessor;
+use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
-use App\OpenSkos\SkosResourceRepository;
+use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -346,43 +350,116 @@ final class ConceptController
      *   }),
      * )
      *
+     * @Error(code="concept-create-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="concept-create-already-exists",
+     *        status=409,
+     *        description="A Concept with the given iri already exists",
+     *        fields={"iri"}
+     * )
+     * @Error(code="concept-create-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to create a Concept for does not exist",
+     *        fields={"tenant"}
+     * )
+     * @Error(code="concept-create-set-does-not-exist",
+     *        status=400,
+     *        description="The given set to create a Concept for does not exist",
+     *        fields={"set"}
+     * )
+     * @Error(code="concept-create-conceptscheme-does-not-exist",
+     *        status=400,
+     *        description="The given conceptscheme to create a Concept for does not exist",
+     *        fields={"conceptscheme"}
+     * )
+     *
      * @throws Exception
      */
     public function postConcept(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
-        ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor,
-        LabelRepository $labelRepository
+        LabelRepository $labelRepository,
+        ConceptRepository $conceptRepository,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
     ): ListResponse {
         // Client permissions
         $auth = $apiRequest->getAuthentication();
         $auth->requireAdministrator();
 
-        // Load data into concepts
-        $graph          = $apiRequest->getGraph();
-        $groupedTriples = SkosResourceRepository::groupTriples(TripleFactory::triplesFromGraph($graph));
-        $concepts       = array_map(function (array $triples, string $subject) {
-            return Concept::fromTriples(new Iri($subject), $triples);
-        }, $groupedTriples, array_keys($groupedTriples));
+        // Load data into sets
+        $graph    = $apiRequest->getGraph();
+        $concepts = $conceptRepository->fromGraph($graph);
+        if (is_null($concepts)) {
+            throw new ApiException('concept-create-empty-or-corrupt-body');
+        }
 
-        /* foreach ($concepts as $concept) { */
-        /*     var_dump($concept, $concept->exists()); */
-        /* } */
+        // Check if the resources already exist
+        foreach ($concepts as $concept) {
+            if ($concept->exists()) {
+                throw new ApiException('concept-create-already-exists', [
+                    'iri' => $concept->iri()->getUri(),
+                ]);
+            }
+        }
 
-        /* var_dump($concepts); */
+        // Ensure the tenants exist
+        foreach ($concepts as $concept) {
+            $tenantCode = $concept->getValue(OpenSkos::TENANT)->value();
+            $tenant     = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('concept-create-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
 
-        /* $conceptSchemes = $conceptSchemeRepository->fromGraph($graph); */
-        /* if (is_null($conceptSchemes)) { */
-        /* throw new ApiException('conceptscheme-create-empty-or-corrupt-body'); */
-        /* } */
+        // Ensure the sets exist
+        foreach ($concepts as $concept) {
+            $setIri = $concept->getValue(OpenSkos::SET)->getUri();
+            $set    = $setRepository->findByIri(new Iri($setIri));
+            if (is_null($set)) {
+                throw new ApiException('concept-create-set-does-not-exist', [
+                    'set' => $setIri,
+                ]);
+            }
+        }
 
-        /* var_dump($graph); */
+        // Ensure the conceptschemes exist
+        foreach ($concepts as $concept) {
+            $conceptSchemes = $concept->getProperty(Skos::IN_SCHEME);
+            foreach ($conceptSchemes as $conceptSchemeIri) {
+                $conceptScheme = $conceptSchemeRepository->findByIri($conceptSchemeIri);
+                if (is_null($conceptScheme)) {
+                    throw new ApiException('concept-create-conceptscheme-does-not-exist', [
+                        'conceptscheme' => $conceptSchemeIri->getUri(),
+                    ]);
+                }
+            }
+        }
 
-        /* var_dump($auth); */
-        /* die(); */
+        // Save all given conceptSchemes
+        foreach ($concepts as $concept) {
+            $errors = $concept->save();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
+        }
 
-        return $this->getAllConcepts($apiRequest, $apiFilter, $repository, $solrFilterProcessor, $labelRepository);
+        return new ListResponse(
+            $concepts,
+            count($concepts),
+            0,
+            $apiRequest->getFormat()
+        );
+        /* return $this->getAllConcepts($apiRequest, $apiFilter, $repository, $solrFilterProcessor, $labelRepository); */
     }
 
     /**
