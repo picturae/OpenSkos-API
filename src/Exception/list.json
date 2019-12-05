@@ -192,6 +192,28 @@
         "class": "App\\Ontology\\Skos",
         "method": "validateAltLabel"
     },
+    "skos-validate-hiddenlabel-literal-type" : {
+        "code": "skos-validate-hiddenlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateHiddenLabel"
+    },
+    "skos-validate-preflabel-literal-type" : {
+        "code": "skos-validate-preflabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validatePrefLabel"
+    },
     "openskos-validate-tenant-literal-type" : {
         "code": "openskos-validate-tenant-literal-type",
         "fields": [
