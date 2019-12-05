@@ -22,10 +22,14 @@ parameters:
       # Labels
       altLabel:
         datatype: literal
+        literaltype: 'xsd:string'
       hiddenLabel:
         datatype: literal
+        literaltype: 'xsd:string'
       prefLabel:
         datatype: literal
+        literaltype: 'xsd:string'
+
 
       # Notations
       notation:

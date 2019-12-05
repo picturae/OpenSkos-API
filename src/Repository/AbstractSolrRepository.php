@@ -48,7 +48,7 @@ abstract class AbstractSolrRepository extends AbstractRepository
         Skos::EDITORIAL_NOTE         => ['t_editorialNote', 'a_editorialNote'],
         Skos::HISTORY_NOTE           => ['t_historyNote', 'a_historyNote'],
         Skos::SCOPE_NOTE             => ['t_scopeNote', 'a_scopeNote', 'scopeNote'],
-        Skos::NOTATION               => ['s_notation', 't_notation', 'a_notation'],
+        Skos::NOTATION               => ['s_notation', 't_notation', 'a_notation', 'max_numeric_notation'],
         Skos::IN_SCHEME              => ['s_inScheme', 'inScheme'],
         OpenSkos::IN_SKOS_COLLECTION => ['s_inSkosCollection', 'inSkosCollection'],
         OpenSkos::STATUS             => ['s_status', 'status'],

@@ -6,6 +6,7 @@ namespace App\OpenSkos\Concept\Controller;
 
 use App\Annotation\Error;
 use App\Annotation\OA;
+use App\EasyRdf\TripleFactory;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Helper\xsdDateHelper;
@@ -415,6 +416,11 @@ final class ConceptController
      *        description="The given conceptscheme to create a Concept for does not exist",
      *        fields={"conceptscheme"}
      * )
+     * @Error(code="concept-create-notation-not-unique",
+     *        status=409,
+     *        description="The given skos:notation is not unique within the given conceptScheme",
+     *        fields={"conceptscheme","notation"}
+     * )
      *
      * @throws Exception
      */
@@ -434,7 +440,9 @@ final class ConceptController
 
         // Load data into sets
         $graph    = $apiRequest->getGraph();
+        $triples  = TripleFactory::triplesFromGraph($graph);
         $concepts = $conceptRepository->fromGraph($graph);
+
         if (is_null($concepts)||(!count($concepts))) {
             throw new ApiException('concept-create-empty-or-corrupt-body');
         }
@@ -473,14 +481,35 @@ final class ConceptController
             }
         }
 
-        // Ensure the conceptschemes exist
         foreach ($concepts as $concept) {
             $conceptSchemes = $concept->getProperty(Skos::IN_SCHEME);
+
+            // Ensure the conceptschemes exist
             foreach ($conceptSchemes as $conceptSchemeIri) {
                 $conceptScheme = $conceptSchemeRepository->findByIri($conceptSchemeIri);
                 if (is_null($conceptScheme)) {
                     throw new ApiException('concept-create-conceptscheme-does-not-exist', [
                         'conceptscheme' => $conceptSchemeIri->getUri(),
+                    ]);
+                }
+            }
+
+            // Ensure unique notation in conceptschemes
+            $notation = $concept->getValue(Skos::NOTATION);
+            foreach ($conceptSchemes as $conceptSchemeIri) {
+                $numFound = 0;
+                $iri      = $conceptSchemeIri->getUri();
+
+                // Fetch notation & scheme combination
+                $conceptRepository->search('*:*', 20, 0, $numFound, null, $filter = [
+                    'notationFilter' => sprintf('max_numeric_notation:"%s"', $notation),
+                    'schemeFilter'   => sprintf('inScheme:"%s"', str_replace('"', '\\"', str_replace('\\', '\\\\', $iri))),
+                ]);
+
+                if ($numFound) {
+                    throw new ApiException('concept-create-notation-not-unique', [
+                        'conceptscheme' => $iri,
+                        'notation'      => $notation,
                     ]);
                 }
             }

@@ -181,6 +181,17 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateTitle"
     },
+    "skos-validate-altlabel-literal-type" : {
+        "code": "skos-validate-altlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateAltLabel"
+    },
     "openskos-validate-tenant-literal-type" : {
         "code": "openskos-validate-tenant-literal-type",
         "fields": [
@@ -422,6 +433,17 @@
         ],
         "description": "The given conceptscheme to create a Concept for does not exist",
         "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-notation-not-unique" : {
+        "code": "concept-create-notation-not-unique",
+        "fields": [
+            "conceptscheme",
+            "notation"
+        ],
+        "description": "The given skos:notation is not unique within the given conceptScheme",
+        "status": 409,
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "postConcept"
     },
