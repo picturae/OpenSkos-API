@@ -220,6 +220,54 @@ final class Concept extends AbstractRdfDocument
         'skosxl'          => '?',
     ];
 
+    protected static $updateFields = [
+        OpenSkos::SET,
+        Skos::NOTATION,
+        OpenSkos::STATUS,
+        Skos::IN_SCHEME,
+        DcTerms::TITLE,
+        Skos::EXAMPLE,
+
+        Dc::CONTRIBUTOR,
+        DcTerms::DATE_APPROVED,
+        OpenSkos::DELETED_BY,
+        OpenSkos::DATE_DELETED,
+        DcTerms::MODIFIED,
+        OpenSkos::MODIFIED_BY,
+        DcTerms::DATE_SUBMITTED,
+
+        Skos::PREF_LABEL,
+        Skos::ALT_LABEL,
+        Skos::HIDDEN_LABEL,
+        SkosXl::PREF_LABEL,
+        SkosXl::ALT_LABEL,
+        SkosXl::HIDDEN_LABEL,
+
+        Skos::EDITORIAL_NOTE,
+        Skos::NOTE,
+        Skos::HISTORY_NOTE,
+        Skos::SCOPE_NOTE,
+        Skos::CHANGE_NOTE,
+
+        OpenSkos::TO_BE_CHECKED,
+        DcTerms::DATE_ACCEPTED,
+        OpenSkos::ACCEPTED_BY,
+
+        Skos::DEFINITION,
+        Skos::TOP_CONCEPT_OF,
+        Skos::RELATED,
+        Skos::RELATED_MATCH,
+
+        Skos::BROADER,
+        Skos::BROAD_MATCH,
+        Skos::BROADER_MATCH,
+        Skos::BROADER_TRANSITIVE,
+
+        Skos::NARROWER,
+        Skos::NARROW_MATCH,
+        Skos::NARROWER_TRANSITIVE,
+    ];
+
     /*
      * XL alternatives for acceptable fields
      */

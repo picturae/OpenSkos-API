@@ -294,6 +294,46 @@ final class ConceptController
     /**
      * @Route(path="/concepts.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive all (filtered) concepts")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\JsonRdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Turtle(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Ntriples(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws Exception
      */
     public function getAllConcepts(

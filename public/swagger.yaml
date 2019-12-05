@@ -32,7 +32,86 @@ paths:
       "summary": ""
   /concepts.{format}:
     get:
-      "summary": ""
+      "summary": "Retreive all (filtered) concepts"
+      "parameters":
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                        "@type":
+                          "type": "string"
+                          "example": "skos:Concept"
+                        "openskos:uuid":
+                          "type": "string"
+                        "openskos:tenant":
+                          "type": "string"
+                        "dcterms:title":
+                          "type": "string"
+            "text/turtle":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                        "@type":
+                          "type": "string"
+                          "example": "skos:Concept"
+                        "openskos:uuid":
+                          "type": "string"
+                        "openskos:tenant":
+                          "type": "string"
+                        "dcterms:title":
+                          "type": "string"
+            "application/n-triples":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                        "@type":
+                          "type": "string"
+                          "example": "skos:Concept"
+                        "openskos:uuid":
+                          "type": "string"
+                        "openskos:tenant":
+                          "type": "string"
+                        "dcterms:title":
+                          "type": "string"
     post:
       "summary": "Create one or more new concepts"
       "parameters":

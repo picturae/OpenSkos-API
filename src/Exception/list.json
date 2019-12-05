@@ -415,8 +415,8 @@
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "postConcept"
     },
-    "concept-create-concept-does-not-exist" : {
-        "code": "concept-create-concept-does-not-exist",
+    "concept-create-conceptscheme-does-not-exist" : {
+        "code": "concept-create-conceptscheme-does-not-exist",
         "fields": [
             "conceptscheme"
         ],
