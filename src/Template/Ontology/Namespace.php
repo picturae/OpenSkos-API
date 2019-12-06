@@ -13,6 +13,7 @@ $skipFields = [
     'datatype',
     'dataclass',
     'literaltype',
+    'resourcetype',
     'name',
     'regex',
 ];

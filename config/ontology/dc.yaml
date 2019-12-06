@@ -6,6 +6,7 @@ parameters:
     properties:
       creator:
         datatype: resource
+        resourcetype: "foaf:Person"
       contributor:
         datatype: resource
       title:

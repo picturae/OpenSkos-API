@@ -5,9 +5,18 @@ parameters:
     namespace: 'http://openskos.org/xmlns#'
     hasVocabulary: true
     properties:
-      datatype:
+      dataType:
         datatype: literal
+        literaltype: "xsd:string"
         "dcterms:description": "The type of data that's supposed to go in the described field"
+      literalType:
+        datatype: literal
+        literaltype: "xsd:string"
+        "dcterms:description": "What kind of literal the described field is supposed to be"
+      resourceType:
+        datatype: literal
+        literaltype: "xsd:string"
+        "dcterms:description": "What kind of resource the described field is supposed to be"
       tenant:
         datatype: literal
         literaltype: "xsd:string"
@@ -15,6 +24,7 @@ parameters:
         "dcterms:description": "A reference to an org:FormalOrganization by it's openskos:code field"
       status:
         datatype: literal
+        literaltype: 'xsd:string'
       toBeChecked:
         datatype: literal
       dateDeleted:
@@ -22,10 +32,13 @@ parameters:
         literaltype: "xsd:datetime"
       deletedBy:
         datatype: resource
+        resourcetype: "foaf:Person"
       acceptedBy:
         datatype: resource
+        resourcetype: "foaf:Person"
       modifiedBy:
         datatype: resource
+        resourcetype: "foaf:Person"
       uuid:
         datatype: literal
         literaltype: "xsd:string"

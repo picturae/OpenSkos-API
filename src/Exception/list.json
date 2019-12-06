@@ -181,6 +181,39 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateTitle"
     },
+    "skosxl-validate-altlabel-literal-type" : {
+        "code": "skosxl-validate-altlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validateAltLabel"
+    },
+    "skosxl-validate-hiddenlabel-literal-type" : {
+        "code": "skosxl-validate-hiddenlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validateHiddenLabel"
+    },
+    "skosxl-validate-preflabel-literal-type" : {
+        "code": "skosxl-validate-preflabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validatePrefLabel"
+    },
     "skos-validate-altlabel-literal-type" : {
         "code": "skos-validate-altlabel-literal-type",
         "fields": [
@@ -214,6 +247,50 @@
         "class": "App\\Ontology\\Skos",
         "method": "validatePrefLabel"
     },
+    "skos-validate-notation-literal-type" : {
+        "code": "skos-validate-notation-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateNotation"
+    },
+    "openskos-validate-datatype-literal-type" : {
+        "code": "openskos-validate-datatype-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the datatype predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateDataType"
+    },
+    "openskos-validate-literaltype-literal-type" : {
+        "code": "openskos-validate-literaltype-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the literaltype predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateLiteralType"
+    },
+    "openskos-validate-resourcetype-literal-type" : {
+        "code": "openskos-validate-resourcetype-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the resourcetype predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateResourceType"
+    },
     "openskos-validate-tenant-literal-type" : {
         "code": "openskos-validate-tenant-literal-type",
         "fields": [
@@ -235,6 +312,17 @@
         "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateTenant"
+    },
+    "openskos-validate-status-literal-type" : {
+        "code": "openskos-validate-status-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the status predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateStatus"
     },
     "openskos-validate-datedeleted-literal-type" : {
         "code": "openskos-validate-datedeleted-literal-type",
