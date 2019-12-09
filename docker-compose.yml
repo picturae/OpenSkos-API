@@ -22,7 +22,7 @@ services:
     networks:
       - openskos
     environment:
-      VIRTUAL_HOST : api.openskos.local
+      VIRTUAL_HOST : api.openskos.localhost
     env_file:
       - data/docker/nginx/default.env
     ports:
