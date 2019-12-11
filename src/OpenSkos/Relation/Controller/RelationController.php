@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Relation\Controller;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
@@ -16,9 +18,8 @@ use App\OpenSkos\RelationType\RelationType;
 use App\Rdf\Iri;
 use App\Rdf\RdfTerm;
 use App\Rdf\Triple;
-use App\Rest\ScalarResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Rest\DirectGraphResponse;
+use EasyRdf_Graph as Graph;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -38,21 +39,28 @@ final class RelationController
         SerializerInterface $serializer
     ) {
         $this->serializer = $serializer;
-        $this->whitelist  = array_merge(
+        $this->whitelist  = array_filter(array_merge(
             [Rdf::TYPE],
             RelationType::vocabularyFields(),
             [OpenSkos::TENANT],
             [OpenSkos::UUID],
             [SkosXl::LABEL_RELATION]
-        );
+        ), function ($uri) {
+            return (bool) Context::decodeUri($uri);
+        });
     }
 
     /**
      * @return Triple[]
      */
-    public static function toTriples(string $iri, array $data): array
+    public static function toTriples(?string $iri, ?array $data): array
     {
         $result = [];
+
+        if (is_null($data) || is_null($iri)) {
+            return [];
+        }
+
         foreach ($data as $key => $value) {
             $result[] = new Triple(new Iri($iri), new Iri($key), $value);
         }
@@ -96,65 +104,97 @@ final class RelationController
     /**
      * @Route(path="/relations.{format?}", methods={"GET"})
      *
-     * @throws BadRequestHttpException
+     * @throws ApiException
+     *
+     * @Error(code="relation-getall-missing-subject-and-object",
+     *        status=400,
+     *        description="Neither subject or object was given, either is required",
+     *        fields={"uuid"}
+     * )
+     * @Error(code="relation-getall-subject-not-found",
+     *        status=404,
+     *        description="No subject could be found with the given id",
+     *        fields={"subject"}
+     * )
+     * @Error(code="relation-getall-object-not-found",
+     *        status=404,
+     *        description="No object could be found with the given id",
+     *        fields={"object"}
+     * )
      */
-    public function getLabels(
+    public function getRelations(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
         JenaRepository $jenaRepository
-    ): ScalarResponse {
-        // Fetch which object to fetch relations for
-        $object = null;
-        $object = $apiRequest->getParameter('subject', $object);
-        $object = $apiRequest->getParameter('object', $object);
-        if (!$object) {
-            throw new BadRequestHttpException('Missing resource ID');
-        }
-
-        $rawdata = null;
-
-        // Attempt with UUID field
-        if (is_null($rawdata) && ApiFilter::isUuid($object)) {
-            $rawdata = $jenaRepository->getByUuid(new InternalResourceId($object));
-        }
-
-        // Direct by iri
-        if (is_null($rawdata) && filter_var($object, FILTER_VALIDATE_URL)) {
-            $rawdata = $jenaRepository->findByIri(new Iri($object));
-        }
-
-        // No resource yet = couldn't find it
-        if (is_null($rawdata)) {
-            throw new NotFoundHttpException("Could not get resource with id: ${object}");
-        }
-
-        // Separate the ID
-        $iri = $rawdata['_id'];
-        unset($rawdata['_id']);
-
-        // Transform raw data into triples
-        $triples = static::toTriples($iri, $rawdata);
-
-        // Remove non-whitelisted fields
+    ): DirectGraphResponse {
         $whitelist = $this->whitelist;
-        $triples   = array_filter(array_map(function (Triple $triple) use ($whitelist) {
-            $field = $triple->getPredicate()->getUri();
-
-            return in_array($field, $whitelist, true) ? $triple : null;
-        }, $triples));
-
-        // Fetch the classname for the rdf type
-        $type  = static::getType($triples);
-        $class = static::getClass($type);
-        if (is_null($class)) {
-            throw new BadRequestHttpException("Could not get class for resource type: ${type}");
+        $subject   = $apiRequest->getParameter('subject');
+        $object    = $apiRequest->getParameter('object');
+        $triples   = [];
+        if (is_null($subject) && is_null($object)) {
+            throw new ApiException('relation-getall-missing-subject-and-object');
         }
 
-        // Build the resource and return it
-        $resource = $class::fromTriples(new Iri($iri), $triples);
+        /* * * * * * * * * * * *\
+         * SUBJECT DATA START  *
+        \* * * * * * * * * * * */
 
-        return new ScalarResponse(
-            $resource,
+        $subjectData    = null;
+        if ($subject) {
+            // Attempt with UUID field
+            if (is_null($subjectData) && ApiFilter::isUuid($subject)) {
+                $subjectData = $jenaRepository->getByUuid(new InternalResourceId($subject));
+            }
+
+            // Direct by iri
+            if (is_null($subjectData) && filter_var($subject, FILTER_VALIDATE_URL)) {
+                $subjectData = $jenaRepository->findByIri(new Iri($subject));
+            }
+
+            // Check if requested data was actually found
+            if (is_null($subjectData)) {
+                throw new ApiException('relation-getall-subject-not-found', [
+                    'subject' => $subject,
+                ]);
+            }
+
+            // Separate the ID
+            $subjectIri = $subjectData['_id'];
+            unset($subjectData['_id']);
+
+            // Transform raw data into triples
+            $triples = static::toTriples($subjectIri, $subjectData);
+
+            // Remove non-whitelisted fields
+            $triples = array_filter(array_map(function (Triple $triple) use ($whitelist) {
+                $field = $triple->getPredicate()->getUri();
+
+                return in_array($field, $whitelist, true) ? $triple : null;
+            }, $triples));
+        }
+
+        /* * * * * * * * * * *\
+         * OBJECT DATA START *
+        \* * * * * * * * * * */
+
+        $objectData = null;
+        if ($object) {
+            $triples = array_merge(
+                $triples,
+                $jenaRepository->findSubjectForObject(new Iri($object))
+            );
+        }
+
+        /* * * * * * * *\
+         * GRAPH START *
+        \* * * * * * * */
+
+        $tripleString = implode(" .\n", $triples).' .';
+        $graph        = new Graph();
+        $graph->parse($tripleString, 'ntriples');
+
+        return new DirectGraphResponse(
+            $graph,
             $apiRequest->getFormat()
         );
     }
