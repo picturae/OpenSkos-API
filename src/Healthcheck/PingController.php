@@ -113,7 +113,7 @@ final class PingController extends AbstractController
                 'published' => 2019,
                 'revised'   => 2019,
             ],
-        ]), 200, [
+        ], JSON_PRETTY_PRINT), 200, [
             'Content-Type' => 'application/json',
         ]);
     }
