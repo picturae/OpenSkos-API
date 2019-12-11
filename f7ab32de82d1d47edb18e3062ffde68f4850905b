@@ -1,0 +1,8 @@
+[ver:1,total:4462]
+src/OpenSkos/Concept/Controller/ConceptController.php:2853,1576058400:225,1576062000:160,1576065600:2089,1576069200:379,m
+src/Rdf/AbstractRdfDocument.php:704,1576065600:103,1576069200:601,m
+src/OpenSkos/Concept/Concept.php:572,1576065600:534,1576069200:38,m
+src/Repository/AbstractSolrRepository.php:244,1576069200:244,m
+src/Repository/AbstractRepository.php:58,1576069200:58,r
+src/Ontology/OpenSkos.php:23,1576069200:23,r
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:8,1576069200:8,r
