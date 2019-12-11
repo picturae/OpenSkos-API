@@ -1,0 +1,15 @@
+[ver:1,total:985]
+src/Exception/ApiException.php:230,1576062000:230,r
+vendor/easyrdf/easyrdf/lib/EasyRdf/Serialiser/Json.php:192,1576062000:192,r
+.git/hooks/post-commit:120,1576058400:120,r
+src/Serializer/RdfEncoder.php:102,1576062000:102,r
+src/Entity/AbstractEntity.php:60,1576062000:60,r
+src/Healthcheck/PingController.php:50,1576062000:50,m
+vendor/ml/json-ld/JsonLD.php:42,1576062000:42,r
+src/Annotation/AbstractAnnotation.php:40,1576062000:40,r
+src/Rdf/Format/AbstractRdfFormat.php:32,1576062000:32,r
+src/Rdf/Format/JsonLd.php:32,1576062000:32,r
+src/Exception/Listener/ExceptionListener.php:30,1576062000:30,m
+src/Exception/Controller/ExceptionController.php:20,1576062000:20,r
+src/Ontology/Command/GenerateOntologyCommand.php:20,1576062000:20,r
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:15,1576058400:15,r
