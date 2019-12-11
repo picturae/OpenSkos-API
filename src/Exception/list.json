@@ -330,7 +330,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the datedeleted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the datedeleted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateDateDeleted"
@@ -499,6 +499,16 @@
         "class": "App\\Security\\Authentication",
         "method": "requireAdministrator"
     },
+    "concept-getone-not-found" : {
+        "code": "concept-getone-not-found",
+        "fields": [
+            "uuid"
+        ],
+        "description": "The requested concept could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConcept"
+    },
     "concept-create-empty-or-corrupt-body" : {
         "code": "concept-create-empty-or-corrupt-body",
         "description": "The body passed to this endpoint was either missing or corrupt",
@@ -603,6 +613,20 @@
         "status": 400,
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "putConcept"
+    },
+    "concept-delete-invalid-permissions-user-missing" : {
+        "code": "concept-delete-invalid-permissions-user-missing",
+        "description": "The administrator role was present but the authenticated user was missing",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "deleteConcept"
+    },
+    "concept-delete-not-an-orphan" : {
+        "code": "concept-delete-not-an-orphan",
+        "description": "The concept to delete still has relations",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "deleteConcept"
     },
     "user-getall-permission-denied-missing-user" : {
         "description": "The authenticated user could not be loaded",

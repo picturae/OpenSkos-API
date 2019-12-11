@@ -85,7 +85,7 @@ final class OpenSkos
         'http://openskos.org/xmlns#resourceType'                => 'xsd:string',
         'http://openskos.org/xmlns#tenant'                      => 'xsd:string',
         'http://openskos.org/xmlns#status'                      => 'xsd:string',
-        'http://openskos.org/xmlns#dateDeleted'                 => 'xsd:datetime',
+        'http://openskos.org/xmlns#dateDeleted'                 => 'xsd:dateTime',
         'http://openskos.org/xmlns#uuid'                        => 'xsd:string',
         'http://openskos.org/xmlns#name'                        => 'xsd:string',
         'http://openskos.org/xmlns#disableSearchInOtherTenants' => 'xsd:boolean',
@@ -315,7 +315,7 @@ final class OpenSkos
      * @Error(code="openskos-validate-datedeleted-literal-type",
      *        status=422,
      *        fields={"expected","actual"},
-     *        description="The object for the datedeleted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *        description="The object for the datedeleted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#dateTime'"
      *     )
      */
     public function validateDateDeleted($property): ?array
@@ -327,11 +327,11 @@ final class OpenSkos
         if ($property instanceof Literal) {
             $value = $property->value();
 
-            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+            if ('http://www.w3.org/2001/XMLSchema#dateTime' !== $property->typeIri()->getUri()) {
                 return [
                     'code' => 'openskos-validate-datedeleted-literal-type',
                     'data' => [
-                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#dateTime',
                         'actual'   => $property->typeIri()->getUri(),
                     ],
                 ];

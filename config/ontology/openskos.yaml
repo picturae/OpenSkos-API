@@ -29,7 +29,7 @@ parameters:
         datatype: literal
       dateDeleted:
         datatype: literal
-        literaltype: "xsd:datetime"
+        literaltype: "xsd:dateTime"
       deletedBy:
         datatype: resource
         resourcetype: "foaf:Person"
