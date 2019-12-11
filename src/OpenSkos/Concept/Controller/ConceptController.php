@@ -239,6 +239,12 @@ final class ConceptController
 
     /**
      * @Route(path="/concept/{id}.{format?}", methods={"GET"})
+     *
+     * @Error(code="concept-getone-not-found",
+     *        status=404,
+     *        description="The requested concept could not be retreived",
+     *        fields={"uuid"}
+     * )
      */
     public function getConcept(
         InternalResourceId $id,
@@ -251,7 +257,9 @@ final class ConceptController
             $id
         );
         if (null === $concept) {
-            throw new NotFoundHttpException("The concept $id could not be retreived.");
+            throw new ApiException('concept-getone-not-found', [
+                'uuid' => $id->id(),
+            ]);
         }
         if (2 === $apiRequest->getLevel()) {
             $concept->loadFullXlLabels($labelRepository);
@@ -647,6 +655,58 @@ final class ConceptController
             $concepts,
             count($concepts),
             0,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/concept/{id}.{format?}", methods={"DELETE"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="concept-delete-invalid-permissions-user-missing",
+     *        status=404,
+     *        description="The administrator role was present but the authenticated user was missing"
+     * )
+     * @Error(code="concept-delete-not-an-orphan",
+     *        status=400,
+     *        description="The concept to delete still has relations"
+     * )
+     */
+    public function deleteConcept(
+        InternalResourceId $id,
+        ApiRequest $apiRequest,
+        ConceptRepository $conceptRepository,
+        LabelRepository $labelRepository
+    ): ScalarResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+        $user = $auth->getUser();
+        if (is_null($user)) {
+            // TODO: security is severely compromised if this is thrown
+            throw new ApiException('concept-delete-invalid-permissions-user-missing');
+        }
+
+        // Fetch the concept we're deleting
+        /** @var Concept $concept */
+        $concept = $this->getConcept($id, $apiRequest, $conceptRepository, $labelRepository)->doc();
+
+        // Ensure the concept doesn't have relations
+        // TODO: delete despite having relations? (a.k.a. orphan check override)
+        if (!$concept->isOrphan()) {
+            throw new ApiException('concept-delete-not-an-orphan');
+        }
+
+        // Throw any update errors
+        $errors = $concept->deleteSoft($user);
+        if ($errors) {
+            throw new ApiException($errors[0]);
+        }
+
+        // Return the concept we just deleted
+        return new ScalarResponse(
+            $concept,
             $apiRequest->getFormat()
         );
     }

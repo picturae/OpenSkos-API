@@ -96,6 +96,18 @@ abstract class AbstractSolrRepository extends AbstractRepository
         $this->solrQueryBuilder = $solrQueryBuilder;
     }
 
+    public function deleteIndex(Iri $iri): void
+    {
+        $client = $this->solrClient->getClient();
+        /** @var UpdateQuery $updateQuery */
+        $updateQuery = $client->createUpdate();
+
+        $updateQuery->addDeleteById($iri->getUri());
+        $updateQuery->addCommit(true);
+
+        $client->update($updateQuery);
+    }
+
     /**
      * Perform a full text query
      * lucene / solr queries are possible

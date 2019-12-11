@@ -6,12 +6,14 @@ namespace App\OpenSkos\Concept;
 
 use App\Annotation\Document;
 use App\Database\Doctrine;
+use App\Ontology\Context;
 use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
 use App\Ontology\SkosXl;
+use App\OpenSkos\RelationType\RelationType;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rdf\Triple;
@@ -379,6 +381,36 @@ final class Concept extends AbstractRdfDocument
                 $triple->setSubject($this->iri());
             }
         })();
+    }
+
+    public function isOrphan(): bool
+    {
+        $relationTypes = RelationType::vocabularyFields();
+        foreach ($relationTypes as $relationType) {
+            $relation = $this->getProperty($relationType);
+            if (!count($relation ?? [])) {
+                continue;
+            }
+
+            // Ignored relations
+            $decodedType = implode(':', Context::decodeUri($relationType) ?? []);
+            if (in_array($decodedType, [
+                'skos:inScheme',
+                'skos:topConceptOf',
+                'openskos:isReplacedBy',
+                'openskos:inSet',
+            ], true)) {
+                continue;
+            }
+
+            // Found relation is not ignored
+            // We're not an orphan
+            return false;
+        }
+
+        // No known relations found
+        // We're an orphan
+        return true;
     }
 
     public static function getAcceptableFields(): array
