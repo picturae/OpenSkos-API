@@ -1,0 +1,14 @@
+[ver:1,total:703]
+src/OpenSkos/RelationType/RelationType.php:219,1576065600:219,r
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:159,1576065600:151,1576069200:8,r
+src/Rdf/Literal/DatetimeLiteral.php:61,1576065600:34,1576069200:27,r
+src/Exception/ApiException.php:60,1576062000:60,r
+src/Ontology/OpenSkos.php:54,1576065600:15,1576069200:39,m
+src/Ontology/Command/GenerateOntologyCommand.php:40,1576062000:20,1576065600:20,r
+src/Exception/Controller/ExceptionController.php:20,1576062000:20,r
+src/Ontology/Context.php:20,1576065600:20,r
+src/Entity/User.php:18,1576065600:18,r
+src/OpenSkos/InternalResourceId.php:18,1576065600:18,r
+config/ontology/openskos.yaml:15,1576069200:15,m
+src/OpenSkos/RelationType/Controller/RelationTypeController.php:13,1576065600:13,r
+src/Rest/DirectGraphResponse.php:6,1576065600:6,r
