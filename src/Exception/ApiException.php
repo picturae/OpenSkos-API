@@ -66,24 +66,31 @@ class ApiException extends \Exception
 
         parent::__construct($errorCode.': '.json_encode($data));
 
+        // Fetch error config
         $knownErrors = static::knownErrors();
         if (isset($knownErrors[$errorCode])) {
             $this->config = $knownErrors[$errorCode];
         }
 
+        // Fetch hardwired status
         if (isset($this->config['status'])) {
             $this->status = $this->config['status'];
         }
 
+        // Fetch hardwired description
         if (isset($this->config['description'])) {
             $this->description = $this->config['description'];
         }
 
+        // Fetch hardwired field list
         if (isset($this->config['fields'])) {
             $this->fields = $this->config['fields'];
         }
 
-        if (!is_null($data)) {
+        if (is_array($data)) {
+            if (isset($data['message'])) {
+                $this->message = $data['message'];
+            }
             foreach ($this->fields as $field) {
                 if (isset($data[$field])) {
                     $this->data[$field] = $data[$field];

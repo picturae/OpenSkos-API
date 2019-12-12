@@ -2,12 +2,12 @@
 
 namespace spec\App\OpenSkos\Filters;
 
+use App\Exception\ApiException;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\Filters\FilterProcessor;
 use Doctrine\DBAL\Connection;
 use PhpSpec\ObjectBehavior;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class FilterProcessorSpec extends ObjectBehavior
 {
@@ -44,7 +44,7 @@ class FilterProcessorSpec extends ObjectBehavior
             '92d6e19e-c424-4bdb-8cac-0738ae9fe88e',
         ];
         $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true];
-        $this->shouldThrow(BadRequestHttpException::class)
+        $this->shouldThrow(ApiException::class)
             ->during('buildInstitutionFilters', ['filter_list' => $filter_list, 'to_apply' => $to_apply]);
     }
 }

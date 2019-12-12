@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
+use App\Annotation\Error;
 use App\EasyRdf\Serializer\OpenSkosJsonLdSerializer;
+use App\Exception\ApiException;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\Label\Label;
@@ -21,7 +23,6 @@ use App\Rdf\Literal\StringLiteral;
 use EasyRdf_Graph;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\NormalizationAwareInterface;
-use Symfony\Component\Serializer\Exception\UnsupportedException;
 
 class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
 {
@@ -67,11 +68,23 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
      * @param string $format
      *
      * @return string
+     *
+     * @Error(code="serializer-rdfencoder-encode-data-not-iterable",
+     *        status=500,
+     *        description="Given data is not an iterable",
+     *        fields={"received"}
+     * )
      */
     public function encode($data, $format, array $context = [])
     {
         if ((!is_iterable($data)) && (!($data instanceof EasyRdf_Graph))) {
-            throw new UnsupportedException('data is not an iterable');
+            $type = gettype($data);
+            if ('object' == $type) {
+                $type .= '('.get_class($data).')';
+            }
+            throw new ApiException('serializer-rdfencoder-encode-data-not-iterable', [
+                'received' => $type,
+            ]);
         }
 
         if ($data instanceof EasyRdf_Graph) {

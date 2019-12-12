@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set\Controller;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Set\SetRepository;
 use App\Rest\DirectGraphResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -28,6 +29,11 @@ final class PrefixController
 
     /**
      * @Route(path="/prefixes.{format?}", methods={"GET"})
+     *
+     * @Error(code="setprefixcontroller-sets-filter-not-applicable",
+     *        status=400,
+     *        description="Sets filter is not applicable here"
+     * )
      */
     public function sets(
         ApiRequest $apiRequest,
@@ -42,7 +48,7 @@ final class PrefixController
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
         if (isset($param_sets) && 0 !== count($param_sets)) {
-            throw new BadRequestHttpException('Sets filter is not applicable here.');
+            throw new ApiException('setprefixcontroller-sets-filter-not-applicable');
         }
 
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);

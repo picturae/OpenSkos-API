@@ -5,9 +5,9 @@
 
 namespace App\EasyRdf\Serializer;
 
-use EasyRdf_Exception;
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use EasyRdf_Graph;
-use LogicException;
 
 /**
  * Class to serialise an EasyRdf_Graph to JSON-LD.
@@ -16,10 +16,16 @@ use LogicException;
  */
 class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
 {
+    /**
+     * @Error(code="openskos-json-ld-serializer-missing-ml-json-ld",
+     *        status=500,
+     *        description="Please install \"ml/json-ld\" dependency to use JSON-LD serialisation"
+     * )
+     */
     public function __construct()
     {
         if (!class_exists('\ML\JsonLD\JsonLD')) {
-            throw new LogicException('Please install "ml/json-ld" dependency to use JSON-LD serialisation');
+            throw new ApiException('openskos-json-ld-serializer-midding-ml-json-ld');
         }
 
         parent::__construct();
@@ -29,16 +35,29 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
      * @param EasyRdf_Graph $graph
      * @param string        $format
      *
-     * @throws EasyRdf_Exception
+     * @throws ApiException
      *
      * @return string
+     *
+     * @Error(code="openskos-json-ld-serializer-serialise-invalid-format",
+     *        status=500,
+     *        description="Requested format is not supported by this serializer",
+     *        fields={"format"}
+     * )
+     * @Error(code="openskos-json-ld-serializer-serialise-unserializable-value",
+     *        status=500,
+     *        description="Unable to serialise object to JSON-LD",
+     *        fields={"type"}
+     * )
      */
     public function serialise($graph, $format, array $options = [])
     {
         parent::checkSerialiseParams($graph, $format);
 
         if ('jsonld' != $format) {
-            throw new EasyRdf_Exception(__CLASS__.' does not support: '.$format);
+            throw new ApiException('openskos-json-ld-serializer-serialise-invalid-format', [
+                'format' => $format,
+            ]);
         }
 
         $ld_graph = new \ML\JsonLD\Graph();
@@ -70,7 +89,9 @@ class OpenSkosJsonLdSerializer extends \EasyRdf_Serialiser
                             $_value = $value['value'];
                         }
                     } else {
-                        throw new EasyRdf_Exception('Unable to serialise object to JSON-LD: '.$value['type']);
+                        throw new ApiException('openskos-json-ld-serializer-serialise-unserializable-value', [
+                            'type' => $value['type'],
+                        ]);
                     }
 
                     if ('http://www.w3.org/1999/02/22-rdf-syntax-ns#type' == $property) {

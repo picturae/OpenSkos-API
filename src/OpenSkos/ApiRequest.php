@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
-use App\OpenSkos\Exception\InvalidApiRequestLevel;
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormat;
 use App\Security\Authentication;
@@ -64,6 +65,22 @@ final class ApiRequest
 
     /**
      * ApiRequest constructor.
+     *
+     * @Error(code="apirequest-invalid-level",
+     *        status=400,
+     *        description="An invalid level was requested",
+     *        fields={"level"}
+     * )
+     * @Error(code="apirequest-invalid-limit",
+     *        status=400,
+     *        description="An invalid limit parameter was given, it needs to be >=0",
+     *        fields={"limit"}
+     * )
+     * @Error(code="apirequest-invalid-offset",
+     *        status=400,
+     *        description="An invalid offset parameter was given, it needs to be >=0",
+     *        fields={"offset"}
+     * )
      */
     public function __construct(
         array $allParams = [],
@@ -103,10 +120,19 @@ final class ApiRequest
         }
 
         if ($level < 1 || $level > 4) {
-            throw new InvalidApiRequestLevel($level);
+            throw new ApiException('apirequest-invalid-level', [
+                'level' => $level,
+            ]);
         }
-        if ($limit < 0 || $offset < 0) {
-            throw new \InvalidArgumentException("Limit and offset must be zero or higher. $limit and $offset passed");
+        if ($limit < 0) {
+            throw new ApiException('apirequest-invalid-limit', [
+                'limit' => $limit,
+            ]);
+        }
+        if ($offset < 0) {
+            throw new ApiException('apirequest-invalid-offset', [
+                'offset' => $offset,
+            ]);
         }
     }
 

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Filters;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class FilterProcessor
 {
@@ -67,6 +68,11 @@ final class FilterProcessor
 
     /**
      * @return array
+     *
+     * @Error(code="filterprocessor-build-institution-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
     public function buildInstitutionFilters(array $filterList)
     {
@@ -74,7 +80,7 @@ final class FilterProcessor
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('filterprocessor-build-institution-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_INSTITUTION];
             } else {
@@ -87,6 +93,15 @@ final class FilterProcessor
 
     /**
      * @return array
+     *
+     * @Error(code="filterprocessor-build-set-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
+     * @Error(code="filterprocessor-build-set-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
     public function buildSetFilters(array $filterList)
     {
@@ -94,11 +109,11 @@ final class FilterProcessor
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('filterprocessor-build-set-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
             } else {
-                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('filterprocessor-build-set-filters-search-by-string');
             }
         }
 

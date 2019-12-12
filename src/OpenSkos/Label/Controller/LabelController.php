@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Label\Controller;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Filters\FilterProcessor;
@@ -12,8 +14,6 @@ use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -55,6 +55,12 @@ final class LabelController
      * TODO: Fetch by UUID instead of regex.
      *
      * @Route(path="/label/{id}.{format?}", methods={"GET"})
+     *
+     * @Error(code="labelcontroller-getone-not-found",
+     *        status=404,
+     *        description="The requested label could not be retreived",
+     *        fields={"id"}
+     * )
      */
     public function getLabel(
        InternalResourceId $id,
@@ -64,7 +70,9 @@ final class LabelController
         $label = $repository->getOneWithoutUuid($id);
 
         if (null === $label) {
-            throw new NotFoundHttpException("The label $id could not be retreived.");
+            throw new ApiException('labelcontroller-getone-not-found', [
+                'id' => $id,
+            ]);
         }
 
         return new ScalarResponse($label, $apiRequest->getFormat());
@@ -72,6 +80,16 @@ final class LabelController
 
     /**
      * @Route(path="/label.{format?}", methods={"GET"})
+     *
+     * @Error(code="labelcontroller-getonebyuri-param-uri-missing",
+     *        status=400,
+     *        description="No uri was given"
+     * )
+     * @Error(code="labelcontroller-getonebyuri-not-found",
+     *        status=404,
+     *        description="The requested label could not be retreived",
+     *        fields={"uri"}
+     * )
      */
     public function getLabelByUri(
         ApiRequest $apiRequest,
@@ -79,13 +97,15 @@ final class LabelController
     ): ScalarResponse {
         $uri = $apiRequest->getParameter('uri', null);
         if (is_null($uri)) {
-            throw new BadRequestHttpException('No uri was given');
+            throw new ApiException('labelcontroller-getonebyuri-param-uri-missing');
         }
 
         $iri   = new Iri($uri);
         $label = $repository->findByIri($iri);
         if (is_null($label)) {
-            throw new NotFoundHttpException("The label $uri could not be retreived.");
+            throw new ApiException('labelcontroller-getonebyuri-not-found', [
+                'uri' => $uri,
+            ]);
         }
 
         return new ScalarResponse($label, $apiRequest->getFormat());
