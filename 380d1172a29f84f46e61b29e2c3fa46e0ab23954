@@ -1,0 +1,10 @@
+[ver:1,total:341]
+README.md:90,1576144800:90,m
+vendor/ml/json-ld/JsonLD.php:72,1576152000:72,r
+spec/Annotation/ErrorSpec.php:47,1576144800:47,r
+bin/console:45,1576148400:45,r
+vendor/ml/json-ld/Graph.php:20,1576152000:20,r
+src/Rdf/Exception/UnknownProperty.php:20,1576152000:20,r
+vendor/easyrdf/easyrdf/lib/EasyRdf/Exception.php:20,1576152000:20,r
+vendor/symfony/cache/Exception/LogicException.php:15,1576152000:15,r
+vendor/ml/json-ld/Node.php:12,1576152000:12,r
