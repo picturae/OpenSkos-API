@@ -9,5 +9,8 @@ parameters:
         dataclass: App\OpenSkos\User\User
       name:
         datatype: literal
+        literaltype: 'xsd:string'
       mbox:
         datatype: literal
+        literaltype: 'xsd:string'
+        regex: '^/[A-Z0-9._%+-]++@[A-Z0-9.-]++\.[A-Z]{2,}+$/i'

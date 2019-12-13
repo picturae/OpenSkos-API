@@ -96,6 +96,7 @@ final class OpenSkos
         'http://openskos.org/xmlns#licenceURL'                  => 'xsd:string',
         'http://openskos.org/xmlns#webpage'                     => 'xsd:string',
         'http://openskos.org/xmlns#enableskosxl'                => 'xsd:boolean',
+        'http://openskos.org/xmlns#usertype'                    => 'xsd:string',
         'http://openskos.org/xmlns#apikey'                      => 'xsd:string',
         'http://openskos.org/xmlns#errorCode'                   => 'xsd:string',
     ];
@@ -279,6 +280,11 @@ final class OpenSkos
      *        fields={"expected","actual"},
      *        description="The object for the status predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
      *     )
+     * @Error(code="openskos-validate-status-enum",
+     *        status=422,
+     *        fields={"allowed","given"},
+     *        description="The object for the status predicate does not consist of an allowed value"
+     *     )
      */
     public function validateStatus($property): ?array
     {
@@ -301,6 +307,17 @@ final class OpenSkos
         }
         if (is_null($value)) {
             return null;
+        }
+
+        $allowed = str_getcsv('candidate,approved,redirected,not_compliant,rejected,obsolete,deleted');
+        if (!in_array($value, $allowed, true)) {
+            return [
+                'code' => 'openskos-validate-status-regex',
+                'data' => [
+                    'allowed' => $allowed,
+                    'given'   => $value,
+                ],
+            ];
         }
 
         return null;
@@ -735,6 +752,60 @@ final class OpenSkos
         }
         if (is_null($value)) {
             return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for usertype.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-usertype-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the usertype predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     * @Error(code="openskos-validate-usertype-enum",
+     *        status=422,
+     *        fields={"allowed","given"},
+     *        description="The object for the usertype predicate does not consist of an allowed value"
+     *     )
+     */
+    public function validateUsertype($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-usertype-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        $allowed = str_getcsv('api,editor,both');
+        if (!in_array($value, $allowed, true)) {
+            return [
+                'code' => 'openskos-validate-usertype-regex',
+                'data' => [
+                    'allowed' => $allowed,
+                    'given'   => $value,
+                ],
+            ];
         }
 
         return null;

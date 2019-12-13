@@ -9,5 +9,7 @@ parameters:
         resourcetype: "foaf:Person"
       contributor:
         datatype: resource
+        resourcetype: "foaf:Person"
       title:
         datatype: literal
+        literaltype: 'xsd:string'

@@ -15,6 +15,7 @@ $skipFields = [
     'literaltype',
     'resourcetype',
     'name',
+    'enum',
     'regex',
 ];
 
@@ -95,6 +96,13 @@ final class <?= $name; ?>
      *        description="The object for the <?= strtolower($property['name']); ?> predicate has a different type than '<?= Context::fullUri($property['literaltype']); ?>'"
      *     )
 <?php } /* if isset property literal type */ ?>
+<?php if (isset($property['enum'])) { ?>
+     * @Error(code="<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-enum",
+     *        status=422,
+     *        fields={"allowed","given"},
+     *        description="The object for the <?= strtolower($property['name']); ?> predicate does not consist of an allowed value"
+     *     )
+<?php } /* if isset property literal type */ ?>
 <?php if (isset($property['regex'])) { ?>
      * @Error(code="<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-regex",
      *        status=422,
@@ -128,6 +136,19 @@ final class <?= $name; ?>
             return null;
         }
 
+<?php if (isset($property['enum'])) { ?>
+        $allowed = str_getcsv('<?= implode(',', $property['enum']); ?>');
+        if (!in_array($value, $allowed)) {
+            return [
+                'code' => '<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-regex',
+                'data' => [
+                    'allowed' => $allowed,
+                    'given'   => $value,
+                ],
+            ];
+        }
+
+<?php } /* if isset property regex */ ?>
 <?php if (isset($property['regex'])) { ?>
         $regex = '<?= str_replace('\\', '\\\\', $property['regex']); ?>';
         if (!preg_match($regex, $value)) {
