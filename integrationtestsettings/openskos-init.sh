@@ -1,8 +1,24 @@
 #!/bin/bash
 
-# sleep 30
+set -e
 
-# cat /opt/apache-jena-fuseki/logs/fuseki*.log
+sleep 30
+echo "Loading SQL data"
+mysql < ../data/travis/mysql/schema.sql
+# mysql < ../data/travis/mysql/job.sql
+# mysql < ../data/travis/mysql/max-numeric-notation.sql
+# mysql < ../data/travis/mysql/namespace.sql
+# mysql < ../data/travis/mysql/notations.sql
+# mysql < ../data/travis/mysql/search-profiles.sql
+mysql < ../data/travis/mysql/user.sql
+
+sleep 30
+echo "Loading Jena data"
+curl -X POST -d "INSERT { $(cat ../data/travis/jena/data.ttl) } WHERE {}" \
+  -H 'Content-Type: application/sparql-update; charset=utf-8' \
+  http://localhost:3030/openskos/update
+
+cat /opt/apache-jena-fuseki/logs/fuseki*.log
 # ps -ef
 
 # wget -O - "http://localhost:8983/solr/openskos/select?indent=on&q=*:*&wt=json"
@@ -25,4 +41,4 @@
 
 # php conceptscheme_or_skoscollection.php --tenant=example --key=xxx --setUri=http://set01/set01abc --uri=http://scheme02/ --description="test scheme 2" --uuid=scheme02abc  --title="test scheme 02"  --restype=scheme create
 
-# cd ${TRAVIS_BUILD_DIR}
+cd ${TRAVIS_BUILD_DIR}
