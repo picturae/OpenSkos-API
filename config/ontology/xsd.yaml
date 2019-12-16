@@ -12,3 +12,7 @@ parameters:
         datatype: class
       dateTime:
         datatype: class
+      integer:
+        datatype: class
+      decimal:
+        datatype: class

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Concept;
 
 use App\Annotation\Document;
+use App\Database\Doctrine;
 use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
@@ -12,7 +13,10 @@ use App\Ontology\Rdf;
 use App\Ontology\Skos;
 use App\Ontology\SkosXl;
 use App\Rdf\AbstractRdfDocument;
+use App\Rdf\Iri;
 use App\Rdf\Triple;
+use App\Rdf\VocabularyAwareResource;
+use App\Repository\AbstractRepository;
 
 /**
  * @Document\Type(Skos::CONCEPT)
@@ -220,6 +224,46 @@ final class Concept extends AbstractRdfDocument
         'skosxl'          => '?',
     ];
 
+    protected static $updateFields = [
+        OpenSkos::SET,
+        OpenSkos::STATUS,
+        Skos::IN_SCHEME,
+        DcTerms::TITLE,
+        Skos::EXAMPLE,
+        Dc::CONTRIBUTOR,
+        DcTerms::DATE_APPROVED,
+        OpenSkos::DELETED_BY,
+        OpenSkos::DATE_DELETED,
+        DcTerms::MODIFIED,
+        OpenSkos::MODIFIED_BY,
+        DcTerms::DATE_SUBMITTED,
+        Skos::PREF_LABEL,
+        Skos::ALT_LABEL,
+        Skos::HIDDEN_LABEL,
+        SkosXl::PREF_LABEL,
+        SkosXl::ALT_LABEL,
+        SkosXl::HIDDEN_LABEL,
+        Skos::EDITORIAL_NOTE,
+        Skos::NOTE,
+        Skos::HISTORY_NOTE,
+        Skos::SCOPE_NOTE,
+        Skos::CHANGE_NOTE,
+        OpenSkos::TO_BE_CHECKED,
+        DcTerms::DATE_ACCEPTED,
+        OpenSkos::ACCEPTED_BY,
+        Skos::DEFINITION,
+        Skos::TOP_CONCEPT_OF,
+        Skos::RELATED,
+        Skos::RELATED_MATCH,
+        Skos::BROADER,
+        Skos::BROAD_MATCH,
+        Skos::BROADER_MATCH,
+        Skos::BROADER_TRANSITIVE,
+        Skos::NARROWER,
+        Skos::NARROW_MATCH,
+        Skos::NARROWER_TRANSITIVE,
+    ];
+
     /*
      * XL alternatives for acceptable fields
      */
@@ -247,6 +291,95 @@ final class Concept extends AbstractRdfDocument
         'skosxl'  => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
         'default' => ['uri' => ['lang' => ''], 'prefLabel' => ['lang' => ''], 'definition' => ['lang' => '']],
     ];
+
+    public function __construct(
+        Iri $subject,
+        ?VocabularyAwareResource $resource = null,
+        ?AbstractRepository $repository = null
+    ) {
+        parent::__construct($subject, $resource, $repository);
+
+        // Ensure we have a notation
+        (function (): void {
+            // Only generate if no notation is known yet
+            if ($this->getValue(Skos::NOTATION)) {
+                return;
+            }
+
+            // We need the tenant to generate an id
+            if (!$this->getValue(OpenSkos::TENANT)) {
+                return;
+            }
+
+            // Build our fetching query
+            $stmt = Doctrine::getConnection()
+                ->createQueryBuilder()
+                ->select('*')
+                ->from('max_numeric_notation')
+                ->where('tenant_code = :tenant')
+                ->setParameter(':tenant', $this->getValue(OpenSkos::TENANT))
+                ->execute()
+            ;
+
+            // We might've receive an affected rows count
+            if (is_int($stmt)) {
+                return;
+            }
+
+            // Notation must be non-null
+            $data = $stmt->fetch();
+            if (!is_array($data)) {
+                return;
+            }
+
+            // Increment & store
+            $data['max_numeric_notation'] = intval($data['max_numeric_notation']) + 1;
+            $this->setValue(new Iri(Skos::NOTATION), ''.$data['max_numeric_notation']);
+
+            // Write incremented number back to db
+            $stmt = Doctrine::getConnection()
+                ->createQueryBuilder()
+                ->update('max_numeric_notation')
+                ->set('max_numeric_notation', ''.$data['max_numeric_notation'])
+                ->where('tenant_code = :tenant')
+                ->setParameter(':tenant', $data['tenant_code'])
+                ->execute()
+            ;
+        })();
+
+        // Generate ID if needed
+        (function () use ($repository): void {
+            if (is_null($repository)) {
+                return;
+            }
+
+            // Only generate if the subject starts with '_:'
+            // This is default in EasyRdf if no id was given
+            $iri = $this->iri()->getUri();
+            if ('_:' !== substr($iri, 0, 2)) {
+                return;
+            }
+
+            // We need a set to generate the ID
+            $set = $this->getValue(OpenSkos::SET);
+            if (!($set instanceof Iri)) {
+                return;
+            }
+
+            // Attempt direct fetch
+            $notation = $this->getValue(Skos::NOTATION);
+            if (is_null($notation)) {
+                return;
+            }
+
+            // Update subject through the whole resource
+            $iri = $set->getUri().'/'.$notation;
+            $this->iri()->setUri($iri);
+            foreach ($this->triples() as $triple) {
+                $triple->setSubject($this->iri());
+            }
+        })();
+    }
 
     public static function getAcceptableFields(): array
     {

@@ -45,6 +45,13 @@ class Iri implements RdfTerm
         return $this->uri;
     }
 
+    public function setUri(string $uri): Iri
+    {
+        $this->uri = $uri;
+
+        return $this;
+    }
+
     public function ntripleString(): string
     {
         return "<$this->uri>";

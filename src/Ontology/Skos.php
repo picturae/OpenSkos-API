@@ -19,6 +19,10 @@
 
 namespace App\Ontology;
 
+use App\Annotation\Error;
+use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
+
 final class Skos
 {
     const NAME_SPACE          = 'http://www.w3.org/2004/02/skos/core#';
@@ -58,5 +62,122 @@ final class Skos
     const RELATED_MATCH       = 'http://www.w3.org/2004/02/skos/core#relatedMatch';
 
     const literaltypes = [
+        'http://www.w3.org/2004/02/skos/core#altLabel'    => 'xsd:string',
+        'http://www.w3.org/2004/02/skos/core#hiddenLabel' => 'xsd:string',
+        'http://www.w3.org/2004/02/skos/core#prefLabel'   => 'xsd:string',
     ];
+
+    /**
+     * Returns the first encountered error for altLabel.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="skos-validate-altlabel-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the altlabel predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateAltLabel($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'skos-validate-altlabel-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for hiddenLabel.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="skos-validate-hiddenlabel-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the hiddenlabel predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateHiddenLabel($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'skos-validate-hiddenlabel-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for prefLabel.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="skos-validate-preflabel-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the preflabel predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validatePrefLabel($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'skos-validate-preflabel-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
 }

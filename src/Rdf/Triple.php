@@ -43,6 +43,13 @@ final class Triple
         return $this->subject;
     }
 
+    public function setSubject(Iri $subject): Triple
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
     public function getPredicate(): Iri
     {
         return $this->predicate;

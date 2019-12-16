@@ -203,8 +203,10 @@ class GenerateSwaggerCommand extends Command
                         $fields         = $annotationData['fields'] ?? [];
                         unset($annotationData['fields']);
                         unset($annotationData['code']);
-                        $data->responses            = [];
-                        $data->responses["'$code'"] = $annotationData;
+                        $data->responses            = array_merge_recursive(
+                            $data->responses ?? [],
+                            ["'$code'"=> ['content' => $annotationData['content']->__toArray()]],
+                        );
                     }
 
                     if ($annotation instanceof OA\Request) {
