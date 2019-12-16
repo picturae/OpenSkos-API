@@ -116,7 +116,7 @@ final class ConceptSchemeController
      *        fields={"set"}
      * )
      */
-    public function postSet(
+    public function postConceptScheme(
         ApiRequest $apiRequest,
         ConceptSchemeRepository $conceptSchemeRepository,
         SetRepository $setRepository,
