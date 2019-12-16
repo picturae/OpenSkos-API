@@ -27,6 +27,8 @@ paths:
   /concept/{id}.{format}:
     get:
       "summary": ""
+    delete:
+      "summary": ""
   /concept.{format}:
     get:
       "summary": ""
@@ -64,9 +66,25 @@ paths:
                           "example": "skos:Concept"
                         "openskos:uuid":
                           "type": "string"
+                        "skos:notation":
+                          "type": "string"
+                        "openskos:status":
+                          "type": "string"
                         "openskos:tenant":
                           "type": "string"
                         "dcterms:title":
+                          "type": "string"
+                        "skos:prefLabel":
+                          "type": "string"
+                        "skos:altLabel":
+                          "type": "string"
+                        "skos:hiddenLabel":
+                          "type": "string"
+                        "skosxl:prefLabel":
+                          "type": "string"
+                        "skosxl:altLabel":
+                          "type": "string"
+                        "skosxl:hiddenLabel":
                           "type": "string"
             "text/turtle":
               "schema":
@@ -86,9 +104,25 @@ paths:
                           "example": "skos:Concept"
                         "openskos:uuid":
                           "type": "string"
+                        "skos:notation":
+                          "type": "string"
+                        "openskos:status":
+                          "type": "string"
                         "openskos:tenant":
                           "type": "string"
                         "dcterms:title":
+                          "type": "string"
+                        "skos:prefLabel":
+                          "type": "string"
+                        "skos:altLabel":
+                          "type": "string"
+                        "skos:hiddenLabel":
+                          "type": "string"
+                        "skosxl:prefLabel":
+                          "type": "string"
+                        "skosxl:altLabel":
+                          "type": "string"
+                        "skosxl:hiddenLabel":
                           "type": "string"
             "application/n-triples":
               "schema":
@@ -108,9 +142,25 @@ paths:
                           "example": "skos:Concept"
                         "openskos:uuid":
                           "type": "string"
+                        "skos:notation":
+                          "type": "string"
+                        "openskos:status":
+                          "type": "string"
                         "openskos:tenant":
                           "type": "string"
                         "dcterms:title":
+                          "type": "string"
+                        "skos:prefLabel":
+                          "type": "string"
+                        "skos:altLabel":
+                          "type": "string"
+                        "skos:hiddenLabel":
+                          "type": "string"
+                        "skosxl:prefLabel":
+                          "type": "string"
+                        "skosxl:altLabel":
+                          "type": "string"
+                        "skosxl:hiddenLabel":
                           "type": "string"
     post:
       "summary": "Create one or more new concepts"
@@ -138,9 +188,25 @@ paths:
                 "example": "skos:Concept"
               "openskos:uuid":
                 "type": "string"
+              "skos:notation":
+                "type": "string"
+              "openskos:status":
+                "type": "string"
               "openskos:tenant":
                 "type": "string"
               "dcterms:title":
+                "type": "string"
+              "skos:prefLabel":
+                "type": "string"
+              "skos:altLabel":
+                "type": "string"
+              "skos:hiddenLabel":
+                "type": "string"
+              "skosxl:prefLabel":
+                "type": "string"
+              "skosxl:altLabel":
+                "type": "string"
+              "skosxl:hiddenLabel":
                 "type": "string"
           "name": "@graph"
           "in": "body"
@@ -165,9 +231,25 @@ paths:
                           "example": "skos:Concept"
                         "openskos:uuid":
                           "type": "string"
+                        "skos:notation":
+                          "type": "string"
+                        "openskos:status":
+                          "type": "string"
                         "openskos:tenant":
                           "type": "string"
                         "dcterms:title":
+                          "type": "string"
+                        "skos:prefLabel":
+                          "type": "string"
+                        "skos:altLabel":
+                          "type": "string"
+                        "skos:hiddenLabel":
+                          "type": "string"
+                        "skosxl:prefLabel":
+                          "type": "string"
+                        "skosxl:altLabel":
+                          "type": "string"
+                        "skosxl:hiddenLabel":
                           "type": "string"
     put:
       "summary": ""
@@ -221,6 +303,39 @@ paths:
       "summary": ""
   /relations.{format}:
     get:
+      "summary": ""
+    post:
+      "summary": "Create one or more semantic relations"
+      "parameters":
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+        - "type": "object"
+          "name": "@context"
+          "in": "body"
+        - "type": "array"
+          "name": "@graph"
+          "in": "body"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+    put:
       "summary": ""
   /conceptschemes.{format}:
     get:
