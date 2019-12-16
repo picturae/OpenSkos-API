@@ -1,0 +1,5 @@
+[ver:1,total:960]
+src/OpenSkos/Relation/Controller/RelationController.php:540,1576508400:540,r
+data/docker/fpm/Dockerfile:180,1576508400:180,r
+integrationtestsettings/install-test-env.sh:120,1576508400:120,m
+.git/hooks/post-commit:120,1576508400:120,r
