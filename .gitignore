@@ -15,3 +15,5 @@
 ###< friendsofphp/php-cs-fixer ###
 
 data/deploy/
+data/solr/data/
+*.bak
