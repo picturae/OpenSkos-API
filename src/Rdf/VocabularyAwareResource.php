@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rdf;
 
-use App\Rdf\Exception\UnknownProperty;
+use App\Annotation\Error;
+use App\Exception\ApiException;
 
 final class VocabularyAwareResource implements RdfResource
 {
@@ -43,11 +44,19 @@ final class VocabularyAwareResource implements RdfResource
     /**
      * @param Triple[]             $triples
      * @param array<string,string> $mapping
+     *
+     * @Error(code="vocabularyawareresource-from-triples-mapping-not-array",
+     *        status=500,
+     *        description="VocabularyAwareResource needs a (array)mapping.",
+     *        fields={"receivedType"}
+     * )
      */
     public static function fromTriples(Iri $iri, array $triples, array $mapping = null): VocabularyAwareResource
     {
         if (!is_array($mapping)) {
-            throw new \Exception('VocabularyAwareResource needs a (array)mapping. Got: '.gettype($mapping));
+            throw new ApiException('vocabularyawareresource-from-triples-mapping-not-array', [
+                'receivedType' => gettype($mapping),
+            ]);
         }
 
         $iriString = $iri->getUri();
@@ -95,11 +104,20 @@ final class VocabularyAwareResource implements RdfResource
         return $this->properties[$property] ?? [];
     }
 
+    /**
+     * @Error(code="vocabularyawareresource-addproperty-unknown-property",
+     *        status=500,
+     *        description="Property is not expected",
+     *        fields={"property"}
+     * )
+     */
     public function addProperty(Iri $property, RdfTerm $object): void
     {
         $iri = $property->getUri();
         if (!array_key_exists($iri, $this->properties)) {
-            throw new UnknownProperty($property);
+            throw new ApiException('vocabularyawareresource-addproperty-unknown-property', [
+                'property' => $property,
+            ]);
         }
 
         $this->properties[$iri][] = $object;

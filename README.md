@@ -34,8 +34,8 @@ Run psalm by: `vendor/bin/psalm`
 
 ## Editing ontology
 
-After every change, you'll need to run `php bin/console ontology:generate` and
-`php bin/console exception:errorlist`.
+After every change, you'll need to run `php bin/console ontology:generate`,
+`php bin/console exception:errorlist` and `php bin/console swagger:generate`.
 
 ### Adding a namespace
 
@@ -65,5 +65,4 @@ Take a look at `src/OpenSkos/User/Controller/UserController.php` for examples
 - Add `use App\Annotation\Error` to the top of your file
 - Add `use App\Exception\ApiException` to the top of your file
 - Add an `@Error` annotation describing your error in the docblock of your method
-- Throw a new `ApiRequest(&lt;errorcode&gt;)` and let the ExceptionListener apply your config
-
+- Throw a new `ApiException(&lt;errorcode&gt;)` and let the ExceptionListener apply your config

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rdf;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\Literal;
@@ -24,6 +26,13 @@ final class Triple
      */
     private $object;
 
+    /**
+     * @Error(code="rdf-triple-construct-invalid-object-type",
+     *        status=500,
+     *        description="Object must be either Iri or Literal",
+     *        fields={"received"}
+     * )
+     */
     public function __construct(
         Iri $subject,
         Iri $predicate,
@@ -34,7 +43,13 @@ final class Triple
         $this->object    = $object;
 
         if (!($object instanceof Iri || $object instanceof Literal)) {
-            throw new \InvalidArgumentException('Object must be Iri|Literal got: '.get_class($object));
+            $type = gettype($this->object);
+            if ('object' == $type) {
+                $type .= '('.get_class($this->object).')';
+            }
+            throw new ApiException('rdf-triple-construct-invalid-object-type', [
+                'received' => $type,
+            ]);
         }
     }
 
@@ -118,6 +133,13 @@ final class Triple
         return null;
     }
 
+    /**
+     * @Error(code="rdf-triple-tostring-invalid-object-type",
+     *        status=500,
+     *        description="Object must be either Iri or Literal",
+     *        fields={"received"}
+     * )
+     */
     public function __toString(): string
     {
         if ($this->object instanceof Iri) {
@@ -142,6 +164,13 @@ final class Triple
             );
         }
 
-        throw new \LogicException('Object must be either Iri or Literal');
+        $type = gettype($this->object);
+        if ('object' == $type) {
+            $type .= '('.get_class($this->object).')';
+        }
+
+        throw new ApiException('rdf-triple-tostring-invalid-object-type', [
+            'received' => $type,
+        ]);
     }
 }

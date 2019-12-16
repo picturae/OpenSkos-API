@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Filters;
 
+use App\Annotation\Error;
 use App\EasyRdf\EasyRdfClient;
+use App\Exception\ApiException;
 use App\Rdf\Sparql\SparqlQuery;
 use App\Solr\ParserText;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class SolrFilterProcessor
 {
@@ -98,6 +99,15 @@ final class SolrFilterProcessor
 
     /**
      * @return array
+     *
+     * @Error(code="solrfilterprocessor-build-institutions-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store)."
+     * )
+     * @Error(code="solrfilterprocessor-build-institutions-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
     public function buildInstitutionFilters(array $filterList)
     {
@@ -105,9 +115,9 @@ final class SolrFilterProcessor
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-institutions-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-institutions-filters-search-by-string');
             } else {
                 $dataOut = [
                     'tenantFilter' => sprintf('s_tenant:"%s"', $filter),
@@ -120,6 +130,15 @@ final class SolrFilterProcessor
 
     /**
      * @return array
+     *
+     * @Error(code="solrfilterprocessor-build-set-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
+     * @Error(code="solrfilterprocessor-build-set-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
     public function buildSetFilters(array $filterList)
     {
@@ -127,13 +146,13 @@ final class SolrFilterProcessor
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-set-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $dataOut = [
                     'setFilter' => sprintf('s_set:"%s"', $filter),
                 ];
             } else {
-                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-set-filters-search-by-string');
             }
         }
 
@@ -142,6 +161,11 @@ final class SolrFilterProcessor
 
     /**
      * @return array
+     *
+     * @Error(code="solrfilterprocessor-build-conceptscheme-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
     public function buildConceptSchemeFilters(array $filterList)
     {
@@ -162,7 +186,7 @@ final class SolrFilterProcessor
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $filtersAsStrings[] = sprintf('s_inScheme:"%s"', $filter);
             } else {
-                throw new BadRequestHttpException('The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-conceptscheme-filters-search-by-string');
             }
         }
 
@@ -175,6 +199,12 @@ final class SolrFilterProcessor
 
     /**
      * @return array
+     *
+     * @Error(code="solrfilterprocessor-build-statuses-filters-unrecognised-status",
+     *        status=400,
+     *        description="Unrecognised status in filters.",
+     *        fields={"received","accepted"}
+     * )
      */
     public function buildStatusesFilters(array $filterList)
     {
@@ -186,7 +216,10 @@ final class SolrFilterProcessor
 
         foreach ($filterList as $filter) {
             if (!in_array($filter, $acceptableStatuses, true)) {
-                throw new BadRequestHttpException(sprintf("Unrecognised status '%s' in filters. Accepted values are: %s", $filter, join(', ', $acceptableStatuses)));
+                throw new ApiException('solrfilterprocessor-build-statuses-filters-unrecognised-status', [
+                    'received' => $filter,
+                    'accepted' => $acceptableStatuses,
+                ]);
             }
             if ('none' === $filter) {
                 //'none' turns up in some search profiles. I have no idea how it got there.

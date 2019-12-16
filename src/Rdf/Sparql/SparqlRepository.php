@@ -3,6 +3,8 @@
 namespace App\Rdf\Sparql;
 
 use App\Annotation\Document;
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepository;
@@ -42,6 +44,20 @@ class SparqlRepository implements SparqlRepositoryInterface
      *
      * @param string $resourceClass
      * @param string $resourceType
+     *
+     * @Error(code="sparqlrepository-construct-resource-class-null",
+     *        status=500,
+     *        description="SparqlRepository can not be initialized without resource class"
+     * )
+     * @Error(code="sparqlrepository-construct-resource-class-not-rdfresource",
+     *        status=500,
+     *        description="SparqlRepository needs to be initialized for a class extending RdfResource",
+     *        fields={"receivedClass"}
+     * )
+     * @Error(code="sparqlrepository-construct-resource-type-null",
+     *        status=500,
+     *        description="SparqlRepository can not be initialized without resource type"
+     * )
      */
     public function __construct(
         Client $rdfClient,
@@ -51,12 +67,14 @@ class SparqlRepository implements SparqlRepositoryInterface
     ) {
         // No class to work on = not good
         if (is_null($resourceClass)) {
-            throw new \Exception('SparqlRepository can not be initialized without resource class');
+            throw new ApiException('sparqlrepository-construct-resource-class-null');
         }
 
         // The class we're working for must be an RdfResource
         if (!is_a($resourceClass, RdfResource::class, true)) {
-            throw new \Exception("SparqlRepository needs to be initialized for a class extending RdfResource, got: ${resourceClass}");
+            throw new ApiException('sparqlrepository-construct-resource-class-not-rdfresource', [
+                'receivedClass' => "${resourceClass}",
+            ]);
         }
 
         // Attempt using annotations if no type was given
@@ -66,7 +84,7 @@ class SparqlRepository implements SparqlRepositoryInterface
 
         // No type given = we can not search
         if (is_null($resourceType)) {
-            throw new \Exception('SparqlRepository can not be initialized without resource type');
+            throw new ApiException('sparqlrepository-construct-resource-type-null');
         }
 
         $this->rdfClient     = $rdfClient;

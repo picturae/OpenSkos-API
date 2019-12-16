@@ -28,8 +28,6 @@ use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use Exception;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -69,6 +67,11 @@ final class ConceptController
     /**
      * Extracts datestamp from request strings. Only a restricted number of formats are accepted
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
+     * @Error(code="conceptcontroller-process-date-stamps-from-request-invalid-date-type",
+     *        status=400,
+     *        description="Dates must be a valid xsd:DateTime or xsdDuration"
+     * )
      */
     private function processDateStampsFromRequest(
         ApiRequest $apiRequest,
@@ -87,14 +90,14 @@ final class ConceptController
                     $rowOut = [];
                     $date1  = $dates[0];
                     if (!$xsdDateHelper->isValidXsdDateTime($date1)) {
-                        throw new BadRequestHttpException('Dates must be a valid xsd:DateTime or xsdDuration');
+                        throw new ApiException('conceptcontroller-process-date-stamps-from-request-invalid-date-type');
                     } else {
                         $rowOut['from'] = $date1;
                     }
                     if (isset($dates[1])) {
                         $date2 = $dates[1];
                         if (!$xsdDateHelper->isValidXsdDateTime($date2)) {
-                            throw new BadRequestHttpException('Dates must be a valid xsd:DateTime or xsdDuration');
+                            throw new ApiException('conceptcontroller-process-date-stamps-from-request-invalid-date-type');
                         } else {
                             $rowOut['until'] = $date2;
                         }
@@ -180,6 +183,17 @@ final class ConceptController
     /**
      * Builds the projection parameters for a concept. Should follow
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
+     * @Error(code="conceptcontroller-build-projection-parameters-field-no-language-support",
+     *        status=400,
+     *        description="Field has no language support",
+     *        fields={"field"}
+     * )
+     * @Error(code="conceptcontroller-build-projection-parameters-field-no-projection-support",
+     *        status=400,
+     *        description="Field has no projection support",
+     *        fields={"field"}
+     * )
      */
     private function buildProjectionParameters(
         ApiRequest $apiRequest,
@@ -207,13 +221,17 @@ final class ConceptController
                         //@Todo: Not going work
                         $projectionParameters[$field] = ['lang' => $lang];
                     } elseif ('' !== $lang) {
-                        throw new BadRequestHttpException(sprintf("No language support for field '%s'", $field));
+                        throw new ApiException('conceptcontroller-build-projection-parameters-field-no-language-support', [
+                            'field' => $field,
+                        ]);
                     } elseif (isset($acceptable_fields[$field])) { //The spec doesn't mention if these keys are case-sensitive, so lets just assume they are
                         $projectionParameters[$field] = ['lang' => ''];
                     } elseif (isset($meta_groups[$field])) {
                         $projectionParameters = $meta_groups[$field];
                     } else {
-                        throw new BadRequestHttpException(sprintf("Field '%s' is not supported for projection", $field));
+                        throw new ApiException('conceptcontroller-build-projection-parameters-field-no-projection-support', [
+                            'field' => $field,
+                        ]);
                     }
                 }
             }
@@ -272,6 +290,21 @@ final class ConceptController
      * Version for foreign Uri's. For now, this is a wrapper for the 'native uri' functionality, but that will probably change.
      *
      * @Route(path="/concept.{format?}", methods={"GET"})
+     *
+     * @Error(code="concept-getonebyfuri-param-uri-missing",
+     *        status=400,
+     *        description="Unable to determine URI for concept. Please either request a UUID in the path, or specifiy the 'uri' parameter"
+     * )
+     * @Error(code="concept-getonebyfuri-param-uri-invalid",
+     *        status=400,
+     *        description="'uri' parameter must be a URI.",
+     *        fields={"foreignUri"}
+     * )
+     * @Error(code="concept-getonebyfuri-not-found",
+     *        status=400,
+     *        description="The requested concept could not be retrieved.",
+     *        fields={"foreignUri"}
+     * )
      */
     public function getConceptByForeignUri(
         ApiRequest $apiRequest,
@@ -281,17 +314,21 @@ final class ConceptController
         $foreignUri = $apiRequest->getForeignUri();
 
         if (!isset($foreignUri)) {
-            throw new BadRequestHttpException("Unable to determine URI for concept. Please either request a UUID in the path, or specifiy the 'uri' parameter");
+            throw new ApiException('concept-getonebyfuri-param-uri-missing');
         }
         if (!filter_var($foreignUri, FILTER_VALIDATE_URL)) {
-            throw new BadRequestHttpException("'uri' parameter must be a URI.");
+            throw new ApiException('concept-getonybyfuri-param-uri-invalid', [
+                'foreignUri' => $foreignUri,
+            ]);
         }
 
         $concept = $repository->findByIri(
             new Iri($foreignUri)
         );
         if (null === $concept) {
-            throw new NotFoundHttpException("The concept <$foreignUri> could not be retrieved.");
+            throw new ApiException('concept-getonybyfuri-not-found', [
+                'foreignUri' => $foreignUri,
+            ]);
         }
         if (2 === $apiRequest->getLevel()) {
             $concept->loadFullXlLabels($labelRepository);

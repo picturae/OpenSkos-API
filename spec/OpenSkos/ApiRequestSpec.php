@@ -2,7 +2,7 @@
 
 namespace spec\App\OpenSkos;
 
-use App\OpenSkos\Exception\InvalidApiRequestLevel;
+use App\Exception\ApiException;
 use App\Rdf\Format\RdfFormat;
 use PhpSpec\ObjectBehavior;
 
@@ -12,16 +12,16 @@ class ApiRequestSpec extends ObjectBehavior
         RdfFormat $format
     ) {
         $this->beConstructedWith([], $format, 5);
-        $this->shouldThrow(InvalidApiRequestLevel::class)->duringInstantiation();
+        $this->shouldThrow(ApiException::class)->duringInstantiation();
 
         $this->beConstructedWith([], $format, 0);
-        $this->shouldThrow(InvalidApiRequestLevel::class)->duringInstantiation();
+        $this->shouldThrow(ApiException::class)->duringInstantiation();
     }
 
     public function it_throws_exception_for_negative_paging(
         RdfFormat $format
     ) {
         $this->beConstructedWith([], $format, 1, -1, -42);
-        $this->shouldThrow(\InvalidArgumentException::class)->duringInstantiation();
+        $this->shouldThrow(ApiException::class)->duringInstantiation();
     }
 }

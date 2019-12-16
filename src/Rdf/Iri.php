@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Rdf;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
+
 class Iri implements RdfTerm
 {
     /**
@@ -15,6 +18,12 @@ class Iri implements RdfTerm
      * Literal constructor.
      *
      * @param mixed $value
+     *
+     * @Error(code="iri-construct-invalid-value-type",
+     *        status=500,
+     *        description="Invalid type for $value, expected string|Iri",
+     *        fields={"receivedType"}
+     * )
      */
     public function __construct($value)
     {
@@ -23,12 +32,13 @@ class Iri implements RdfTerm
         } elseif ($value instanceof Iri) {
             $this->uri = $value->getUri();
         } else {
-            $exceptionString = 'Invalid type for $value, expected string|Iri but got ';
-            $type            = gettype($value);
+            $type = gettype($value);
             if ('object' === $type) {
                 $type .= '('.get_class($value).')';
             }
-            throw new \Exception($exceptionString.$type);
+            throw new ApiException('iri-construct-invalid-value-type', [
+                'receivedType' => $type,
+            ]);
         }
     }
 

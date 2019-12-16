@@ -6,6 +6,50 @@
         "class": "App\\Exception\\ApiException",
         "method": "__construct"
     },
+    "openskos-json-ld-serializer-serialise-invalid-format" : {
+        "code": "openskos-json-ld-serializer-serialise-invalid-format",
+        "fields": [
+            "format"
+        ],
+        "description": "Requested format is not supported by this serializer",
+        "status": 500,
+        "class": "App\\EasyRdf\\Serializer\\OpenSkosJsonLdSerializer",
+        "method": "serialise"
+    },
+    "openskos-json-ld-serializer-serialise-unserializable-value" : {
+        "code": "openskos-json-ld-serializer-serialise-unserializable-value",
+        "fields": [
+            "type"
+        ],
+        "description": "Unable to serialise object to JSON-LD",
+        "status": 500,
+        "class": "App\\EasyRdf\\Serializer\\OpenSkosJsonLdSerializer",
+        "method": "serialise"
+    },
+    "sparqlrepository-construct-resource-class-null" : {
+        "code": "sparqlrepository-construct-resource-class-null",
+        "description": "SparqlRepository can not be initialized without resource class",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
+    },
+    "sparqlrepository-construct-resource-class-not-rdfresource" : {
+        "code": "sparqlrepository-construct-resource-class-not-rdfresource",
+        "fields": [
+            "receivedClass"
+        ],
+        "description": "SparqlRepository needs to be initialized for a class extending RdfResource",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
+    },
+    "sparqlrepository-construct-resource-type-null" : {
+        "code": "sparqlrepository-construct-resource-type-null",
+        "description": "SparqlRepository can not be initialized without resource type",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
+    },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
         "fields": [
@@ -70,6 +114,76 @@
         "status": 500,
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "save"
+    },
+    "rdf-literal-datetime-unparsable-value" : {
+        "code": "rdf-literal-datetime-unparsable-value",
+        "fields": [
+            "value"
+        ],
+        "description": "The given value can not be parsed to a DateTimeLiteral",
+        "status": 500,
+        "class": "App\\Rdf\\Literal\\DatetimeLiteral",
+        "method": "fromString"
+    },
+    "iri-construct-invalid-value-type" : {
+        "code": "iri-construct-invalid-value-type",
+        "fields": [
+            "receivedType"
+        ],
+        "description": "Invalid type for $value, expected string|Iri",
+        "status": 500,
+        "class": "App\\Rdf\\Iri",
+        "method": "__construct"
+    },
+    "rdf-triple-construct-invalid-object-type" : {
+        "code": "rdf-triple-construct-invalid-object-type",
+        "fields": [
+            "received"
+        ],
+        "description": "Object must be either Iri or Literal",
+        "status": 500,
+        "class": "App\\Rdf\\Triple",
+        "method": "__construct"
+    },
+    "rdf-triple-tostring-invalid-object-type" : {
+        "code": "rdf-triple-tostring-invalid-object-type",
+        "fields": [
+            "received"
+        ],
+        "description": "Object must be either Iri or Literal",
+        "status": 500,
+        "class": "App\\Rdf\\Triple",
+        "method": "__toString"
+    },
+    "vocabularyawareresource-from-triples-mapping-not-array" : {
+        "code": "vocabularyawareresource-from-triples-mapping-not-array",
+        "fields": [
+            "receivedType"
+        ],
+        "description": "VocabularyAwareResource needs a (array)mapping.",
+        "status": 500,
+        "class": "App\\Rdf\\VocabularyAwareResource",
+        "method": "fromTriples"
+    },
+    "vocabularyawareresource-addproperty-unknown-property" : {
+        "code": "vocabularyawareresource-addproperty-unknown-property",
+        "fields": [
+            "property"
+        ],
+        "description": "Property is not expected",
+        "status": 500,
+        "class": "App\\Rdf\\VocabularyAwareResource",
+        "method": "addProperty"
+    },
+    "serializer-rdfencoder-encode-data-not-iterable" : {
+        "code": "serializer-rdfencoder-encode-data-not-iterable",
+        "fields": [
+            "received"
+        ],
+        "description": "Given data is not an iterable",
+        "status": 500,
+        "class": "App\\Serializer\\RdfEncoder",
+        "method": "encode"
     },
     "dcterms-validate-created-literal-type" : {
         "code": "dcterms-validate-created-literal-type",
@@ -499,6 +613,43 @@
         "class": "App\\Security\\Authentication",
         "method": "requireAdministrator"
     },
+    "internal-resource-id-resolver-unresolvable" : {
+        "code": "internal-resource-id-resolver-unresolvable",
+        "fields": [
+            "value"
+        ],
+        "description": "The given value can not be resolved into InternalResourceId",
+        "status": 500,
+        "class": "App\\Rest\\ArgumentResolver\\InternalResourceIdResolver",
+        "method": "resolve"
+    },
+    "conceptcontroller-process-date-stamps-from-request-invalid-date-type" : {
+        "code": "conceptcontroller-process-date-stamps-from-request-invalid-date-type",
+        "description": "Dates must be a valid xsd:DateTime or xsdDuration",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "processDateStampsFromRequest"
+    },
+    "conceptcontroller-build-projection-parameters-field-no-language-support" : {
+        "code": "conceptcontroller-build-projection-parameters-field-no-language-support",
+        "fields": [
+            "field"
+        ],
+        "description": "Field has no language support",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "buildProjectionParameters"
+    },
+    "conceptcontroller-build-projection-parameters-field-no-projection-support" : {
+        "code": "conceptcontroller-build-projection-parameters-field-no-projection-support",
+        "fields": [
+            "field"
+        ],
+        "description": "Field has no projection support",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "buildProjectionParameters"
+    },
     "concept-getone-not-found" : {
         "code": "concept-getone-not-found",
         "fields": [
@@ -508,6 +659,33 @@
         "status": 404,
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "getConcept"
+    },
+    "concept-getonebyfuri-param-uri-missing" : {
+        "code": "concept-getonebyfuri-param-uri-missing",
+        "description": "Unable to determine URI for concept. Please either request a UUID in the path, or specifiy the 'uri' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConceptByForeignUri"
+    },
+    "concept-getonebyfuri-param-uri-invalid" : {
+        "code": "concept-getonebyfuri-param-uri-invalid",
+        "fields": [
+            "foreignUri"
+        ],
+        "description": "'uri' parameter must be a URI.",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConceptByForeignUri"
+    },
+    "concept-getonebyfuri-not-found" : {
+        "code": "concept-getonebyfuri-not-found",
+        "fields": [
+            "foreignUri"
+        ],
+        "description": "The requested concept could not be retrieved.",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConceptByForeignUri"
     },
     "concept-create-empty-or-corrupt-body" : {
         "code": "concept-create-empty-or-corrupt-body",
@@ -628,6 +806,63 @@
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "deleteConcept"
     },
+    "apirequest-invalid-level" : {
+        "code": "apirequest-invalid-level",
+        "fields": [
+            "level"
+        ],
+        "description": "An invalid level was requested",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-limit" : {
+        "code": "apirequest-invalid-limit",
+        "fields": [
+            "limit"
+        ],
+        "description": "An invalid limit parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-offset" : {
+        "code": "apirequest-invalid-offset",
+        "fields": [
+            "offset"
+        ],
+        "description": "An invalid offset parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "labelcontroller-getone-not-found" : {
+        "code": "labelcontroller-getone-not-found",
+        "fields": [
+            "id"
+        ],
+        "description": "The requested label could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabel"
+    },
+    "labelcontroller-getonebyuri-param-uri-missing" : {
+        "code": "labelcontroller-getonebyuri-param-uri-missing",
+        "description": "No uri was given",
+        "status": 400,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabelByUri"
+    },
+    "labelcontroller-getonebyuri-not-found" : {
+        "code": "labelcontroller-getonebyuri-not-found",
+        "fields": [
+            "uri"
+        ],
+        "description": "The requested label could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabelByUri"
+    },
     "user-getall-permission-denied-missing-user" : {
         "description": "The authenticated user could not be loaded",
         "status": 403,
@@ -669,6 +904,73 @@
         "status": 404,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
+    },
+    "filterprocessor-build-institution-filters-uuid-not-supported" : {
+        "code": "filterprocessor-build-institution-filters-uuid-not-supported",
+        "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
+        "method": "buildInstitutionFilters"
+    },
+    "filterprocessor-build-set-filters-uuid-not-supported" : {
+        "code": "filterprocessor-build-set-filters-uuid-not-supported",
+        "description": "The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "filterprocessor-build-set-filters-search-by-string" : {
+        "code": "filterprocessor-build-set-filters-search-by-string",
+        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "solrfilterprocessor-build-institutions-filters-uuid-not-supported" : {
+        "code": "solrfilterprocessor-build-institutions-filters-uuid-not-supported",
+        "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildInstitutionFilters"
+    },
+    "solrfilterprocessor-build-institutions-filters-search-by-string" : {
+        "code": "solrfilterprocessor-build-institutions-filters-search-by-string",
+        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildInstitutionFilters"
+    },
+    "solrfilterprocessor-build-set-filters-uuid-not-supported" : {
+        "code": "solrfilterprocessor-build-set-filters-uuid-not-supported",
+        "description": "The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "solrfilterprocessor-build-set-filters-search-by-string" : {
+        "code": "solrfilterprocessor-build-set-filters-search-by-string",
+        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "solrfilterprocessor-build-conceptscheme-filters-search-by-string" : {
+        "code": "solrfilterprocessor-build-conceptscheme-filters-search-by-string",
+        "description": "The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildConceptSchemeFilters"
+    },
+    "solrfilterprocessor-build-statuses-filters-unrecognised-status" : {
+        "code": "solrfilterprocessor-build-statuses-filters-unrecognised-status",
+        "fields": [
+            "received",
+            "accepted"
+        ],
+        "description": "Unrecognised status in filters.",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildStatusesFilters"
     },
     "institution-getall-filter-institutions-not-applicable" : {
         "code": "institution-getall-filter-institutions-not-applicable",
@@ -727,6 +1029,13 @@
         "status": 400,
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
         "method": "putInstitution"
+    },
+    "setprefixcontroller-sets-filter-not-applicable" : {
+        "code": "setprefixcontroller-sets-filter-not-applicable",
+        "description": "Sets filter is not applicable here",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
+        "method": "sets"
     },
     "set-getall-sets-filter" : {
         "code": "set-getall-sets-filter",
@@ -820,6 +1129,36 @@
         "status": 422,
         "class": "App\\OpenSkos\\Set\\Set",
         "method": "errors"
+    },
+    "relation-getall-missing-subject-and-object" : {
+        "code": "relation-getall-missing-subject-and-object",
+        "fields": [
+            "uuid"
+        ],
+        "description": "Neither subject or object was given, either is required",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "getRelations"
+    },
+    "relation-getall-subject-not-found" : {
+        "code": "relation-getall-subject-not-found",
+        "fields": [
+            "subject"
+        ],
+        "description": "No subject could be found with the given id",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "getRelations"
+    },
+    "relation-getall-object-not-found" : {
+        "code": "relation-getall-object-not-found",
+        "fields": [
+            "object"
+        ],
+        "description": "No object could be found with the given id",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "getRelations"
     },
     "conceptscheme-getone-not-found" : {
         "code": "conceptscheme-getone-not-found",
