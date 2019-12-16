@@ -130,7 +130,7 @@ final class InstitutionController
         // Load data into institutions
         $graph        = $apiRequest->getGraph();
         $institutions = $repository->fromGraph($graph);
-        if (is_null($institutions)) {
+        if (is_null($institutions)||(!count($institutions))) {
             throw new ApiException('institution-create-empty-or-corrupt-body');
         }
 
@@ -225,7 +225,7 @@ final class InstitutionController
         // Load data into institutions
         $graph        = $apiRequest->getGraph();
         $institutions = $repository->fromGraph($graph);
-        if (is_null($institutions)) {
+        if (is_null($institutions)||(!count($institutions))) {
             throw new ApiException('institution-update-empty-or-corrupt-body');
         }
 

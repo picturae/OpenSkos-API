@@ -10,5 +10,5 @@ parameters:
         datatype: class
       string:
         datatype: class
-      datetime:
+      dateTime:
         datatype: class

@@ -1,6 +1,7 @@
 version: "3.5"
 
 services:
+
   openskos-api-fpm:
     build:
       context: .
@@ -27,7 +28,8 @@ services:
     ports:
       - 9020:80
     volumes:
-      - ./data/docker/nginx:/app:ro
+      - ./data/docker/nginx:/app
+      - ./public:/app/public
     links:
       - openskos-api-fpm
 

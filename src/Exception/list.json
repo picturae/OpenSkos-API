@@ -77,7 +77,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the created predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the created predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateCreated"
@@ -88,7 +88,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the date predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the date predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateDate"
@@ -99,7 +99,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the dateaccepted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the dateaccepted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateDateAccepted"
@@ -110,7 +110,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the dateapproved predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the dateapproved predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateDateApproved"
@@ -121,7 +121,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the datecopyrighted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the datecopyrighted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateDateCopyrighted"
@@ -132,7 +132,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the datesubmitted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the datesubmitted predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateDateSubmitted"
@@ -165,7 +165,7 @@
             "expected",
             "actual"
         ],
-        "description": "The object for the modified predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#datetime'",
+        "description": "The object for the modified predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#dateTime'",
         "status": 422,
         "class": "App\\Ontology\\DcTerms",
         "method": "validateModified"
@@ -378,6 +378,100 @@
         "class": "App\\Security\\Authentication",
         "method": "requireAdministrator"
     },
+    "concept-create-empty-or-corrupt-body" : {
+        "code": "concept-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-already-exists" : {
+        "code": "concept-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "A Concept with the given iri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-tenant-does-not-exist" : {
+        "code": "concept-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-set-does-not-exist" : {
+        "code": "concept-create-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-concept-does-not-exist" : {
+        "code": "concept-create-concept-does-not-exist",
+        "fields": [
+            "conceptscheme"
+        ],
+        "description": "The given conceptscheme to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-update-empty-or-corrupt-body" : {
+        "code": "concept-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-does-not-exist" : {
+        "code": "concept-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-tenant-does-not-exist" : {
+        "code": "concept-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-set-does-not-exist" : {
+        "code": "concept-update-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to update a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-concept-does-not-exist" : {
+        "code": "concept-update-concept-does-not-exist",
+        "fields": [
+            "conceptscheme"
+        ],
+        "description": "The given conceptscheme to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
     "user-getall-permission-denied-missing-user" : {
         "description": "The authenticated user could not be loaded",
         "status": 403,
@@ -586,7 +680,7 @@
         "description": "The body passed to this endpoint was either missing or corrupt",
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-create-already-exists" : {
         "code": "conceptscheme-create-already-exists",
@@ -596,7 +690,7 @@
         "description": "A ConceptScheme with the given iri already exists",
         "status": 409,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-create-tenant-does-not-exist" : {
         "code": "conceptscheme-create-tenant-does-not-exist",
@@ -606,7 +700,7 @@
         "description": "The given tenant to create a ConceptScheme for does not exist",
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-create-set-does-not-exist" : {
         "code": "conceptscheme-create-set-does-not-exist",
@@ -616,7 +710,7 @@
         "description": "The given set to create a ConceptScheme for does not exist",
         "status": 400,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postSet"
+        "method": "postConceptScheme"
     },
     "conceptscheme-update-empty-or-corrupt-body" : {
         "code": "conceptscheme-update-empty-or-corrupt-body",

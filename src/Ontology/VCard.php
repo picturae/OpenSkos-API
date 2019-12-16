@@ -32,4 +32,7 @@ final class VCard
     const LOCALITY   = 'http://www.w3.org/2006/vcard/ns#Locality';
     const PCODE      = 'http://www.w3.org/2006/vcard/ns#Pcode';
     const COUNTRY    = 'http://www.w3.org/2006/vcard/ns#Country';
+
+    const literaltypes = [
+    ];
 }

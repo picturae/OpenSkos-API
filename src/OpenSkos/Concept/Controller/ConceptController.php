@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept\Controller;
 
+use App\Annotation\Error;
+use App\Annotation\OA;
+use App\Entity\User;
+use App\Exception\ApiException;
 use App\Helper\xsdDateHelper;
 use App\Ontology\OpenSkos;
+use App\Ontology\Skos;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Concept\Concept as SkosConcept;
 use App\OpenSkos\Concept\ConceptRepository;
-use App\OpenSkos\Concept\Solr\SolrJenaConceptRepository;
+use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\DataLevels\Level2Processor;
 use App\OpenSkos\Filters\SolrFilterProcessor;
+use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\LabelRepository;
+use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
@@ -24,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class Concept
+final class ConceptController
 {
     /**
      * @var SerializerInterface
@@ -231,7 +239,7 @@ final class Concept
     /**
      * @Route(path="/concept/{id}.{format?}", methods={"GET"})
      */
-    public function concept(
+    public function getConcept(
         InternalResourceId $id,
         ApiRequest $apiRequest,
         ConceptRepository $repository,
@@ -256,7 +264,7 @@ final class Concept
      *
      * @Route(path="/concept.{format?}", methods={"GET"})
      */
-    public function conceptByForeignUri(
+    public function getConceptByForeignUri(
         ApiRequest $apiRequest,
         ConceptRepository $repository,
         LabelRepository $labelRepository
@@ -288,10 +296,10 @@ final class Concept
      *
      * @throws Exception
      */
-    public function concepts(
+    public function getAllConcepts(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
-        SolrJenaConceptRepository $repository,
+        ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor,
         LabelRepository $labelRepository
     ): ListResponse {
@@ -315,6 +323,266 @@ final class Concept
     }
 
     /**
+     * @Route(path="/concepts.{format?}", methods={"POST"})
+     *
+     * @OA\Summary("Create one or more new concepts")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\JsonRdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @Error(code="concept-create-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="concept-create-already-exists",
+     *        status=409,
+     *        description="A Concept with the given iri already exists",
+     *        fields={"iri"}
+     * )
+     * @Error(code="concept-create-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to create a Concept for does not exist",
+     *        fields={"tenant"}
+     * )
+     * @Error(code="concept-create-set-does-not-exist",
+     *        status=400,
+     *        description="The given set to create a Concept for does not exist",
+     *        fields={"set"}
+     * )
+     * @Error(code="concept-create-conceptscheme-does-not-exist",
+     *        status=400,
+     *        description="The given conceptscheme to create a Concept for does not exist",
+     *        fields={"conceptscheme"}
+     * )
+     *
+     * @throws Exception
+     */
+    public function postConcept(
+        ApiRequest $apiRequest,
+        ApiFilter $apiFilter,
+        SolrFilterProcessor $solrFilterProcessor,
+        LabelRepository $labelRepository,
+        ConceptRepository $conceptRepository,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        // Load data into sets
+        $graph    = $apiRequest->getGraph();
+        $concepts = $conceptRepository->fromGraph($graph);
+        if (is_null($concepts)||(!count($concepts))) {
+            throw new ApiException('concept-create-empty-or-corrupt-body');
+        }
+
+        // Check if the resources already exist
+        foreach ($concepts as $concept) {
+            if ($concept->exists()) {
+                throw new ApiException('concept-create-already-exists', [
+                    'iri' => $concept->iri()->getUri(),
+                ]);
+            }
+        }
+
+        // Ensure the tenants exist
+        foreach ($concepts as $concept) {
+            $tenantCode = $concept->getValue(OpenSkos::TENANT)->value();
+            $tenant     = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('concept-create-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
+
+        // Ensure the sets exist
+        foreach ($concepts as $concept) {
+            $setIri = $concept->getValue(OpenSkos::SET)->getUri();
+            $set    = $setRepository->findByIri(new Iri($setIri));
+            if (is_null($set)) {
+                throw new ApiException('concept-create-set-does-not-exist', [
+                    'set' => $setIri,
+                ]);
+            }
+        }
+
+        // Ensure the conceptschemes exist
+        foreach ($concepts as $concept) {
+            $conceptSchemes = $concept->getProperty(Skos::IN_SCHEME);
+            foreach ($conceptSchemes as $conceptSchemeIri) {
+                $conceptScheme = $conceptSchemeRepository->findByIri($conceptSchemeIri);
+                if (is_null($conceptScheme)) {
+                    throw new ApiException('concept-create-conceptscheme-does-not-exist', [
+                        'conceptscheme' => $conceptSchemeIri->getUri(),
+                    ]);
+                }
+            }
+        }
+
+        // Save all given conceptSchemes
+        foreach ($concepts as $concept) {
+            $errors = $concept->save();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
+        }
+
+        return new ListResponse(
+            $concepts,
+            count($concepts),
+            0,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
+     * @Route(path="/concepts.{format?}", methods={"PUT"})
+     *
+     * @Error(code="concept-update-empty-or-corrupt-body",
+     *        status=400,
+     *        description="The body passed to this endpoint was either missing or corrupt"
+     * )
+     * @Error(code="concept-update-does-not-exist",
+     *        status=400,
+     *        description="The set with the given iri does not exist",
+     *        fields={"iri"}
+     * )
+     * @Error(code="concept-update-tenant-does-not-exist",
+     *        status=400,
+     *        description="The given tenant to update a Concept for does not exist",
+     *        fields={"tenant"}
+     * )
+     * @Error(code="concept-update-set-does-not-exist",
+     *        status=400,
+     *        description="The given set to update a Concept for does not exist",
+     *        fields={"set"}
+     * )
+     * @Error(code="concept-update-concept-does-not-exist",
+     *        status=400,
+     *        description="The given conceptscheme to create a Concept for does not exist",
+     *        fields={"conceptscheme"}
+     * )
+     */
+    public function putConcept(
+        ApiRequest $apiRequest,
+        ConceptRepository $conceptRepository,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository
+    ): ListResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+        /** @var User $user */
+        $user = $auth->getUser();
+
+        // Load data into concept schemes
+        $graph     = $apiRequest->getGraph();
+        $concepts  = $conceptRepository->fromGraph($graph);
+        if (is_null($concepts)||(!count($concepts))) {
+            throw new ApiException('concept-update-empty-or-corrupt-body');
+        }
+
+        // Validate all given resources
+        $errors = [];
+        foreach ($concepts as $concept) {
+            if (!$concept->exists()) {
+                throw new ApiException('concept-update-does-not-exist', [
+                    'iri' => $concept->iri()->getUri(),
+                ]);
+            }
+            $errors = array_merge($errors, $concept->errors());
+        }
+        if (count($errors)) {
+            foreach ($errors as $error) {
+                throw new ApiException($error);
+            }
+        }
+
+        // Ensure the tenants exist
+        foreach ($concepts as $concept) {
+            $tenantCode = $concept->getValue(OpenSkos::TENANT)->value();
+            $tenant     = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($tenantCode)
+            );
+            if (is_null($tenant)) {
+                throw new ApiException('conceptscheme-update-tenant-does-not-exist', [
+                    'tenant' => $tenantCode,
+                ]);
+            }
+        }
+
+        // Ensure the sets exist
+        foreach ($concepts as $concept) {
+            $setIri = $concept->getValue(OpenSkos::SET)->getUri();
+            $set    = $setRepository->findByIri(new Iri($setIri));
+            if (is_null($set)) {
+                throw new ApiException('concept-update-set-does-not-exist', [
+                    'set' => $setIri,
+                ]);
+            }
+        }
+
+        // Ensure the concepts exist
+        foreach ($concepts as $concept) {
+            $conceptSchemes = $concept->getProperty(Skos::IN_SCHEME);
+            foreach ($conceptSchemes as $conceptSchemeIri) {
+                $conceptScheme = $conceptSchemeRepository->findByIri($conceptSchemeIri);
+                if (is_null($conceptScheme)) {
+                    throw new ApiException('concept-update-conceptscheme-does-not-exist', [
+                        'conceptscheme' => $conceptSchemeIri->getUri(),
+                    ]);
+                }
+            }
+        }
+
+        // Rebuild all given Concepts
+        $modifier = new Iri(OpenSkos::MODIFIED_BY);
+        foreach ($concepts as $concept) {
+            $concept->setValue($modifier, $user->iri());
+            $errors = $concept->update();
+            if ($errors) {
+                throw new ApiException($errors[0]);
+            }
+        }
+
+        return new ListResponse(
+            $concepts,
+            count($concepts),
+            0,
+            $apiRequest->getFormat()
+        );
+    }
+
+    /**
      * @Route(path="/autocomplete.{format?}", methods={"GET"})
      *
      * @throws Exception
@@ -322,7 +590,7 @@ final class Concept
     public function autocomplete(
         ApiRequest $apiRequest,
         ApiFilter $apiFilter,
-        SolrJenaConceptRepository $repository,
+        ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor
     ): ListResponse {
         $full_filter = $this->buildConceptFilters($apiRequest, $apiFilter, $solrFilterProcessor);

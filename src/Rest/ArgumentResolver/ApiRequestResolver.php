@@ -15,7 +15,6 @@ use EasyRdf_Graph as Graph;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class ApiRequestResolver implements ArgumentValueResolverInterface
@@ -75,7 +74,7 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         try {
             return $this->formatFactory->createFromName($formatName);
         } catch (UnknownFormatException $e) {
-            throw new BadRequestHttpException('Invalid Format', $e);
+            return $this->resolveFormat(null, $headers);
         }
     }
 

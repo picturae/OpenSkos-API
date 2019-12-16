@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\OpenSkos\Filters;
 
 use App\EasyRdf\EasyRdfClient;
-use App\OpenSkos\Concept\Solr\ParserText;
 use App\Rdf\Sparql\SparqlQuery;
+use App\Solr\ParserText;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

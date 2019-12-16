@@ -70,6 +70,14 @@ final class <?= $name; ?>
 <?php } /* foreach values as value */ ?>
     ];
 <?php } /* foreach lists as key values */ ?>
+
+    const literaltypes = [
+<?php foreach ($properties as $property) { ?>
+<?php if (isset($property['literaltype'])) { ?>
+        '<?= $namespace.$property['name']; ?>' => '<?= $property['literaltype']; ?>',
+<?php } /* if isset property literaltype */ ?>
+<?php } /* foreach properties as property */ ?>
+    ];
 <?php foreach ($properties as $property) { ?>
 <?php if ($property['hasValidation']) { ?>
 

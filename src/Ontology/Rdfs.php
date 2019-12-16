@@ -26,4 +26,7 @@ final class Rdfs
     const SUB_PROPERTY_OF = 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
     const DOMAIN          = 'http://www.w3.org/2000/01/rdf-schema#domain';
     const RANGE           = 'http://www.w3.org/2000/01/rdf-schema#range';
+
+    const literaltypes = [
+    ];
 }

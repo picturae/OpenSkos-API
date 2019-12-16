@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Healthcheck;
 
+use App\Annotation\OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -29,6 +30,22 @@ final class PingController extends AbstractController
 
     /**
      * @Route(path="/ping", methods={"GET"})
+     *
+     * @OA\Summary("Healthcheck end basic information")
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\StringLiteral(name="name"     , description="Name of the whole api being called", example="openskos-api"),
+     *     @OA\Schema\StringLiteral(name="status"   , description="Status of the api"                 , example="ok"          ),
+     *     @OA\Schema\StringLiteral(name="version"  , description="Version of the api"                , example="2.3"         ),
+     *     @OA\Schema\StringLiteral(name="license"  , description="License the api operates under"    , example="MIT"         ),
+     *     @OA\Schema\ObjectLiteral(name="copyright", description="Copyright information"             , properties={
+     *       @OA\Schema\StringLiteral(name="holder"    , description="Holder of the copyright"             , example="Picturae"),
+     *       @OA\Schema\IntegerLiteral(name="published", description="The year the copyright was published", example=2019),
+     *       @OA\Schema\IntegerLiteral(name="revised"  , description="The year the copyright was revised"  , example=2019),
+     *     }),
+     *   }),
+     * )
      */
     public function ping(
         JenaRepository $jenaRepository

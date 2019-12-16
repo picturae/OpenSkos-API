@@ -25,5 +25,8 @@ final class Xsd
     const NON_NEGATIVE_INTEGER = 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger';
     const BOOLEAN              = 'http://www.w3.org/2001/XMLSchema#boolean';
     const STRING               = 'http://www.w3.org/2001/XMLSchema#string';
-    const DATETIME             = 'http://www.w3.org/2001/XMLSchema#datetime';
+    const DATE_TIME            = 'http://www.w3.org/2001/XMLSchema#dateTime';
+
+    const literaltypes = [
+    ];
 }

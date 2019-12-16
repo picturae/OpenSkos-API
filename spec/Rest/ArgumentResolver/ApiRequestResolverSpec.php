@@ -8,7 +8,6 @@ use App\Rdf\Format\RdfFormatFactory;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ApiRequestResolverSpec extends ObjectBehavior
 {
@@ -46,22 +45,5 @@ class ApiRequestResolverSpec extends ObjectBehavior
         $apiRequest->getLevel()->shouldBe(1);
         $apiRequest->getLimit()->shouldBe(123);
         $apiRequest->getOffset()->shouldBe(12);
-    }
-
-    public function it_throws_an_exception_when_cant_resolve_format(
-        ArgumentMetadata $argumentMetadata
-    ) {
-        $request = new Request(
-            [
-                'format' => 'unknown-format',
-                'limit'  => '123',
-                'offset' => '12',
-                'level'  => '1',
-            ]
-        );
-
-        $this->resolve($request, $argumentMetadata)
-            ->shouldThrow(HttpException::class)
-            ->during('current');
     }
 }

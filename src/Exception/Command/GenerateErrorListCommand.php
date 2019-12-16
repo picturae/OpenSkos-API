@@ -43,7 +43,7 @@ class GenerateErrorListCommand extends Command
         $fileRepository = new FileRepository();
         $parserFactory  = new ParserFactory();
         $fqcnRepository = new FqcnRepository($fileRepository, $parserFactory);
-        $classes        = $fqcnRepository->findIn(dirname(dirname(__DIR__)));
+        $classes        = $fqcnRepository->findIn($_SERVER['APP_ROOT'].'/src');
 
         // Prepare the annotation reader
         $annotationReader = new AnnotationReader();

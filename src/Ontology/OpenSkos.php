@@ -77,6 +77,23 @@ final class OpenSkos
         self::STATUS_DELETED,
     ];
 
+    const literaltypes = [
+        'http://openskos.org/xmlns#tenant'                      => 'xsd:string',
+        'http://openskos.org/xmlns#dateDeleted'                 => 'xsd:datetime',
+        'http://openskos.org/xmlns#uuid'                        => 'xsd:string',
+        'http://openskos.org/xmlns#name'                        => 'xsd:string',
+        'http://openskos.org/xmlns#disableSearchInOtherTenants' => 'xsd:boolean',
+        'http://openskos.org/xmlns#enableStatussesSystem'       => 'xsd:boolean',
+        'http://openskos.org/xmlns#allow_oai'                   => 'xsd:boolean',
+        'http://openskos.org/xmlns#oai_baseURL'                 => 'xsd:string',
+        'http://openskos.org/xmlns#conceptBaseUri'              => 'xsd:string',
+        'http://openskos.org/xmlns#licenceURL'                  => 'xsd:string',
+        'http://openskos.org/xmlns#webpage'                     => 'xsd:string',
+        'http://openskos.org/xmlns#enableskosxl'                => 'xsd:boolean',
+        'http://openskos.org/xmlns#apikey'                      => 'xsd:string',
+        'http://openskos.org/xmlns#errorCode'                   => 'xsd:string',
+    ];
+
     /**
      * Returns the first encountered error for tenant.
      * Returns null on success (a.k.a. no errors).

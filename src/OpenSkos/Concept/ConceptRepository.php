@@ -4,18 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Concept;
 
-use App\OpenSkos\InternalResourceId;
-use App\Rdf\Iri;
+use App\Ontology\Skos;
+use App\Repository\AbstractSolrRepository;
 
-interface ConceptRepository
+class ConceptRepository extends AbstractSolrRepository
 {
-    public function all(int $offset = 0, int $limit = 100, array $filter = []): array;
-
-    public function findByIri(Iri $iri): ?Concept;
-
-    public function find(InternalResourceId $id): ?Concept;
-
-    public function findBy(Iri $predicate, InternalResourceId $object): ?array;
-
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Concept;
+    const DOCUMENT_CLASS = Concept::class;
+    const DOCUMENT_TYPE  = Skos::CONCEPT;
 }

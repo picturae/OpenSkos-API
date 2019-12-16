@@ -25,4 +25,7 @@ final class Dc
     const CREATOR     = 'http://purl.org/dc/elements/1.1/creator';
     const CONTRIBUTOR = 'http://purl.org/dc/elements/1.1/contributor';
     const TITLE       = 'http://purl.org/dc/elements/1.1/title';
+
+    const literaltypes = [
+    ];
 }

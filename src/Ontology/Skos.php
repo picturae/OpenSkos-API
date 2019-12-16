@@ -56,4 +56,7 @@ final class Skos
     const NARROW_MATCH        = 'http://www.w3.org/2004/02/skos/core#narrowMatch';
     const NARROWER_MATCH      = 'http://www.w3.org/2004/02/skos/core#narrowerMatch';
     const RELATED_MATCH       = 'http://www.w3.org/2004/02/skos/core#relatedMatch';
+
+    const literaltypes = [
+    ];
 }

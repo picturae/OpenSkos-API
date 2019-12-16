@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\OpenSkos\Concept\Solr;
+namespace App\Solr;
 
-use App\OpenSkos\Concept\Concept;
 use Solarium\Core\Query\Helper as QueryHelper;
 
 final class SolrQueryBuilder
@@ -121,40 +120,6 @@ final class SolrQueryBuilder
 
         // @TODO Use filter queries
         $optionsQueries = [];
-
-        /* //status */
-        /* if (false === strpos($searchText, 'status')) { // We dont add status query if it is in the query already. */
-        /*     if (!empty($options['status'])) { */
-        /*         $optionsQueries[] = '(' */
-        /*             .'s_status:(' */
-        /*             .implode(' OR ', array_map([$helper, 'escapePhrase'], $options['status'])) */
-        /*             .'))'; */
-        /*     } else { */
-        /*         $optionsQueries[] = '-s_status:'.Concept::STATUS_DELETED; */
-        /*     } */
-        /* } */
-
-        /* // combine */
-        /* if (!empty($optionsQueries)) { */
-        /*     $optionsQuery = implode(' AND ', $optionsQueries); */
-        /*     if (empty($solrQuery)) { */
-        /*         $solrQuery = $optionsQuery; */
-        /*     } else { */
-        /*         // a possible bug in solr version */
-        /*         if ('-s_status:deleted' != trim($optionsQuery)) { */
-        /*             $solrQuery .= ' AND ('.$optionsQuery.')'; */
-        /*         } else { */
-        /*             $solrQuery .= ' AND -s_status:deleted'; */
-        /*         } */
-        /*     } */
-        /* } */
-
-        /* //@todo: Sort parameters */
-        /* if (!empty($options['sorts'])) { */
-        /*     $sorts = $options['sorts']; */
-        /* } else { */
-        /*     $sorts = null; */
-        /* } */
 
         return $solrQuery;
     }

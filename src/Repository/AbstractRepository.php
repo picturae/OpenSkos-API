@@ -8,7 +8,7 @@ use App\Annotation\Document;
 use App\EasyRdf\TripleFactory;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
-use App\OpenSkos\SkosResourceRepository;
+use App\OpenSkos\SkosResourceRepositoryWithProjection;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\Client;
@@ -33,7 +33,7 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $rdfClient;
 
     /**
-     * @var SkosResourceRepository
+     * @var SkosResourceRepositoryWithProjection
      */
     protected $skosRepository;
 
@@ -65,8 +65,7 @@ abstract class AbstractRepository implements RepositoryInterface
         OpenSkosIriFactory $iriFactory,
         Connection $connection
     ) {
-        $this->rdfClient = $rdfClient;
-
+        $this->rdfClient  = $rdfClient;
         $this->connection = $connection;
         $repository       = $this;
 
@@ -104,7 +103,7 @@ abstract class AbstractRepository implements RepositoryInterface
             };
         }
 
-        $this->skosRepository = new SkosResourceRepository(
+        $this->skosRepository = new SkosResourceRepositoryWithProjection(
             $this->tripleFactory,
             $this->rdfClient
         );
