@@ -1237,6 +1237,13 @@
         "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
         "method": "getRelations"
     },
+    "relation-update-bad-request" : {
+        "code": "relation-update-bad-request",
+        "description": "Updating a relation is not allowed\/possible",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "putRelation"
+    },
     "conceptscheme-getone-not-found" : {
         "code": "conceptscheme-getone-not-found",
         "fields": [

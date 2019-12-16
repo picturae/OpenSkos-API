@@ -198,4 +198,24 @@ final class RelationController
             $apiRequest->getFormat()
         );
     }
+
+    /**
+     * @Route(path="/relations.{format?}", methods={"PUT"})
+     *
+     * @throws ApiException
+     *
+     * @Error(code="relation-update-bad-request",
+     *        status=400,
+     *        description="Updating a relation is not allowed/possible"
+     * )
+     */
+    public function putRelation(
+        ApiRequest $apiRequest
+    ): void {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+
+        throw new ApiException('relation-update-bad-request');
+    }
 }
