@@ -7,7 +7,9 @@ namespace App\Rdf\Sparql;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
 
 final class SparqlQuery
 {
@@ -165,23 +167,67 @@ QUERY_BY_TYPE_AND_PREDICATE;
 
         $queryString = sprintf($queryString, Rdf::TYPE, (string) $rdfType, (string) $predicate, $object);
 
-        $retVal = new SparqlQuery($queryString);
+        return new SparqlQuery($queryString);
+    }
 
-        return $retVal;
+    /**
+     * @param Iri|Literal|InternalResourceId|string $object
+     */
+    public static function selectSubjectFromPredicate(
+        Iri $predicate,
+        $object
+    ): SparqlQuery {
+        $queryString = <<<QUERY_SELECT_SUBJECT_FROM_PREDICATE
+SELECT ?subject
+WHERE {
+    ?subject <%s> %s .
+}
+QUERY_SELECT_SUBJECT_FROM_PREDICATE;
+
+        if ($object instanceof Iri) {
+            $object = $object->ntripleString();
+        }
+        if ($object instanceof Literal) {
+            $object = '"'.$object->__toString().'"';
+        }
+
+        $queryString = sprintf($queryString, (string) $predicate, (string) $object);
+
+        return new SparqlQuery($queryString);
+    }
+
+    /**
+     * @param Iri|Literal|InternalResourceId|string $object
+     */
+    public static function selectSubjectFromObject(
+        $object
+    ): SparqlQuery {
+        $queryString = <<<QUERY_SELECT_SUBJECT_FROM_PREDICATE
+SELECT ?subject ?predicate ?type
+WHERE {
+    ?subject ?predicate %s .
+    ?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?type .
+}
+QUERY_SELECT_SUBJECT_FROM_PREDICATE;
+
+        if ($object instanceof Iri) {
+            $object = $object->ntripleString();
+        }
+        if ($object instanceof Literal) {
+            $object = '"'.$object->__toString().'"';
+        }
+
+        $queryString = sprintf($queryString, (string) $object);
+
+        return new SparqlQuery($queryString);
     }
 
     public static function selectSubjectFromUuid(
         string $uuid
     ): SparqlQuery {
-        return new SparqlQuery(
-            sprintf(
-               'SELECT ?subject
-                            WHERE { 
-                              ?subject <%s> "%s"
-                            }',
-                OpenSkos::UUID,
-                $uuid
-            )
+        return static::selectSubjectFromPredicate(
+            new Iri(OpenSkos::UUID),
+            $uuid
         );
     }
 

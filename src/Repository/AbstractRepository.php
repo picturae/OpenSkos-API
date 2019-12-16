@@ -6,12 +6,17 @@ namespace App\Repository;
 
 use App\Annotation\Document;
 use App\EasyRdf\TripleFactory;
+use App\Ontology\Rdf;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\OpenSkosIriFactory;
 use App\OpenSkos\SkosResourceRepositoryWithProjection;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
+use App\Rdf\Literal\StringLiteral;
+use App\Rdf\RdfTerm;
 use App\Rdf\Sparql\Client;
+use App\Rdf\Sparql\SparqlQuery;
 use App\Rdf\Triple;
 use Doctrine\DBAL\Connection;
 
@@ -281,6 +286,42 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         return $res;
+    }
+
+    /**
+     * @param Iri|Literal|InternalResourceId|string $object
+     */
+    public function findSubjectForObject(
+        $object
+    ): array {
+        $client = $this->skosRepository->rdfClient();
+        $sparql = SparqlQuery::selectSubjectFromObject(
+            $object
+        );
+
+        if (is_string($object)) {
+            $object = new StringLiteral($object);
+        }
+        if (!($object instanceof RdfTerm)) {
+            return [];
+        }
+
+        $triples = [];
+        foreach ($client->fetch($sparql) as $row) {
+            $iri = new Iri($row->subject->getUri());
+            array_push($triples, new Triple(
+                $iri,
+                new Iri($row->predicate->getUri()),
+                $object
+            ));
+            array_push($triples, new Triple(
+                $iri,
+                new Iri(Rdf::TYPE),
+                new Iri($row->type->getUri())
+            ));
+        }
+
+        return $triples;
     }
 
     /**
