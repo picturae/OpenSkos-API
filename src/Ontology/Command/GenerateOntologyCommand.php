@@ -94,21 +94,38 @@ class GenerateOntologyCommand extends Command
                         'name'          => $propertyDescriptor,
                         'const'         => strtoupper(Template::from_camel_case($propertyDescriptor)),
                         'hasValidation' => false,
+                        'regex'         => null,
                         'datatype'      => 'literal',
                         'literaltype'   => null,
+                        'enum'          => null,
                     ];
                     continue;
                 }
 
                 // Handle more complex property
                 if (is_array($propertyDescriptor)) {
+                    $hasValidation = isset($propertyDescriptor['regex']) ||
+                        isset($propertyDescriptor['literaltype'])        ||
+                        isset($propertyDescriptor['enum'])               ||
+                    0;
+
+                    // Enum list reference
+                    if (isset($propertyDescriptor['enum']) &&
+                        is_string($propertyDescriptor['enum']) &&
+                        '!' == substr($propertyDescriptor['enum'], 0, 1)
+                    ) {
+                        $listName                   = substr($propertyDescriptor['enum'], 1);
+                        $propertyDescriptor['enum'] = $ontology[$listName];
+                    }
+
                     $properties[] = [
                         'name'          => $key,
                         'const'         => strtoupper($propertyDescriptor['const'] ?? Template::from_camel_case($key)),
-                        'hasValidation' => isset($propertyDescriptor['regex']) || isset($propertyDescriptor['literaltype']),
+                        'hasValidation' => $hasValidation,
                         'regex'         => $propertyDescriptor['regex'] ?? null,
                         'datatype'      => $propertyDescriptor['datatype'] ?? 'literal',
                         'literaltype'   => $propertyDescriptor['literaltype'] ?? null,
+                        'enum'          => $propertyDescriptor['enum'] ?? null,
                     ];
                     if ($ontology['hasVocabulary']) {
                         $propertyDescriptor['name'] = $key;
@@ -124,6 +141,17 @@ class GenerateOntologyCommand extends Command
             $ontology['const'] = $ontology['const'] ?? [];
             foreach ($ontology['const'] as $constName => $constDescriptor) {
                 $constName = strtoupper($constName);
+
+                // Handle '@source'
+                if (is_string($constDescriptor) &&
+                    '!' == substr($constDescriptor, 0, 1)
+                ) {
+                    $constDescriptor = [
+                        'type'   => 'list',
+                        'source' => substr($constDescriptor, 1),
+                    ];
+                }
+
                 switch ($constDescriptor['type']) {
                     case 'list':
                         foreach ($ontology[$constDescriptor['source']] as $constValue) {

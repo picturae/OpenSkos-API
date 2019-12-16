@@ -25,6 +25,7 @@ parameters:
       status:
         datatype: literal
         literaltype: 'xsd:string'
+        enum: '!status'
       toBeChecked:
         datatype: literal
       dateDeleted:
@@ -87,6 +88,8 @@ parameters:
         datatype: literal
       usertype:
         datatype: literal
+        literaltype: 'xsd:string'
+        enum: '!usertypes'
       apikey:
         datatype: literal
         literaltype: "xsd:string"
@@ -113,9 +116,7 @@ parameters:
           - "rdf:Property"
 
     const:
-      statuses:
-        type: list
-        source: status
+      statuses: '!status'
 
     status:
       - candidate
@@ -125,3 +126,8 @@ parameters:
       - rejected
       - obsolete
       - deleted
+
+    usertypes:
+      - api
+      - editor
+      - both

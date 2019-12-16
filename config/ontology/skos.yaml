@@ -13,6 +13,7 @@ parameters:
         dataclass: App\OpenSkos\ConceptScheme\ConceptScheme
       inScheme:
         datatype: resource
+        resourcetype: "skos:ConceptScheme"
       hasTopConcept:
         datatype: literal
       topConceptOf:
@@ -57,14 +58,19 @@ parameters:
       # Semantic relations
       broader:
         datatype: resource
+        resourcetype: "skos:Concept"
       broaderTransitive:
         datatype: resource
+        resourcetype: "skos:Concept"
       narrower:
         datatype: resource
+        resourcetype: "skos:Concept"
       narrowerTransitive:
         datatype: resource
+        resourcetype: "skos:Concept"
       related:
         datatype: resource
+        resourcetype: "skos:Concept"
       semanticRelation:
         datatype: resource
 
@@ -81,17 +87,25 @@ parameters:
       # Mapping properties
       broadMatch:
         datatype: resource
+        resourcetype: "skos:Concept"
       broaderMatch:
         datatype: resource
+        resourcetype: "skos:Concept"
       closeMatch:
         datatype: resource
+        resourcetype: "skos:Concept"
       exactMatch:
         datatype: resource
+        resourcetype: "skos:Concept"
       mappingRelation:
         datatype: resource
+        resourcetype: "skos:Concept"
       narrowMatch:
         datatype: resource
+        resourcetype: "skos:Concept"
       narrowerMatch:
         datatype: resource
+        resourcetype: "skos:Concept"
       relatedMatch:
         datatype: resource
+        resourcetype: "skos:Concept"

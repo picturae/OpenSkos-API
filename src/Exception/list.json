@@ -438,6 +438,17 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateStatus"
     },
+    "openskos-validate-status-enum" : {
+        "code": "openskos-validate-status-enum",
+        "fields": [
+            "allowed",
+            "given"
+        ],
+        "description": "The object for the status predicate does not consist of an allowed value",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateStatus"
+    },
     "openskos-validate-datedeleted-literal-type" : {
         "code": "openskos-validate-datedeleted-literal-type",
         "fields": [
@@ -570,6 +581,28 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateEnableskosxl"
     },
+    "openskos-validate-usertype-literal-type" : {
+        "code": "openskos-validate-usertype-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the usertype predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateUsertype"
+    },
+    "openskos-validate-usertype-enum" : {
+        "code": "openskos-validate-usertype-enum",
+        "fields": [
+            "allowed",
+            "given"
+        ],
+        "description": "The object for the usertype predicate does not consist of an allowed value",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateUsertype"
+    },
     "openskos-validate-apikey-literal-type" : {
         "code": "openskos-validate-apikey-literal-type",
         "fields": [
@@ -591,6 +624,50 @@
         "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateErrorCode"
+    },
+    "foaf-validate-name-literal-type" : {
+        "code": "foaf-validate-name-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the name predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateName"
+    },
+    "foaf-validate-mbox-literal-type" : {
+        "code": "foaf-validate-mbox-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the mbox predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateMbox"
+    },
+    "foaf-validate-mbox-regex" : {
+        "code": "foaf-validate-mbox-regex",
+        "fields": [
+            "regex",
+            "value"
+        ],
+        "description": "The object for the mbox predicate did not match the configured regex",
+        "status": 422,
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateMbox"
+    },
+    "dc-validate-title-literal-type" : {
+        "code": "dc-validate-title-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Dc",
+        "method": "validateTitle"
     },
     "authentication-permission-denied-invalid-credentials" : {
         "code": "authentication-permission-denied-invalid-credentials",
