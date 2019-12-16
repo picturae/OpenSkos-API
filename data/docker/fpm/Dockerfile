@@ -1,24 +1,27 @@
-FROM php:7.3-fpm
+FROM alpine:edge
+
+ENV TERM=ansi
 
 WORKDIR /app
 
-RUN apt update \
-    && apt install -y libicu-dev libzip-dev \
-    && docker-php-ext-install intl \
-    && docker-php-ext-install zip \
-    && docker-php-ext-enable opcache \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /app/var \
-    && docker-php-ext-install pdo pdo_mysql
+RUN echo "" > /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main"      >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing"   >> /etc/apk/repositories
 
-# RUN pecl install xdebug
+# Update all packages & install bash/curl
+RUN apk update
+RUN apk upgrade
+RUN apk add bash curl
 
-COPY data/docker/fpm/php.ini /usr/local/etc/
-RUN curl https://getcomposer.org/installer | php -- --filename composer --install-dir=/usr/local/bin
+# Install phpvm
+RUN curl -sL https://finwo.github.io/phpvm/install.sh | bash /dev/stdin --prefix /usr
 
-COPY bin bin/
-COPY config config/
-COPY src src/
-COPY public public/
-COPY vendor vendor/
-COPY composer.* ./
+# Setup PHP
+RUN phpvm use 7.3.12 --install-dependencies
+RUN mkdir -p /var/log/php
+RUN addgroup -S -g 1000 www-data
+RUN adduser -SD -u 1000 -G www-data www-data
+EXPOSE 9000
+
+CMD /usr/local/sbin/php-fpm -F
