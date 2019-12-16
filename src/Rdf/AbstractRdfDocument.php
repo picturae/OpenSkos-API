@@ -4,6 +4,7 @@ namespace App\Rdf;
 
 use App\Annotation\AbstractAnnotation;
 use App\Annotation\Error;
+use App\Entity\User as AuthUser;
 use App\Ontology\Context;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
@@ -11,11 +12,13 @@ use App\Ontology\Rdf;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
+use App\OpenSkos\User\User as RdfUser;
 use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use App\Repository\AbstractRepository;
+use App\Repository\AbstractSolrRepository;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ramsey\Uuid\Uuid;
 
@@ -566,6 +569,27 @@ abstract class AbstractRdfDocument implements RdfResource
         $this->repository->delete($this->iri());
 
         return null;
+    }
+
+    /**
+     * @param AuthUser|RdfUser $user
+     */
+    public function deleteSoft($user = null): ?array
+    {
+        $this->setValue(new Iri(OpenSkos::STATUS), new StringLiteral('deleted'));
+        $this->setValue(new Iri(OpenSkos::DATE_DELETED), new DatetimeLiteral(new \DateTime()));
+
+        if (!is_null($user)) {
+            $this->setValue(new Iri(OpenSkos::DELETED_BY), $user->iri());
+        }
+
+        $response = $this->update();
+
+        if ($this->repository instanceof AbstractSolrRepository) {
+            $this->repository->deleteIndex($this->iri());
+        }
+
+        return $response;
     }
 
     /**

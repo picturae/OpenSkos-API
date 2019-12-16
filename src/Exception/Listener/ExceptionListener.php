@@ -42,7 +42,7 @@ final class ExceptionListener
             $response->setContent(json_encode([
                 'code'    => $exception->getCode() ?: 500,
                 'message' => $exception->getMessage(),
-            ]));
+            ], JSON_PRETTY_PRINT));
             $event->setResponse($response);
 
             return;
@@ -77,7 +77,7 @@ final class ExceptionListener
         ]);
 
         // Encode & respond
-        $response->setContent(json_encode(array_filter($responseData)));
+        $response->setContent(json_encode(array_filter($responseData), JSON_PRETTY_PRINT));
         $event->setResponse($response);
 
         return;

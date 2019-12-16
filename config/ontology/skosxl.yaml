@@ -9,9 +9,11 @@ parameters:
         dataclass: App\OpenSkos\Label\Label
       altLabel:
         datatype: literal
+        literaltype: "xsd:string"
         "rdfs:range": "skosxl:Label"
       hiddenLabel:
         datatype: literal
+        literaltype: "xsd:string"
         "rdfs:range": "skosxl:Label"
       labelRelation:
         datatype: resource
@@ -22,4 +24,5 @@ parameters:
         "rdfs:domain": "skosxl:Label"
       prefLabel:
         datatype: literal
+        literaltype: "xsd:string"
         "rdfs:range": "skosxl:Label"

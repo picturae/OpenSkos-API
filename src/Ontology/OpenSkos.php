@@ -26,7 +26,9 @@ use App\Rdf\Literal\Literal;
 final class OpenSkos
 {
     const NAME_SPACE                      = 'http://openskos.org/xmlns#';
-    const DATATYPE                        = 'http://openskos.org/xmlns#datatype';
+    const DATA_TYPE                       = 'http://openskos.org/xmlns#dataType';
+    const LITERAL_TYPE                    = 'http://openskos.org/xmlns#literalType';
+    const RESOURCE_TYPE                   = 'http://openskos.org/xmlns#resourceType';
     const TENANT                          = 'http://openskos.org/xmlns#tenant';
     const STATUS                          = 'http://openskos.org/xmlns#status';
     const TO_BE_CHECKED                   = 'http://openskos.org/xmlns#toBeChecked';
@@ -78,8 +80,12 @@ final class OpenSkos
     ];
 
     const literaltypes = [
+        'http://openskos.org/xmlns#dataType'                    => 'xsd:string',
+        'http://openskos.org/xmlns#literalType'                 => 'xsd:string',
+        'http://openskos.org/xmlns#resourceType'                => 'xsd:string',
         'http://openskos.org/xmlns#tenant'                      => 'xsd:string',
-        'http://openskos.org/xmlns#dateDeleted'                 => 'xsd:datetime',
+        'http://openskos.org/xmlns#status'                      => 'xsd:string',
+        'http://openskos.org/xmlns#dateDeleted'                 => 'xsd:dateTime',
         'http://openskos.org/xmlns#uuid'                        => 'xsd:string',
         'http://openskos.org/xmlns#name'                        => 'xsd:string',
         'http://openskos.org/xmlns#disableSearchInOtherTenants' => 'xsd:boolean',
@@ -93,6 +99,120 @@ final class OpenSkos
         'http://openskos.org/xmlns#apikey'                      => 'xsd:string',
         'http://openskos.org/xmlns#errorCode'                   => 'xsd:string',
     ];
+
+    /**
+     * Returns the first encountered error for dataType.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-datatype-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the datatype predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateDataType($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-datatype-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for literalType.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-literaltype-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the literaltype predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateLiteralType($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-literaltype-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for resourceType.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-resourcetype-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the resourcetype predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateResourceType($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-resourcetype-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
 
     /**
      * Returns the first encountered error for tenant.
@@ -149,6 +269,44 @@ final class OpenSkos
     }
 
     /**
+     * Returns the first encountered error for status.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-status-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the status predicate has a different type than 'http://www.w3.org/2001/XMLSchema#string'"
+     *     )
+     */
+    public function validateStatus($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#string' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-status-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#string',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the first encountered error for dateDeleted.
      * Returns null on success (a.k.a. no errors).
      *
@@ -157,7 +315,7 @@ final class OpenSkos
      * @Error(code="openskos-validate-datedeleted-literal-type",
      *        status=422,
      *        fields={"expected","actual"},
-     *        description="The object for the datedeleted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#datetime'"
+     *        description="The object for the datedeleted predicate has a different type than 'http://www.w3.org/2001/XMLSchema#dateTime'"
      *     )
      */
     public function validateDateDeleted($property): ?array
@@ -169,11 +327,11 @@ final class OpenSkos
         if ($property instanceof Literal) {
             $value = $property->value();
 
-            if ('http://www.w3.org/2001/XMLSchema#datetime' !== $property->typeIri()->getUri()) {
+            if ('http://www.w3.org/2001/XMLSchema#dateTime' !== $property->typeIri()->getUri()) {
                 return [
                     'code' => 'openskos-validate-datedeleted-literal-type',
                     'data' => [
-                        'expected' => 'http://www.w3.org/2001/XMLSchema#datetime',
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#dateTime',
                         'actual'   => $property->typeIri()->getUri(),
                     ],
                 ];
@@ -668,10 +826,20 @@ final class OpenSkos
         $openskos->setType('owl:Ontology');
         $openskos->addLiteral('dc:title', 'OpenSkos vocabulary');
 
-        $datatype = $graph->resource('openskos:datatype');
-        $datatype->setType('rdf:Property');
-        $datatype->addLiteral('openskos:datatype', 'literal');
-        $datatype->addLiteral('dcterms:description', 'The type of data that\'s supposed to go in the described field');
+        $dataType = $graph->resource('openskos:dataType');
+        $dataType->setType('rdf:Property');
+        $dataType->addLiteral('openskos:datatype', 'literal');
+        $dataType->addLiteral('dcterms:description', 'The type of data that\'s supposed to go in the described field');
+
+        $literalType = $graph->resource('openskos:literalType');
+        $literalType->setType('rdf:Property');
+        $literalType->addLiteral('openskos:datatype', 'literal');
+        $literalType->addLiteral('dcterms:description', 'What kind of literal the described field is supposed to be');
+
+        $resourceType = $graph->resource('openskos:resourceType');
+        $resourceType->setType('rdf:Property');
+        $resourceType->addLiteral('openskos:datatype', 'literal');
+        $resourceType->addLiteral('dcterms:description', 'What kind of resource the described field is supposed to be');
 
         $tenant = $graph->resource('openskos:tenant');
         $tenant->setType('rdf:Property');
