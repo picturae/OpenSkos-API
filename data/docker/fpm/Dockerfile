@@ -18,7 +18,7 @@ RUN apk add bash curl
 RUN curl -sL https://finwo.github.io/phpvm/install.sh | bash /dev/stdin --prefix /usr
 
 # Setup PHP
-RUN phpvm use 7.3.12 --install-dependencies
+RUN phpvm use 7.3.12 --install-dependencies --full
 RUN mkdir -p /var/log/php
 RUN addgroup -S -g 1000 www-data
 RUN adduser -SD -u 1000 -G www-data www-data
