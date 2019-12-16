@@ -155,6 +155,9 @@ class SkosResourceRepository
         return $fullSet;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getByUuid(InternalResourceId $subject)
     {
         // Indexed

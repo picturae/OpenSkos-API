@@ -105,9 +105,14 @@ final class SetController
      *        description="The body passed to this endpoint was either missing or corrupt"
      * )
      * @Error(code="set-create-already-exists",
-     *        status=400,
-     *        description="A set with the given iri already exists",
-     *        fields={"iri"}
+     *        status=409,
+     *        description="A set with the given iri or uuid already exists",
+     *        fields={"iri","uuid"}
+     * )
+     * @Error(code="set-create-already-exists-duplicate-base-uri",
+     *        status=409,
+     *        description="A set with the given baseUri already exists",
+     *        fields={"baseUri"}
      * )
      * @Error(code="set-create-tenant-does-not-exist",
      *        status=400,
@@ -133,9 +138,22 @@ final class SetController
 
         // Check if the resources already exist
         foreach ($sets as $set) {
+            // Check by iri/uuid
             if ($set->exists()) {
                 throw new ApiException('set-create-already-exists', [
-                    'iri' => $set->iri()->getUri(),
+                    'iri'  => $set->iri()->getUri(),
+                    'uuid' => $set->getValue(OpenSkos::UUID),
+                ]);
+            }
+
+            // Check by concept-base-uri
+            $found = $setRepository->findOneBy(
+                new Iri(OpenSkos::CONCEPT_BASE_URI),
+                new InternalResourceId($set->getValue(OpenSkos::CONCEPT_BASE_URI)->__toString())
+            );
+            if ($found) {
+                throw new ApiException('set-create-already-exists-duplicate-base-uri', [
+                    'baseUri' => $set->getValue(OpenSkos::CONCEPT_BASE_URI)->__toString(),
                 ]);
             }
         }

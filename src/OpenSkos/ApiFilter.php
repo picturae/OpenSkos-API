@@ -4,6 +4,8 @@ namespace App\OpenSkos;
 
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\Set\SetRepository;
+use App\Rdf\Iri;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ApiFilter
@@ -30,6 +32,7 @@ final class ApiFilter
         'dcterms:dateSubmitted' => 'xsd:duration',
         'dcterms:modified'      => 'xsd:duration',
         'openskos:deleted'      => 'xsd:duration',
+        'openskos:set'          => 'openskos:set',
         'openskos:status'       => OpenSkos::STATUSES,
     ];
 
@@ -54,9 +57,17 @@ final class ApiFilter
      */
     private $lang = null;
 
+    /**
+     * @var SetRepository
+     */
+    private $setRepository;
+
     public function __construct(
-        Request $request
+        Request $request,
+        SetRepository $setRepository
     ) {
+        $this->setRepository = $setRepository;
+
         $params = $request->query->get('filter', []);
 
         // Extract filter language
@@ -71,25 +82,14 @@ final class ApiFilter
         }
     }
 
-    public static function fullUri(string $predicate): string
+    public static function fromFullUri(string $predicate): ?string
     {
-        $tokens = explode(':', $predicate);
-        $prefix = array_shift($tokens);
-        $field  = implode(':', $tokens);
-
-        return Context::prefixes[$prefix].$field;
-    }
-
-    public static function fromFullUri(string $predicate): string
-    {
-        // Transform URL into prefix
-        foreach (Context::prefixes as $prefix => $namespace) {
-            if (substr($predicate, 0, strlen($namespace)) === $namespace) {
-                return $prefix.':'.(substr($predicate, strlen($namespace)));
-            }
+        $parts = Context::decodeUri(Context::fullUri($predicate));
+        if (is_null($parts)) {
+            return null;
         }
 
-        return $predicate;
+        return implode(':', $parts);
     }
 
     /**
@@ -119,16 +119,12 @@ final class ApiFilter
 
         // Transform URL into prefix
         $predicate = static::fromFullUri($predicate);
-
-        // Disallow unknown prefixes
-        $tokens = explode(':', $predicate);
-        $prefix = $tokens[0];
-        if (!isset(Context::prefixes[$prefix])) {
+        if (is_null($predicate)) {
             return $this;
         }
 
         // Detect field type
-        $type = static::types[$predicate] ?? 'csv';
+        $type = static::types[$predicate] ?? static::types['default'];
 
         // Disallow unknown enum
         if (is_array($type)) {
@@ -137,13 +133,24 @@ final class ApiFilter
             }
         }
 
-        // Handle csv
-        if ('csv' === $type && is_string($value)) {
-            $value = str_getcsv($value);
+        switch ($type) {
+            case 'openskos:set':
+                // TODO: fetch sets & use the found iri
+                $set = $this->setRepository->findOneBy(
+                    new Iri(OpenSkos::CODE),
+                    new InternalResourceId($value)
+                );
+                if (!is_null($set)) {
+                    $value = $set->iri()->getUri();
+                }
+                break;
+            case 'xsd:duration':
+                // TODO: validate datetime
+                break;
         }
 
         // Register the filter
-        $this->filters[$predicate] = $value;
+        $this->filters[$predicate][] = $value;
 
         return $this;
     }
@@ -191,7 +198,7 @@ final class ApiFilter
 
         // Build the right predicate
         $entity    = static::entity[$predicate] ?? 'subject';
-        $predicate = static::fullUri($predicate);
+        $predicate = Context::fullUri($predicate);
 
         // Add url or string to the output
         if (filter_var($value, FILTER_VALIDATE_URL)) {
@@ -238,6 +245,9 @@ final class ApiFilter
                     // Fetch short predicate and data type
                     $predicate = static::fromFullUri($jenaFilter['predicate']);
                     $datatype  = static::types[$predicate] ?? 'csv';
+                    if (is_null($predicate)) {
+                        continue;
+                    }
 
                     // Build solr field
                     $filterField = null;
