@@ -1237,6 +1237,57 @@
         "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
         "method": "getRelations"
     },
+    "semantic-relation-create-subject-concept-not-found" : {
+        "code": "semantic-relation-create-subject-concept-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The subject concept to create a semantic relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-object-concept-not-found" : {
+        "code": "semantic-relation-create-object-concept-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The target concept to create a semantic relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-predicate-not-allowed" : {
+        "code": "semantic-relation-create-predicate-not-allowed",
+        "fields": [
+            "predicate"
+        ],
+        "description": "The given predicate is not a valid relation to be created",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-literal-not-allowed" : {
+        "code": "semantic-relation-create-literal-not-allowed",
+        "fields": [
+            "predicate",
+            "reference"
+        ],
+        "description": "Semantic relations with a literal reference are not allowed",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-unknown-reference" : {
+        "code": "semantic-relation-create-unknown-reference",
+        "fields": [
+            "type"
+        ],
+        "description": "An IRI reference was expected, received an unknown type",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
     "relation-update-bad-request" : {
         "code": "relation-update-bad-request",
         "description": "Updating a relation is not allowed\/possible",

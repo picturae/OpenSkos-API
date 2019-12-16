@@ -9,6 +9,7 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Owl;
 use App\Ontology\Rdf;
 use App\Ontology\Rdfs;
+use App\Ontology\Skos;
 
 final class RelationType
 {
@@ -17,9 +18,21 @@ final class RelationType
         return array_keys(static::vocabulary()->resources());
     }
 
+    public static function semanticFields(): array
+    {
+        return array_filter(static::vocabularyFields(), function ($predicate) {
+            return !in_array($predicate, [
+                Skos::IN_SCHEME,
+                OpenSkos::IN_COLLECTION,
+                OpenSkos::IN_SET,
+            ], true);
+        });
+    }
+
     public static function vocabulary(): \EasyRdf_Graph
     {
         \EasyRdf_Namespace::set('dc', Dc::NAME_SPACE);
+        \EasyRdf_Namespace::set('skos', Skos::NAME_SPACE);
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
         \EasyRdf_Namespace::set('owl', Owl::NAME_SPACE);
         \EasyRdf_Namespace::set('rdf', Rdf::NAME_SPACE);
