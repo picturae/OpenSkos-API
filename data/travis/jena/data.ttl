@@ -1,0 +1,1564 @@
+<http://localhost:9000/api/labels/0552a6d0-17c6-44a6-b41d-c51ea1adfb5c>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:23+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "words"@nl .
+
+<http://localhost:9000/test/Artists>
+        a       <http://www.w3.org/2004/02/skos/core#ConceptScheme> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#uuid>
+                "a5c6b433-3d2d-488f-a347-895773ea16fe" ;
+        <http://purl.org/dc/elements/1.1/creator>
+                "rschrijver"@en ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T09:16:41+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/description>
+                "Artiesten"@en ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T09:16:41+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://purl.org/dc/terms/title>
+                "Artists"@en .
+
+<http://localhost:9000/test>
+        a       <http://openskos.org/xmlns#set> ;
+        <http://openskos.org/xmlns#allow_oai>
+                ""^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+        <http://openskos.org/xmlns#code>
+                "test" ;
+        <http://openskos.org/xmlns#conceptBaseUri>
+                "http://localhost:9000/test" ;
+        <http://openskos.org/xmlns#licenceURL>
+                <http://creativecommons.org/publicdomain/zero/1.0/> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#webpage>
+                "" ;
+        <http://purl.org/dc/terms/description>
+                "test dataset" ;
+        <http://purl.org/dc/terms/license>
+                "Creative Commons Zero (CC0)" ;
+        <http://purl.org/dc/terms/title>
+                "test" .
+
+<http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706>
+        a       <http://xmlns.com/foaf/0.1/Person> ;
+        <http://xmlns.com/foaf/0.1/name>
+                "rschrijver" .
+
+<http://localhost:9000/api/users/f167229a-2727-4d61-b43f-682e13cb650f>
+        a       <http://xmlns.com/foaf/0.1/Person> ;
+        <http://xmlns.com/foaf/0.1/name>
+                "rbron" .
+
+<http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8>
+        a       <http://www.w3.org/ns/org#FormalOrganization> ;
+        <http://openskos.org/xmlns#code>
+                "pic" ;
+        <http://openskos.org/xmlns#enableStatussesSystem>
+                "false" ;
+        <http://openskos.org/xmlns#enableskosxl>
+                "false" ;
+        <http://openskos.org/xmlns#name>
+                "rschrijver" ;
+        <http://openskos.org/xmlns#uuid>
+                "3b99e79f-d4e5-4daf-bd31-71e82c0da4a8" ;
+        <http://www.w3.org/2006/vcard/ns#EMAIL>
+                "r.schrijver@picturae.com" .
+
+<http://localhost:9000/test/31>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "1140f199-fc3a-4f67-8fc9-25435e7fbc2c" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:44:01+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:44:01+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:23+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "words"@nl ;
+        <http://www.w3.org/2004/02/skos/core#example>
+                "Snelle woorden"@nl ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "hiphop"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#narrower>
+                <http://localhost:9000/test/33> , <http://localhost:9000/test/34> , <http://localhost:9000/test/32> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "31" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Hip hop"@nl ;
+        <http://www.w3.org/2004/02/skos/core#relatedMatch>
+                <http://localhost:9000/test/36> , <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/0552a6d0-17c6-44a6-b41d-c51ea1adfb5c> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/52382b73-331e-4716-a9c3-1aaa63cd751d> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/24f55925-43d2-43cf-a6f2-a57469ed1b76> .
+
+<http://localhost:9000/test/36>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "b303f288-deff-43df-8fb2-9458eb63b824" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T11:18:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T11:18:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:28:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Piano"@nl ;
+        <http://www.w3.org/2004/02/skos/core#closeMatch>
+                <http://localhost:9000/test/29> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "keys"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Instruments> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "36" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Keyboard"@nl ;
+        <http://www.w3.org/2004/02/skos/core#relatedMatch>
+                <http://localhost:9000/test/31> , <http://localhost:9000/test/27> , <http://localhost:9000/test/30> , <http://localhost:9000/test/24> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/c916ac38-e3cf-483a-9156-13cd39832120> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/d831eaea-1980-46ab-872c-9477427e5650> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/c03220ec-d1e1-47bc-83bb-7c5a01d288de> .
+
+<http://localhost:9000/test/35>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "7a561aba-3eb8-4a2b-92e0-a31bb285c944" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T11:13:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T11:13:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:57:54+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Gitaartje"@nl ;
+        <http://www.w3.org/2004/02/skos/core#changeNote>
+                "what?"@nl ;
+        <http://www.w3.org/2004/02/skos/core#closeMatch>
+                <http://localhost:9000/test/28> , <http://localhost:9000/test/25> , <http://localhost:9000/test/26> ;
+        <http://www.w3.org/2004/02/skos/core#definition>
+                "Vibrating Strings"@nl ;
+        <http://www.w3.org/2004/02/skos/core#editorialNote>
+                "Geen idee"@nl ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Snaren"@nl ;
+        <http://www.w3.org/2004/02/skos/core#historyNote>
+                "A long time ago..."@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Instruments> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "35" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Gitaar"@nl ;
+        <http://www.w3.org/2004/02/skos/core#related>
+                <http://localhost:9000/test/38> ;
+        <http://www.w3.org/2004/02/skos/core#relatedMatch>
+                <http://localhost:9000/test/31> , <http://localhost:9000/test/27> , <http://localhost:9000/test/30> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/c4fe2830-3e72-4357-8a0c-cf1f1eca1b90> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/10fa4ed5-dc56-49b9-85db-b0fad8c705c6> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/669fd0b5-f66b-4f14-80a4-e24a99f7c912> .
+
+<http://localhost:9000/test/Genres>
+        a       <http://www.w3.org/2004/02/skos/core#ConceptScheme> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#uuid>
+                "50f8837e-4574-464d-83ea-0db875a812a1" ;
+        <http://purl.org/dc/elements/1.1/creator>
+                "rschrijver"@en ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T09:13:34+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/description>
+                "Music Genres"@en ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T09:13:34+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://purl.org/dc/terms/title>
+                "Genres"@en .
+
+<http://localhost:9000/test/33>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "572d549c-1f85-4f5c-adc5-d3c24c47933d" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:53:07+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:53:07+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:53:07+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "trippy"@nl ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                <http://localhost:9000/test/31> , <http://localhost:9000/test/30> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "genre hybrid"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "33" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Trip hop"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/e4803b87-2bee-42e1-8c38-736eb9f36fd3> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/f71aaacc-1248-42c4-beb1-9c1c1378d0a4> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/be6b6f3d-250f-4d57-87f4-40423ec79a7a> .
+
+<http://localhost:9000/test/34>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "aa2d0422-3928-4f76-88d2-3cc5013997c8" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:59:09+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:59:09+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "woorden"@nl ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                <http://localhost:9000/test/31> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "snelle woorden"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "34" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Rap"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/0526ba45-56de-4c77-84ef-0b4bef0f4884> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/0e142e47-f306-425e-b8d2-3691002623ed> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/0cc0a7f3-2c0c-4edb-bd74-1a0f5c68c107> .
+
+<http://localhost:9000/api/labels/24f55925-43d2-43cf-a6f2-a57469ed1b76>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:23+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Hip hop"@nl .
+
+<http://localhost:9000/test/32>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "80720837-7ed8-409a-9528-128b3580e8b0" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:46:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:46:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:46:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "hihats"@nl ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                <http://localhost:9000/test/31> , <http://localhost:9000/test/30> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "808"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "32" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Trap"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/8e125b65-6d67-45a2-af73-23a27538880e> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/3148e269-edb8-4519-a1c6-3b0d6d7b468d> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/aa59ba25-770c-414b-8744-875c5c9efedd> .
+
+<http://localhost:9000/api/labels/52382b73-331e-4716-a9c3-1aaa63cd751d>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:23+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "hiphop"@nl .
+
+<http://localhost:9000/api/labels/8222cb96-47eb-44b5-8c81-83ec9a491f0f>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:58:33+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Electronic Dance Music"@nl .
+
+<http://localhost:9000/api/labels/1de9a6e4-0ac2-42b0-b28b-d9edccfe5e92>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:15:52+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Ziel"@nl .
+
+<http://localhost:9000/api/labels/f3b022f4-8e3f-47c4-a328-70b70ed65522>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:03:16+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Bass Instrument"@nl .
+
+<http://localhost:9000/api/labels/c03220ec-d1e1-47bc-83bb-7c5a01d288de>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:28:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Keyboard"@nl .
+
+<http://localhost:9000/api/labels/1599f061-a7e8-4fb2-ac2f-1a4d18e5ec9e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:18:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Keyboard"@nl .
+
+<http://localhost:9000/test/29>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "2597d788-25c1-4dbf-a876-00cf5b3eb402" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:18:48+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:18:48+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:21:04+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Deep as water"@nl ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                <http://localhost:9000/test/30> , <http://localhost:9000/test/24> ;
+        <http://www.w3.org/2004/02/skos/core#broaderTransitive>
+                <http://localhost:9000/test/30> ;
+        <http://www.w3.org/2004/02/skos/core#closeMatch>
+                <http://localhost:9000/test/36> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Liquid Funk"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "29" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Liquid DnB"@nl ;
+        <http://www.w3.org/2004/02/skos/core#related>
+                <http://localhost:9000/test/27> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/f6415dde-e258-48ff-b338-bd7db0b0d0ab> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/010836b2-e993-4826-bfa2-44cc9953a230> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/d3a472f8-ab89-4d5f-a0ff-6e1d0241b6d6> .
+
+<http://localhost:9000/test/27>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "2c047350-3c97-4cf3-976d-9346116d8f4b" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:15:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:15:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:11:52+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Ziel"@nl ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Soulful"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "27" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Soul"@nl ;
+        <http://www.w3.org/2004/02/skos/core#related>
+                <http://localhost:9000/test/29> ;
+        <http://www.w3.org/2004/02/skos/core#relatedMatch>
+                <http://localhost:9000/test/36> , <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/05a2bdae-4a36-4d0f-a528-2c05cda57fff> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/6775577c-2391-4d2e-b1e7-ad74f684ac99> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/a370fa08-cae1-4a9f-a6ba-560591480818> .
+
+<http://localhost:9000/api/labels/d3a472f8-ab89-4d5f-a0ff-6e1d0241b6d6>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:21:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Liquid DnB"@nl .
+
+<http://localhost:9000/api/labels/f6415dde-e258-48ff-b338-bd7db0b0d0ab>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:21:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Deep as water"@nl .
+
+<http://localhost:9000/test/30>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "28fcc988-7aa1-4e28-a10f-80a39397c162" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:23:34+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:23:34+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:58:33+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Electronic Dance Music"@nl ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Dansbare Computer Geluiden"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#narrower>
+                <http://localhost:9000/test/33> , <http://localhost:9000/test/32> , <http://localhost:9000/test/29> , <http://localhost:9000/test/24> ;
+        <http://www.w3.org/2004/02/skos/core#narrowerTransitive>
+                <http://localhost:9000/test/29> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "30" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "EDM"@nl ;
+        <http://www.w3.org/2004/02/skos/core#relatedMatch>
+                <http://localhost:9000/test/36> , <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/8222cb96-47eb-44b5-8c81-83ec9a491f0f> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/9eed3704-6906-4e1b-8b66-6686779f6672> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/44df8cf5-4da2-4417-85f3-f7cb09493b7d> .
+
+<http://localhost:9000/test/24>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "7f4a9b37-6103-4185-91be-e97d8020b2af" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:01:36+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:01:36+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:01:36+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "DnB"@nl ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                <http://localhost:9000/test/30> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "174bpm"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#narrower>
+                <http://localhost:9000/test/29> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "24" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Drum & Bass"@nl ;
+        <http://www.w3.org/2004/02/skos/core#relatedMatch>
+                <http://localhost:9000/test/36> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/706a0c84-b6f5-4498-9aa9-091589e5fc3e> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/0b3cb007-f233-447a-ac6d-f834bd65147e> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/c93720dc-b1ff-4fe9-90d1-7fcb29c396b5> .
+
+<http://localhost:9000/api/labels/010836b2-e993-4826-bfa2-44cc9953a230>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:21:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Liquid Funk"@nl .
+
+<http://localhost:9000/api/labels/115924f5-7361-4e52-94e7-2a7740307798>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:03:08+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Steen"@nl .
+
+<http://localhost:9000/api/labels/824f5e53-e6e2-41a5-b3b9-0a5150cc2a6c>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:03:16+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Bass"@nl .
+
+<http://localhost:9000/api/labels/05a2bdae-4a36-4d0f-a528-2c05cda57fff>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:11:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Ziel"@nl .
+
+<http://localhost:9000/api/labels/54327e75-6ae4-482f-b326-54f9b6c6dc25>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:14:12+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Metal"@nl .
+
+<http://localhost:9000/api/labels/8e125b65-6d67-45a2-af73-23a27538880e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:46:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "hihats"@nl .
+
+<http://localhost:9000/api/labels/44df8cf5-4da2-4417-85f3-f7cb09493b7d>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:58:33+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "EDM"@nl .
+
+<http://localhost:9000/test/Instruments>
+        a       <http://www.w3.org/2004/02/skos/core#ConceptScheme> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#uuid>
+                "e78c388d-488d-4d52-a82f-3c0d454a6f36" ;
+        <http://purl.org/dc/elements/1.1/creator>
+                "rschrijver"@en ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T09:19:16+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/description>
+                "Instrumenten"@en ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T09:19:16+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://purl.org/dc/terms/title>
+                "Instruments"@en .
+
+<http://localhost:9000/api/labels/d831eaea-1980-46ab-872c-9477427e5650>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:28:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "keys"@nl .
+
+<http://localhost:9000/api/labels/c916ac38-e3cf-483a-9156-13cd39832120>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:28:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Piano"@nl .
+
+<http://localhost:9000/api/labels/e0ece74f-2e0c-44ba-8722-b1092e66e0ab>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:17:43+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "very interesting combo"@nl .
+
+<http://localhost:9000/api/labels/0526ba45-56de-4c77-84ef-0b4bef0f4884>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "woorden"@nl .
+
+<http://localhost:9000/api/labels/f5b204c4-da08-4b04-b220-abca668b7f6a>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:24:41+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaartje"@nl .
+
+<http://localhost:9000/api/labels/9eed3704-6906-4e1b-8b66-6686779f6672>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:58:33+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Dansbare Computer Geluiden"@nl .
+
+<http://localhost:9000/api/labels/0e142e47-f306-425e-b8d2-3691002623ed>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "snelle woorden"@nl .
+
+<http://localhost:9000/api/labels/fc6bfea2-7f5e-4f8d-8ff8-17988d4e5398>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:23:35+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "EDM"@nl .
+
+<http://localhost:9000/api/labels/0cc0a7f3-2c0c-4edb-bd74-1a0f5c68c107>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:29+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Rap"@nl .
+
+<http://localhost:9000/test/28>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "30aa7c8e-91ec-4496-9e0f-feff4db147c0" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:17:42+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:17:42+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:17:42+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "jazz rock combo"@nl ;
+        <http://www.w3.org/2004/02/skos/core#broader>
+                <http://localhost:9000/test/25> ;
+        <http://www.w3.org/2004/02/skos/core#closeMatch>
+                <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "very interesting combo"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "28" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Jazzrock"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/71c11339-cbf6-4193-9ef0-02a20cd90c13> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/e0ece74f-2e0c-44ba-8722-b1092e66e0ab> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/c9a1750a-6380-490e-8584-210781af72ca> .
+
+<http://localhost:9000/api/labels/71c11339-cbf6-4193-9ef0-02a20cd90c13>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:17:43+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "jazz rock combo"@nl .
+
+<http://localhost:9000/test/25>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "7080b980-e3f2-413a-bf6a-c3a801b9950f" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:03:07+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:03:07+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:55:59+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Steen"@nl ;
+        <http://www.w3.org/2004/02/skos/core#closeMatch>
+                <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Gitaartjes"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#narrower>
+                <http://localhost:9000/test/28> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "25" ;
+        <http://www.w3.org/2004/02/skos/core#note>
+                "Blah blah"@nl ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Rock"@nl ;
+        <http://www.w3.org/2004/02/skos/core#scopeNote>
+                "Steen Notitie"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/8c6fee49-67ab-4272-b839-94f18918d6be> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/c8190e7d-9d3f-4f58-8a4d-ff1d1d7591ab> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/f762fa08-027f-4927-8d9a-276b23f9943e> .
+
+<http://localhost:9000/api/labels/c9a1750a-6380-490e-8584-210781af72ca>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:17:43+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Jazzrock"@nl .
+
+<http://localhost:9000/api/labels/b4991549-fa7e-44a9-ac63-99ee883d5b04>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:00:03+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Bass Music"@nl .
+
+<http://localhost:9000/api/labels/adb5e89e-d648-44af-88a6-57bcaf3eedf8>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:00:03+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Bass"@nl .
+
+<http://localhost:9000/api/labels/e4803b87-2bee-42e1-8c38-736eb9f36fd3>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:53:08+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "trippy"@nl .
+
+<http://localhost:9000/api/labels/98a29a3f-df30-42f8-9212-013164c2d47f>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:23:35+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Electronic Dance Music"@nl .
+
+<http://localhost:9000/api/labels/3a93cd42-7694-4f02-89dc-335cfd3bda6e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:18:49+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Liquid Funk"@nl .
+
+<http://localhost:9000/api/labels/10fa4ed5-dc56-49b9-85db-b0fad8c705c6>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:57:55+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Snaren"@nl .
+
+<http://localhost:9000/api/labels/c4fe2830-3e72-4357-8a0c-cf1f1eca1b90>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:57:55+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaartje"@nl .
+
+<http://localhost:9000/test/26>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "466d1560-6db3-4311-bd84-004c93c18903" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-14T10:14:11+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-14T10:14:11+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:14:11+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Metaal"@nl ;
+        <http://www.w3.org/2004/02/skos/core#closeMatch>
+                <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Heftige gitaartjes"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "26" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Metal"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/b8f1e62b-73e1-4ea6-b7ea-45a98dc01bd7> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/edd25229-2909-4858-8bf4-c73f1619a628> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/54327e75-6ae4-482f-b326-54f9b6c6dc25> .
+
+<http://localhost:9000/api/labels/669fd0b5-f66b-4f14-80a4-e24a99f7c912>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:57:55+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaar"@nl .
+
+<http://localhost:9000/test/38>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "966c5e3e-289e-4f0f-8429-03da127d9ca1" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-18T14:00:03+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-18T14:00:03+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:03:15+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Bass Music"@nl ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Bass Instrument"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> , <http://localhost:9000/test/Instruments> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "38" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Bass"@nl ;
+        <http://www.w3.org/2004/02/skos/core#related>
+                <http://localhost:9000/test/35> ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/b133ed39-2dbc-4026-9724-0c4cb67ab6d2> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/f3b022f4-8e3f-47c4-a328-70b70ed65522> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/824f5e53-e6e2-41a5-b3b9-0a5150cc2a6c> .
+
+<http://localhost:9000/api/labels/32115f60-94c4-4b06-8a25-4c583333e71b>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:07:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Steen"@nl .
+
+<http://localhost:9000/api/labels/3a30d252-85ba-4630-bc85-54fa391bf101>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:59:10+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "woorden"@nl .
+
+<http://localhost:9000/api/labels/94937831-8bb1-4255-931e-4f9c831c04e7>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:23:35+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Dansbare Computer Geluiden"@nl .
+
+<http://localhost:9000/api/labels/8d8345fc-3dd0-4e16-9eb3-53938cf0455f>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:15:52+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Soul"@nl .
+
+<http://localhost:9000/api/labels/7d483ddc-d113-4ef5-bdca-37cc0979ebdd>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:54:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Noise"@nl .
+
+<http://localhost:9000/api/labels/79dfb97a-9c78-45ea-ae10-e8a5f712e477>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:13:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaartje"@nl .
+
+<http://localhost:9000/api/labels/c8190e7d-9d3f-4f58-8a4d-ff1d1d7591ab>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:00+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaartjes"@nl .
+
+<http://localhost:9000/api/labels/0b3cb007-f233-447a-ac6d-f834bd65147e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:01:37+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "174bpm"@nl .
+
+<http://localhost:9000/api/labels/c93720dc-b1ff-4fe9-90d1-7fcb29c396b5>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:01:37+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Drum & Bass"@nl .
+
+<http://localhost:9000/api/labels/78a1d8c6-45c0-4ea4-b6c7-40d3ffbd27e8>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Hip hop"@nl .
+
+<http://localhost:9000/api/labels/a370fa08-cae1-4a9f-a6ba-560591480818>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:11:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Soul"@nl .
+
+<http://localhost:9000/api/labels/6775577c-2391-4d2e-b1e7-ad74f684ac99>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:11:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Soulful"@nl .
+
+<http://localhost:9000/api/labels/edd25229-2909-4858-8bf4-c73f1619a628>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:14:12+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Heftige gitaartjes"@nl .
+
+<http://localhost:9000/api/labels/b8f1e62b-73e1-4ea6-b7ea-45a98dc01bd7>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:14:12+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Metaal"@nl .
+
+<http://localhost:9000/api/labels/f762fa08-027f-4927-8d9a-276b23f9943e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:00+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Rock"@nl .
+
+<http://localhost:9000/api/labels/06d14769-dab7-44eb-93ea-97d453f29e8c>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:44:02+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "words"@nl .
+
+<http://localhost:9000/api/labels/65cacc5e-2aed-4e32-bdec-b7c497e8716b>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:59:10+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "snelle woorden"@nl .
+
+<http://localhost:9000/api/labels/8c6fee49-67ab-4272-b839-94f18918d6be>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:56:00+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Steen"@nl .
+
+<http://localhost:9000/api/labels/6517c025-b7f8-4862-be7e-779b481932f1>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:07:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaartjes"@nl .
+
+<http://localhost:9000/api/labels/e3511e07-bbf9-4cd7-8319-4131d62ff13b>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:18:49+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Deep as water"@nl .
+
+<http://localhost:9000/api/labels/4c852319-88f3-4717-9c01-9efa7842c381>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "words"@nl .
+
+<http://localhost:9000/api/labels/7c40606b-62e7-4543-a4c7-59864a657a80>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:24:41+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaar"@nl .
+
+<http://localhost:9000/api/labels/d46d3183-358f-4ddc-a737-f7e9b561a2e1>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:03:08+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaartjes"@nl .
+
+<http://localhost:9000/api/labels/028976bd-aa5e-4368-94f2-a17a156a2594>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:03:08+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Rock"@nl .
+
+<http://localhost:9000/api/labels/672e169b-abad-4796-adef-ed73c5e48423>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:54:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Geluid"@nl .
+
+<http://localhost:9000/api/labels/66159c1f-4ebd-4db5-adad-f3de0e582023>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:06:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "hiphop"@nl .
+
+<http://localhost:9000/api/labels/be6b6f3d-250f-4d57-87f4-40423ec79a7a>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:53:08+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Trip hop"@nl .
+
+<http://localhost:9000/api/labels/f71aaacc-1248-42c4-beb1-9c1c1378d0a4>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:53:08+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "genre hybrid"@nl .
+
+<http://localhost:9000/api/labels/2ba91ba9-e534-435f-8cc3-6bcd9569df27>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:18:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "keys"@nl .
+
+<http://localhost:9000/api/labels/d72bac62-97b0-472e-ae13-5f90c660e2a5>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:44:02+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "hiphop"@nl .
+
+<http://localhost:9000/api/labels/32ca99f2-74c1-479e-9d64-30e031649244>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:44:02+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Hip hop"@nl .
+
+<http://localhost:9000/api/labels/dfd47598-fb52-4462-9d12-1fea9c757f49>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:00:03+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Bass Instrument"@nl .
+
+<http://localhost:9000/api/labels/902d9f32-cc87-485d-b372-9335b64a62dc>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:24:41+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Snaren"@nl .
+
+<http://localhost:9000/api/labels/b0722580-29a7-4e2f-a90f-ac9190c76208>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:54:51+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Enjoy"@nl .
+
+<http://localhost:9000/api/labels/b133ed39-2dbc-4026-9724-0c4cb67ab6d2>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T14:03:16+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Bass Music"@nl .
+
+<http://localhost:9000/api/labels/3148e269-edb8-4519-a1c6-3b0d6d7b468d>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:46:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "808"@nl .
+
+<http://localhost:9000/api/labels/aa59ba25-770c-414b-8744-875c5c9efedd>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:46:53+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Trap"@nl .
+
+<http://localhost:9000/api/labels/634a3a11-b7a1-4c46-ac9e-94e5f009b176>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:18:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Piano"@nl .
+
+<http://localhost:9000/api/labels/758ae757-ccca-4979-88af-5e0529c5599e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:59:10+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Rap"@nl .
+
+<http://localhost:9000/api/labels/a2fec827-7369-4f03-b820-c9373fcfff26>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:15:52+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Soulful"@nl .
+
+<http://localhost:9000/api/labels/706a0c84-b6f5-4498-9aa9-091589e5fc3e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:01:37+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "DnB"@nl .
+
+<http://localhost:9000/api/labels/54eb8ea5-b66e-41c7-89ad-4549ab24243e>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T10:18:49+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Liquid DnB"@nl .
+
+<http://localhost:9000/api/labels/5889c91e-3704-4035-9957-bfa12de68d69>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:13:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Gitaar"@nl .
+
+<http://localhost:9000/test/37>
+        a       <http://www.w3.org/2004/02/skos/core#Concept> ;
+        <http://openskos.org/xmlns#acceptedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#modifiedBy>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://openskos.org/xmlns#set>
+                <http://localhost:9000/test> ;
+        <http://openskos.org/xmlns#status>
+                "approved" ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://openskos.org/xmlns#toBeChecked>
+                "0" ;
+        <http://openskos.org/xmlns#uuid>
+                "09742961-b01a-408c-b4e9-7c3d1667d201" ;
+        <http://purl.org/dc/terms/creator>
+                <http://localhost:9000/api/users/9cfe2651-d65b-4a51-879b-a4e8c9b9d706> ;
+        <http://purl.org/dc/terms/dateAccepted>
+                "2019-11-18T13:54:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/dateSubmitted>
+                "2019-11-18T13:54:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-18T13:54:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://purl.org/dc/terms/publisher>
+                <http://tenant/3b99e79f-d4e5-4daf-bd31-71e82c0da4a8> ;
+        <http://www.w3.org/2004/02/skos/core#altLabel>
+                "Geluid"@nl ;
+        <http://www.w3.org/2004/02/skos/core#hiddenLabel>
+                "Enjoy"@nl ;
+        <http://www.w3.org/2004/02/skos/core#inScheme>
+                <http://localhost:9000/test/Genres> ;
+        <http://www.w3.org/2004/02/skos/core#notation>
+                "37" ;
+        <http://www.w3.org/2004/02/skos/core#prefLabel>
+                "Noise"@nl ;
+        <http://www.w3.org/2008/05/skos-xl#altLabel>
+                <http://localhost:9000/api/labels/672e169b-abad-4796-adef-ed73c5e48423> ;
+        <http://www.w3.org/2008/05/skos-xl#hiddenLabel>
+                <http://localhost:9000/api/labels/b0722580-29a7-4e2f-a90f-ac9190c76208> ;
+        <http://www.w3.org/2008/05/skos-xl#prefLabel>
+                <http://localhost:9000/api/labels/7d483ddc-d113-4ef5-bdca-37cc0979ebdd> .
+
+<http://localhost:9000/api/labels/58cb844e-38d3-4b7c-8355-aea9ae157069>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:07:50+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Rock"@nl .
+
+<http://localhost:9000/api/labels/76a291a8-742e-4216-8fce-a15445e6e598>
+        a       <http://www.w3.org/2008/05/skos-xl#Label> ;
+        <http://openskos.org/xmlns#tenant>
+                "pic" ;
+        <http://purl.org/dc/terms/modified>
+                "2019-11-14T11:13:05+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+        <http://www.w3.org/2008/05/skos-xl#literalForm>
+                "Snaren"@nl .
