@@ -1,0 +1,4 @@
+[ver:1,total:150]
+src/Rdf/AbstractRdfDocument.php:70,1576587600:70,r
+data/docker/fpm/Dockerfile:60,1576587600:60,m
+src/OpenSkos/RelationType/RelationType.php:20,1576587600:20,r
