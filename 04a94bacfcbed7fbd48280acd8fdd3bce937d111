@@ -1,0 +1,6 @@
+[ver:1,total:1560]
+.git/MERGE_MSG:900,1576512000:900,d
+src/Rdf/AbstractRdfDocument.php:390,1576573200:390,m
+data/docker/fpm/Dockerfile:210,1576584000:210,r
+docker-compose.yml:30,1576584000:30,r
+src/OpenSkos/Concept/Concept.php:30,1576573200:30,r
