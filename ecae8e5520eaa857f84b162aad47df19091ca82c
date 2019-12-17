@@ -1,0 +1,13 @@
+[ver:1,total:724]
+data/docker/fpm/Dockerfile:180,1576587600:180,r
+vendor/psr/container/src/ContainerInterface.php:155,1576594800:155,r
+src/Rdf/AbstractRdfDocument.php:123,1576591200:69,1576594800:54,r
+config/ontology/owl.yaml:87,1576591200:87,m
+src/OpenSkos/ConceptScheme/ConceptSchemeRepository.php:45,1576594800:45,r
+config/packages/concept_scheme.yaml:35,1576594800:35,r
+src/Ontology/Owl.php:32,1576591200:32,m
+src/Rdf/Iri.php:20,1576594800:20,r
+src/Ontology/Skos.php:15,1576591200:15,r
+config/packages/healthcheck.yaml:12,1576594800:12,r
+config/packages/relations.yaml:12,1576594800:12,r
+src/Rest/ListResponse.php:8,1576587600:8,r
