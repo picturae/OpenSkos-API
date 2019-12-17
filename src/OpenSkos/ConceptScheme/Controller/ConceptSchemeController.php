@@ -102,8 +102,8 @@ final class ConceptSchemeController
      * )
      * @Error(code="conceptscheme-create-already-exists",
      *        status=409,
-     *        description="A ConceptScheme with the given iri already exists",
-     *        fields={"iri"}
+     *        description="A ConceptScheme with the given iri or uuid already exists",
+     *        fields={"iri", "uuid"}
      * )
      * @Error(code="conceptscheme-create-tenant-does-not-exist",
      *        status=400,
@@ -137,7 +137,8 @@ final class ConceptSchemeController
         foreach ($conceptSchemes as $conceptScheme) {
             if ($conceptScheme->exists()) {
                 throw new ApiException('conceptscheme-create-already-exists', [
-                    'iri' => $conceptScheme->iri()->getUri(),
+                    'iri'  => $conceptScheme->iri()->getUri(),
+                    'uuid' => $conceptScheme->getValue(OpenSkos::UUID),
                 ]);
             }
         }

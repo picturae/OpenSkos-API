@@ -1315,9 +1315,10 @@
     "conceptscheme-create-already-exists" : {
         "code": "conceptscheme-create-already-exists",
         "fields": [
-            "iri"
+            "iri",
+            "uuid"
         ],
-        "description": "A ConceptScheme with the given iri already exists",
+        "description": "A ConceptScheme with the given iri or uuid already exists",
         "status": 409,
         "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
         "method": "postConceptScheme"
