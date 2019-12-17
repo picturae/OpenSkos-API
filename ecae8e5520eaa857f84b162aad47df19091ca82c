@@ -11,3 +11,8 @@ src/Ontology/Skos.php:15,1576591200:15,r
 config/packages/healthcheck.yaml:12,1576594800:12,r
 config/packages/relations.yaml:12,1576594800:12,r
 src/Rest/ListResponse.php:8,1576587600:8,r
+
+[ver:1,total:150]
+src/Rdf/AbstractRdfDocument.php:70,1576587600:70,r
+data/docker/fpm/Dockerfile:60,1576587600:60,m
+src/OpenSkos/RelationType/RelationType.php:20,1576587600:20,r
