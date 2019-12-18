@@ -1335,6 +1335,54 @@
         "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
         "method": "putRelation"
     },
+    "semantic-relation-delete-subject-not-found" : {
+        "code": "semantic-relation-delete-subject-not-found",
+        "fields": [
+            "subject"
+        ],
+        "description": "The subject to delete a relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-object-not-found" : {
+        "code": "semantic-relation-delete-object-not-found",
+        "fields": [
+            "object"
+        ],
+        "description": "The object to delete a relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-missing-param-subject" : {
+        "code": "semantic-relation-delete-missing-param-subject",
+        "description": "Missing the 'subject' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-missing-param-predicate" : {
+        "code": "semantic-relation-delete-missing-param-predicate",
+        "description": "Missing the 'predicate' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-missing-param-object" : {
+        "code": "semantic-relation-delete-missing-param-object",
+        "description": "Missing the 'object' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-corrupt-param-predicate" : {
+        "code": "semantic-relation-delete-corrupt-param-predicate",
+        "description": "The given predicate is not valid or not allowed",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
     "conceptscheme-getone-not-found" : {
         "code": "conceptscheme-getone-not-found",
         "fields": [
