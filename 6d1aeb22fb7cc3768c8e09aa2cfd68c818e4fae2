@@ -1,0 +1,11 @@
+[ver:1,total:7941]
+src/OpenSkos/Concept/Concept.php:3272,1576587600:370,1576591200:1796,1576594800:336,1576656000:40,1576659600:730,m
+src/OpenSkos/Concept/Controller/ConceptController.php:1550,1576587600:595,1576591200:264,1576594800:366,1576598400:90,1576656000:35,1576659600:200,m
+src/Repository/AbstractRepository.php:1382,1576591200:15,1576594800:907,1576656000:240,1576659600:220,m
+src/OpenSkos/RelationType/RelationType.php:851,1576587600:17,1576591200:782,1576594800:52,m
+src/OpenSkos/ApiFilter.php:600,1576598400:600,r
+config/packages/concepts.yaml:172,1576594800:142,1576659600:30,m
+src/Repository/AbstractSolrRepository.php:45,1576594800:25,1576659600:20,r
+config/ontology/owl.yaml:30,1576656000:30,r
+config/packages/users.yaml:24,1576594800:24,m
+src/Ontology/Owl.php:15,1576656000:15,r
