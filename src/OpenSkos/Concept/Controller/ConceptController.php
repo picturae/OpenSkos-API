@@ -130,6 +130,7 @@ final class ConceptController
         $apiFilter->addFilter('openskos:modifiedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy'));
         $apiFilter->addFilter('openskos:acceptedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:acceptedBy'));
         $apiFilter->addFilter('openskos:deletedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy'));
+
         $full_filter = $apiFilter->buildFilters('solr');
 
         /*

@@ -13,6 +13,7 @@ use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
 use App\Ontology\SkosXl;
+use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\RelationType\RelationType;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
@@ -381,6 +382,127 @@ final class Concept extends AbstractRdfDocument
                 $triple->setSubject($this->iri());
             }
         })();
+    }
+
+    /**
+     * @Error(code="concept-related-concept-not-found",
+     *        status=404,
+     *        description="The referenced concept for the relation could not be found",
+     *        fields={"iri", "relation"}
+     * )
+     * @Error(code="concept-related-concept-scheme-not-found",
+     *        status=404,
+     *        description="The referenced concept scheme for the relation could not be found",
+     *        fields={"iri", "relation"}
+     * )
+     * @Error(code="concept-missing-concept-scheme",
+     *        status=400,
+     *        description="No concept scheme is registered for concept"
+     * )
+     * @Error(code="concept-semantic-relation-concept-scheme-mismatch",
+     *        status=400,
+     *        description="Semantic relations are not possible between concepts with mismatchiing schemes",
+     *        fields={"ours", "referenced"}
+     * )
+     */
+    public function errors(string $errorPrefix = null): array
+    {
+        // Generic rules first
+        $errors = parent::errors($errorPrefix);
+        if (is_null($this->repository)) {
+            return $errors;
+        }
+
+        // Fetch fields to check
+        $relationFields = RelationType::vocabularyFields();
+        $conceptSchemes = $this->getProperty(Skos::IN_SCHEME) ?? [];
+        if (!count($conceptSchemes)) {
+            array_push($errors, [
+                'code' => 'concept-missing-concept-scheme',
+            ]);
+
+            return $errors;
+        }
+
+        foreach ($relationFields as $relationField) {
+            $relations = $this->getProperty($relationField) ?? [];
+            if (!count($relations)) {
+                continue;
+            }
+
+            switch ($relationField) {
+                case OpenSkos::IN_COLLECTION:
+                case OpenSkos::IN_SET:
+                case Skos::TOP_CONCEPT_OF:
+                    // TODO: CHECK IF ?? EXISTS
+                    break;
+
+                case Skos::IN_SCHEME:
+
+                    // Fetch the concept scheme repository
+                    $conceptSchemeRepository = ConceptSchemeRepository::instance();
+                    if (is_null($conceptSchemeRepository)) {
+                        continue;
+                    }
+
+                    // Check if all concept schemes actually exist
+                    foreach ($relations as $relation) {
+                        $relatedConceptScheme = $conceptSchemeRepository->findByIri($relation);
+
+                        // The related concept must be found
+                        if (is_null($relatedConceptScheme)) {
+                            array_push($errors, [
+                                'code'     => 'concept-related-concept-scheme-not-found',
+                                'iri'      => $relation->getUri(),
+                                'relation' => $relationField,
+                            ]);
+                            continue;
+                        }
+                    }
+
+                    break;
+                default:
+                    $schemeMatch = 'match' !== substr(strtolower($relationField), -5);
+
+                    foreach ($relations as $relation) {
+                        $relatedConcept = $this->repository->findByIri($relation);
+
+                        // The related concept must be found
+                        if (is_null($relatedConcept)) {
+                            array_push($errors, [
+                                'code'     => 'concept-related-concept-not-found',
+                                'iri'      => $relation->getUri(),
+                                'relation' => $relationField,
+                            ]);
+                            continue;
+                        }
+
+                        // Concept Schemes may have to match
+                        if ($schemeMatch) {
+                            $found        = false;
+                            $foundSchemes = $relatedConcept->getProperty(Skos::IN_SCHEME) ?? [];
+                            foreach ($foundSchemes as $foundScheme) {
+                                foreach ($conceptSchemes as $scheme) {
+                                    if ($scheme->getUri() == $foundScheme->getUri()) {
+                                        $found = true;
+                                        break 2;
+                                    }
+                                }
+                            }
+                            if (!$found) {
+                                array_push($errors, [
+                                    'code'       => 'concept-semantic-relation-concept-scheme-mismatch',
+                                    'ours'       => explode("\n", implode("\n", $conceptSchemes)),
+                                    'referenced' => explode("\n", implode("\n", $foundSchemes)),
+                                ]);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+        return $errors;
     }
 
     public function isOrphan(): bool

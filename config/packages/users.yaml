@@ -10,11 +10,11 @@ services:
 
   # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
   # To cover all our needs
-  set.iri_factory:
+  user.iri_factory:
     class: App\OpenSkos\OpenSkosIriFactory
     arguments:
       $namespace: 'http://user'
 
   App\OpenSkos\User\UserRepository:
     arguments:
-      $iriFactory: '@set.iri_factory'
+      $iriFactory: '@user.iri_factory'

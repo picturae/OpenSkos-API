@@ -17,4 +17,15 @@ services:
 
   App\OpenSkos\Concept\ConceptRepository:
     arguments:
-      $iriFactory: '@set.iri_factory'
+      $iriFactory: '@concept.iri_factory'
+
+  # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
+  # To cover all our needs
+  concept_scheme.iri_factory:
+    class: App\OpenSkos\OpenSkosIriFactory
+    arguments:
+      $namespace: 'http://tenant'
+
+  App\OpenSkos\ConceptScheme\ConceptSchemeRepository:
+    arguments:
+      $iriFactory: '@concept_scheme.iri_factory'
