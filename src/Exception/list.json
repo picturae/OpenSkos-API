@@ -883,6 +883,46 @@
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "deleteConcept"
     },
+    "concept-related-concept-not-found" : {
+        "code": "concept-related-concept-not-found",
+        "fields": [
+            "iri",
+            "relation"
+        ],
+        "description": "The referenced concept for the relation could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "concept-related-concept-scheme-not-found" : {
+        "code": "concept-related-concept-scheme-not-found",
+        "fields": [
+            "iri",
+            "relation"
+        ],
+        "description": "The referenced concept scheme for the relation could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "concept-missing-concept-scheme" : {
+        "code": "concept-missing-concept-scheme",
+        "description": "No concept scheme is registered for concept",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "concept-semantic-relation-concept-scheme-mismatch" : {
+        "code": "concept-semantic-relation-concept-scheme-mismatch",
+        "fields": [
+            "ours",
+            "referenced"
+        ],
+        "description": "Semantic relations are not possible between concepts with mismatchiing schemes",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
     "apirequest-invalid-level" : {
         "code": "apirequest-invalid-level",
         "fields": [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Concept;
 
 use App\Annotation\Document;
+use App\Annotation\Error;
 use App\Database\Doctrine;
 use App\Ontology\Context;
 use App\Ontology\Dc;
