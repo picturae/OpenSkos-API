@@ -259,9 +259,9 @@ final class ApiFilter
                     }
 
                     // Register the filters
-                    $filterValue                = $jenaFilter['value'];
+                    $filterValue                = trim($jenaFilter['value']);
                     $filterName                 = lcfirst(str_replace(' ', '', ucwords(str_replace(':', ' ', $predicate.':filter'))));
-                    $solrFilters[$filterName][] = "${filterField}:\"${filterValue}\"";
+                    $solrFilters[$filterName][] = "${filterField}:".(strpos($filterValue, ' ') ? "\"${filterValue}\"" : $filterValue);
                 }
 
                 // OR all lists together
