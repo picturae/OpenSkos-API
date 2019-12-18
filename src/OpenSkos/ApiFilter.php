@@ -251,6 +251,7 @@ final class ApiFilter
                             $filterField = 'd_'.$shortfield;
                             break;
                         case 'csv':
+                        case 'xsd:string':
                             $filterField = 's_'.$shortfield;
                             break;
                         default:
