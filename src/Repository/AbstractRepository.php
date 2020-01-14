@@ -63,6 +63,23 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $annotations = [];
 
     /**
+     * @var array
+     */
+    private static $instances = [];
+
+    public static function instance(): ?AbstractRepository
+    {
+        /* static $cache = []; */
+        $class = get_called_class();
+
+        if (!isset(self::$instances[$class])) {
+            return null;
+        }
+
+        return self::$instances[$class];
+    }
+
+    /**
      * AbstractRepository constructor.
      */
     public function __construct(
@@ -73,6 +90,8 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->rdfClient  = $rdfClient;
         $this->connection = $connection;
         $repository       = $this;
+
+        self::$instances[get_called_class()] = $this;
 
         /*
          * Fallback factory

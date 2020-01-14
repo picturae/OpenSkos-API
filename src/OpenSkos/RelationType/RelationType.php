@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\RelationType;
 
+use App\Ontology\Context;
 use App\Ontology\Dc;
 use App\Ontology\OpenSkos;
 use App\Ontology\Owl;
@@ -15,16 +16,41 @@ final class RelationType
 {
     public static function vocabularyFields(): array
     {
-        return array_keys(static::vocabulary()->resources());
+        return array_filter(
+            array_keys(static::vocabulary()->resources()),
+            function ($predicate) {
+                if (!Context::decodeUri($predicate)) {
+                    return false;
+                }
+
+                return !in_array($predicate, [
+                    Owl::OBJECT_PROPERTY,
+                    Owl::ONTOLOGY,
+                    Owl::SYMMETRIC_PROPERTY,
+                    Owl::TRANSITIVE_PROPERTY,
+                    Rdf::PROPERTY,
+                    Skos::CONCEPT,
+                    Skos::CONCEPT_SCHEME,
+                    Skos::MAPPING_RELATION,
+                    Skos::SEMANTIC_RELATION,
+                ], true);
+
+                return true;
+            }
+        );
     }
 
     public static function semanticFields(): array
     {
         return array_filter(static::vocabularyFields(), function ($predicate) {
             return !in_array($predicate, [
+                Skos::HAS_TOP_CONCEPT,
                 Skos::IN_SCHEME,
+                Skos::TOP_CONCEPT_OF,
                 OpenSkos::IN_COLLECTION,
                 OpenSkos::IN_SET,
+                OpenSkos::IS_REPLACED_BY,
+                OpenSkos::REPLACES,
             ], true);
         });
     }
