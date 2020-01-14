@@ -642,6 +642,11 @@ abstract class AbstractRdfDocument implements RdfResource
             $this->addProperty($triple->getPredicate(), $triple->getObject());
         }
 
+        // Last validate before deleting data
+        if ($errors = $this->errors()) {
+            return $errors;
+        }
+
         // Delete everything
         $deleteErrors = $this->delete();
         if ($deleteErrors) {
