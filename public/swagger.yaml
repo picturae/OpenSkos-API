@@ -335,8 +335,98 @@ paths:
                     "type": "array"
                     "items":
                       "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                        "@type":
+                          "type": "string"
+                          "example": "skos:Concept"
+                        "openskos:uuid":
+                          "type": "string"
+                        "skos:notation":
+                          "type": "string"
+                        "openskos:status":
+                          "type": "string"
+                        "openskos:tenant":
+                          "type": "string"
+                        "dcterms:title":
+                          "type": "string"
+                        "skos:prefLabel":
+                          "type": "string"
+                        "skos:altLabel":
+                          "type": "string"
+                        "skos:hiddenLabel":
+                          "type": "string"
+                        "skosxl:prefLabel":
+                          "type": "string"
+                        "skosxl:altLabel":
+                          "type": "string"
+                        "skosxl:hiddenLabel":
+                          "type": "string"
     put:
-      "summary": ""
+      "summary": "Update an existing relation"
+    delete:
+      "summary": "Delete one or more relations"
+      "parameters":
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+        - "type": "string"
+          "name": "object"
+          "in": "query"
+        - "type": "string"
+          "name": "predicate"
+          "in": "query"
+        - "type": "string"
+          "name": "subject"
+          "in": "query"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                        "@type":
+                          "type": "string"
+                          "example": "skos:Concept"
+                        "openskos:uuid":
+                          "type": "string"
+                        "skos:notation":
+                          "type": "string"
+                        "openskos:status":
+                          "type": "string"
+                        "openskos:tenant":
+                          "type": "string"
+                        "dcterms:title":
+                          "type": "string"
+                        "skos:prefLabel":
+                          "type": "string"
+                        "skos:altLabel":
+                          "type": "string"
+                        "skos:hiddenLabel":
+                          "type": "string"
+                        "skosxl:prefLabel":
+                          "type": "string"
+                        "skosxl:altLabel":
+                          "type": "string"
+                        "skosxl:hiddenLabel":
+                          "type": "string"
   /conceptschemes.{format}:
     get:
       "summary": ""

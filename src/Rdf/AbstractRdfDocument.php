@@ -593,6 +593,8 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
+     * @param array $options
+     *
      * @Error(code="rdf-document-update-missing-repository",
      *        status=500,
      *        description="No repository is known to the document requested to be updated"
@@ -603,8 +605,12 @@ abstract class AbstractRdfDocument implements RdfResource
      *        fields={"iri"}
      * )
      */
-    public function update(): ?array
+    public function update($options = []): ?array
     {
+        if (!isset($options['prepopulated'])) {
+            $options['prepopulated'] = false;
+        }
+
         // No repository = can't check
         if (is_null($this->repository)) {
             return [[
@@ -624,22 +630,25 @@ abstract class AbstractRdfDocument implements RdfResource
             ]];
         }
 
-        // Copy updatable fields into found
-        foreach (static::$updateFields as $field) {
-            $found->getResource()->removeTriple($field);
-            $newProperties = $this->getProperty($field) ?? [];
-            $iri           = new Iri($field);
-            foreach ($newProperties as $value) {
-                $found->addProperty($iri, $value);
+        // Only use the found data if not populated already
+        if (!$options['prepopulated']) {
+            // Copy updatable fields into found
+            foreach (static::$updateFields as $field) {
+                $found->getResource()->removeTriple($field);
+                $newProperties = $this->getProperty($field) ?? [];
+                $iri           = new Iri($field);
+                foreach ($newProperties as $value) {
+                    $found->addProperty($iri, $value);
+                }
             }
-        }
 
-        // Copy resulting data into $this
-        foreach ($this->triples() as $triple) {
-            $this->resource->removeTriple($triple->getPredicate()->getUri());
-        }
-        foreach ($found->triples() as $triple) {
-            $this->addProperty($triple->getPredicate(), $triple->getObject());
+            // Copy resulting data into $this
+            foreach ($this->triples() as $triple) {
+                $this->resource->removeTriple($triple->getPredicate()->getUri());
+            }
+            foreach ($found->triples() as $triple) {
+                $this->addProperty($triple->getPredicate(), $triple->getObject());
+            }
         }
 
         // Last validate before deleting data

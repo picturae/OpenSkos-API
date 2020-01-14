@@ -9,22 +9,26 @@ use App\Annotation\OA;
 use App\EasyRdf\TripleFactory;
 use App\Exception\ApiException;
 use App\Ontology\Context;
+use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\SkosXl;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Relation\JenaRepository;
 use App\OpenSkos\RelationType\RelationType;
 use App\OpenSkos\SkosResourceRepository;
 use App\Rdf\Iri;
+use App\Rdf\Literal\DatetimeLiteral;
 use App\Rdf\Literal\Literal;
 use App\Rdf\RdfTerm;
 use App\Rdf\Triple;
 use App\Rest\DirectGraphResponse;
 use App\Rest\ListResponse;
+use App\Rest\ScalarResponse;
 use EasyRdf_Graph as Graph;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -229,7 +233,7 @@ final class RelationController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
      *   }),
      * )
@@ -376,6 +380,8 @@ final class RelationController
      *
      * @throws ApiException
      *
+     * @OA\Summary("Update an existing relation")
+     *
      * @Error(code="relation-update-bad-request",
      *        status=400,
      *        description="Updating a relation is not allowed/possible"
@@ -389,5 +395,145 @@ final class RelationController
         $auth->requireAdministrator();
 
         throw new ApiException('relation-update-bad-request');
+    }
+
+    /**
+     * @Route(path="/relations.{format?}", methods={"DELETE"})
+     *
+     * @OA\Summary("Delete one or more relations")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="object",
+     *     in="query",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="predicate",
+     *     in="query",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="subject",
+     *     in="query",
+     *   ),
+     * })
+     *
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\JsonRdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @Error(code="semantic-relation-delete-subject-not-found",
+     *        status=404,
+     *        description="The subject to delete a relation for could not be found",
+     *        fields={"subject"}
+     * )
+     * @Error(code="semantic-relation-delete-object-not-found",
+     *        status=404,
+     *        description="The object to delete a relation for could not be found",
+     *        fields={"object"}
+     * )
+     * @Error(code="semantic-relation-delete-missing-param-subject",
+     *        status=400,
+     *        description="Missing the 'subject' parameter"
+     * )
+     * @Error(code="semantic-relation-delete-missing-param-predicate",
+     *        status=400,
+     *        description="Missing the 'predicate' parameter"
+     * )
+     * @Error(code="semantic-relation-delete-missing-param-object",
+     *        status=400,
+     *        description="Missing the 'object' parameter"
+     * )
+     * @Error(code="semantic-relation-delete-corrupt-param-predicate",
+     *        status=400,
+     *        description="The given predicate is not valid or not allowed"
+     * )
+     *
+     * @throws ApiException
+     */
+    public function deleteRelation(
+        ApiRequest $apiRequest,
+        ConceptRepository $conceptRepository,
+        string $finalArg = null
+    ): ScalarResponse {
+        // Client permissions
+        $auth = $apiRequest->getAuthentication();
+        $auth->requireAdministrator();
+        $user = $auth->getUser();
+
+        // Fetch params
+        $objectIri  = $apiRequest->getParameter('object');
+        $predicate  = $apiRequest->getParameter('predicate');
+        $subjectIri = $apiRequest->getParameter('subject');
+        if (is_null($subjectIri)) {
+            throw new ApiException('semantic-relation-delete-missing-param-subject');
+        }
+        if (is_null($predicate)) {
+            throw new ApiException('semantic-relation-delete-missing-param-predicate');
+        }
+        if (is_null($objectIri)) {
+            throw new ApiException('semantic-relation-delete-missing-param-object');
+        }
+
+        // Resolve predicate
+        $allowedPredicates = RelationType::semanticFields();
+        $predicate         = Context::fullUri($predicate);
+        if (is_null($predicate) || !in_array($predicate, $allowedPredicates, true)) {
+            throw new ApiException('semantic-relation-delete-corrupt-param-predicate');
+        }
+
+        // Resolve concepts
+        $object  = $conceptRepository->findByIri(new Iri($objectIri));
+        $subject = $conceptRepository->findByIri(new Iri($subjectIri));
+        if (is_null($object)) {
+            throw new ApiException('semantic-relation-delete-object-not-found', [
+                'object' => $objectIri,
+            ]);
+        }
+        if (is_null($subject)) {
+            throw new ApiException('semantic-relation-delete-subject-not-found', [
+                'subject' => $subjectIri,
+            ]);
+        }
+
+        /* // Fetch relevant relations */
+        $relations = array_filter($subject->getProperty($predicate) ?? [], function (Iri $relation) use ($objectIri) {
+            return $relation->getUri() == $objectIri;
+        });
+
+        // Remove all relevenat relations
+        foreach ($relations as $relation) {
+            $subject->getResource()->removeTriple($predicate, $relation);
+        }
+
+        // Mark as updated
+        $subject->setValue(new Iri(DcTerms::MODIFIED), new DatetimeLiteral(new \Datetime()));
+        if (!is_null($user)) {
+            $subject->setValue(new Iri(OpenSkos::MODIFIED_BY), $user->iri());
+        }
+
+        // Save the updates
+        $conceptRepository->deleteIndex($subject->iri());
+        $errors = $subject->update();
+        if (is_array($errors)) {
+            throw new ApiException($errors[0]);
+        }
+
+        // Return what's left
+        return new ScalarResponse(
+            $subject,
+            $apiRequest->getFormat()
+        );
     }
 }
