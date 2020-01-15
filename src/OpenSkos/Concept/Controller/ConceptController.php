@@ -293,6 +293,18 @@ final class ConceptController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @Error(code="concept-getone-not-found",
      *        status=404,
@@ -350,6 +362,12 @@ final class ConceptController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -421,6 +439,12 @@ final class ConceptController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @throws Exception
      */
@@ -476,6 +500,24 @@ final class ConceptController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="409",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -646,6 +688,18 @@ final class ConceptController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @Error(code="concept-update-empty-or-corrupt-body",
      *        status=400,
@@ -789,6 +843,24 @@ final class ConceptController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *

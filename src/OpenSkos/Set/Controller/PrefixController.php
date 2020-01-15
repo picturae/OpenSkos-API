@@ -52,6 +52,12 @@ final class PrefixController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @Error(code="setprefixcontroller-sets-filter-not-applicable",
      *        status=400,

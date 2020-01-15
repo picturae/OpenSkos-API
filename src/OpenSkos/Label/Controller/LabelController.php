@@ -102,6 +102,12 @@ final class LabelController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @Error(code="labelcontroller-getone-not-found",
      *        status=404,
@@ -151,6 +157,18 @@ final class LabelController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=Label::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *

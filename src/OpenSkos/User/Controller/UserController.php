@@ -64,12 +64,8 @@ final class UserController
      * )
      * @OA\Response(
      *   code="403",
-     *   content=@OA\Content\Rdf(properties={
-     *     @OA\Schema\ObjectLiteral(name="@context"),
-     *     @OA\Schema\ArrayLiteral(
-     *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=Error::class),
-     *     ),
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -151,6 +147,18 @@ final class UserController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=User::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *

@@ -640,6 +640,44 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     delete:
       "summary": "Delete a single concept using it's identifier"
       "parameters":
@@ -827,6 +865,63 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /concept.{format}:
     get:
       "summary": "Retreive a concept by foreign URI"
@@ -1015,6 +1110,25 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /concepts.{format}:
     get:
       "summary": "Retreive all (filtered) concepts"
@@ -1199,6 +1313,25 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     post:
       "summary": "Create one or more new concepts"
       "parameters":
@@ -1434,6 +1567,63 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'409'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     put:
       "summary": "Update one or more concepts (FULL rewrite)"
       "parameters":
@@ -1669,6 +1859,44 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /autocomplete.{format}:
     get:
       "summary": "Loose label search on concepts"
@@ -2049,6 +2277,25 @@ paths:
                           "type": "string"
                           "name": "skosxl:literalForm"
                     "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /label.{format}:
     get:
       "summary": "Retreive a label by foreign URI"
@@ -2147,6 +2394,44 @@ paths:
                           "type": "string"
                           "name": "skosxl:literalForm"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /users.{format}:
     get:
       "summary": "Fetch a list of all (filtered) users"
@@ -2288,75 +2573,23 @@ paths:
                     "name": "@graph"
         "'403'":
           "content":
-            "application/rdf+json":
+            "application/json":
               "schema":
                 "type": "object"
                 "properties":
-                  "@context":
+                  "":
                     "type": "object"
-                    "name": "@context"
-                  "@graph":
-                    "type": "array"
-                    "items":
-                      "type": "object"
-                      "properties":
-                        "status":
-                          "type": "integer"
-                          "format": "int16"
-                          "name": "status"
-                        "code":
-                          "type": "string"
-                          "name": "code"
-                        "description":
-                          "type": "string"
-                          "name": "description"
-                    "name": "@graph"
-            "application/n-triples":
-              "schema":
-                "type": "object"
-                "properties":
-                  "@context":
-                    "type": "object"
-                    "name": "@context"
-                  "@graph":
-                    "type": "array"
-                    "items":
-                      "type": "object"
-                      "properties":
-                        "status":
-                          "type": "integer"
-                          "format": "int16"
-                          "name": "status"
-                        "code":
-                          "type": "string"
-                          "name": "code"
-                        "description":
-                          "type": "string"
-                          "name": "description"
-                    "name": "@graph"
-            "text/turtle":
-              "schema":
-                "type": "object"
-                "properties":
-                  "@context":
-                    "type": "object"
-                    "name": "@context"
-                  "@graph":
-                    "type": "array"
-                    "items":
-                      "type": "object"
-                      "properties":
-                        "status":
-                          "type": "integer"
-                          "format": "int16"
-                          "name": "status"
-                        "code":
-                          "type": "string"
-                          "name": "code"
-                        "description":
-                          "type": "string"
-                          "name": "description"
-                    "name": "@graph"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /user/{id}.{format}:
     get:
       "summary": "Fetch a single user using it's identifier"
@@ -2500,6 +2733,44 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /statuses.{format}:
     get:
       "summary": "Retreive all available statuses"
@@ -2697,6 +2968,25 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     post:
       "summary": "Create one or more new institutions"
       "parameters":
@@ -2860,6 +3150,63 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'409'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     put:
       "summary": "Update one or more institutions (FULL rewrite)"
       "parameters":
@@ -3023,6 +3370,44 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /institution/{id}.{format}:
     get:
       "summary": "Retreive an institution using it's identifier"
@@ -3157,6 +3542,25 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     delete:
       "summary": "Delete a single institution using it's identifier"
       "parameters":
@@ -3290,6 +3694,25 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /prefixes.{format}:
     get:
       "summary": "Retreive all available prefixes"
@@ -3357,6 +3780,25 @@ paths:
                           "name": "openskos:prefix"
                           "description": "The available prefix url"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /sets.{format}:
     get:
       "summary": "Retreive all (filtered) sets"
@@ -3514,6 +3956,25 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     post:
       "summary": "Create one or more new sets"
       "parameters":
@@ -3713,6 +4174,63 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'409'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     put:
       "summary": "Update one or more sets (FULL rewrite)"
       "parameters":
@@ -3912,6 +4430,44 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /set/{id}.{format}:
     get:
       "summary": "Retreive a set using it's identifier"
@@ -4073,6 +4629,25 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     delete:
       "summary": "Delete a single set using it's identifier"
       "parameters":
@@ -4233,6 +4808,63 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /relations.{format}:
     get:
       "summary": "Retreive all (filtered) relations for a subject or object"
@@ -4425,6 +5057,44 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     post:
       "summary": "Create one or more semantic relations"
       "parameters":
@@ -4614,6 +5284,63 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     put:
       "summary": "Update an existing relation"
       "parameters":
@@ -4629,15 +5356,23 @@ paths:
       "responses":
         "'400'":
           "content":
-            "application/rdf+json":
+            "application/json":
               "schema":
                 "type": "object"
-            "application/n-triples":
-              "schema":
-                "type": "object"
-            "text/turtle":
-              "schema":
-                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     delete:
       "summary": "Delete one or more relations"
       "parameters":
@@ -4830,6 +5565,63 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /conceptschemes.{format}:
     get:
       "summary": "Retreive all (filtered) concept schemes"
@@ -5102,6 +5894,44 @@ paths:
                           "type": "string"
                           "name": "openskos:status"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'409'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     put:
       "summary": "Update one or more concept schemes (FULL rewrite)"
       "parameters":
@@ -5253,6 +6083,44 @@ paths:
                           "type": "string"
                           "name": "openskos:status"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /conceptscheme/{id}.{format}:
     get:
       "summary": "Retreive a concept scheme using it's identifier"
@@ -5378,6 +6246,25 @@ paths:
                           "type": "string"
                           "name": "openskos:status"
                     "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
     delete:
       "summary": "Delete a single concept scheme using it's identifier"
       "parameters":
@@ -5502,6 +6389,44 @@ paths:
                           "type": "string"
                           "name": "openskos:status"
                     "name": "@graph"
+        "'403'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "":
+                    "type": "object"
+                    "properties":
+                      "status":
+                        "type": "integer"
+                        "format": "int16"
+                        "name": "status"
+                      "code":
+                        "type": "string"
+                        "name": "code"
+                      "description":
+                        "type": "string"
+                        "name": "description"
   /ping:
     get:
       "summary": "Healthcheck end basic information"

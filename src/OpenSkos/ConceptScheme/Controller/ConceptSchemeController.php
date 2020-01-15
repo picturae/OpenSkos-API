@@ -110,6 +110,12 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -164,6 +170,18 @@ final class ConceptSchemeController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="409",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -295,6 +313,18 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @throws ApiException
      */
@@ -345,6 +375,18 @@ final class ConceptSchemeController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *

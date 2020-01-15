@@ -143,6 +143,18 @@ final class RelationController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -264,6 +276,24 @@ final class RelationController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -418,7 +448,9 @@ final class RelationController
      * })
      * @OA\Response(
      *   code="400",
-     *   content=@OA\Content\Rdf(),
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
      * )
      *
      * @throws ApiException
@@ -472,6 +504,24 @@ final class RelationController
      *       name="@graph",
      *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
+     *   }),
+     * )
+     * @OA\Response(
+     *   code="404",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
