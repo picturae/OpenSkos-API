@@ -2286,6 +2286,77 @@ paths:
                           "type": "string"
                           "name": "openskos:uuid"
                     "name": "@graph"
+        "'403'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "status":
+                          "type": "integer"
+                          "format": "int16"
+                          "name": "status"
+                        "code":
+                          "type": "string"
+                          "name": "code"
+                        "description":
+                          "type": "string"
+                          "name": "description"
+                    "name": "@graph"
+            "application/n-triples":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "status":
+                          "type": "integer"
+                          "format": "int16"
+                          "name": "status"
+                        "code":
+                          "type": "string"
+                          "name": "code"
+                        "description":
+                          "type": "string"
+                          "name": "description"
+                    "name": "@graph"
+            "text/turtle":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "status":
+                          "type": "integer"
+                          "format": "int16"
+                          "name": "status"
+                        "code":
+                          "type": "string"
+                          "name": "code"
+                        "description":
+                          "type": "string"
+                          "name": "description"
+                    "name": "@graph"
   /user/{id}.{format}:
     get:
       "summary": "Fetch a single user using it's identifier"

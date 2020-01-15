@@ -62,6 +62,16 @@ final class UserController
      *     ),
      *   }),
      * )
+     * @OA\Response(
+     *   code="403",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Error::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *

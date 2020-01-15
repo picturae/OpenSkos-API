@@ -2,6 +2,7 @@
 
 namespace App\Annotation\OA\Schema;
 
+use App\Annotation\Error;
 use App\Ontology\Context;
 use App\Rdf\AbstractRdfDocument;
 
@@ -64,6 +65,22 @@ class ObjectLiteral extends Literal
                             break;
                     }
                 }
+            } elseif (is_a($this->class, Error::class, true)) {
+                $statusLiteral         = new IntegerLiteral();
+                $statusLiteral->name   = 'status';
+                $statusLiteral->format = 'int16';
+
+                $codeLiteral       = new StringLiteral();
+                $codeLiteral->name = 'code';
+
+                $descriptionLiteral       = new StringLiteral();
+                $descriptionLiteral->name = 'description';
+
+                $this->properties = [
+                    $statusLiteral,
+                    $codeLiteral,
+                    $descriptionLiteral,
+                ];
             } else {
                 $reflectionClass      = new \ReflectionClass($this->class);
                 $reflectionProperties = $reflectionClass->getProperties();
