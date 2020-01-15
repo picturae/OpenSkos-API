@@ -1,0 +1,14 @@
+[ver:1,total:1140]
+src/OpenSkos/User/Controller/UserController.php:480,1579100400:480,m
+src/Annotation/OA/Schema/ObjectLiteral.php:393,1579100400:393,m
+public/swagger.yaml:77,1579100400:77,m
+src/Annotation/Error.php:48,1579100400:48,r
+src/Rdf/Literal/IntegerLiteral.php:30,1579100400:30,r
+src/OpenSkos/Concept/Controller/ConceptController.php:20,1579100400:20,r
+src/Annotation/OA/Schema/IntegerLiteral.php:20,1579100400:20,r
+src/Documentation/Swagger/Command/GenerateSwaggerCommand.php:19,1579100400:19,r
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:13,1579100400:13,r
+src/Annotation/OA/Schema/Literal.php:13,1579100400:13,r
+src/Annotation/AbstractAnnotation.php:12,1579100400:12,r
+src/Rdf/Literal/Literal.php:9,1579100400:9,r
+src/OpenSkos/Set/Controller/SetController.php:6,1579100400:6,r
