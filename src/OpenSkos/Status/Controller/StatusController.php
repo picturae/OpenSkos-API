@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Status\Controller;
 
+use App\Annotation\OA;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\ApiRequest;
@@ -29,8 +30,30 @@ final class StatusController
 
     /**
      * @Route(path="/statuses.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive all available statuses")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="rdf:value", description="One of the allowed values for this openskos:status field"),
+     *       }),
+     *     ),
+     *   }),
+     * )
      */
-    public function status(
+    public function getAllStatuses(
         ApiRequest $apiRequest
     ): DirectGraphResponse {
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);

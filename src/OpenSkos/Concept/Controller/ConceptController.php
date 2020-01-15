@@ -269,6 +269,31 @@ final class ConceptController
     /**
      * @Route(path="/concept/{id}.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive a concept using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @Error(code="concept-getone-not-found",
      *        status=404,
      *        description="The requested concept could not be retreived",
@@ -301,6 +326,32 @@ final class ConceptController
      * Version for foreign Uri's. For now, this is a wrapper for the 'native uri' functionality, but that will probably change.
      *
      * @Route(path="/concept.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive a concept by foreign URI")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="uri",
+     *     in="query",
+     *     example="http://openskos.org/pic/1911",
+     *     required=true,
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
      *
      * @Error(code="concept-getonebyfuri-param-uri-missing",
      *        status=400,
@@ -362,27 +413,7 @@ final class ConceptController
      * })
      * @OA\Response(
      *   code="200",
-     *   content=@OA\Content\JsonRdf(properties={
-     *     @OA\Schema\ObjectLiteral(name="@context"),
-     *     @OA\Schema\ArrayLiteral(
-     *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
-     *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="200",
-     *   content=@OA\Content\Turtle(properties={
-     *     @OA\Schema\ObjectLiteral(name="@context"),
-     *     @OA\Schema\ArrayLiteral(
-     *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
-     *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="200",
-     *   content=@OA\Content\Ntriples(properties={
+     *   content=@OA\Content\Rdf(properties={
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
@@ -439,7 +470,7 @@ final class ConceptController
      * })
      * @OA\Response(
      *   code="200",
-     *   content=@OA\Content\JsonRdf(properties={
+     *   content=@OA\Content\Rdf(properties={
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
@@ -590,6 +621,32 @@ final class ConceptController
     /**
      * @Route(path="/concepts.{format?}", methods={"PUT"})
      *
+     * @OA\Summary("Update one or more concepts (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @Error(code="concept-update-empty-or-corrupt-body",
      *        status=400,
      *        description="The body passed to this endpoint was either missing or corrupt"
@@ -710,6 +767,31 @@ final class ConceptController
     /**
      * @Route(path="/concept/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single concept using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="concept-delete-invalid-permissions-user-missing",
@@ -761,6 +843,31 @@ final class ConceptController
 
     /**
      * @Route(path="/autocomplete.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Loose label search on concepts")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws Exception
      */

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\OpenSkos\Institution\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Institution\Institution;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\AbstractRdfDocument;
@@ -33,6 +35,26 @@ final class InstitutionController
 
     /**
      * @Route(path="/institutions.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive all (filtered) institutions")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -73,6 +95,31 @@ final class InstitutionController
     /**
      * @Route(path="/institution/{id}.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive an institution using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="institution-getone-not-found",
@@ -106,6 +153,32 @@ final class InstitutionController
 
     /**
      * @Route(path="/institutions.{format?}", methods={"POST"})
+     *
+     * @OA\Summary("Create one or more new institutions")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -171,6 +244,31 @@ final class InstitutionController
     /**
      * @Route(path="/institution/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single institution using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      */
     public function deleteInstitution(
@@ -199,6 +297,32 @@ final class InstitutionController
 
     /**
      * @Route(path="/institutions.{format?}", methods={"PUT"})
+     *
+     * @OA\Summary("Update one or more institutions (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *

@@ -30,18 +30,20 @@ final class SkosResourceRepositoryWithProjection extends SkosResourceRepository
             }
         }
 
-        //TODO: Move to separate helper class?
-        $groups = [];
-        foreach ($triples as $triple) {
-            $predicate = $triple->getPredicate()->getUri();
-            $object    = $triple->getObject();
-            if (!$do_projection || isset($fields_to_project[$predicate])) {
-                if (('' === $fields_to_project[$predicate]) ||
-                     ($object instanceof StringLiteral && $fields_to_project[$predicate] === $object->lang())) {
-                    $groups[$triple->getSubject()->getUri()][] = $triple;
-                }
-            }
-        }
+        // Group the triples
+        $groups = self::groupTriples($triples);
+
+        // TODO: figure out what's so special about this version
+        /* foreach ($triples as $triple) { */
+        /*     $predicate = $triple->getPredicate()->getUri(); */
+        /*     $object    = $triple->getObject(); */
+        /*     if (!$do_projection || isset($fields_to_project[$predicate])) { */
+        /*         if (('' === $fields_to_project[$predicate]) || */
+        /*              ($object instanceof StringLiteral && $fields_to_project[$predicate] === $object->lang())) { */
+        /*             $groups[$triple->getSubject()->getUri()][] = $triple; */
+        /*         } */
+        /*     } */
+        /* } */
 
         $res = [];
         foreach ($groups as $iriString => $group) {

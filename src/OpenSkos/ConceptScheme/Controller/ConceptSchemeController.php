@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\OpenSkos\ConceptScheme\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\ConceptScheme\ConceptScheme;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Institution\InstitutionRepository;
@@ -37,6 +39,26 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive all (filtered) concept schemes")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
      */
     public function getConceptschemes(
         ApiFilter $apiFilter,
@@ -63,6 +85,31 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptscheme/{id}.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive a concept scheme using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -93,6 +140,32 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"POST"})
+     *
+     * @OA\Summary("Create one or more new concept schemes")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -198,6 +271,31 @@ final class ConceptSchemeController
     /**
      * @Route(path="/conceptscheme/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single concept scheme using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      */
     public function deleteConceptScheme(
@@ -223,6 +321,32 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"PUT"})
+     *
+     * @OA\Summary("Update one or more concept schemes (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
      *
      * @Error(code="conceptscheme-update-empty-or-corrupt-body",
      *        status=400,

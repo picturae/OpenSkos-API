@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\User\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\OA;
 use App\Exception\ApiException;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
@@ -41,6 +42,26 @@ final class UserController
 
     /**
      * @Route(path="/users.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Fetch a list of all (filtered) users")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=User::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -97,6 +118,31 @@ final class UserController
 
     /**
      * @Route(path="/user/{id}.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Fetch a single user using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=User::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *

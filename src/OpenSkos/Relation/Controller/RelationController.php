@@ -114,6 +114,36 @@ final class RelationController
     /**
      * @Route(path="/relations.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive all (filtered) relations for a subject or object")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="subject",
+     *     in="query",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="object",
+     *     in="query",
+     *     example="1337",
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="relation-getall-missing-subject-and-object",
@@ -226,10 +256,9 @@ final class RelationController
      *     in="body",
      *   ),
      * })
-     *
      * @OA\Response(
      *   code="200",
-     *   content=@OA\Content\JsonRdf(properties={
+     *   content=@OA\Content\Rdf(properties={
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
@@ -378,6 +407,20 @@ final class RelationController
     /**
      * @Route(path="/relations.{format?}", methods={"PUT"})
      *
+     * @OA\Summary("Update one or more relations (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="400",
+     *   content=@OA\Content\Rdf(),
+     * )
+     *
      * @throws ApiException
      *
      * @OA\Summary("Update an existing relation")
@@ -421,10 +464,9 @@ final class RelationController
      *     in="query",
      *   ),
      * })
-     *
      * @OA\Response(
      *   code="200",
-     *   content=@OA\Content\JsonRdf(properties={
+     *   content=@OA\Content\Rdf(properties={
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",

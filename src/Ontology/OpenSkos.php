@@ -85,6 +85,7 @@ final class OpenSkos
         'http://openskos.org/xmlns#resourceType'                => 'xsd:string',
         'http://openskos.org/xmlns#tenant'                      => 'xsd:string',
         'http://openskos.org/xmlns#status'                      => 'xsd:string',
+        'http://openskos.org/xmlns#toBeChecked'                 => 'xsd:boolean',
         'http://openskos.org/xmlns#dateDeleted'                 => 'xsd:dateTime',
         'http://openskos.org/xmlns#uuid'                        => 'xsd:string',
         'http://openskos.org/xmlns#name'                        => 'xsd:string',
@@ -324,6 +325,44 @@ final class OpenSkos
     }
 
     /**
+     * Returns the first encountered error for toBeChecked.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-tobechecked-literal-type",
+     *        status=422,
+     *        fields={"expected","actual"},
+     *        description="The object for the tobechecked predicate has a different type than 'http://www.w3.org/2001/XMLSchema#boolean'"
+     *     )
+     */
+    public function validateToBeChecked($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+
+            if ('http://www.w3.org/2001/XMLSchema#boolean' !== $property->typeIri()->getUri()) {
+                return [
+                    'code' => 'openskos-validate-tobechecked-literal-type',
+                    'data' => [
+                        'expected' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                        'actual'   => $property->typeIri()->getUri(),
+                    ],
+                ];
+            }
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the first encountered error for dateDeleted.
      * Returns null on success (a.k.a. no errors).
      *
@@ -408,6 +447,45 @@ final class OpenSkos
                 'data' => [
                     'regex' => $regex,
                     'value' => $value,
+                ],
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the first encountered error for role.
+     * Returns null on success (a.k.a. no errors).
+     *
+     * @param Literal|Iri $value
+     *
+     * @Error(code="openskos-validate-role-enum",
+     *        status=422,
+     *        fields={"allowed","given"},
+     *        description="The object for the role predicate does not consist of an allowed value"
+     *     )
+     */
+    public function validateRole($property): ?array
+    {
+        $value = null;
+        if ($property instanceof Iri) {
+            $value = $property->getUri();
+        }
+        if ($property instanceof Literal) {
+            $value = $property->value();
+        }
+        if (is_null($value)) {
+            return null;
+        }
+
+        $allowed = str_getcsv('root,administrator,editor,user,guest');
+        if (!in_array($value, $allowed, true)) {
+            return [
+                'code' => 'openskos-validate-role-regex',
+                'data' => [
+                    'allowed' => $allowed,
+                    'given'   => $value,
                 ],
             ];
         }

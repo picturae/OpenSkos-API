@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\RelationType\Controller;
 
+use App\Annotation\OA;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\RelationType\RelationType;
 use App\Rest\DirectGraphResponse;
@@ -28,6 +29,30 @@ final class RelationTypeController
 
     /**
      * @Route(path="/relationtypes.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive all available relation types")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="rdfs:subPropertyOf", description="What this relation type is a sub-version of"),
+     *         @OA\Schema\StringLiteral(name="rdfs:domain"                                                                  ),
+     *         @OA\Schema\StringLiteral(name="rdfs:range"                                                                   ),
+     *       }),
+     *     ),
+     *   }),
+     * )
      */
     public function getRelationTypes(
         ApiRequest $apiRequest
@@ -40,6 +65,30 @@ final class RelationTypeController
 
     /**
      * @Route(path="/relationtype/{id}.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive a single relation type")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="rdfs:subPropertyOf", description="What this relation type is a sub-version of"),
+     *         @OA\Schema\StringLiteral(name="rdfs:domain"                                                                  ),
+     *         @OA\Schema\StringLiteral(name="rdfs:range"                                                                   ),
+     *       }),
+     *     ),
+     *   }),
+     * )
      */
     public function getRelationType(
         string $id,

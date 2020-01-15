@@ -28,6 +28,7 @@ parameters:
         enum: '!status'
       toBeChecked:
         datatype: literal
+        literaltype: 'xsd:boolean'
       dateDeleted:
         datatype: literal
         literaltype: "xsd:dateTime"
@@ -50,6 +51,7 @@ parameters:
         "rdf:type": "rdfs:Class"
       role:
         datatype: literal
+        enum: '!roles'
       inSkosCollection:
         datatype: literal
       code:
@@ -131,3 +133,10 @@ parameters:
       - api
       - editor
       - both
+
+    roles:
+      - root
+      - administrator
+      - editor
+      - user
+      - guest

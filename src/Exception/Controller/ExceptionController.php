@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exception\Controller;
 
-use App\Annotation\Error;
 use App\Annotation\OA;
 use App\OpenSkos\ApiRequest;
 use App\Rest\DirectGraphResponse;

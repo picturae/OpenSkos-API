@@ -23,11 +23,13 @@ final class Label extends AbstractRdfDocument implements RdfResource
     const type        = 'type';
     const modified    = 'modified';
     const literalForm = 'literalForm';
+    const uuid        = 'uuid';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
+        self::uuid        => OpenSkos::UUID,
         self::type        => Rdf::TYPE,
         self::modified    => DcTerms::MODIFIED,
         self::literalForm => SkosXl::LITERAL_FORM,

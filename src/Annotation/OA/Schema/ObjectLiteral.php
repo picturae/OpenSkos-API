@@ -43,6 +43,8 @@ class ObjectLiteral extends Literal
 
                 // Use mapping to fetch known fields from ontology
                 foreach ($this->class::getMapping() as $localName => $predicate) {
+                    // TODO: Hidden Fields?
+
                     $decoded = Context::decodeUri($predicate);
                     $type    = Context::literaltype($predicate);
                     if (is_null($decoded)) {
@@ -50,6 +52,11 @@ class ObjectLiteral extends Literal
                     }
                     $short = implode(':', $decoded);
                     switch ($type) {
+                        case 'xsd:boolean':
+                            $literal       = new BooleanLiteral();
+                            $literal->name = $short;
+                            array_push($this->properties, $literal);
+                            break;
                         case 'xsd:string':
                             $literal       = new StringLiteral();
                             $literal->name = $short;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
@@ -12,6 +13,7 @@ use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\Set\Set;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
@@ -36,6 +38,26 @@ final class SetController
     /**
      * @Route(path="/sets.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive all (filtered) sets")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="set-getall-sets-filter",
@@ -43,7 +65,7 @@ final class SetController
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
      */
-    public function getSets(
+    public function getAllSets(
         ApiRequest $apiRequest,
         SetRepository $repository,
         FilterProcessor $filterProcessor
@@ -69,6 +91,31 @@ final class SetController
 
     /**
      * @Route(path="/set/{id}.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive a set using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
      *
      * @Error(code="set-getone-not-found",
      *        status=404,
@@ -97,6 +144,32 @@ final class SetController
 
     /**
      * @Route(path="/sets.{format?}", methods={"POST"})
+     *
+     * @OA\Summary("Create one or more new sets")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
@@ -199,6 +272,31 @@ final class SetController
     /**
      * @Route(path="/set/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single set using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      */
     public function deleteSet(
@@ -224,6 +322,32 @@ final class SetController
 
     /**
      * @Route(path="/sets.{format?}", methods={"PUT"})
+     *
+     * @OA\Summary("Update one or more sets (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
      *
      * @throws ApiException
      *
