@@ -15,7 +15,7 @@ RUN apk upgrade
 RUN apk add bash curl
 
 # Install phpvm
-RUN curl -sL https://finwo.github.io/phpvm/install.sh | bash /dev/stdin --prefix /usr
+RUN curl -sL https://finwo.github.io/phpvm/install.sh | bash /dev/stdin --prefix /usr --version pecl
 
 # Setup PHP
 RUN phpvm use 7.3.12 --install-dependencies --full
