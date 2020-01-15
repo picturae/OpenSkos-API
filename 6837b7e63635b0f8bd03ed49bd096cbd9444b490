@@ -1,0 +1,5 @@
+[ver:1,total:2240]
+src/OpenSkos/ApiFilter.php:1300,1579014000:330,1579017600:270,1579089600:700,m
+src/OpenSkos/Concept/Controller/ConceptController.php:860,1578920400:380,1579014000:210,1579017600:30,1579078800:180,1579082400:60,m
+config/ontology/dcterms.yaml:60,1579089600:60,r
+config/ontology/skos.yaml:20,1579089600:20,r
