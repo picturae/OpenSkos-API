@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Exception\Controller;
 
+use App\Annotation\Error;
+use App\Annotation\OA;
 use App\OpenSkos\ApiRequest;
 use App\Rest\DirectGraphResponse;
 use EasyRdf_Graph as Graph;
@@ -34,6 +36,31 @@ final class ExceptionController
 
     /**
      * @Route(path="/errors.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive all registered errors")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="openskos:errorCode" , description="Unique identifier for the error"),
+     *         @OA\Schema\StringLiteral(name="dcterms:description", description="Human-readable description of the error"),
+     *         @OA\Schema\StringLiteral(name="rdf:Property"       , description="Which extra properties a thrown error may carry"),
+     *         @OA\Schema\StringLiteral(name="http:sc"            , description="The http status code to expect when this error is thrown"),
+     *       }),
+     *     ),
+     *   }),
+     * )
      */
     public function getAllErrors(
         ApiRequest $apiRequest

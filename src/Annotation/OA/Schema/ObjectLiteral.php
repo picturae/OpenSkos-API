@@ -71,7 +71,6 @@ class ObjectLiteral extends Literal
 
         foreach ($this->properties as $property) {
             $schema['properties'][$property->name] = $property;
-            unset($property->name);
         }
 
         if (!empty($this->name)) {
