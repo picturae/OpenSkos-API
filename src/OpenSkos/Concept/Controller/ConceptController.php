@@ -121,6 +121,13 @@ final class ConceptController
         ApiFilter $apiFilter,
         SolrFilterProcessor $solrFilterProcessor
     ): array {
+        // TODO:
+        // - collections
+        // - dateSubmitted
+        // - modified
+        // - dateAccepted
+        // - dateDeleted
+
         // TODO: Don't use non-default filters anymore
         $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
         $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
@@ -130,6 +137,9 @@ final class ConceptController
         $apiFilter->addFilter('openskos:modifiedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy'));
         $apiFilter->addFilter('openskos:acceptedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:acceptedBy'));
         $apiFilter->addFilter('openskos:deletedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy'));
+        $apiFilter->addFilter('openskos:modifiedBy:', $this->processFilterFromRequest($apiRequest, 'modifiedBy'));
+        $apiFilter->addFilter('openskos:acceptedBy:', $this->processFilterFromRequest($apiRequest, 'acceptedBy'));
+        $apiFilter->addFilter('openskos:deletedBy:', $this->processFilterFromRequest($apiRequest, 'deletedBy'));
 
         $full_filter = $apiFilter->buildFilters('solr');
 
