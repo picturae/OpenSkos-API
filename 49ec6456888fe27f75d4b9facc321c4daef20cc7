@@ -1,0 +1,9 @@
+[ver:1,total:2140]
+data/docker/fpm/Dockerfile:1230,1578301200:420,1579082400:750,1579086000:60,m
+.git/MERGE_MSG:360,1579010400:360,d
+src/Rdf/VocabularyAwareResource.php:180,1576681200:180,r
+src/OpenSkos/Relation/Controller/RelationController.php:140,1578920400:140,r
+src/OpenSkos/RelationType/RelationType.php:100,1578920400:100,r
+src/Exception/list.json:80,1578920400:80,r
+docker-compose.yml:30,1579082400:30,r
+config/packages/relationtypes.yaml:20,1578920400:20,r
