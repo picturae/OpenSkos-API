@@ -1,0 +1,10 @@
+[ver:1,total:780]
+src/Healthcheck/PingController.php:400,1579165200:80,1579168800:320,m
+public/swagger.yaml:104,1579165200:104,m
+config/packages/hb_swagger_ui.yaml:69,1579165200:54,1579168800:15,m
+config/routes/dev/hb_swagger_ui.yaml:60,1579165200:60,r
+src/Healthcheck/JenaRepository.php:50,1579168800:50,r
+vendor/swagger-api/swagger-ui/swagger-config.yaml:30,1579165200:30,r
+composer.json:27,1579165200:12,1579168800:15,r
+LICENCE.txt:20,1579165200:20,r
+src/Healthcheck/Person.php:20,1579168800:20,m
