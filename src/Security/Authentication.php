@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Entity\User;
 use App\Exception\ApiException;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,14 @@ class Authentication
      */
     protected $user = null;
 
+    /**
+     * @ErrorInherit(class=User::class, method="__construct")
+     * @ErrorInherit(class=User::class, method="getApikey"  )
+     * @ErrorInherit(class=User::class, method="getRole"    )
+     * @ErrorInherit(class=User::class, method="getType"    )
+     * @ErrorInherit(class=User::class, method="populate"   )
+     * @ErrorInherit(class=User::class, method="setPassword")
+     */
     public function __construct(
         Request $request = null
     ) {
@@ -117,6 +126,8 @@ class Authentication
      *   - user
      *   - guest.
      *
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated")
+     *
      * @return string[]
      */
     public function getRoles(): array
@@ -128,6 +139,10 @@ class Authentication
         return $this->roles;
     }
 
+    /**
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated")
+     * @ErrorInherit(class=Authentication::class, method="getRoles"       )
+     */
     public function isAdministrator(): bool
     {
         if (!$this->isAuthenticated()) {
@@ -137,6 +152,9 @@ class Authentication
         return in_array('administrator', $this->getRoles(), true);
     }
 
+    /**
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated")
+     */
     public function getUser(): ?User
     {
         if (!$this->isAuthenticated()) {
@@ -157,6 +175,9 @@ class Authentication
      *        status=401,
      *        description="No credentials were given"
      * )
+     *
+     * @ErrorInherit(class=Authentication::class, method="hasAuthenticationData")
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated"      )
      */
     public function requireAuthenticated(string $errorCodePrefix = null): void
     {
@@ -175,6 +196,9 @@ class Authentication
      *        status=403,
      *        description="The requested action requires the 'administrator' role while the authenticated user does not posses it"
      * )
+     *
+     * @ErrorInherit(class=Authentication::class, method="isAdministrator"     )
+     * @ErrorInherit(class=Authentication::class, method="requireAuthenticated")
      */
     public function requireAdministrator(string $errorCodePrefix = null): void
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\ConceptScheme\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
@@ -21,6 +22,7 @@ use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -59,6 +61,19 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiFilter::class              , method="__construct"    )
+     * @ErrorInherit(class=ApiFilter::class              , method="buildFilters"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"    )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"      )
+     * @ErrorInherit(class=ApiRequest::class             , method="getInstitutions")
+     * @ErrorInherit(class=ApiRequest::class             , method="getLimit"       )
+     * @ErrorInherit(class=ApiRequest::class             , method="getOffset"      )
+     * @ErrorInherit(class=ApiRequest::class             , method="getSets"        )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"    )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="all"            )
+     * @ErrorInherit(class=FilterProcessor::class        , method="__construct"    )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"    )
      */
     public function getConceptschemes(
         ApiFilter $apiFilter,
@@ -110,12 +125,6 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @throws ApiException
      *
@@ -124,6 +133,15 @@ final class ConceptSchemeController
      *        description="The requested ConceptScheme could not be retreived",
      *        fields={"iri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"  )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct")
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="findOneBy"  )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class     , method="id"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class         , method="__construct")
      */
     public function getConceptScheme(
         InternalResourceId $id,
@@ -172,18 +190,6 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="409",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @throws ApiException
      *
@@ -206,6 +212,27 @@ final class ConceptSchemeController
      *        description="The given set to create a ConceptScheme for does not exist",
      *        fields={"set"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class             , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class         , method="requireAdministrator")
+     * @ErrorInherit(class=ConceptScheme::class          , method="errors"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="exists"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="getValue"            )
+     * @ErrorInherit(class=ConceptScheme::class          , method="iri"                 )
+     * @ErrorInherit(class=ConceptScheme::class          , method="save"                )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="fromGraph"           )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="findByIri"           )
      */
     public function postConceptScheme(
         ApiRequest $apiRequest,
@@ -313,18 +340,16 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=Authentication::class         , method="requireAdministrator")
+     * @ErrorInherit(class=ConceptScheme::class          , method="delete"              )
+     * @ErrorInherit(class=ConceptSchemeController::class, method="getConceptScheme"    )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=ScalarResponse::class         , method="__construct"         )
      *
      * @throws ApiException
      */
@@ -377,18 +402,6 @@ final class ConceptSchemeController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @Error(code="conceptscheme-update-empty-or-corrupt-body",
      *        status=400,
@@ -409,6 +422,27 @@ final class ConceptSchemeController
      *        description="The given set to update a conceptscheme for does not exist",
      *        fields={"set"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class             , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class         , method="getUser"             )
+     * @ErrorInherit(class=ConceptScheme::class          , method="errors"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="exists"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="getValue"            )
+     * @ErrorInherit(class=ConceptScheme::class          , method="iri"                 )
+     * @ErrorInherit(class=ConceptScheme::class          , method="setValue"            )
+     * @ErrorInherit(class=ConceptScheme::class          , method="update"              )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="findByIri"           )
      */
     public function putConceptScheme(
         ApiRequest $apiRequest,

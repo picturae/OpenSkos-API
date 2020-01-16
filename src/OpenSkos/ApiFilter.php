@@ -2,8 +2,10 @@
 
 namespace App\OpenSkos;
 
+use App\Annotation\ErrorInherit;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\Set\Set;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,6 +59,9 @@ final class ApiFilter
      */
     private $setRepository;
 
+    /**
+     * @ErrorInherit(class=ApiFilter::class, method="addFilter")
+     */
     public function __construct(
         Request $request,
         SetRepository $setRepository
@@ -94,6 +99,10 @@ final class ApiFilter
         }
     }
 
+    /**
+     * @ErrorInherit(class=Context::class, method="decodeUri")
+     * @ErrorInherit(class=Context::class, method="fullUri"  )
+     */
     public static function fromFullUri(string $predicate): ?string
     {
         $parts = Context::decodeUri(Context::fullUri($predicate));
@@ -106,6 +115,14 @@ final class ApiFilter
 
     /**
      * @param mixed $value
+     *
+     * @ErrorInherit(class=ApiFilter::class         , method="fromFullUri")
+     * @ErrorInherit(class=Context::class           , method="literaltype")
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct")
+     * @ErrorInherit(class=Iri::class               , method="__construct")
+     * @ErrorInherit(class=Iri::class               , method="getUri"     )
+     * @ErrorInherit(class=Set::class               , method="iri"        )
+     * @ErrorInherit(class=SetRepository::class     , method="findOneBy"  )
      */
     public function addFilter(
         string $predicate,
@@ -184,6 +201,8 @@ final class ApiFilter
      * @param string       $predicate
      * @param array|string $value
      * @param string|null  $lang
+     *
+     * @ErrorInherit(class=Context::class, method="fullUri")
      */
     private static function buildFilter($predicate, $value, $lang = null): array
     {
@@ -232,6 +251,10 @@ final class ApiFilter
 
     /**
      * @param string $type
+     *
+     * @ErrorInherit(class=ApiFilter::class, method="buildFilter")
+     * @ErrorInherit(class=ApiFilter::class, method="fromFullUri")
+     * @ErrorInherit(class=Context::class  , method="literaltype")
      */
     public function buildFilters($type = 'jena'): array
     {
@@ -299,6 +322,8 @@ final class ApiFilter
 
     /**
      * @param string $type
+     *
+     * @ErrorInherit(class=ApiFilter::class, method="buildFilters")
      */
     public function __toArray($type = 'jena'): array
     {

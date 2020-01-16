@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Status\Controller;
 
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
@@ -52,6 +53,10 @@ final class StatusController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"  )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
      */
     public function getAllStatuses(
         ApiRequest $apiRequest

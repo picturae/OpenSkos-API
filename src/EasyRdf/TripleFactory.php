@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EasyRdf;
 
+use App\Annotation\ErrorInherit;
 use App\Rdf\Iri;
 use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
@@ -14,6 +15,15 @@ use EasyRdf_Graph;
 
 final class TripleFactory
 {
+    /**
+     * @ErrorInherit(class=BooleanLiteral::class , method="fromString" )
+     * @ErrorInherit(class=BooleanLiteral::class , method="typeIri"    )
+     * @ErrorInherit(class=DatetimeLiteral::class, method="fromString" )
+     * @ErrorInherit(class=DatetimeLiteral::class, method="typeIri"    )
+     * @ErrorInherit(class=Iri::class            , method="__construct")
+     * @ErrorInherit(class=Iri::class            , method="getUri"     )
+     * @ErrorInherit(class=StringLiteral::class  , method="__construct")
+     */
     private static function arrayToRdfTerm(array $arr): ?RdfTerm
     {
         $type  = $arr['type'];
@@ -38,6 +48,10 @@ final class TripleFactory
     }
 
     /**
+     * @ErrorInherit(class=Iri::class          , method="__construct"   )
+     * @ErrorInherit(class=Triple::class       , method="__construct"   )
+     * @ErrorInherit(class=TripleFactory::class, method="arrayToRdfTerm")
+     *
      * @return Triple[]
      */
     public static function triplesFromGraph(EasyRdf_Graph $graph): array

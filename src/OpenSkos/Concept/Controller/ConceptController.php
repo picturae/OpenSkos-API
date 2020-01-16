@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Concept\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\EasyRdf\TripleFactory;
 use App\Entity\User;
@@ -15,7 +16,6 @@ use App\Ontology\Skos;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Concept\Concept;
-use App\OpenSkos\Concept\Concept as SkosConcept;
 use App\OpenSkos\Concept\ConceptRepository;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\DataLevels\Level2Processor;
@@ -27,6 +27,7 @@ use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use Exception;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -49,6 +50,8 @@ final class ConceptController
 
     /**
      * Processes comma separated parameters for filters.
+     *
+     * @ErrorInherit(class=ApiRequest::class, method="getParameter")
      */
     private function processFilterFromRequest(
         ApiRequest $apiRequest,
@@ -72,6 +75,10 @@ final class ConceptController
      *        status=400,
      *        description="Dates must be a valid xsd:DateTime or xsdDuration"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class   , method="getParameter"      )
+     * @ErrorInherit(class=xsdDateHelper::class, method="__construct"       )
+     * @ErrorInherit(class=xsdDateHelper::class, method="isValidXsdDateTime")
      */
     private function processDateStampsFromRequest(
         ApiRequest $apiRequest,
@@ -115,6 +122,11 @@ final class ConceptController
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
      *
      * @param ConceptRepository $repository
+     *
+     * @ErrorInherit(class=ApiFilter::class        , method="buildFilters"            )
+     * @ErrorInherit(class=ApiRequest::class       , method="getInstitutions"         )
+     * @ErrorInherit(class=ApiRequest::class       , method="getSets"                 )
+     * @ErrorInherit(class=ConceptController::class, method="processFilterFromRequest")
      */
     private function buildConceptFilters(
         ApiRequest $apiRequest,
@@ -158,6 +170,8 @@ final class ConceptController
     /**
      * Builds the selection parameters for a concept. Should follow
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
+     *
+     * @ErrorInherit(class=ApiRequest::class, method="getParameter")
      */
     private function buildSelectionParameters(
         ApiRequest $apiRequest,
@@ -205,6 +219,12 @@ final class ConceptController
      *        description="Field has no projection support",
      *        fields={"field"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class, method="getParameter"           )
+     * @ErrorInherit(class=Concept::class   , method="getAcceptableFieldsToXl")
+     * @ErrorInherit(class=Concept::class   , method="getAcceptableFields"    )
+     * @ErrorInherit(class=Concept::class   , method="getLanguageSensitive"   )
+     * @ErrorInherit(class=Concept::class   , method="getMetaGroups"          )
      */
     private function buildProjectionParameters(
         ApiRequest $apiRequest,
@@ -219,9 +239,9 @@ final class ConceptController
             $props = preg_split('/\s*,\s*/', $props, -1, PREG_SPLIT_NO_EMPTY);
         }
 
-        $acceptable_fields  = SkosConcept::getAcceptableFields();
-        $language_sensitive = SkosConcept::getLanguageSensitive();
-        $meta_groups        = SkosConcept::getMetaGroups();
+        $acceptable_fields  = Concept::getAcceptableFields();
+        $language_sensitive = Concept::getLanguageSensitive();
+        $meta_groups        = Concept::getMetaGroups();
         if (isset($props) && is_iterable($props)) {
             foreach ($props as $param) {
                 //The language flag might be buried in brackets
@@ -251,7 +271,7 @@ final class ConceptController
         }
 
         //If we have chosen a projection parameter with an XL label, add that to our list too.
-        $labelMappings = SkosConcept::getAcceptableFieldsToXl();
+        $labelMappings = Concept::getAcceptableFieldsToXl();
         foreach ($labelMappings  as $skosLabel => $skosXLLabel) {
             if (isset($projectionParameters[$skosLabel])) {
                 $projectionParameters[$skosXLLabel] = $projectionParameters[$skosLabel];
@@ -289,20 +309,8 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -311,6 +319,17 @@ final class ConceptController
      *        description="The requested concept could not be retreived",
      *        fields={"uuid"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct"     )
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"       )
+     * @ErrorInherit(class=ApiRequest::class        , method="getLevel"        )
+     * @ErrorInherit(class=Concept::class           , method="loadFullXlLabels")
+     * @ErrorInherit(class=ConceptRepository::class , method="__construct"     )
+     * @ErrorInherit(class=ConceptRepository::class , method="findOneBy"       )
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct"     )
+     * @ErrorInherit(class=InternalResourceId::class, method="id"              )
+     * @ErrorInherit(class=Iri::class               , method="__construct"     )
+     * @ErrorInherit(class=ScalarResponse::class    , method="__construct"     )
      */
     public function getConcept(
         InternalResourceId $id,
@@ -360,14 +379,8 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -385,6 +398,15 @@ final class ConceptController
      *        description="The requested concept could not be retrieved.",
      *        fields={"foreignUri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class       , method="__construct"     )
+     * @ErrorInherit(class=ApiRequest::class       , method="getForeignUri"   )
+     * @ErrorInherit(class=ApiRequest::class       , method="getFormat"       )
+     * @ErrorInherit(class=ApiRequest::class       , method="getLevel"        )
+     * @ErrorInherit(class=Concept::class          , method="loadFullXlLabels")
+     * @ErrorInherit(class=ConceptRepository::class, method="__construct"     )
+     * @ErrorInherit(class=ConceptRepository::class, method="findByIri"       )
+     * @ErrorInherit(class=ScalarResponse::class   , method="__construct"     )
      */
     public function getConceptByForeignUri(
         ApiRequest $apiRequest,
@@ -435,16 +457,24 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"                )
+     * @ErrorInherit(class=ApiRequest::class         , method="getLevel"                 )
+     * @ErrorInherit(class=ApiRequest::class         , method="getLimit"                 )
+     * @ErrorInherit(class=ApiRequest::class         , method="getOffset"                )
+     * @ErrorInherit(class=ApiFilter::class          , method="__construct"              )
+     * @ErrorInherit(class=ConceptController::class  , method="buildConceptFilters"      )
+     * @ErrorInherit(class=ConceptController::class  , method="buildProjectionParameters")
+     * @ErrorInherit(class=ConceptRepository::class  , method="__construct"              )
+     * @ErrorInherit(class=ConceptRepository::class  , method="all"                      )
+     * @ErrorInherit(class=Level2Processor::class    , method="AddLevel2Data"            )
+     * @ErrorInherit(class=ListResponse::class       , method="__construct"              )
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="__construct"              )
      *
      * @throws Exception
      */
@@ -489,7 +519,7 @@ final class ConceptController
      *   @OA\Schema\ArrayLiteral(
      *     name="@graph",
      *     in="body",
-     *     items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *   ),
      * })
      * @OA\Response(
@@ -498,26 +528,8 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="409",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -550,6 +562,30 @@ final class ConceptController
      *        description="The given skos:notation is not unique within the given conceptScheme",
      *        fields={"conceptscheme","notation"}
      * )
+     *
+     * @ErrorInherit(class=ApiFilter::class              , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class             , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class         , method="requireAdministrator")
+     * @ErrorInherit(class=Concept::class                , method="getProperty"         )
+     * @ErrorInherit(class=Concept::class                , method="getValue"            )
+     * @ErrorInherit(class=Concept::class                , method="iri"                 )
+     * @ErrorInherit(class=Concept::class                , method="save"                )
+     * @ErrorInherit(class=ConceptRepository::class      , method="__construct"         )
+     * @ErrorInherit(class=ConceptRepository::class      , method="fromGraph"           )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="findByIri"           )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"              )
+     * @ErrorInherit(class=SolrFilterProcessor::class    , method="__construct"         )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="findByIri"           )
+     * @ErrorInherit(class=TripleFactory::class          , method="triplesFromGraph"    )
      *
      * @throws Exception
      */
@@ -675,7 +711,7 @@ final class ConceptController
      *   @OA\Schema\ArrayLiteral(
      *     name="@graph",
      *     in="body",
-     *     items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *     items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *   ),
      * })
      * @OA\Response(
@@ -684,20 +720,8 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -725,6 +749,33 @@ final class ConceptController
      *        description="The given conceptscheme to create a Concept for does not exist",
      *        fields={"conceptscheme"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class             , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class         , method="getUser"             )
+     * @ErrorInherit(class=Authentication::class         , method="requireAdministrator")
+     * @ErrorInherit(class=Concept::class                , method="errors"              )
+     * @ErrorInherit(class=Concept::class                , method="exists"              )
+     * @ErrorInherit(class=Concept::class                , method="getProperty"         )
+     * @ErrorInherit(class=Concept::class                , method="getValue"            )
+     * @ErrorInherit(class=Concept::class                , method="iri"                 )
+     * @ErrorInherit(class=Concept::class                , method="setValue"            )
+     * @ErrorInherit(class=Concept::class                , method="update"              )
+     * @ErrorInherit(class=ConceptRepository::class      , method="__construct"         )
+     * @ErrorInherit(class=ConceptRepository::class      , method="fromGraph"           )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="findByIri"           )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="findByIri"           )
+     * @ErrorInherit(class=User::class                   , method="iri"                 )
      */
     public function putConcept(
         ApiRequest $apiRequest,
@@ -841,26 +892,8 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
      *   }),
      * )
      *
@@ -874,6 +907,18 @@ final class ConceptController
      *        status=400,
      *        description="The concept to delete still has relations"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class        , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"           )
+     * @ErrorInherit(class=Authentication::class    , method="getUser"             )
+     * @ErrorInherit(class=Authentication::class    , method="requireAdministrator")
+     * @ErrorInherit(class=Concept::class           , method="deleteSoft"          )
+     * @ErrorInherit(class=Concept::class           , method="isOrphan"            )
+     * @ErrorInherit(class=ConceptController::class , method="getConcept"          )
+     * @ErrorInherit(class=ConceptRepository::class , method="__construct"         )
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct"         )
+     * @ErrorInherit(class=ScalarResponse::class    , method="__construct"         )
      */
     public function deleteConcept(
         InternalResourceId $id,
@@ -936,10 +981,24 @@ final class ConceptController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=SkosConcept::class),
+     *       items=@OA\Schema\ObjectLiteral(class=Concept::class),
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiFilter::class          , method="__construct"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"                )
+     * @ErrorInherit(class=ApiRequest::class         , method="getLimit"                 )
+     * @ErrorInherit(class=ApiRequest::class         , method="getOffset"                )
+     * @ErrorInherit(class=ApiRequest::class         , method="getParameter"             )
+     * @ErrorInherit(class=ConceptController::class  , method="buildConceptFilters"      )
+     * @ErrorInherit(class=ConceptController::class  , method="buildProjectionParameters")
+     * @ErrorInherit(class=ConceptController::class  , method="buildSelectionParameters" )
+     * @ErrorInherit(class=ConceptRepository::class  , method="__construct"              )
+     * @ErrorInherit(class=ConceptRepository::class  , method="fullSolrSearch"           )
+     * @ErrorInherit(class=ListResponse::class       , method="__construct"              )
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="__construct"              )
      *
      * @throws Exception
      */

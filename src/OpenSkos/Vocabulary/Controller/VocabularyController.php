@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Vocabulary\Controller;
 
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
@@ -54,6 +55,11 @@ final class VocabularyController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat")
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
+     * @ErrorInherit(class=OpenSkos::class           , method="vocabulary" )
      */
     public function getRelationTypes(
         ApiRequest $apiRequest

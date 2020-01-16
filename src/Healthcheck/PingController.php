@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Healthcheck;
 
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,6 +47,9 @@ final class PingController extends AbstractController
      *     }),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=JenaRepository::class, method="__construct")
+     * @ErrorInherit(class=JenaRepository::class, method="all"        )
      */
     public function ping(
         JenaRepository $jenaRepository

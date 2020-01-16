@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exception\Controller;
 
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\OpenSkos\ApiRequest;
 use App\Rest\DirectGraphResponse;
@@ -60,6 +61,10 @@ final class ExceptionController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"  )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
      */
     public function getAllErrors(
         ApiRequest $apiRequest

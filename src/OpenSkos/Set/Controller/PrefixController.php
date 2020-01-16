@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
@@ -52,17 +53,23 @@ final class PrefixController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @Error(code="setprefixcontroller-sets-filter-not-applicable",
      *        status=400,
      *        description="Sets filter is not applicable here"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class         , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class         , method="getSets"                )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class    , method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class    , method="buildInstitutionFilters")
+     * @ErrorInherit(class=SetRepository::class      , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class      , method="all"                    )
      */
     public function getAllPrefixes(
         ApiRequest $apiRequest,

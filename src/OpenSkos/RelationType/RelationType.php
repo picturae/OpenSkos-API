@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\RelationType;
 
+use App\Annotation\ErrorInherit;
 use App\Ontology\Context;
 use App\Ontology\Dc;
 use App\Ontology\OpenSkos;
@@ -14,6 +15,10 @@ use App\Ontology\Skos;
 
 final class RelationType
 {
+    /**
+     * @ErrorInherit(class=Context::class     , method="decodeUri" )
+     * @ErrorInherit(class=RelationType::class, method="vocabulary")
+     */
     public static function vocabularyFields(): array
     {
         return array_filter(
@@ -40,6 +45,9 @@ final class RelationType
         );
     }
 
+    /**
+     * @ErrorInherit(class=RelationType::class, method="vocabularyFields")
+     */
     public static function semanticFields(): array
     {
         return array_filter(static::vocabularyFields(), function ($predicate) {

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\RelationType\Controller;
 
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\RelationType\RelationType;
+use App\Rdf\Iri;
 use App\Rest\DirectGraphResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -53,6 +55,11 @@ final class RelationTypeController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
+     * @ErrorInherit(class=RelationType::class       , method="vocabulary" )
      */
     public function getRelationTypes(
         ApiRequest $apiRequest
@@ -89,6 +96,12 @@ final class RelationTypeController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"  )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
+     * @ErrorInherit(class=Iri::class                , method="getUri"     )
+     * @ErrorInherit(class=RelationType::class       , method="vocabulary" )
      */
     public function getRelationType(
         string $id,

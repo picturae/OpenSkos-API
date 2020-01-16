@@ -7,6 +7,8 @@ namespace App\Template\Ontology;
 
 namespace App\Ontology;
 
+use App\Annotation\ErrorInherit;
+
 final class Context
 {
     const prefixes = [
@@ -62,6 +64,8 @@ final class Context
 
     /**
      * Detect prefix AND field from uri.
+     *
+     * @ErrorInherit(class=Context::class, method="detectNamespaceFromUri")
      */
     public static function decodeUri(?string $uri): ?array
     {
@@ -85,6 +89,8 @@ final class Context
 
     /**
      * Returns the literal type for a field (or null)
+     *
+     * @ErrorInherit(class=Context::class, method="decodeUri")
      */
     public static function literaltype(?string $uri): ?string
     {
@@ -103,6 +109,8 @@ final class Context
 
     /**
      * Turn a uri or short notation into full uri.
+     *
+     * @ErrorInherit(class=Context::class, method="decodeUri")
      */
     public static function fullUri(?string $uri): ?string
     {
@@ -137,6 +145,8 @@ final class Context
 
     /**
      * Automatically detect namespaces from a given graph.
+     *
+     * @ErrorInherit(class=Context::class, method="detectNamespaceFromUri")
      */
     public static function detect(\EasyRdf_Graph $graph): array
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Rdf;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Exception\ApiException;
 
 final class VocabularyAwareResource implements RdfResource
@@ -50,6 +51,11 @@ final class VocabularyAwareResource implements RdfResource
      *        description="VocabularyAwareResource needs a (array)mapping.",
      *        fields={"receivedType"}
      * )
+     *
+     * @ErrorInherit(class=Iri::class   , method="getUri"      )
+     * @ErrorInherit(class=Triple::class, method="getObject"   )
+     * @ErrorInherit(class=Triple::class, method="getPredicate")
+     * @ErrorInherit(class=Triple::class, method="getSubject"  )
      */
     public static function fromTriples(Iri $iri, array $triples, array $mapping = null): VocabularyAwareResource
     {
@@ -110,6 +116,9 @@ final class VocabularyAwareResource implements RdfResource
      *        description="Property is not expected",
      *        fields={"property"}
      * )
+     *
+     * @ErrorInherit(class=Iri::class   , method="getUri"     )
+     * @ErrorInherit(class=Triple::class, method="__construct")
      */
     public function addProperty(Iri $property, RdfTerm $object): void
     {
@@ -131,6 +140,11 @@ final class VocabularyAwareResource implements RdfResource
 
     /**
      * @param string|null $value
+     *
+     * @ErrorInherit(class=Iri::class   , method="getUri"      )
+     * @ErrorInherit(class=Triple::class, method="__toString"  )
+     * @ErrorInherit(class=Triple::class, method="getObject"   )
+     * @ErrorInherit(class=Triple::class, method="getPredicate")
      */
     public function removeTriple(string $predicate, $value = null): int
     {
@@ -171,14 +185,12 @@ final class VocabularyAwareResource implements RdfResource
      * @param $tripleKey
      * @param $newValue
      */
-    public function replaceTriple($tripleKey, $newValue)
+    public function replaceTriple($tripleKey, $newValue): void
     {
         $this->triples[$tripleKey] = $newValue;
-
-        return;
     }
 
-    public function reIndexTripleStore()
+    public function reIndexTripleStore(): void
     {
         $this->triples = array_values($this->triples);
     }

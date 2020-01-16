@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\OpenSkos\Relation\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\EasyRdf\TripleFactory;
+use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\Context;
 use App\Ontology\DcTerms;
@@ -29,6 +31,7 @@ use App\Rdf\Triple;
 use App\Rest\DirectGraphResponse;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use EasyRdf_Graph as Graph;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -45,6 +48,10 @@ final class RelationController
      */
     private $whitelist = [];
 
+    /**
+     * @ErrorInherit(class=Context::class     , method="decodeUri"       )
+     * @ErrorInherit(class=RelationType::class, method="vocabularyFields")
+     */
     public function __construct(
         SerializerInterface $serializer
     ) {
@@ -62,6 +69,9 @@ final class RelationController
 
     /**
      * @return Triple[]
+     *
+     * @ErrorInherit(class=Iri::class   , method="__construct")
+     * @ErrorInherit(class=Triple::class, method="__construct")
      */
     public static function toTriples(?string $iri, ?array $data): array
     {
@@ -80,6 +90,10 @@ final class RelationController
 
     /**
      * @param Triple[] $triples
+     *
+     * @ErrorInherit(class=Iri::class   , method="getUri"      )
+     * @ErrorInherit(class=Triple::class, method="getObject"   )
+     * @ErrorInherit(class=Triple::class, method="getPredicate")
      */
     public static function getType(array $triples): ?RdfTerm
     {
@@ -94,6 +108,9 @@ final class RelationController
 
     /**
      * @param RdfTerm $type
+     *
+     * @ErrorInherit(class=Context::class, method="decodeUri" )
+     * @ErrorInherit(class=RdfTerm::class, method="__toString")
      */
     public static function getClass(?RdfTerm $type): ?string
     {
@@ -143,18 +160,6 @@ final class RelationController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @throws ApiException
      *
@@ -173,6 +178,22 @@ final class RelationController
      *        description="No object could be found with the given id",
      *        fields={"object"}
      * )
+     *
+     * @ErrorInherit(class=ApiFilter::class          , method="__construct"         )
+     * @ErrorInherit(class=ApiFilter::class          , method="isUuid"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class         , method="getParameter"        )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct"         )
+     * @ErrorInherit(class=InternalResourceId::class , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                , method="getUri"              )
+     * @ErrorInherit(class=JenaRepository::class     , method="__construct"         )
+     * @ErrorInherit(class=JenaRepository::class     , method="findByIri"           )
+     * @ErrorInherit(class=JenaRepository::class     , method="findSubjectForObject")
+     * @ErrorInherit(class=JenaRepository::class     , method="getByUuid"           )
+     * @ErrorInherit(class=RelationController::class , method="toTriples"           )
+     * @ErrorInherit(class=Triple::class             , method="getPredicate"        )
      */
     public function getRelations(
         ApiRequest $apiRequest,
@@ -278,24 +299,6 @@ final class RelationController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @Error(code="semantic-relation-create-subject-concept-not-found",
      *        status=404,
@@ -324,6 +327,26 @@ final class RelationController
      * )
      *
      * @throws ApiException
+     *
+     * @ErrorInherit(class=ApiRequest::class            , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class            , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class            , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class            , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class        , method="requireAdministrator")
+     * @ErrorInherit(class=Concept::class               , method="addProperty"         )
+     * @ErrorInherit(class=Concept::class               , method="update"              )
+     * @ErrorInherit(class=ConceptRepository::class     , method="__construct"         )
+     * @ErrorInherit(class=ConceptRepository::class     , method="findByIri"           )
+     * @ErrorInherit(class=Iri::class                   , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                   , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class          , method="__construct"         )
+     * @ErrorInherit(class=Literal::class               , method="value"               )
+     * @ErrorInherit(class=RelationType::class          , method="semanticFields"      )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="groupTriples"        )
+     * @ErrorInherit(class=Triple::class                , method="getObject"           )
+     * @ErrorInherit(class=Triple::class                , method="getPredicate"        )
+     * @ErrorInherit(class=Triple::class                , method="getSubject"          )
+     * @ErrorInherit(class=TripleFactory::class         , method="triplesFromGraph"    )
      */
     public function postRelation(
         ApiRequest $apiRequest,
@@ -446,12 +469,6 @@ final class RelationController
      *     enum={"json", "ttl", "n-triples"},
      *   ),
      * })
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @throws ApiException
      *
@@ -461,6 +478,10 @@ final class RelationController
      *        status=400,
      *        description="Updating a relation is not allowed/possible"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class    , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class    , method="getAuthentication"   )
+     * @ErrorInherit(class=Authentication::class, method="requireAdministrator")
      */
     public function putRelation(
         ApiRequest $apiRequest
@@ -506,24 +527,6 @@ final class RelationController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="403",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @Error(code="semantic-relation-delete-subject-not-found",
      *        status=404,
@@ -553,6 +556,24 @@ final class RelationController
      * )
      *
      * @throws ApiException
+     *
+     * @ErrorInherit(class=ApiRequest::class       , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class       , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class       , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class       , method="getParameter"        )
+     * @ErrorInherit(class=Authentication::class   , method="requireAdministrator")
+     * @ErrorInherit(class=Authentication::class   , method="getUser"             )
+     * @ErrorInherit(class=Concept::class          , method="getProperty"         )
+     * @ErrorInherit(class=Concept::class          , method="getResource"         )
+     * @ErrorInherit(class=Concept::class          , method="setValue"            )
+     * @ErrorInherit(class=ConceptRepository::class, method="__construct"         )
+     * @ErrorInherit(class=ConceptRepository::class, method="findByIri"           )
+     * @ErrorInherit(class=Context::class          , method="fullUri"             )
+     * @ErrorInherit(class=Iri::class              , method="__construct"         )
+     * @ErrorInherit(class=Iri::class              , method="getUri"              )
+     * @ErrorInherit(class=RelationType::class     , method="semanticFields"      )
+     * @ErrorInherit(class=ScalarResponse::class   , method="__construct"         )
+     * @ErrorInherit(class=User::class             , method="iri"                 )
      */
     public function deleteRelation(
         ApiRequest $apiRequest,

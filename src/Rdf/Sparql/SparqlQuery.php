@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rdf\Sparql;
 
+use App\Annotation\ErrorInherit;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Filters\FilterProcessor;
@@ -38,6 +39,9 @@ final class SparqlQuery
 
     /**
      * FIXME: Make it not static.
+     *
+     * @ErrorInherit(class=Iri::class        , method="getUri"     )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
      */
     public static function describeAllOfType(
         Iri $type,
@@ -130,6 +134,10 @@ final class SparqlQuery
         );
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class        , method="getUri"     )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
+     */
     public static function describeResource(
         Iri $subject
     ): SparqlQuery {
@@ -140,6 +148,9 @@ final class SparqlQuery
         );
     }
 
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
+     */
     public static function describeResources(
         array $subjects
     ): SparqlQuery {
@@ -172,6 +183,10 @@ QUERY_BY_TYPE_AND_PREDICATE;
 
     /**
      * @param Iri|Literal|InternalResourceId|string $object
+     *
+     * @ErrorInherit(class=Iri::class        , method="ntripleString")
+     * @ErrorInherit(class=Literal::class    , method="__toString"   )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"  )
      */
     public static function selectSubjectFromPredicate(
         Iri $predicate,
@@ -198,6 +213,10 @@ QUERY_SELECT_SUBJECT_FROM_PREDICATE;
 
     /**
      * @param Iri|Literal|InternalResourceId|string $object
+     *
+     * @ErrorInherit(class=Iri::class        , method="ntripleString")
+     * @ErrorInherit(class=Literal::class    , method="__toString"   )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"  )
      */
     public static function selectSubjectFromObject(
         $object
@@ -222,6 +241,11 @@ QUERY_SELECT_SUBJECT_FROM_PREDICATE;
         return new SparqlQuery($queryString);
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class        , method="__construct"               )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     * @ErrorInherit(class=SparqlQuery::class, method="selectSubjectFromPredicate")
+     */
     public static function selectSubjectFromUuid(
         string $uuid
     ): SparqlQuery {
@@ -231,6 +255,9 @@ QUERY_SELECT_SUBJECT_FROM_PREDICATE;
         );
     }
 
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
     public static function describeSubjectFromUuid(
         string $uuid
     ): SparqlQuery {
@@ -246,6 +273,9 @@ QUERY_SELECT_SUBJECT_FROM_PREDICATE;
         );
     }
 
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
     public static function describeWithoutUUID(
         string $uuid
     ): SparqlQuery {
@@ -265,6 +295,9 @@ QUERY_WITHOUT_UUID;
         return new SparqlQuery($queryString);
     }
 
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
     public static function describeByTypeWithoutUUID(
         string $rdfType,
         string $uuid
@@ -285,6 +318,9 @@ QUERY_BY_TYPE_WITHOUT_UUID;
         return new SparqlQuery($queryString);
     }
 
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
     public static function deleteSubject(
         string $subject
     ): SparqlQuery {

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Annotation\Document;
+use App\Annotation\ErrorInherit;
 use App\Rdf\Iri;
 
 /**
@@ -75,6 +76,10 @@ class User extends AbstractEntity
      */
     protected $enableSkosXl;
 
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     * @ErrorInherit(class=User::class, method="getUri"     )
+     */
     public function iri(): Iri
     {
         return new Iri($this->getUri() ?? '');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Annotation\Document;
+use App\Annotation\ErrorInherit;
 use App\EasyRdf\TripleFactory;
 use App\Ontology\Rdf;
 use App\OpenSkos\InternalResourceId;
@@ -81,6 +82,11 @@ abstract class AbstractRepository implements RepositoryInterface
 
     /**
      * AbstractRepository constructor.
+     *
+     * @ErrorInherit(class=Iri::class                                 , method="getUri"      )
+     * @ErrorInherit(class=SkosResourceRepositoryWithProjection::class, method="__construct" )
+     * @ErrorInherit(class=Triple::class                              , method="getObject"   )
+     * @ErrorInherit(class=Triple::class                              , method="getPredicate")
      */
     public function __construct(
         Client $rdfClient,
@@ -135,6 +141,9 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->iriFactory = $iriFactory;
     }
 
+    /**
+     * @ErrorInherit(class=TripleFactory::class, method="triplesFromGraph")
+     */
     public function fromGraph(\EasyRdf_Graph $graph): ?array
     {
         $tripleFactory = $this->tripleFactory;
@@ -155,6 +164,10 @@ abstract class AbstractRepository implements RepositoryInterface
         return $this->connection;
     }
 
+    /**
+     * @ErrorInherit(class=AbstractRepository::class, method="getConnection")
+     * @ErrorInherit(class=Iri::class               , method="getUri"       )
+     */
     public function all(int $offset = 0, int $limit = 100, array $filters = []): array
     {
         $results = $this->skosRepository->allOfType(
@@ -207,6 +220,9 @@ abstract class AbstractRepository implements RepositoryInterface
         return $this->skosRepository->findByIri($iri);
     }
 
+    /**
+     * @ErrorInherit(class=AbstractRepository::class, method="findByIri")
+     */
     public function find(InternalResourceId $id): ?AbstractRdfDocument
     {
         return $this->findByIri($this->iriFactory->fromInternalResourceId($id));
@@ -217,6 +233,10 @@ abstract class AbstractRepository implements RepositoryInterface
         return $this->skosRepository->findBy(new Iri(static::DOCUMENT_TYPE), $predicate, $object);
     }
 
+    /**
+     * @ErrorInherit(class=AbstractRepository::class, method="getConnection")
+     * @ErrorInherit(class=Iri::class               , method="getUri"       )
+     */
     public function findOneBy(Iri $predicate, InternalResourceId $object): ?AbstractRdfDocument
     {
         /** @var AbstractRdfDocument $res */
@@ -267,6 +287,10 @@ abstract class AbstractRepository implements RepositoryInterface
 
     // TODO: Copy doctrine data fetch into other functions
     // TODO: Delete this function
+
+    /**
+     * @ErrorInherit(class=AbstractRepository::class, method="getConnection")
+     */
     public function get(Iri $object)
     {
         $res = $this->skosRepository->findByIri($object);
@@ -309,6 +333,11 @@ abstract class AbstractRepository implements RepositoryInterface
 
     /**
      * @param Iri|Literal|InternalResourceId|string $object
+     *
+     * @ErrorInherit(class=Iri::class          , method="__construct"            )
+     * @ErrorInherit(class=SparqlQuery::class  , method="selectSubjectFromObject")
+     * @ErrorInherit(class=StringLiteral::class, method="__construct"            )
+     * @ErrorInherit(class=Triple::class       , method="__construct"            )
      */
     public function findSubjectForObject(
         $object

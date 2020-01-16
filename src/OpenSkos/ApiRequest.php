@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Exception\ApiException;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormat;
@@ -81,6 +82,9 @@ final class ApiRequest
      *        description="An invalid offset parameter was given, it needs to be >=0",
      *        fields={"offset"}
      * )
+     *
+     * @ErrorInherit(class=Authentication::class, method="__construct")
+     * @ErrorInherit(class=JsonLd::class        , method="instance"   )
      */
     public function __construct(
         array $allParams = [],

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Label\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use App\Exception\ApiException;
 use App\OpenSkos\ApiFilter;
@@ -54,6 +55,16 @@ final class LabelController
      *     ),
      *   }),
      * )
+     *
+     * @ErrorInherit(class=ApiFilter::class      , method="__construct" )
+     * @ErrorInherit(class=ApiFilter::class      , method="buildFilters")
+     * @ErrorInherit(class=ApiRequest::class     , method="__construct" )
+     * @ErrorInherit(class=ApiRequest::class     , method="getFormat"   )
+     * @ErrorInherit(class=ApiRequest::class     , method="getLimit"    )
+     * @ErrorInherit(class=ApiRequest::class     , method="getOffset"   )
+     * @ErrorInherit(class=FilterProcessor::class, method="__construct" )
+     * @ErrorInherit(class=LabelRepository::class, method="all"         )
+     * @ErrorInherit(class=ListResponse::class   , method="__construct" )
      */
     public function getLabels(
         ApiRequest $apiRequest,
@@ -102,18 +113,18 @@ final class LabelController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @Error(code="labelcontroller-getone-not-found",
      *        status=404,
      *        description="The requested label could not be retreived",
      *        fields={"id"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct"      )
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"        )
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct"      )
+     * @ErrorInherit(class=LabelRepository::class   , method="getOneWithoutUuid")
+     * @ErrorInherit(class=ScalarResponse::class    , method="__construct"      )
      */
     public function getLabel(
        InternalResourceId $id,
@@ -159,18 +170,6 @@ final class LabelController
      *     ),
      *   }),
      * )
-     * @OA\Response(
-     *   code="400",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
-     * @OA\Response(
-     *   code="404",
-     *   content=@OA\Content\Json(properties={
-     *     @OA\Schema\ObjectLiteral(class=Error::class),
-     *   }),
-     * )
      *
      * @Error(code="labelcontroller-getonebyuri-param-uri-missing",
      *        status=400,
@@ -181,6 +180,13 @@ final class LabelController
      *        description="The requested label could not be retreived",
      *        fields={"uri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class     , method="__construct" )
+     * @ErrorInherit(class=ApiRequest::class     , method="getFormat"   )
+     * @ErrorInherit(class=ApiRequest::class     , method="getParameter")
+     * @ErrorInherit(class=Iri::class            , method="__construct" )
+     * @ErrorInherit(class=LabelRepository::class, method="findByIri"   )
+     * @ErrorInherit(class=ScalarResponse::class , method="__construct" )
      */
     public function getLabelByUri(
         ApiRequest $apiRequest,
