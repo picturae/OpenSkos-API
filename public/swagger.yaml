@@ -5,7 +5,7 @@ info:
   version    : "2.3"
 
 servers:
-  - "url": "http://api.openskos.local"
+  - "url": "http://api.openskos.localhost"
     "description": "Default local development server"
 
 paths:
@@ -6429,7 +6429,7 @@ paths:
                         "name": "description"
   /ping:
     get:
-      "summary": "Healthcheck end basic information"
+      "summary": "Healthcheck and basic information"
       "responses":
         "'200'":
           "content":
@@ -6455,7 +6455,7 @@ paths:
                   "license":
                     "type": "string"
                     "name": "license"
-                    "example": "MIT"
+                    "example": "proprietary"
                     "description": "License the api operates under"
                   "copyright":
                     "type": "object"

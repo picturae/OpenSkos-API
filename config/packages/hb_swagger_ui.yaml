@@ -13,5 +13,5 @@ services:
       $title      : 'OpenSkos API'
       $description: 'TODO: DESCRIPTION'
       $servers    :
-        - url: http://api.openskos.local
+        - url: http://api.openskos.localhost
           description: Default local development server
