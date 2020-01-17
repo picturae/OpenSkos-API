@@ -313,7 +313,7 @@ final class OpenSkos
         $allowed = str_getcsv('candidate,approved,redirected,not_compliant,rejected,obsolete,deleted');
         if (!in_array($value, $allowed, true)) {
             return [
-                'code' => 'openskos-validate-status-regex',
+                'code' => 'openskos-validate-status-enum',
                 'data' => [
                     'allowed' => $allowed,
                     'given'   => $value,
@@ -482,7 +482,7 @@ final class OpenSkos
         $allowed = str_getcsv('root,administrator,editor,user,guest');
         if (!in_array($value, $allowed, true)) {
             return [
-                'code' => 'openskos-validate-role-regex',
+                'code' => 'openskos-validate-role-enum',
                 'data' => [
                     'allowed' => $allowed,
                     'given'   => $value,
@@ -878,7 +878,7 @@ final class OpenSkos
         $allowed = str_getcsv('api,editor,both');
         if (!in_array($value, $allowed, true)) {
             return [
-                'code' => 'openskos-validate-usertype-regex',
+                'code' => 'openskos-validate-usertype-enum',
                 'data' => [
                     'allowed' => $allowed,
                     'given'   => $value,

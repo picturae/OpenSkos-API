@@ -140,7 +140,7 @@ final class <?= $name; ?>
         $allowed = str_getcsv('<?= implode(',', $property['enum']); ?>');
         if (!in_array($value, $allowed)) {
             return [
-                'code' => '<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-regex',
+                'code' => '<?= strtolower($name); ?>-validate-<?= strtolower($property['name']); ?>-enum',
                 'data' => [
                     'allowed' => $allowed,
                     'given'   => $value,
