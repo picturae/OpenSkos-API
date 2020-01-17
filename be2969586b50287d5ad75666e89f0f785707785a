@@ -1,2 +1,7 @@
 [ver:1,total:60]
 src/Annotation/ErrorInherit.php:60,1579262400:60,m
+
+[ver:1,total:120]
+src/Healthcheck/PingController.php:90,1579262400:90,r
+src/Annotation/ErrorInherit.php:15,1579262400:15,m
+src/Repository/AbstractRepository.php:15,1579262400:15,r
