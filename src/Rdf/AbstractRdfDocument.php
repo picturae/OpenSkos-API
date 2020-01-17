@@ -4,6 +4,7 @@ namespace App\Rdf;
 
 use App\Annotation\AbstractAnnotation;
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Entity\User as AuthUser;
 use App\Ontology\Context;
 use App\Ontology\DcTerms;
@@ -80,6 +81,14 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * @param VocabularyAwareResource $resource
      * @param AbstractRepository      $repository
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="addProperty")
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="annotations")
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getValue"   )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="iri"        )
+     * @ErrorInherit(class=Iri::class                    , method="__construct")
+     * @ErrorInherit(class=Iri::class                    , method="getUri"     )
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="__construct")
      */
     public function __construct(
         Iri $subject,
@@ -141,6 +150,8 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * @param mixed $value
+     *
+     * @ErrorInherit(class=StringLiteral::class, method="value")
      */
     private static function isUuid($value): bool
     {
@@ -167,12 +178,17 @@ abstract class AbstractRdfDocument implements RdfResource
         return static::$mapping;
     }
 
+    /**
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="iri")
+     */
     public function iri(): Iri
     {
         return $this->resource->iri();
     }
 
     /**
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="triples")
+     *
      * @return Triple[]
      */
     public function triples(): array
@@ -181,6 +197,8 @@ abstract class AbstractRdfDocument implements RdfResource
     }
 
     /**
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="properties")
+     *
      * @return RdfTerm[][]
      */
     public function properties(): ?array
@@ -188,11 +206,17 @@ abstract class AbstractRdfDocument implements RdfResource
         return $this->resource->properties();
     }
 
+    /**
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="getProperty")
+     */
     public function getProperty(string $property): ?array
     {
         return $this->resource->getProperty($property);
     }
 
+    /**
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getProperty")
+     */
     public function getValue(string $property): ?RdfTerm
     {
         $properties = $this->getProperty($property);
@@ -212,6 +236,13 @@ abstract class AbstractRdfDocument implements RdfResource
      *
      * @param mixed $property
      * @param mixed $value
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getResource")
+     * @ErrorInherit(class=BooleanLiteral::class         , method="__construct")
+     * @ErrorInherit(class=DatetimeLiteral::class        , method="__construct")
+     * @ErrorInherit(class=Iri::class                    , method="__construct")
+     * @ErrorInherit(class=StringLiteral::class          , method="__construct")
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="addProperty")
      */
     public function addProperty($property, $value): bool
     {
@@ -254,6 +285,11 @@ abstract class AbstractRdfDocument implements RdfResource
      *
      * @param mixed $property
      * @param mixed $value
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="addProperty" )
+     * @ErrorInherit(class=Iri::class                    , method="__construct" )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"      )
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="removeTriple")
      */
     public function setValue($property, $value): bool
     {
@@ -273,6 +309,10 @@ abstract class AbstractRdfDocument implements RdfResource
         return $this->addProperty($iri, $value);
     }
 
+    /**
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getMapping" )
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getProperty")
+     */
     public function getMappedProperty(string $property): ?array
     {
         return $this->getProperty($this->getMapping()[$property]);
@@ -280,6 +320,10 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * @return string[]|string|null
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getMapping" )
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getProperty")
+     * @ErrorInherit(class=Literal::class            , method="__toString")
      */
     public function getMappedValue(string $property)
     {
@@ -306,6 +350,8 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * @return AbstractRdfDocument
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="__construct")
      */
     public static function createEmpty(Iri $subject): self
     {
@@ -315,6 +361,9 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * @param Triple[]           $triples
      * @param AbstractRepository $repository
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="__construct")
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="fromTriples")
      */
     public static function fromTriples(Iri $subject, array $triples, AbstractRepository $repository = null): AbstractRdfDocument
     {
@@ -326,6 +375,13 @@ abstract class AbstractRdfDocument implements RdfResource
     /**
      * @param array              $data
      * @param AbstractRepository $repository
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="__construct")
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="addProperty")
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="annotations")
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="populate"   )
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getProperty")
+     * @ErrorInherit(class=Iri::class                , method="__construct")
      *
      * @return AbstractRdfDocument
      */
@@ -351,6 +407,16 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * Loads the XL labels and replaces the default URI value with the full resource.
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="triples"           )
+     * @ErrorInherit(class=Label::class                  , method="setSubject"        )
+     * @ErrorInherit(class=Label::class                  , method="setType"           )
+     * @ErrorInherit(class=LabelRepository::class        , method="findByIri"         )
+     * @ErrorInherit(class=Triple::class                 , method="getObject"         )
+     * @ErrorInherit(class=Triple::class                 , method="getPredicate"      )
+     * @ErrorInherit(class=Triple::class                 , method="getSubject"        )
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="reIndexTripleStore")
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="replaceTriple"     )
      */
     public function loadFullXlLabels(LabelRepository $labelRepository): void
     {
@@ -389,6 +455,12 @@ abstract class AbstractRdfDocument implements RdfResource
         return $this->resource;
     }
 
+    /**
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getResource")
+     * @ErrorInherit(class=Iri::class                    , method="__construct")
+     * @ErrorInherit(class=StringLiteral::class          , method="__construct")
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="addProperty")
+     */
     public function populate(array $data = null): bool
     {
         if (is_null($data)) {
@@ -425,6 +497,10 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * Whether or not the resource already exists in our sparql db.
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getValue"   )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct")
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="iri"        )
      */
     public function exists(): bool
     {
@@ -468,6 +544,12 @@ abstract class AbstractRdfDocument implements RdfResource
      *        status=400,
      *        description="Properties could not be loaded from the rdf resource"
      * )
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="annotations")
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="getValue"   )
+     * @ErrorInherit(class=AbstractRdfDocument::class, method="properties" )
+     * @ErrorInherit(class=Context::class            , method="decodeUri"  )
+     * @ErrorInherit(class=Iri::class                , method="getUri"     )
      */
     public function errors(string $errorPrefix = null): array
     {
@@ -573,6 +655,14 @@ abstract class AbstractRdfDocument implements RdfResource
 
     /**
      * @param AuthUser|RdfUser $user
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class   , method="iri"        )
+     * @ErrorInherit(class=AbstractRdfDocument::class   , method="setValue"   )
+     * @ErrorInherit(class=AbstractRdfDocument::class   , method="update"     )
+     * @ErrorInherit(class=AbstractSolrRepository::class, method="deleteIndex")
+     * @ErrorInherit(class=DatetimeLiteral::class       , method="__construct")
+     * @ErrorInherit(class=Iri::class                   , method="__construct")
+     * @ErrorInherit(class=StringLiteral::class         , method="__construct")
      */
     public function deleteSoft($user = null): ?array
     {
@@ -604,6 +694,19 @@ abstract class AbstractRdfDocument implements RdfResource
      *        description="The document requested to be updated does not exist",
      *        fields={"iri"}
      * )
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="addProperty" )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="delete"      )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="errors"      )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getProperty" )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getResource" )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="save"        )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="triples"     )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"      )
+     * @ErrorInherit(class=Triple::class                 , method="getObject"   )
+     * @ErrorInherit(class=Triple::class                 , method="getPredicate")
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="iri"         )
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="removeTriple")
      */
     public function update($options = []): ?array
     {
@@ -681,6 +784,17 @@ abstract class AbstractRdfDocument implements RdfResource
      *        description="The insert threw an exception",
      *        fields={"message"}
      * )
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="addProperty" )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="errors"      )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getValue"    )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="isUuid"      )
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="triples"     )
+     * @ErrorInherit(class=DatetimeLiteral::class        , method="__construct" )
+     * @ErrorInherit(class=Iri::class                    , method="__construct" )
+     * @ErrorInherit(class=StringLiteral::class          , method="__construct" )
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="properties"  )
+     * @ErrorInherit(class=VocabularyAwareResource::class, method="removeTriple")
      */
     public function save(): ?array
     {

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
@@ -12,11 +14,13 @@ use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
+use App\OpenSkos\Set\Set;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -36,14 +40,46 @@ final class SetController
     /**
      * @Route(path="/sets.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive all (filtered) sets")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="set-getall-sets-filter",
      *        status=400,
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class     , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class     , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class     , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class     , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class     , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class     , method="getSets"                )
+     * @ErrorInherit(class=FilterProcessor::class, method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class, method="buildInstitutionFilters")
+     * @ErrorInherit(class=ListResponse::class   , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class  , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class  , method="all"                    )
      */
-    public function getSets(
+    public function getAllSets(
         ApiRequest $apiRequest,
         SetRepository $repository,
         FilterProcessor $filterProcessor
@@ -70,11 +106,45 @@ final class SetController
     /**
      * @Route(path="/set/{id}.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive a set using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @Error(code="set-getone-not-found",
      *        status=404,
      *        description="The requested set could not be found",
      *        fields={"iri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"  )
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class, method="id"         )
+     * @ErrorInherit(class=Iri::class               , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class    , method="__construct")
+     * @ErrorInherit(class=SetRepository::class     , method="__construct")
+     * @ErrorInherit(class=SetRepository::class     , method="findOneBy"  )
      */
     public function getSet(
         InternalResourceId $id,
@@ -98,6 +168,32 @@ final class SetController
     /**
      * @Route(path="/sets.{format?}", methods={"POST"})
      *
+     * @OA\Summary("Create one or more new sets")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="set-create-empty-or-corrupt-body",
@@ -119,6 +215,26 @@ final class SetController
      *        description="The given tenant to create a set for does not exist",
      *        fields={"tenant"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class           , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class           , method="getGraph"            )
+     * @ErrorInherit(class=ApiRequest::class           , method="getOffset"           )
+     * @ErrorInherit(class=Authentication::class       , method="requireAdministrator")
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                  , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                  , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"         )
+     * @ErrorInherit(class=Set::class                  , method="exists"              )
+     * @ErrorInherit(class=Set::class                  , method="getValue"            )
+     * @ErrorInherit(class=Set::class                  , method="iri"                 )
+     * @ErrorInherit(class=Set::class                  , method="save"                )
+     * @ErrorInherit(class=SetRepository::class        , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class        , method="findOneBy"           )
+     * @ErrorInherit(class=SetRepository::class        , method="fromGraph"           )
      */
     public function postSet(
         ApiRequest $apiRequest,
@@ -199,7 +315,42 @@ final class SetController
     /**
      * @Route(path="/set/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single set using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
+     *
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class        , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"           )
+     * @ErrorInherit(class=Authentication::class    , method="requireAdministrator")
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct"         )
+     * @ErrorInherit(class=ScalarResponse::class    , method="__construct"         )
+     * @ErrorInherit(class=Set::class               , method="delete"              )
+     * @ErrorInherit(class=SetController::class     , method="getSet"              )
+     * @ErrorInherit(class=SetRepository::class     , method="__construct"         )
      */
     public function deleteSet(
         InternalResourceId $id,
@@ -225,6 +376,32 @@ final class SetController
     /**
      * @Route(path="/sets.{format?}", methods={"PUT"})
      *
+     * @OA\Summary("Update one or more sets (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="set-update-empty-or-corrupt-body",
@@ -241,6 +418,27 @@ final class SetController
      *        description="The given tenant to update a set for does not exist",
      *        fields={"tenant"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class           , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class           , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class       , method="getUser"             )
+     * @ErrorInherit(class=Authentication::class       , method="requireAdministrator")
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                  , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                  , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"         )
+     * @ErrorInherit(class=Set::class                  , method="errors"              )
+     * @ErrorInherit(class=Set::class                  , method="getValue"            )
+     * @ErrorInherit(class=Set::class                  , method="iri"                 )
+     * @ErrorInherit(class=Set::class                  , method="setValue"            )
+     * @ErrorInherit(class=Set::class                  , method="update"              )
+     * @ErrorInherit(class=SetRepository::class        , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class        , method="fromGraph"           )
+     * @ErrorInherit(class=User::class                 , method="iri"                 )
      */
     public function putSet(
         ApiRequest $apiRequest,

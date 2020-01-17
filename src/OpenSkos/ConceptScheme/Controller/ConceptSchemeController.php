@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\OpenSkos\ConceptScheme\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiFilter;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\ConceptScheme\ConceptScheme;
 use App\OpenSkos\ConceptScheme\ConceptSchemeRepository;
 use App\OpenSkos\Filters\FilterProcessor;
 use App\OpenSkos\Institution\InstitutionRepository;
@@ -19,6 +22,7 @@ use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -37,6 +41,39 @@ final class ConceptSchemeController
 
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"GET"})
+     *
+     * @OA\Summary("Retreive all (filtered) concept schemes")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @ErrorInherit(class=ApiFilter::class              , method="__construct"    )
+     * @ErrorInherit(class=ApiFilter::class              , method="buildFilters"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"    )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"      )
+     * @ErrorInherit(class=ApiRequest::class             , method="getInstitutions")
+     * @ErrorInherit(class=ApiRequest::class             , method="getLimit"       )
+     * @ErrorInherit(class=ApiRequest::class             , method="getOffset"      )
+     * @ErrorInherit(class=ApiRequest::class             , method="getSets"        )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"    )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="all"            )
+     * @ErrorInherit(class=FilterProcessor::class        , method="__construct"    )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"    )
      */
     public function getConceptschemes(
         ApiFilter $apiFilter,
@@ -64,6 +101,31 @@ final class ConceptSchemeController
     /**
      * @Route(path="/conceptscheme/{id}.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive a concept scheme using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="conceptscheme-getone-not-found",
@@ -71,6 +133,15 @@ final class ConceptSchemeController
      *        description="The requested ConceptScheme could not be retreived",
      *        fields={"iri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"  )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct")
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="findOneBy"  )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class     , method="id"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class         , method="__construct")
      */
     public function getConceptScheme(
         InternalResourceId $id,
@@ -94,6 +165,32 @@ final class ConceptSchemeController
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"POST"})
      *
+     * @OA\Summary("Create one or more new concept schemes")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="conceptscheme-create-empty-or-corrupt-body",
@@ -115,6 +212,27 @@ final class ConceptSchemeController
      *        description="The given set to create a ConceptScheme for does not exist",
      *        fields={"set"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class             , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class         , method="requireAdministrator")
+     * @ErrorInherit(class=ConceptScheme::class          , method="errors"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="exists"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="getValue"            )
+     * @ErrorInherit(class=ConceptScheme::class          , method="iri"                 )
+     * @ErrorInherit(class=ConceptScheme::class          , method="save"                )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="fromGraph"           )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="findByIri"           )
      */
     public function postConceptScheme(
         ApiRequest $apiRequest,
@@ -198,6 +316,41 @@ final class ConceptSchemeController
     /**
      * @Route(path="/conceptscheme/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single concept scheme using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=Authentication::class         , method="requireAdministrator")
+     * @ErrorInherit(class=ConceptScheme::class          , method="delete"              )
+     * @ErrorInherit(class=ConceptSchemeController::class, method="getConceptScheme"    )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=ScalarResponse::class         , method="__construct"         )
+     *
      * @throws ApiException
      */
     public function deleteConceptScheme(
@@ -224,6 +377,32 @@ final class ConceptSchemeController
     /**
      * @Route(path="/conceptschemes.{format?}", methods={"PUT"})
      *
+     * @OA\Summary("Update one or more concept schemes (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @Error(code="conceptscheme-update-empty-or-corrupt-body",
      *        status=400,
      *        description="The body passed to this endpoint was either missing or corrupt"
@@ -243,6 +422,27 @@ final class ConceptSchemeController
      *        description="The given set to update a conceptscheme for does not exist",
      *        fields={"set"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class             , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class             , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class         , method="getUser"             )
+     * @ErrorInherit(class=ConceptScheme::class          , method="errors"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="exists"              )
+     * @ErrorInherit(class=ConceptScheme::class          , method="getValue"            )
+     * @ErrorInherit(class=ConceptScheme::class          , method="iri"                 )
+     * @ErrorInherit(class=ConceptScheme::class          , method="setValue"            )
+     * @ErrorInherit(class=ConceptScheme::class          , method="update"              )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"           )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"         )
+     * @ErrorInherit(class=Iri::class                    , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class           , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="__construct"         )
+     * @ErrorInherit(class=SetRepository::class          , method="findByIri"           )
      */
     public function putConceptScheme(
         ApiRequest $apiRequest,

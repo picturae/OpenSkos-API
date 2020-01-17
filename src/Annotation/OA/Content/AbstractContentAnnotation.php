@@ -11,6 +11,16 @@ abstract class AbstractContentAnnotation extends ObjectLiteral
      */
     public $mimetype;
 
+    /**
+     * @return AbstractContentAnnotation
+     */
+    public static function instance()
+    {
+        $classname = get_called_class();
+
+        return new $classname();
+    }
+
     public function __toArray(): array
     {
         $mime = $this->mimetype;

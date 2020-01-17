@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
+use App\Annotation\ErrorInherit;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\Client;
 use App\Rdf\Sparql\SparqlQuery;
@@ -47,6 +48,9 @@ class SkosResourceRepository
 
     /**
      * @param Triple[] $triples
+     *
+     * @ErrorInherit(class=Iri::class   , method="getUri"    )
+     * @ErrorInherit(class=Triple::class, method="getSubject")
      */
     public static function groupTriples(array $triples): array
     {
@@ -60,6 +64,10 @@ class SkosResourceRepository
 
     /**
      * @psalm-return array<T>
+     *
+     * @ErrorInherit(class=Iri::class                   , method="__construct"      )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="groupTriples"     )
+     * @ErrorInherit(class=SparqlQuery::class           , method="describeAllOfType")
      */
     public function allOfType(
         Iri $type,
@@ -88,6 +96,8 @@ class SkosResourceRepository
     /**
      * @return mixed
      * @psalm-return T|null
+     *
+     * @ErrorInherit(class=SparqlQuery::class, method="describeResource")
      */
     public function findByIri(Iri $iri)
     {
@@ -100,6 +110,11 @@ class SkosResourceRepository
         return call_user_func($this->resourceFactory, $iri, $triples);
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class                   , method="__construct"     )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="groupTriples"    )
+     * @ErrorInherit(class=SparqlQuery::class           , method="describeResource")
+     */
     public function findManyByIriList(array $iris): array
     {
         $sparql  = SparqlQuery::describeResources($iris);
@@ -118,6 +133,11 @@ class SkosResourceRepository
         return $res;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class                   , method="__construct"               )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="groupTriples"              )
+     * @ErrorInherit(class=SparqlQuery::class           , method="describeByTypeAndPredicate")
+     */
     public function findBy(Iri $rdfType, Iri $predicate, InternalResourceId $object): array
     {
         $sparql  = SparqlQuery::describeByTypeAndPredicate($rdfType, $predicate, $object);
@@ -138,6 +158,8 @@ class SkosResourceRepository
 
     /**
      * @return array|mixed|null
+     *
+     * @ErrorInherit(class=SkosResourceRepository::class, method="findBy")
      */
     public function findOneBy(Iri $rdfType, Iri $predicate, InternalResourceId $object)
     {
@@ -157,6 +179,12 @@ class SkosResourceRepository
 
     /**
      * @return mixed|null
+     *
+     * @ErrorInherit(class=Iri::class                   , method="__construct"            )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="findBy"                 )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="groupTriples"           )
+     * @ErrorInherit(class=SparqlQuery::class           , method="describeSubjectFromUuid")
+     * @ErrorInherit(class=SparqlQuery::class           , method="describeWithoutUuid"    )
      */
     public function getByUuid(InternalResourceId $subject)
     {
@@ -193,6 +221,10 @@ class SkosResourceRepository
     /**
      * Fetches a resource directly by it's subject.
      *
+     * @ErrorInherit(class=Iri::class                   , method="__construct"              )
+     * @ErrorInherit(class=SkosResourceRepository::class, method="groupTriples"             )
+     * @ErrorInherit(class=SparqlQuery::class           , method="describeByTypeWithoutUuid")
+     *
      * @return mixed|null
      */
     public function getOneWithoutUuid(Iri $rdfType, InternalResourceId $subject)
@@ -225,6 +257,10 @@ class SkosResourceRepository
         return $this->rdfClient->insertTriples($triples);
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class        , method="getUri"       )
+     * @ErrorInherit(class=SparqlQuery::class, method="deleteSubject")
+     */
     public function deleteSubject(Iri $subject)
     {
         $sparql = SparqlQuery::deleteSubject($subject->getUri());

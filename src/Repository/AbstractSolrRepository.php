@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Annotation\ErrorInherit;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
@@ -96,6 +97,10 @@ abstract class AbstractSolrRepository extends AbstractRepository
         $this->solrQueryBuilder = $solrQueryBuilder;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class       , method="getUri"   )
+     * @ErrorInherit(class=SolrClient::class, method="getClient")
+     */
     public function deleteIndex(Iri $iri): void
     {
         $client = $this->solrClient->getClient();
@@ -117,6 +122,8 @@ abstract class AbstractSolrRepository extends AbstractRepository
      * @param int    &$numFound     output Total number of found records
      * @param array  $sorts
      * @param bool   $full_retrieve
+     *
+     * @ErrorInherit(class=SolrClient::class, method="getClient")
      *
      * @return array Array of uris
      *
@@ -227,6 +234,11 @@ abstract class AbstractSolrRepository extends AbstractRepository
 
     /**
      * @param Triple[] $triples
+     *
+     * @ErrorInherit(class=Iri::class       , method="getUri"   )
+     * @ErrorInherit(class=Literal::class   , method="value"    )
+     * @ErrorInherit(class=SolrClient::class, method="getClient")
+     * @ErrorInherit(class=Triple::class    , method="getObject")
      */
     public function insertTriples(array $triples): \EasyRdf_Http_Response
     {

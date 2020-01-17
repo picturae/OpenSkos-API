@@ -21,6 +21,7 @@ parameters:
         "rdfs:domain": "skosxl:Label"
       literalForm:
         datatype: literal
+        literaltype: "xsd:string"
         "rdfs:domain": "skosxl:Label"
       prefLabel:
         datatype: literal

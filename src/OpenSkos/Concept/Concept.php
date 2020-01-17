@@ -6,6 +6,7 @@ namespace App\OpenSkos\Concept;
 
 use App\Annotation\Document;
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Database\Doctrine;
 use App\Ontology\Context;
 use App\Ontology\Dc;
@@ -296,6 +297,14 @@ final class Concept extends AbstractRdfDocument
         'default' => ['uri' => ['lang' => ''], 'prefLabel' => ['lang' => ''], 'definition' => ['lang' => '']],
     ];
 
+    /**
+     * @ErrorInherit(class=Concept::class, method="getValue"   )
+     * @ErrorInherit(class=Concept::class, method="iri"        )
+     * @ErrorInherit(class=Concept::class, method="setValue"   )
+     * @ErrorInherit(class=Concept::class, method="triples"    )
+     * @ErrorInherit(class=Iri::class    , method="__construct")
+     * @ErrorInherit(class=Iri::class    , method="getUri"     )
+     */
     public function __construct(
         Iri $subject,
         ?VocabularyAwareResource $resource = null,
@@ -405,6 +414,12 @@ final class Concept extends AbstractRdfDocument
      *        description="Semantic relations are not possible between concepts with mismatchiing schemes",
      *        fields={"ours", "referenced"}
      * )
+     *
+     * @ErrorInherit(class=Concept::class                , method="getProperty"     )
+     * @ErrorInherit(class=ConceptRepository::class      , method="findByIri"       )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="findByIri"       )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="instance"        )
+     * @ErrorInherit(class=RelationType::class           , method="vocabularyFields")
      */
     public function errors(string $errorPrefix = null): array
     {
@@ -506,6 +521,11 @@ final class Concept extends AbstractRdfDocument
         return $errors;
     }
 
+    /**
+     * @ErrorInherit(class=Concept::class     , method="getProperty"     )
+     * @ErrorInherit(class=Context::class     , method="decodeUri"       )
+     * @ErrorInherit(class=RelationType::class, method="vocabularyFields")
+     */
     public function isOrphan(): bool
     {
         $relationTypes = RelationType::vocabularyFields();
@@ -539,14 +559,6 @@ final class Concept extends AbstractRdfDocument
     public static function getAcceptableFields(): array
     {
         return self::$acceptable_fields;
-    }
-
-    /**
-     * @return string[]
-     */
-    public static function getMapping(): array
-    {
-        return static::$mapping;
     }
 
     public static function getXlPredicates(): array

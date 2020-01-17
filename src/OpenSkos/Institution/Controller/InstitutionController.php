@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace App\OpenSkos\Institution\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Institution\Institution;
 use App\OpenSkos\Institution\InstitutionRepository;
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -34,6 +38,26 @@ final class InstitutionController
     /**
      * @Route(path="/institutions.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive all (filtered) institutions")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="institution-getall-filter-institutions-not-applicable",
@@ -44,6 +68,15 @@ final class InstitutionController
      *        status=400,
      *        description="A sets filter was given in the request but it is not supported on this endpoint"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"    )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"      )
+     * @ErrorInherit(class=ApiRequest::class           , method="getInstitutions")
+     * @ErrorInherit(class=ApiRequest::class           , method="getLimit"       )
+     * @ErrorInherit(class=ApiRequest::class           , method="getOffset"      )
+     * @ErrorInherit(class=ApiRequest::class           , method="getSets"        )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"    )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"    )
      */
     public function getInstitutions(
         ApiRequest $apiRequest,
@@ -73,6 +106,31 @@ final class InstitutionController
     /**
      * @Route(path="/institution/{id}.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive an institution using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="institution-getone-not-found",
@@ -80,6 +138,16 @@ final class InstitutionController
      *        description="The requested institution could not be retreived",
      *        fields={"id"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"  )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct")
+     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"  )
+     * @ErrorInherit(class=InstitutionRepository::class, method="getByUuid"  )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class   , method="__toString" )
+     * @ErrorInherit(class=Iri::class                  , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class       , method="__construct")
      */
     public function getInstitution(
         InternalResourceId $id,
@@ -107,6 +175,32 @@ final class InstitutionController
     /**
      * @Route(path="/institutions.{format?}", methods={"POST"})
      *
+     * @OA\Summary("Create one or more new institutions")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="institution-create-empty-or-corrupt-body",
@@ -118,6 +212,20 @@ final class InstitutionController
      *        description="An institution with the given iri already exists",
      *        fields={"iri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class           , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class           , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class       , method="requireAdministrator")
+     * @ErrorInherit(class=Institution::class          , method="errors"              )
+     * @ErrorInherit(class=Institution::class          , method="exists"              )
+     * @ErrorInherit(class=Institution::class          , method="iri"                 )
+     * @ErrorInherit(class=Institution::class          , method="save"                )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class, method="fromGraph"           )
+     * @ErrorInherit(class=Iri::class                  , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"         )
      */
     public function postInstitution(
         ApiRequest $apiRequest,
@@ -171,7 +279,42 @@ final class InstitutionController
     /**
      * @Route(path="/institution/{id}.{format?}", methods={"DELETE"})
      *
+     * @OA\Summary("Delete a single institution using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class           , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"           )
+     * @ErrorInherit(class=Authentication::class       , method="requireAdministrator")
+     * @ErrorInherit(class=Institution::class          , method="delete"              )
+     * @ErrorInherit(class=InstitutionController::class, method="getInstitution"      )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct"         )
+     * @ErrorInherit(class=ScalarResponse::class       , method="__construct"         )
      */
     public function deleteInstitution(
         InternalResourceId $id,
@@ -200,6 +343,32 @@ final class InstitutionController
     /**
      * @Route(path="/institutions.{format?}", methods={"PUT"})
      *
+     * @OA\Summary("Update one or more institutions (FULL rewrite)")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     *   @OA\Schema\ObjectLiteral(name="@context",in="body"),
+     *   @OA\Schema\ArrayLiteral(
+     *     name="@graph",
+     *     in="body",
+     *     items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="institution-update-empty-or-corrupt-body",
@@ -211,6 +380,23 @@ final class InstitutionController
      *        description="The institution with the given iri does not exist",
      *        fields={"iri"}
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class           , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class           , method="getGraph"            )
+     * @ErrorInherit(class=Authentication::class       , method="getUser"             )
+     * @ErrorInherit(class=Authentication::class       , method="requireAdministrator")
+     * @ErrorInherit(class=Institution::class          , method="errors"              )
+     * @ErrorInherit(class=Institution::class          , method="exists"              )
+     * @ErrorInherit(class=Institution::class          , method="iri"                 )
+     * @ErrorInherit(class=Institution::class          , method="setValue"            )
+     * @ErrorInherit(class=Institution::class          , method="update"              )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"         )
+     * @ErrorInherit(class=InstitutionRepository::class, method="fromGraph"           )
+     * @ErrorInherit(class=Iri::class                  , method="getUri"              )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"         )
+     * @ErrorInherit(class=User::class                 , method="iri"                 )
      */
     public function putInstitution(
         ApiRequest $apiRequest,

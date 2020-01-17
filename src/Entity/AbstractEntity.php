@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Annotation\Document;
+use App\Annotation\ErrorInherit;
 use App\Database\Doctrine;
 use Doctrine\Common\Annotations\AnnotationReader;
 use JsonMapper;
@@ -50,6 +51,9 @@ abstract class AbstractEntity
      * If no data was given, the data already in the entity is used to query the database.
      *
      * @param mixed $data
+     *
+     * @ErrorInherit(class=AbstractEntity::class, method="__toArray")
+     * @ErrorInherit(class=AbstractEntity::class, method="getTable" )
      */
     public function populate($data = null): self
     {

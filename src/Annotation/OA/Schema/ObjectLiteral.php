@@ -2,6 +2,7 @@
 
 namespace App\Annotation\OA\Schema;
 
+use App\Annotation\Error;
 use App\Ontology\Context;
 use App\Rdf\AbstractRdfDocument;
 
@@ -43,6 +44,8 @@ class ObjectLiteral extends Literal
 
                 // Use mapping to fetch known fields from ontology
                 foreach ($this->class::getMapping() as $localName => $predicate) {
+                    // TODO: Hidden Fields?
+
                     $decoded = Context::decodeUri($predicate);
                     $type    = Context::literaltype($predicate);
                     if (is_null($decoded)) {
@@ -50,6 +53,11 @@ class ObjectLiteral extends Literal
                     }
                     $short = implode(':', $decoded);
                     switch ($type) {
+                        case 'xsd:boolean':
+                            $literal       = new BooleanLiteral();
+                            $literal->name = $short;
+                            array_push($this->properties, $literal);
+                            break;
                         case 'xsd:string':
                             $literal       = new StringLiteral();
                             $literal->name = $short;
@@ -57,6 +65,22 @@ class ObjectLiteral extends Literal
                             break;
                     }
                 }
+            } elseif (is_a($this->class, Error::class, true)) {
+                $statusLiteral         = new IntegerLiteral();
+                $statusLiteral->name   = 'status';
+                $statusLiteral->format = 'int16';
+
+                $codeLiteral       = new StringLiteral();
+                $codeLiteral->name = 'code';
+
+                $descriptionLiteral       = new StringLiteral();
+                $descriptionLiteral->name = 'description';
+
+                $this->properties = [
+                    $statusLiteral,
+                    $codeLiteral,
+                    $descriptionLiteral,
+                ];
             } else {
                 $reflectionClass      = new \ReflectionClass($this->class);
                 $reflectionProperties = $reflectionClass->getProperties();
@@ -71,7 +95,6 @@ class ObjectLiteral extends Literal
 
         foreach ($this->properties as $property) {
             $schema['properties'][$property->name] = $property;
-            unset($property->name);
         }
 
         if (!empty($this->name)) {

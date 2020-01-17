@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\OpenSkos\Filters;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\EasyRdf\EasyRdfClient;
 use App\Exception\ApiException;
 use App\Rdf\Sparql\SparqlQuery;
@@ -49,6 +50,8 @@ final class SolrFilterProcessor
      * @param $uuid
      *
      * @psalm-suppress UndefinedInterfaceMethod
+     *
+     * @ErrorInherit(class=SparqlQuery::class, method="SelectSubjectFromUuid")
      */
     private function retrieveUriFromUuid($uuid): ?string
     {
@@ -139,6 +142,8 @@ final class SolrFilterProcessor
      *        status=400,
      *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
      * )
+     *
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="isUuid")
      */
     public function buildSetFilters(array $filterList)
     {
@@ -166,6 +171,8 @@ final class SolrFilterProcessor
      *        status=400,
      *        description="The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store)."
      * )
+     *
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="retrieveUriFromUuid")
      */
     public function buildConceptSchemeFilters(array $filterList)
     {

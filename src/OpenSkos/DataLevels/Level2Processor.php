@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\DataLevels;
 
+use App\Annotation\ErrorInherit;
 use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
 use App\Rdf\Iri;
+use App\Rdf\Triple;
 use App\Rdf\VocabularyAwareResource;
 
 final class Level2Processor
 {
+    /**
+     * @ErrorInherit(class=Iri::class   , method="getUri"      )
+     * @ErrorInherit(class=Triple::class, method="getObject"   )
+     * @ErrorInherit(class=Triple::class, method="getPredicate")
+     */
     private function crossLinkEntities(array $entities, array $to_process): array
     {
         $crosslink = [];
@@ -40,6 +47,11 @@ final class Level2Processor
         return $crosslink;
     }
 
+    /**
+     * @ErrorInherit(class=Concept::class        , method="getXlPredicates"  )
+     * @ErrorInherit(class=Level2Processor::class, method="crossLinkEntities")
+     * @ErrorInherit(class=Level2Processor::class, method="populateData"     )
+     */
     public function AddLevel2Data(LabelRepository $repository, array &$entities): void
     {
         /*

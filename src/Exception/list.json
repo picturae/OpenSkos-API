@@ -317,6 +317,17 @@
         "class": "App\\Ontology\\SkosXl",
         "method": "validateHiddenLabel"
     },
+    "skosxl-validate-literalform-literal-type" : {
+        "code": "skosxl-validate-literalform-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the literalform predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validateLiteralForm"
+    },
     "skosxl-validate-preflabel-literal-type" : {
         "code": "skosxl-validate-preflabel-literal-type",
         "fields": [
@@ -449,6 +460,17 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateStatus"
     },
+    "openskos-validate-tobechecked-literal-type" : {
+        "code": "openskos-validate-tobechecked-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the tobechecked predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#boolean'",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateToBeChecked"
+    },
     "openskos-validate-datedeleted-literal-type" : {
         "code": "openskos-validate-datedeleted-literal-type",
         "fields": [
@@ -481,6 +503,17 @@
         "status": 422,
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateUuid"
+    },
+    "openskos-validate-role-enum" : {
+        "code": "openskos-validate-role-enum",
+        "fields": [
+            "allowed",
+            "given"
+        ],
+        "description": "The object for the role predicate does not consist of an allowed value",
+        "status": 422,
+        "class": "App\\Ontology\\OpenSkos",
+        "method": "validateRole"
     },
     "openskos-validate-name-literal-type" : {
         "code": "openskos-validate-name-literal-type",
@@ -1152,14 +1185,14 @@
         "description": "Sets filter is not applicable here",
         "status": 400,
         "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
-        "method": "sets"
+        "method": "getAllPrefixes"
     },
     "set-getall-sets-filter" : {
         "code": "set-getall-sets-filter",
         "description": "A 'sets' filter was given but is not applicable to this endpoint",
         "status": 400,
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "getSets"
+        "method": "getAllSets"
     },
     "set-getone-not-found" : {
         "code": "set-getone-not-found",

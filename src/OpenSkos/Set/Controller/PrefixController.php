@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\OpenSkos\Set\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
 use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
@@ -30,12 +32,46 @@ final class PrefixController
     /**
      * @Route(path="/prefixes.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Retreive all available prefixes")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="openskos:prefix", description="The available prefix url"),
+     *       }),
+     *     ),
+     *   }),
+     * )
+     *
      * @Error(code="setprefixcontroller-sets-filter-not-applicable",
      *        status=400,
      *        description="Sets filter is not applicable here"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class         , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class         , method="getSets"                )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class    , method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class    , method="buildInstitutionFilters")
+     * @ErrorInherit(class=SetRepository::class      , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class      , method="all"                    )
      */
-    public function sets(
+    public function getAllPrefixes(
         ApiRequest $apiRequest,
         SetRepository $repository,
         FilterProcessor $filterProcessor

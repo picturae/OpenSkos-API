@@ -36,6 +36,9 @@ final class StringLiteral implements Literal
         return $this->lang;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     */
     public static function typeIri(): Iri
     {
         return new Iri('http://www.w3.org/2001/XMLSchema#string');

@@ -17,11 +17,6 @@ abstract class Literal extends AbstractAnnotation
     /**
      * @var mixed
      */
-    public $exmaple;
-
-    /**
-     * @var mixed
-     */
     public $name;
 
     /**

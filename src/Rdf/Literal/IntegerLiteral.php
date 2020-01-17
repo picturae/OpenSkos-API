@@ -9,20 +9,23 @@ use App\Rdf\Iri;
 final class IntegerLiteral implements Literal
 {
     /**
-     * @var bool
+     * @var int
      */
     private $value;
 
-    public function __construct(bool $value)
+    public function __construct(int $value)
     {
         $this->value = $value;
     }
 
-    public function value(): bool
+    public function value(): int
     {
         return $this->value;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     */
     public static function typeIri(): Iri
     {
         return new Iri('http://www.w3.org/2001/XMLSchema#integer');
@@ -39,12 +42,14 @@ final class IntegerLiteral implements Literal
     }
 
     /**
+     * @param mixed $value
+     *
      * @return IntegerLiteral
+     *
+     * @ErrorInherit(class=IntegerLiteral::class , method="__construct")
      */
-    public static function fromString(string $value): self
+    public static function fromString($value): self
     {
-        $retval = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-
-        return new IntegerLiteral($retval);
+        return new self(intval($value));
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Rdf;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Exception\ApiException;
 
 class Iri implements RdfTerm
@@ -24,6 +25,8 @@ class Iri implements RdfTerm
      *        description="Invalid type for $value, expected string|Iri",
      *        fields={"receivedType"}
      * )
+     *
+     * @ErrorInherit(class=Iri::class , method="getUri")
      */
     public function __construct($value)
     {

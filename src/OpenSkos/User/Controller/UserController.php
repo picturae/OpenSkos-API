@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\OpenSkos\User\Controller;
 
 use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
+use App\Entity\User as AuthUser;
 use App\Exception\ApiException;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\Label\LabelRepository;
@@ -14,6 +17,7 @@ use App\OpenSkos\User\UserRepository;
 use App\Rdf\Iri;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
+use App\Security\Authentication;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -42,6 +46,26 @@ final class UserController
     /**
      * @Route(path="/users.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Fetch a list of all (filtered) users")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=User::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error("user-getall-permission-denied-missing-user",
@@ -52,6 +76,21 @@ final class UserController
      *        status=403,
      *        description="The uri for the authenticated user could not be loaded"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class    , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class    , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class    , method="getFormat"           )
+     * @ErrorInherit(class=ApiRequest::class    , method="getLimit"            )
+     * @ErrorInherit(class=ApiRequest::class    , method="getOffset"           )
+     * @ErrorInherit(class=Authentication::class, method="getUser"             )
+     * @ErrorInherit(class=Authentication::class, method="isAdministrator"     )
+     * @ErrorInherit(class=Authentication::class, method="requireAuthenticated")
+     * @ErrorInherit(class=AuthUser::class      , method="getUri"              )
+     * @ErrorInherit(class=Iri::class           , method="__construct"         )
+     * @ErrorInherit(class=ListResponse::class  , method="__construct"         )
+     * @ErrorInherit(class=UserRepository::class, method="__construct"         )
+     * @ErrorInherit(class=UserRepository::class, method="all"                 )
+     * @ErrorInherit(class=UserRepository::class, method="get"                 )
      */
     public function geAllUsers(
         UserRepository $repository,
@@ -98,6 +137,31 @@ final class UserController
     /**
      * @Route(path="/user/{id}.{format?}", methods={"GET"})
      *
+     * @OA\Summary("Fetch a single user using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=User::class),
+     *     ),
+     *   }),
+     * )
+     *
      * @throws ApiException
      *
      * @Error(code="user-getone-permission-denied-missing-user",
@@ -116,6 +180,18 @@ final class UserController
      *        status=404,
      *        description="The requested user could not be found"
      * )
+     *
+     * @ErrorInherit(class=ApiRequest::class    , method="__construct"         )
+     * @ErrorInherit(class=ApiRequest::class    , method="getAuthentication"   )
+     * @ErrorInherit(class=ApiRequest::class    , method="getFormat"           )
+     * @ErrorInherit(class=Authentication::class, method="getUser"             )
+     * @ErrorInherit(class=Authentication::class, method="isAdministrator"     )
+     * @ErrorInherit(class=Authentication::class, method="requireAuthenticated")
+     * @ErrorInherit(class=AuthUser::class      , method="getUri"              )
+     * @ErrorInherit(class=Iri::class           , method="__construct"         )
+     * @ErrorInherit(class=ScalarResponse::class, method="__construct"         )
+     * @ErrorInherit(class=UserRepository::class, method="__construct"         )
+     * @ErrorInherit(class=UserRepository::class, method="get"                 )
      */
     public function getOneUser(
         string $id,

@@ -2,6 +2,8 @@
 
 namespace App\Documentation\Swagger\Command;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Annotation\OA;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Gnugat\NomoSpaco\File\FileRepository;
@@ -181,10 +183,25 @@ class GenerateSwaggerCommand extends Command
                 $annotatedMethods = [];
                 $data             = new \stdClass();
                 $data->summary    = '';
+                $methodHasRoute   = false;
 
+                // Check if the method even has a route
+                foreach ($annotations as $annotation) {
+                    if ($annotation instanceof Route) {
+                        $methodHasRoute = true;
+                    }
+                }
+
+                // No route = not interesting
+                if (!$methodHasRoute) {
+                    continue;
+                }
+
+                // Build documentation based on route
                 foreach ($annotations as $annotation) {
                     // Route annotation
                     if ($annotation instanceof Route) {
+                        $methodHasRoute   = true;
                         $path             = $annotation->getPath();
                         $annotatedMethods = $annotation->getMethods();
                         $path             = str_replace('?}', '}', $path);
@@ -205,13 +222,51 @@ class GenerateSwaggerCommand extends Command
                         unset($annotationData['code']);
                         $data->responses            = array_merge_recursive(
                             $data->responses ?? [],
-                            ["'$code'"=> ['content' => $annotationData['content']->__toArray()]],
+                            ["'$code'" => ['content' => $annotationData['content']->__toArray()]],
                         );
                     }
 
                     if ($annotation instanceof OA\Request) {
                         $data->parameters = $annotation->parameters;
                     }
+                }
+
+                // Fetch all errors
+                $errorFetcher         = new ErrorInherit();
+                $errorFetcher->class  = $class;
+                $errorFetcher->method = $reflectionMethod->name;
+                foreach ($errorFetcher->getErrors() as $error) {
+                    // Fetch/create the initial documentation
+                    $code                       = $error->status;
+                    $data->responses["'$code'"] = $data->responses["'$code'"] ?? ['content'=> ['application/json'=> [
+                        'schema'=> ['type'=>'object', 'properties'=>[]],
+                    ]]];
+                    $properties = $data->responses["'$code'"]['content']['application/json']['schema']['properties'];
+
+                    // Register default fields
+                    $properties['status'] = [
+                        'type'        => 'integer',
+                        'format'      => 'int16',
+                        'description' => 'Equivelent http status code',
+                    ];
+                    $properties['code'] = [
+                        'type'        => 'string',
+                        'description' => 'Unique error code',
+                    ];
+                    $properties['description'] = [
+                        'type'        => 'string',
+                        'description' => 'Human-readable explanation of the error',
+                    ];
+
+                    // Extra fields
+                    foreach ($error->fields as $extraField) {
+                        $properties[$extraField] = [
+                            'type' => 'string',
+                        ];
+                    }
+
+                    // Write back the resulting description
+                    $data->responses["'$code'"]['content']['application/json']['schema']['properties'] = $properties;
                 }
 
                 if (!count($annotatedMethods)) {
