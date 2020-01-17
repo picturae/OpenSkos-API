@@ -1,0 +1,15 @@
+[ver:1,total:1380]
+src/OpenSkos/Institution/Controller/InstitutionController.php:1020,1579273200:1020,m
+public/swagger.yaml:100,1579273200:100,m
+src/Entity/AbstractEntity.php:100,1579273200:100,m
+src/Entity/User.php:28,1579273200:28,r
+src/OpenSkos/SkosResourceRepository.php:20,1579273200:20,r
+src/Security/Authentication.php:20,1579273200:20,r
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:20,1579273200:20,r
+src/OpenSkos/ApiRequest.php:20,1579273200:20,r
+src/Rest/ScalarResponse.php:12,1579273200:12,r
+src/Rdf/Iri.php:8,1579273200:8,r
+src/OpenSkos/InternalResourceId.php:8,1579273200:8,r
+src/Rest/ListResponse.php:8,1579273200:8,r
+src/OpenSkos/Institution/Institution.php:8,1579273200:8,r
+src/OpenSkos/Institution/InstitutionRepository.php:8,1579273200:8,r
