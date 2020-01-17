@@ -1,4 +1,11 @@
 {
+    "internal-server-error" : {
+        "code": "internal-server-error",
+        "description": "An ApiException was thrown but no error code was given",
+        "status": 500,
+        "class": "App\\Exception\\ApiException",
+        "method": "__construct"
+    },
     "openskos-json-ld-serializer-serialise-invalid-format" : {
         "code": "openskos-json-ld-serializer-serialise-invalid-format",
         "fields": [
@@ -19,157 +26,29 @@
         "class": "App\\EasyRdf\\Serializer\\OpenSkosJsonLdSerializer",
         "method": "serialise"
     },
-    "solrfilterprocessor-build-institutions-filters-uuid-not-supported" : {
-        "code": "solrfilterprocessor-build-institutions-filters-uuid-not-supported",
-        "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
-        "method": "buildInstitutionFilters"
+    "sparqlrepository-construct-resource-class-null" : {
+        "code": "sparqlrepository-construct-resource-class-null",
+        "description": "SparqlRepository can not be initialized without resource class",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
     },
-    "solrfilterprocessor-build-institutions-filters-search-by-string" : {
-        "code": "solrfilterprocessor-build-institutions-filters-search-by-string",
-        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
-        "method": "buildInstitutionFilters"
-    },
-    "solrfilterprocessor-build-set-filters-uuid-not-supported" : {
-        "code": "solrfilterprocessor-build-set-filters-uuid-not-supported",
-        "description": "The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
-        "method": "buildSetFilters"
-    },
-    "solrfilterprocessor-build-set-filters-search-by-string" : {
-        "code": "solrfilterprocessor-build-set-filters-search-by-string",
-        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
-        "method": "buildSetFilters"
-    },
-    "solrfilterprocessor-build-conceptscheme-filters-search-by-string" : {
-        "code": "solrfilterprocessor-build-conceptscheme-filters-search-by-string",
-        "description": "The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
-        "method": "buildConceptSchemeFilters"
-    },
-    "solrfilterprocessor-build-statuses-filters-unrecognised-status" : {
-        "code": "solrfilterprocessor-build-statuses-filters-unrecognised-status",
+    "sparqlrepository-construct-resource-class-not-rdfresource" : {
+        "code": "sparqlrepository-construct-resource-class-not-rdfresource",
         "fields": [
-            "received",
-            "accepted"
+            "receivedClass"
         ],
-        "description": "Unrecognised status in filters.",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
-        "method": "buildStatusesFilters"
+        "description": "SparqlRepository needs to be initialized for a class extending RdfResource",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
     },
-    "filterprocessor-build-institution-filters-uuid-not-supported" : {
-        "code": "filterprocessor-build-institution-filters-uuid-not-supported",
-        "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
-        "method": "buildInstitutionFilters"
-    },
-    "filterprocessor-build-set-filters-uuid-not-supported" : {
-        "code": "filterprocessor-build-set-filters-uuid-not-supported",
-        "description": "The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
-        "method": "buildSetFilters"
-    },
-    "filterprocessor-build-set-filters-search-by-string" : {
-        "code": "filterprocessor-build-set-filters-search-by-string",
-        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
-        "method": "buildSetFilters"
-    },
-    "conceptscheme-getone-not-found" : {
-        "code": "conceptscheme-getone-not-found",
-        "fields": [
-            "iri"
-        ],
-        "description": "The requested ConceptScheme could not be retreived",
-        "status": 404,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "getConceptScheme"
-    },
-    "conceptscheme-create-empty-or-corrupt-body" : {
-        "code": "conceptscheme-create-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
-    },
-    "conceptscheme-create-already-exists" : {
-        "code": "conceptscheme-create-already-exists",
-        "fields": [
-            "iri",
-            "uuid"
-        ],
-        "description": "A ConceptScheme with the given iri or uuid already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
-    },
-    "conceptscheme-create-tenant-does-not-exist" : {
-        "code": "conceptscheme-create-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to create a ConceptScheme for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
-    },
-    "conceptscheme-create-set-does-not-exist" : {
-        "code": "conceptscheme-create-set-does-not-exist",
-        "fields": [
-            "set"
-        ],
-        "description": "The given set to create a ConceptScheme for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
-    },
-    "conceptscheme-update-empty-or-corrupt-body" : {
-        "code": "conceptscheme-update-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
-    },
-    "conceptscheme-update-does-not-exist" : {
-        "code": "conceptscheme-update-does-not-exist",
-        "fields": [
-            "iri"
-        ],
-        "description": "The set with the given iri does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
-    },
-    "conceptscheme-update-tenant-does-not-exist" : {
-        "code": "conceptscheme-update-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to update a conceptscheme for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
-    },
-    "conceptscheme-update-set-does-not-exist" : {
-        "code": "conceptscheme-update-set-does-not-exist",
-        "fields": [
-            "set"
-        ],
-        "description": "The given set to update a conceptscheme for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
+    "sparqlrepository-construct-resource-type-null" : {
+        "code": "sparqlrepository-construct-resource-type-null",
+        "description": "SparqlRepository can not be initialized without resource type",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
     },
     "abstract-rdf-document-missing-predicate" : {
         "code": "abstract-rdf-document-missing-predicate",
@@ -236,645 +115,65 @@
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "save"
     },
-    "relation-getall-missing-subject-and-object" : {
-        "code": "relation-getall-missing-subject-and-object",
+    "rdf-literal-datetime-unparsable-value" : {
+        "code": "rdf-literal-datetime-unparsable-value",
         "fields": [
-            "uuid"
+            "value"
         ],
-        "description": "Neither subject or object was given, either is required",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "getRelations"
-    },
-    "relation-getall-subject-not-found" : {
-        "code": "relation-getall-subject-not-found",
-        "fields": [
-            "subject"
-        ],
-        "description": "No subject could be found with the given id",
-        "status": 404,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "getRelations"
-    },
-    "relation-getall-object-not-found" : {
-        "code": "relation-getall-object-not-found",
-        "fields": [
-            "object"
-        ],
-        "description": "No object could be found with the given id",
-        "status": 404,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "getRelations"
-    },
-    "semantic-relation-create-subject-concept-not-found" : {
-        "code": "semantic-relation-create-subject-concept-not-found",
-        "fields": [
-            "iri"
-        ],
-        "description": "The subject concept to create a semantic relation for could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "postRelation"
-    },
-    "semantic-relation-create-object-concept-not-found" : {
-        "code": "semantic-relation-create-object-concept-not-found",
-        "fields": [
-            "iri"
-        ],
-        "description": "The target concept to create a semantic relation for could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "postRelation"
-    },
-    "semantic-relation-create-predicate-not-allowed" : {
-        "code": "semantic-relation-create-predicate-not-allowed",
-        "fields": [
-            "predicate"
-        ],
-        "description": "The given predicate is not a valid relation to be created",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "postRelation"
-    },
-    "semantic-relation-create-literal-not-allowed" : {
-        "code": "semantic-relation-create-literal-not-allowed",
-        "fields": [
-            "predicate",
-            "reference"
-        ],
-        "description": "Semantic relations with a literal reference are not allowed",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "postRelation"
-    },
-    "semantic-relation-create-unknown-reference" : {
-        "code": "semantic-relation-create-unknown-reference",
-        "fields": [
-            "type"
-        ],
-        "description": "An IRI reference was expected, received an unknown type",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "postRelation"
-    },
-    "relation-update-bad-request" : {
-        "code": "relation-update-bad-request",
-        "description": "Updating a relation is not allowed\/possible",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "putRelation"
-    },
-    "semantic-relation-delete-subject-not-found" : {
-        "code": "semantic-relation-delete-subject-not-found",
-        "fields": [
-            "subject"
-        ],
-        "description": "The subject to delete a relation for could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "deleteRelation"
-    },
-    "semantic-relation-delete-object-not-found" : {
-        "code": "semantic-relation-delete-object-not-found",
-        "fields": [
-            "object"
-        ],
-        "description": "The object to delete a relation for could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "deleteRelation"
-    },
-    "semantic-relation-delete-missing-param-subject" : {
-        "code": "semantic-relation-delete-missing-param-subject",
-        "description": "Missing the 'subject' parameter",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "deleteRelation"
-    },
-    "semantic-relation-delete-missing-param-predicate" : {
-        "code": "semantic-relation-delete-missing-param-predicate",
-        "description": "Missing the 'predicate' parameter",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "deleteRelation"
-    },
-    "semantic-relation-delete-missing-param-object" : {
-        "code": "semantic-relation-delete-missing-param-object",
-        "description": "Missing the 'object' parameter",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "deleteRelation"
-    },
-    "semantic-relation-delete-corrupt-param-predicate" : {
-        "code": "semantic-relation-delete-corrupt-param-predicate",
-        "description": "The given predicate is not valid or not allowed",
-        "status": 400,
-        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
-        "method": "deleteRelation"
-    },
-    "sparqlrepository-construct-resource-class-null" : {
-        "code": "sparqlrepository-construct-resource-class-null",
-        "description": "SparqlRepository can not be initialized without resource class",
+        "description": "The given value can not be parsed to a DateTimeLiteral",
         "status": 500,
-        "class": "App\\Rdf\\Sparql\\SparqlRepository",
-        "method": "__construct"
+        "class": "App\\Rdf\\Literal\\DatetimeLiteral",
+        "method": "fromString"
     },
-    "sparqlrepository-construct-resource-class-not-rdfresource" : {
-        "code": "sparqlrepository-construct-resource-class-not-rdfresource",
+    "iri-construct-invalid-value-type" : {
+        "code": "iri-construct-invalid-value-type",
         "fields": [
-            "receivedClass"
+            "receivedType"
         ],
-        "description": "SparqlRepository needs to be initialized for a class extending RdfResource",
+        "description": "Invalid type for $value, expected string|Iri",
         "status": 500,
-        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "class": "App\\Rdf\\Iri",
         "method": "__construct"
     },
-    "sparqlrepository-construct-resource-type-null" : {
-        "code": "sparqlrepository-construct-resource-type-null",
-        "description": "SparqlRepository can not be initialized without resource type",
+    "rdf-triple-construct-invalid-object-type" : {
+        "code": "rdf-triple-construct-invalid-object-type",
+        "fields": [
+            "received"
+        ],
+        "description": "Object must be either Iri or Literal",
         "status": 500,
-        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "class": "App\\Rdf\\Triple",
         "method": "__construct"
     },
-    "labelcontroller-getone-not-found" : {
-        "code": "labelcontroller-getone-not-found",
+    "rdf-triple-tostring-invalid-object-type" : {
+        "code": "rdf-triple-tostring-invalid-object-type",
         "fields": [
-            "id"
+            "received"
         ],
-        "description": "The requested label could not be retreived",
-        "status": 404,
-        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
-        "method": "getLabel"
+        "description": "Object must be either Iri or Literal",
+        "status": 500,
+        "class": "App\\Rdf\\Triple",
+        "method": "__toString"
     },
-    "labelcontroller-getonebyuri-param-uri-missing" : {
-        "code": "labelcontroller-getonebyuri-param-uri-missing",
-        "description": "No uri was given",
-        "status": 400,
-        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
-        "method": "getLabelByUri"
-    },
-    "labelcontroller-getonebyuri-not-found" : {
-        "code": "labelcontroller-getonebyuri-not-found",
+    "vocabularyawareresource-from-triples-mapping-not-array" : {
+        "code": "vocabularyawareresource-from-triples-mapping-not-array",
         "fields": [
-            "uri"
+            "receivedType"
         ],
-        "description": "The requested label could not be retreived",
-        "status": 404,
-        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
-        "method": "getLabelByUri"
+        "description": "VocabularyAwareResource needs a (array)mapping.",
+        "status": 500,
+        "class": "App\\Rdf\\VocabularyAwareResource",
+        "method": "fromTriples"
     },
-    "user-getall-permission-denied-missing-user" : {
-        "description": "The authenticated user could not be loaded",
-        "status": 403,
-        "code": "user-getall-permission-denied-missing-user",
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "geAllUsers"
-    },
-    "user-getall-permission-denied-missing-user-uri" : {
-        "description": "The uri for the authenticated user could not be loaded",
-        "status": 403,
-        "code": "user-getall-permission-denied-missing-user-uri",
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "geAllUsers"
-    },
-    "user-getone-permission-denied-missing-user" : {
-        "code": "user-getone-permission-denied-missing-user",
-        "description": "The authenticated user could not be loaded",
-        "status": 403,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
-    },
-    "user-getone-permission-denied-missing-user-uri" : {
-        "code": "user-getone-permission-denied-missing-user-uri",
-        "description": "The uri for the authenticated user could not be loaded",
-        "status": 403,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
-    },
-    "user-getone-permission-denied-missing-role-administrator" : {
-        "code": "user-getone-permission-denied-missing-role-administrator",
-        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
-        "status": 403,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
-    },
-    "user-getone-not-found-user" : {
-        "code": "user-getone-not-found-user",
-        "description": "The requested user could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
-    },
-    "institution-getall-filter-institutions-not-applicable" : {
-        "code": "institution-getall-filter-institutions-not-applicable",
-        "description": "An institutions filter was given in the request but it is not supported on this endpoint",
-        "status": 400,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "getInstitutions"
-    },
-    "institution-getall-filter-sets-not-applicable" : {
-        "code": "institution-getall-filter-sets-not-applicable",
-        "description": "A sets filter was given in the request but it is not supported on this endpoint",
-        "status": 400,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "getInstitutions"
-    },
-    "institution-getone-not-found" : {
-        "code": "institution-getone-not-found",
+    "vocabularyawareresource-addproperty-unknown-property" : {
+        "code": "vocabularyawareresource-addproperty-unknown-property",
         "fields": [
-            "id"
+            "property"
         ],
-        "description": "The requested institution could not be retreived",
-        "status": 404,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "getInstitution"
-    },
-    "institution-create-empty-or-corrupt-body" : {
-        "code": "institution-create-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "postInstitution"
-    },
-    "institution-create-already-exists" : {
-        "code": "institution-create-already-exists",
-        "fields": [
-            "iri"
-        ],
-        "description": "An institution with the given iri already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "postInstitution"
-    },
-    "institution-update-empty-or-corrupt-body" : {
-        "code": "institution-update-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "putInstitution"
-    },
-    "institution-update-does-not-exist" : {
-        "code": "institution-update-does-not-exist",
-        "fields": [
-            "iri"
-        ],
-        "description": "The institution with the given iri does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
-        "method": "putInstitution"
-    },
-    "apirequest-invalid-level" : {
-        "code": "apirequest-invalid-level",
-        "fields": [
-            "level"
-        ],
-        "description": "An invalid level was requested",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
-    },
-    "apirequest-invalid-limit" : {
-        "code": "apirequest-invalid-limit",
-        "fields": [
-            "limit"
-        ],
-        "description": "An invalid limit parameter was given, it needs to be >=0",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
-    },
-    "apirequest-invalid-offset" : {
-        "code": "apirequest-invalid-offset",
-        "fields": [
-            "offset"
-        ],
-        "description": "An invalid offset parameter was given, it needs to be >=0",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
-    },
-    "conceptcontroller-process-date-stamps-from-request-invalid-date-type" : {
-        "code": "conceptcontroller-process-date-stamps-from-request-invalid-date-type",
-        "description": "Dates must be a valid xsd:DateTime or xsdDuration",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "processDateStampsFromRequest"
-    },
-    "conceptcontroller-build-projection-parameters-field-no-language-support" : {
-        "code": "conceptcontroller-build-projection-parameters-field-no-language-support",
-        "fields": [
-            "field"
-        ],
-        "description": "Field has no language support",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "buildProjectionParameters"
-    },
-    "conceptcontroller-build-projection-parameters-field-no-projection-support" : {
-        "code": "conceptcontroller-build-projection-parameters-field-no-projection-support",
-        "fields": [
-            "field"
-        ],
-        "description": "Field has no projection support",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "buildProjectionParameters"
-    },
-    "concept-getone-not-found" : {
-        "code": "concept-getone-not-found",
-        "fields": [
-            "uuid"
-        ],
-        "description": "The requested concept could not be retreived",
-        "status": 404,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "getConcept"
-    },
-    "concept-getonebyfuri-param-uri-missing" : {
-        "code": "concept-getonebyfuri-param-uri-missing",
-        "description": "Unable to determine URI for concept. Please either request a UUID in the path, or specifiy the 'uri' parameter",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "getConceptByForeignUri"
-    },
-    "concept-getonebyfuri-param-uri-invalid" : {
-        "code": "concept-getonebyfuri-param-uri-invalid",
-        "fields": [
-            "foreignUri"
-        ],
-        "description": "'uri' parameter must be a URI.",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "getConceptByForeignUri"
-    },
-    "concept-getonebyfuri-not-found" : {
-        "code": "concept-getonebyfuri-not-found",
-        "fields": [
-            "foreignUri"
-        ],
-        "description": "The requested concept could not be retrieved.",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "getConceptByForeignUri"
-    },
-    "concept-create-empty-or-corrupt-body" : {
-        "code": "concept-create-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "postConcept"
-    },
-    "concept-create-already-exists" : {
-        "code": "concept-create-already-exists",
-        "fields": [
-            "iri"
-        ],
-        "description": "A Concept with the given iri already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "postConcept"
-    },
-    "concept-create-tenant-does-not-exist" : {
-        "code": "concept-create-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to create a Concept for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "postConcept"
-    },
-    "concept-create-set-does-not-exist" : {
-        "code": "concept-create-set-does-not-exist",
-        "fields": [
-            "set"
-        ],
-        "description": "The given set to create a Concept for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "postConcept"
-    },
-    "concept-create-conceptscheme-does-not-exist" : {
-        "code": "concept-create-conceptscheme-does-not-exist",
-        "fields": [
-            "conceptscheme"
-        ],
-        "description": "The given conceptscheme to create a Concept for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "postConcept"
-    },
-    "concept-create-notation-not-unique" : {
-        "code": "concept-create-notation-not-unique",
-        "fields": [
-            "conceptscheme",
-            "notation"
-        ],
-        "description": "The given skos:notation is not unique within the given conceptScheme",
-        "status": 409,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "postConcept"
-    },
-    "concept-update-empty-or-corrupt-body" : {
-        "code": "concept-update-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "putConcept"
-    },
-    "concept-update-does-not-exist" : {
-        "code": "concept-update-does-not-exist",
-        "fields": [
-            "iri"
-        ],
-        "description": "The set with the given iri does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "putConcept"
-    },
-    "concept-update-tenant-does-not-exist" : {
-        "code": "concept-update-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to update a Concept for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "putConcept"
-    },
-    "concept-update-set-does-not-exist" : {
-        "code": "concept-update-set-does-not-exist",
-        "fields": [
-            "set"
-        ],
-        "description": "The given set to update a Concept for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "putConcept"
-    },
-    "concept-update-concept-does-not-exist" : {
-        "code": "concept-update-concept-does-not-exist",
-        "fields": [
-            "conceptscheme"
-        ],
-        "description": "The given conceptscheme to create a Concept for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "putConcept"
-    },
-    "concept-delete-invalid-permissions-user-missing" : {
-        "code": "concept-delete-invalid-permissions-user-missing",
-        "description": "The administrator role was present but the authenticated user was missing",
-        "status": 404,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "deleteConcept"
-    },
-    "concept-delete-not-an-orphan" : {
-        "code": "concept-delete-not-an-orphan",
-        "description": "The concept to delete still has relations",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
-        "method": "deleteConcept"
-    },
-    "concept-related-concept-not-found" : {
-        "code": "concept-related-concept-not-found",
-        "fields": [
-            "iri",
-            "relation"
-        ],
-        "description": "The referenced concept for the relation could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Concept\\Concept",
-        "method": "errors"
-    },
-    "concept-related-concept-scheme-not-found" : {
-        "code": "concept-related-concept-scheme-not-found",
-        "fields": [
-            "iri",
-            "relation"
-        ],
-        "description": "The referenced concept scheme for the relation could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Concept\\Concept",
-        "method": "errors"
-    },
-    "concept-missing-concept-scheme" : {
-        "code": "concept-missing-concept-scheme",
-        "description": "No concept scheme is registered for concept",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Concept",
-        "method": "errors"
-    },
-    "concept-semantic-relation-concept-scheme-mismatch" : {
-        "code": "concept-semantic-relation-concept-scheme-mismatch",
-        "fields": [
-            "ours",
-            "referenced"
-        ],
-        "description": "Semantic relations are not possible between concepts with mismatchiing schemes",
-        "status": 400,
-        "class": "App\\OpenSkos\\Concept\\Concept",
-        "method": "errors"
-    },
-    "setprefixcontroller-sets-filter-not-applicable" : {
-        "code": "setprefixcontroller-sets-filter-not-applicable",
-        "description": "Sets filter is not applicable here",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
-        "method": "getAllPrefixes"
-    },
-    "set-getall-sets-filter" : {
-        "code": "set-getall-sets-filter",
-        "description": "A 'sets' filter was given but is not applicable to this endpoint",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "getAllSets"
-    },
-    "set-getone-not-found" : {
-        "code": "set-getone-not-found",
-        "fields": [
-            "iri"
-        ],
-        "description": "The requested set could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "getSet"
-    },
-    "set-create-empty-or-corrupt-body" : {
-        "code": "set-create-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
-    },
-    "set-create-already-exists" : {
-        "code": "set-create-already-exists",
-        "fields": [
-            "iri",
-            "uuid"
-        ],
-        "description": "A set with the given iri or uuid already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
-    },
-    "set-create-already-exists-duplicate-base-uri" : {
-        "code": "set-create-already-exists-duplicate-base-uri",
-        "fields": [
-            "baseUri"
-        ],
-        "description": "A set with the given baseUri already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
-    },
-    "set-create-tenant-does-not-exist" : {
-        "code": "set-create-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to create a set for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
-    },
-    "set-update-empty-or-corrupt-body" : {
-        "code": "set-update-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "putSet"
-    },
-    "set-update-does-not-exist" : {
-        "code": "set-update-does-not-exist",
-        "fields": [
-            "iri"
-        ],
-        "description": "The set with the given iri does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "putSet"
-    },
-    "set-update-tenant-does-not-exist" : {
-        "code": "set-update-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to update a set for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "putSet"
-    },
-    "set-base-uri-does-not-match-code" : {
-        "code": "set-base-uri-does-not-match-code",
-        "fields": [
-            "code",
-            "base-uri"
-        ],
-        "description": "The given openskos:code does not match the end of the given openskos:conceptBaseUri",
-        "status": 422,
-        "class": "App\\OpenSkos\\Set\\Set",
-        "method": "errors"
+        "description": "Property is not expected",
+        "status": 500,
+        "class": "App\\Rdf\\VocabularyAwareResource",
+        "method": "addProperty"
     },
     "serializer-rdfencoder-encode-data-not-iterable" : {
         "code": "serializer-rdfencoder-encode-data-not-iterable",
@@ -885,27 +184,6 @@
         "status": 500,
         "class": "App\\Serializer\\RdfEncoder",
         "method": "encode"
-    },
-    "authentication-permission-denied-invalid-credentials" : {
-        "code": "authentication-permission-denied-invalid-credentials",
-        "description": "Invalid credentials were given",
-        "status": 403,
-        "class": "App\\Security\\Authentication",
-        "method": "requireAuthenticated"
-    },
-    "authentication-permission-denied-missing-credentials" : {
-        "code": "authentication-permission-denied-missing-credentials",
-        "description": "No credentials were given",
-        "status": 401,
-        "class": "App\\Security\\Authentication",
-        "method": "requireAuthenticated"
-    },
-    "authentication-permission-denied-missing-role-administrator" : {
-        "code": "authentication-permission-denied-missing-role-administrator",
-        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
-        "status": 403,
-        "class": "App\\Security\\Authentication",
-        "method": "requireAdministrator"
     },
     "dcterms-validate-created-literal-type" : {
         "code": "dcterms-validate-created-literal-type",
@@ -1017,83 +295,6 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateTitle"
     },
-    "skos-validate-altlabel-literal-type" : {
-        "code": "skos-validate-altlabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateAltLabel"
-    },
-    "skos-validate-hiddenlabel-literal-type" : {
-        "code": "skos-validate-hiddenlabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateHiddenLabel"
-    },
-    "skos-validate-preflabel-literal-type" : {
-        "code": "skos-validate-preflabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validatePrefLabel"
-    },
-    "skos-validate-notation-literal-type" : {
-        "code": "skos-validate-notation-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateNotation"
-    },
-    "foaf-validate-name-literal-type" : {
-        "code": "foaf-validate-name-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the name predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Foaf",
-        "method": "validateName"
-    },
-    "foaf-validate-mbox-literal-type" : {
-        "code": "foaf-validate-mbox-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the mbox predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Foaf",
-        "method": "validateMbox"
-    },
-    "foaf-validate-mbox-regex" : {
-        "code": "foaf-validate-mbox-regex",
-        "fields": [
-            "regex",
-            "value"
-        ],
-        "description": "The object for the mbox predicate did not match the configured regex",
-        "status": 422,
-        "class": "App\\Ontology\\Foaf",
-        "method": "validateMbox"
-    },
     "skosxl-validate-altlabel-literal-type" : {
         "code": "skosxl-validate-altlabel-literal-type",
         "fields": [
@@ -1138,16 +339,49 @@
         "class": "App\\Ontology\\SkosXl",
         "method": "validatePrefLabel"
     },
-    "dc-validate-title-literal-type" : {
-        "code": "dc-validate-title-literal-type",
+    "skos-validate-altlabel-literal-type" : {
+        "code": "skos-validate-altlabel-literal-type",
         "fields": [
             "expected",
             "actual"
         ],
-        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
         "status": 422,
-        "class": "App\\Ontology\\Dc",
-        "method": "validateTitle"
+        "class": "App\\Ontology\\Skos",
+        "method": "validateAltLabel"
+    },
+    "skos-validate-hiddenlabel-literal-type" : {
+        "code": "skos-validate-hiddenlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateHiddenLabel"
+    },
+    "skos-validate-preflabel-literal-type" : {
+        "code": "skos-validate-preflabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validatePrefLabel"
+    },
+    "skos-validate-notation-literal-type" : {
+        "code": "skos-validate-notation-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateNotation"
     },
     "openskos-validate-datatype-literal-type" : {
         "code": "openskos-validate-datatype-literal-type",
@@ -1424,72 +658,70 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateErrorCode"
     },
-    "internal-server-error" : {
-        "code": "internal-server-error",
-        "description": "An ApiException was thrown but no error code was given",
-        "status": 500,
-        "class": "App\\Exception\\ApiException",
-        "method": "__construct"
-    },
-    "rdf-triple-construct-invalid-object-type" : {
-        "code": "rdf-triple-construct-invalid-object-type",
+    "foaf-validate-name-literal-type" : {
+        "code": "foaf-validate-name-literal-type",
         "fields": [
-            "received"
+            "expected",
+            "actual"
         ],
-        "description": "Object must be either Iri or Literal",
-        "status": 500,
-        "class": "App\\Rdf\\Triple",
-        "method": "__construct"
+        "description": "The object for the name predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateName"
     },
-    "rdf-triple-tostring-invalid-object-type" : {
-        "code": "rdf-triple-tostring-invalid-object-type",
+    "foaf-validate-mbox-literal-type" : {
+        "code": "foaf-validate-mbox-literal-type",
         "fields": [
-            "received"
+            "expected",
+            "actual"
         ],
-        "description": "Object must be either Iri or Literal",
-        "status": 500,
-        "class": "App\\Rdf\\Triple",
-        "method": "__toString"
+        "description": "The object for the mbox predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateMbox"
     },
-    "rdf-literal-datetime-unparsable-value" : {
-        "code": "rdf-literal-datetime-unparsable-value",
+    "foaf-validate-mbox-regex" : {
+        "code": "foaf-validate-mbox-regex",
         "fields": [
+            "regex",
             "value"
         ],
-        "description": "The given value can not be parsed to a DateTimeLiteral",
-        "status": 500,
-        "class": "App\\Rdf\\Literal\\DatetimeLiteral",
-        "method": "fromString"
+        "description": "The object for the mbox predicate did not match the configured regex",
+        "status": 422,
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateMbox"
     },
-    "vocabularyawareresource-from-triples-mapping-not-array" : {
-        "code": "vocabularyawareresource-from-triples-mapping-not-array",
+    "dc-validate-title-literal-type" : {
+        "code": "dc-validate-title-literal-type",
         "fields": [
-            "receivedType"
+            "expected",
+            "actual"
         ],
-        "description": "VocabularyAwareResource needs a (array)mapping.",
-        "status": 500,
-        "class": "App\\Rdf\\VocabularyAwareResource",
-        "method": "fromTriples"
+        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Dc",
+        "method": "validateTitle"
     },
-    "vocabularyawareresource-addproperty-unknown-property" : {
-        "code": "vocabularyawareresource-addproperty-unknown-property",
-        "fields": [
-            "property"
-        ],
-        "description": "Property is not expected",
-        "status": 500,
-        "class": "App\\Rdf\\VocabularyAwareResource",
-        "method": "addProperty"
+    "authentication-permission-denied-invalid-credentials" : {
+        "code": "authentication-permission-denied-invalid-credentials",
+        "description": "Invalid credentials were given",
+        "status": 403,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAuthenticated"
     },
-    "iri-construct-invalid-value-type" : {
-        "code": "iri-construct-invalid-value-type",
-        "fields": [
-            "receivedType"
-        ],
-        "description": "Invalid type for $value, expected string|Iri",
-        "status": 500,
-        "class": "App\\Rdf\\Iri",
-        "method": "__construct"
+    "authentication-permission-denied-missing-credentials" : {
+        "code": "authentication-permission-denied-missing-credentials",
+        "description": "No credentials were given",
+        "status": 401,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAuthenticated"
+    },
+    "authentication-permission-denied-missing-role-administrator" : {
+        "code": "authentication-permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
+        "status": 403,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAdministrator"
     },
     "internal-resource-id-resolver-unresolvable" : {
         "code": "internal-resource-id-resolver-unresolvable",
@@ -1500,6 +732,774 @@
         "status": 500,
         "class": "App\\Rest\\ArgumentResolver\\InternalResourceIdResolver",
         "method": "resolve"
+    },
+    "conceptcontroller-process-date-stamps-from-request-invalid-date-type" : {
+        "code": "conceptcontroller-process-date-stamps-from-request-invalid-date-type",
+        "description": "Dates must be a valid xsd:DateTime or xsdDuration",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "processDateStampsFromRequest"
+    },
+    "conceptcontroller-build-projection-parameters-field-no-language-support" : {
+        "code": "conceptcontroller-build-projection-parameters-field-no-language-support",
+        "fields": [
+            "field"
+        ],
+        "description": "Field has no language support",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "buildProjectionParameters"
+    },
+    "conceptcontroller-build-projection-parameters-field-no-projection-support" : {
+        "code": "conceptcontroller-build-projection-parameters-field-no-projection-support",
+        "fields": [
+            "field"
+        ],
+        "description": "Field has no projection support",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "buildProjectionParameters"
+    },
+    "concept-getone-not-found" : {
+        "code": "concept-getone-not-found",
+        "fields": [
+            "uuid"
+        ],
+        "description": "The requested concept could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConcept"
+    },
+    "concept-getonebyfuri-param-uri-missing" : {
+        "code": "concept-getonebyfuri-param-uri-missing",
+        "description": "Unable to determine URI for concept. Please either request a UUID in the path, or specifiy the 'uri' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConceptByForeignUri"
+    },
+    "concept-getonebyfuri-param-uri-invalid" : {
+        "code": "concept-getonebyfuri-param-uri-invalid",
+        "fields": [
+            "foreignUri"
+        ],
+        "description": "'uri' parameter must be a URI.",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConceptByForeignUri"
+    },
+    "concept-getonebyfuri-not-found" : {
+        "code": "concept-getonebyfuri-not-found",
+        "fields": [
+            "foreignUri"
+        ],
+        "description": "The requested concept could not be retrieved.",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "getConceptByForeignUri"
+    },
+    "concept-create-empty-or-corrupt-body" : {
+        "code": "concept-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-already-exists" : {
+        "code": "concept-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "A Concept with the given iri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-tenant-does-not-exist" : {
+        "code": "concept-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-set-does-not-exist" : {
+        "code": "concept-create-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-conceptscheme-does-not-exist" : {
+        "code": "concept-create-conceptscheme-does-not-exist",
+        "fields": [
+            "conceptscheme"
+        ],
+        "description": "The given conceptscheme to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-create-notation-not-unique" : {
+        "code": "concept-create-notation-not-unique",
+        "fields": [
+            "conceptscheme",
+            "notation"
+        ],
+        "description": "The given skos:notation is not unique within the given conceptScheme",
+        "status": 409,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "postConcept"
+    },
+    "concept-update-empty-or-corrupt-body" : {
+        "code": "concept-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-does-not-exist" : {
+        "code": "concept-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-tenant-does-not-exist" : {
+        "code": "concept-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-set-does-not-exist" : {
+        "code": "concept-update-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to update a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-update-concept-does-not-exist" : {
+        "code": "concept-update-concept-does-not-exist",
+        "fields": [
+            "conceptscheme"
+        ],
+        "description": "The given conceptscheme to create a Concept for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "putConcept"
+    },
+    "concept-delete-invalid-permissions-user-missing" : {
+        "code": "concept-delete-invalid-permissions-user-missing",
+        "description": "The administrator role was present but the authenticated user was missing",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "deleteConcept"
+    },
+    "concept-delete-not-an-orphan" : {
+        "code": "concept-delete-not-an-orphan",
+        "description": "The concept to delete still has relations",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
+        "method": "deleteConcept"
+    },
+    "concept-related-concept-not-found" : {
+        "code": "concept-related-concept-not-found",
+        "fields": [
+            "iri",
+            "relation"
+        ],
+        "description": "The referenced concept for the relation could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "concept-related-concept-scheme-not-found" : {
+        "code": "concept-related-concept-scheme-not-found",
+        "fields": [
+            "iri",
+            "relation"
+        ],
+        "description": "The referenced concept scheme for the relation could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "concept-missing-concept-scheme" : {
+        "code": "concept-missing-concept-scheme",
+        "description": "No concept scheme is registered for concept",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "concept-semantic-relation-concept-scheme-mismatch" : {
+        "code": "concept-semantic-relation-concept-scheme-mismatch",
+        "fields": [
+            "ours",
+            "referenced"
+        ],
+        "description": "Semantic relations are not possible between concepts with mismatchiing schemes",
+        "status": 400,
+        "class": "App\\OpenSkos\\Concept\\Concept",
+        "method": "errors"
+    },
+    "apirequest-invalid-level" : {
+        "code": "apirequest-invalid-level",
+        "fields": [
+            "level"
+        ],
+        "description": "An invalid level was requested",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-limit" : {
+        "code": "apirequest-invalid-limit",
+        "fields": [
+            "limit"
+        ],
+        "description": "An invalid limit parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-offset" : {
+        "code": "apirequest-invalid-offset",
+        "fields": [
+            "offset"
+        ],
+        "description": "An invalid offset parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "labelcontroller-getone-not-found" : {
+        "code": "labelcontroller-getone-not-found",
+        "fields": [
+            "id"
+        ],
+        "description": "The requested label could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabel"
+    },
+    "labelcontroller-getonebyuri-param-uri-missing" : {
+        "code": "labelcontroller-getonebyuri-param-uri-missing",
+        "description": "No uri was given",
+        "status": 400,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabelByUri"
+    },
+    "labelcontroller-getonebyuri-not-found" : {
+        "code": "labelcontroller-getonebyuri-not-found",
+        "fields": [
+            "uri"
+        ],
+        "description": "The requested label could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabelByUri"
+    },
+    "user-getall-permission-denied-missing-user" : {
+        "description": "The authenticated user could not be loaded",
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getall-permission-denied-missing-user-uri" : {
+        "description": "The uri for the authenticated user could not be loaded",
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user-uri",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getone-permission-denied-missing-user" : {
+        "code": "user-getone-permission-denied-missing-user",
+        "description": "The authenticated user could not be loaded",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-missing-user-uri" : {
+        "code": "user-getone-permission-denied-missing-user-uri",
+        "description": "The uri for the authenticated user could not be loaded",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-missing-role-administrator" : {
+        "code": "user-getone-permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-not-found-user" : {
+        "code": "user-getone-not-found-user",
+        "description": "The requested user could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "filterprocessor-build-institution-filters-uuid-not-supported" : {
+        "code": "filterprocessor-build-institution-filters-uuid-not-supported",
+        "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
+        "method": "buildInstitutionFilters"
+    },
+    "filterprocessor-build-set-filters-uuid-not-supported" : {
+        "code": "filterprocessor-build-set-filters-uuid-not-supported",
+        "description": "The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "filterprocessor-build-set-filters-search-by-string" : {
+        "code": "filterprocessor-build-set-filters-search-by-string",
+        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "solrfilterprocessor-build-institutions-filters-uuid-not-supported" : {
+        "code": "solrfilterprocessor-build-institutions-filters-uuid-not-supported",
+        "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildInstitutionFilters"
+    },
+    "solrfilterprocessor-build-institutions-filters-search-by-string" : {
+        "code": "solrfilterprocessor-build-institutions-filters-search-by-string",
+        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildInstitutionFilters"
+    },
+    "solrfilterprocessor-build-set-filters-uuid-not-supported" : {
+        "code": "solrfilterprocessor-build-set-filters-uuid-not-supported",
+        "description": "The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "solrfilterprocessor-build-set-filters-search-by-string" : {
+        "code": "solrfilterprocessor-build-set-filters-search-by-string",
+        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildSetFilters"
+    },
+    "solrfilterprocessor-build-conceptscheme-filters-search-by-string" : {
+        "code": "solrfilterprocessor-build-conceptscheme-filters-search-by-string",
+        "description": "The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store).",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildConceptSchemeFilters"
+    },
+    "solrfilterprocessor-build-statuses-filters-unrecognised-status" : {
+        "code": "solrfilterprocessor-build-statuses-filters-unrecognised-status",
+        "fields": [
+            "received",
+            "accepted"
+        ],
+        "description": "Unrecognised status in filters.",
+        "status": 400,
+        "class": "App\\OpenSkos\\Filters\\SolrFilterProcessor",
+        "method": "buildStatusesFilters"
+    },
+    "institution-getall-filter-institutions-not-applicable" : {
+        "code": "institution-getall-filter-institutions-not-applicable",
+        "description": "An institutions filter was given in the request but it is not supported on this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "getInstitutions"
+    },
+    "institution-getall-filter-sets-not-applicable" : {
+        "code": "institution-getall-filter-sets-not-applicable",
+        "description": "A sets filter was given in the request but it is not supported on this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "getInstitutions"
+    },
+    "institution-getone-not-found" : {
+        "code": "institution-getone-not-found",
+        "fields": [
+            "id"
+        ],
+        "description": "The requested institution could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "getInstitution"
+    },
+    "institution-create-empty-or-corrupt-body" : {
+        "code": "institution-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
+    },
+    "institution-create-already-exists" : {
+        "code": "institution-create-already-exists",
+        "fields": [
+            "iri"
+        ],
+        "description": "An institution with the given iri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "postInstitution"
+    },
+    "institution-update-empty-or-corrupt-body" : {
+        "code": "institution-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "putInstitution"
+    },
+    "institution-update-does-not-exist" : {
+        "code": "institution-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The institution with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
+        "method": "putInstitution"
+    },
+    "setprefixcontroller-sets-filter-not-applicable" : {
+        "code": "setprefixcontroller-sets-filter-not-applicable",
+        "description": "Sets filter is not applicable here",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
+        "method": "getAllPrefixes"
+    },
+    "set-getall-sets-filter" : {
+        "code": "set-getall-sets-filter",
+        "description": "A 'sets' filter was given but is not applicable to this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getAllSets"
+    },
+    "set-getone-not-found" : {
+        "code": "set-getone-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The requested set could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getSet"
+    },
+    "set-create-empty-or-corrupt-body" : {
+        "code": "set-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-already-exists" : {
+        "code": "set-create-already-exists",
+        "fields": [
+            "iri",
+            "uuid"
+        ],
+        "description": "A set with the given iri or uuid already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-already-exists-duplicate-base-uri" : {
+        "code": "set-create-already-exists-duplicate-base-uri",
+        "fields": [
+            "baseUri"
+        ],
+        "description": "A set with the given baseUri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-tenant-does-not-exist" : {
+        "code": "set-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a set for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-update-empty-or-corrupt-body" : {
+        "code": "set-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
+    },
+    "set-update-does-not-exist" : {
+        "code": "set-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
+    },
+    "set-update-tenant-does-not-exist" : {
+        "code": "set-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a set for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
+    },
+    "set-base-uri-does-not-match-code" : {
+        "code": "set-base-uri-does-not-match-code",
+        "fields": [
+            "code",
+            "base-uri"
+        ],
+        "description": "The given openskos:code does not match the end of the given openskos:conceptBaseUri",
+        "status": 422,
+        "class": "App\\OpenSkos\\Set\\Set",
+        "method": "errors"
+    },
+    "relation-getall-missing-subject-and-object" : {
+        "code": "relation-getall-missing-subject-and-object",
+        "fields": [
+            "uuid"
+        ],
+        "description": "Neither subject or object was given, either is required",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "getRelations"
+    },
+    "relation-getall-subject-not-found" : {
+        "code": "relation-getall-subject-not-found",
+        "fields": [
+            "subject"
+        ],
+        "description": "No subject could be found with the given id",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "getRelations"
+    },
+    "relation-getall-object-not-found" : {
+        "code": "relation-getall-object-not-found",
+        "fields": [
+            "object"
+        ],
+        "description": "No object could be found with the given id",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "getRelations"
+    },
+    "semantic-relation-create-subject-concept-not-found" : {
+        "code": "semantic-relation-create-subject-concept-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The subject concept to create a semantic relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-object-concept-not-found" : {
+        "code": "semantic-relation-create-object-concept-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The target concept to create a semantic relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-predicate-not-allowed" : {
+        "code": "semantic-relation-create-predicate-not-allowed",
+        "fields": [
+            "predicate"
+        ],
+        "description": "The given predicate is not a valid relation to be created",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-literal-not-allowed" : {
+        "code": "semantic-relation-create-literal-not-allowed",
+        "fields": [
+            "predicate",
+            "reference"
+        ],
+        "description": "Semantic relations with a literal reference are not allowed",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "semantic-relation-create-unknown-reference" : {
+        "code": "semantic-relation-create-unknown-reference",
+        "fields": [
+            "type"
+        ],
+        "description": "An IRI reference was expected, received an unknown type",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "postRelation"
+    },
+    "relation-update-bad-request" : {
+        "code": "relation-update-bad-request",
+        "description": "Updating a relation is not allowed\/possible",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "putRelation"
+    },
+    "semantic-relation-delete-subject-not-found" : {
+        "code": "semantic-relation-delete-subject-not-found",
+        "fields": [
+            "subject"
+        ],
+        "description": "The subject to delete a relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-object-not-found" : {
+        "code": "semantic-relation-delete-object-not-found",
+        "fields": [
+            "object"
+        ],
+        "description": "The object to delete a relation for could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-missing-param-subject" : {
+        "code": "semantic-relation-delete-missing-param-subject",
+        "description": "Missing the 'subject' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-missing-param-predicate" : {
+        "code": "semantic-relation-delete-missing-param-predicate",
+        "description": "Missing the 'predicate' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-missing-param-object" : {
+        "code": "semantic-relation-delete-missing-param-object",
+        "description": "Missing the 'object' parameter",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "semantic-relation-delete-corrupt-param-predicate" : {
+        "code": "semantic-relation-delete-corrupt-param-predicate",
+        "description": "The given predicate is not valid or not allowed",
+        "status": 400,
+        "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
+        "method": "deleteRelation"
+    },
+    "conceptscheme-getone-not-found" : {
+        "code": "conceptscheme-getone-not-found",
+        "fields": [
+            "iri"
+        ],
+        "description": "The requested ConceptScheme could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "getConceptScheme"
+    },
+    "conceptscheme-create-empty-or-corrupt-body" : {
+        "code": "conceptscheme-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
+    },
+    "conceptscheme-create-already-exists" : {
+        "code": "conceptscheme-create-already-exists",
+        "fields": [
+            "iri",
+            "uuid"
+        ],
+        "description": "A ConceptScheme with the given iri or uuid already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
+    },
+    "conceptscheme-create-tenant-does-not-exist" : {
+        "code": "conceptscheme-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a ConceptScheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
+    },
+    "conceptscheme-create-set-does-not-exist" : {
+        "code": "conceptscheme-create-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to create a ConceptScheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
+    },
+    "conceptscheme-update-empty-or-corrupt-body" : {
+        "code": "conceptscheme-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-does-not-exist" : {
+        "code": "conceptscheme-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-tenant-does-not-exist" : {
+        "code": "conceptscheme-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
+    },
+    "conceptscheme-update-set-does-not-exist" : {
+        "code": "conceptscheme-update-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
     "EOF": null
 }
