@@ -10,9 +10,9 @@ use Doctrine\Common\Annotations\AnnotationReader;
 class ErrorInherit extends AbstractAnnotation
 {
     /**
-     * @var ass-tring
+     * @var class-string
      */
-    public $class = '';
+    public $class;
 
     /**
      * @var string
