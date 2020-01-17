@@ -1,0 +1,4 @@
+[ver:1,total:180]
+src/Entity/AbstractEntity.php:90,1579273200:90,m
+src/OpenSkos/SkosResourceRepositoryWithProjection.php:60,1579273200:60,m
+src/OpenSkos/SkosResourceRepository.php:30,1579273200:30,r
