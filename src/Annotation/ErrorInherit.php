@@ -10,16 +10,16 @@ use Doctrine\Common\Annotations\AnnotationReader;
 class ErrorInherit extends AbstractAnnotation
 {
     /**
-     * @var class-string
+     * @var string
      */
-    public $class;
+    public $class = '';
 
     /**
      * @var string
      */
     public $method = '';
 
-    public function getErrors()
+    public function getErrors(): array
     {
         // Build annotationreader once
         static $annotationReader = null;
@@ -33,7 +33,9 @@ class ErrorInherit extends AbstractAnnotation
         }
 
         // Fetch the method's annotations
-        $reflectionClass  = new \ReflectionClass($this->class);
+        /** @var class-string $classname */
+        $classname        = $this->class;
+        $reflectionClass  = new \ReflectionClass($classname);
         $reflectionMethod = $reflectionClass->getMethod($this->method);
         $annotations      = $annotationReader->getMethodAnnotations($reflectionMethod);
 
