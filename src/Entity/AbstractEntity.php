@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Annotation\Document;
+use App\Annotation\ErrorInherit;
 use App\Database\Doctrine;
 use Doctrine\Common\Annotations\AnnotationReader;
 use JsonMapper;

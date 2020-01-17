@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\OpenSkos;
 
+use App\Annotation\ErrorInherit;
 use App\OpenSkos\Concept\Concept;
 use App\Rdf\Iri;
 use App\Rdf\Literal\StringLiteral;
