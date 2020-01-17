@@ -21,6 +21,7 @@ final class ApiFilter
         'literalForm'   => 'skosxl:literalForm',
         'modified'      => 'dcterms:modified',
         'modifiedBy'    => 'openskos:modifiedBy',
+        'prefLabel'     => 'skos:prefLabel',
         'sets'          => 'openskos:set',
         'status'        => 'openskos:status',
         'tenant'        => 'openskos:tenant',
@@ -62,7 +63,24 @@ final class ApiFilter
     ) {
         $this->setRepository = $setRepository;
 
+        // Fetch filters
         $params = $request->query->get('filter', []);
+
+        // Add text[n]=N&fields=predicate,predicate support
+        $texts  = $request->query->get('text', []);
+        $fields = str_getcsv($request->query->get('fields', ''));
+        foreach ($fields as $field) {
+            if (isset($params[$field]) && (!is_array($params[$field]))) {
+                $params[$field] = [$params[$field]];
+            }
+            if (isset($params[$field])) {
+                foreach ($texts as $text) {
+                    array_push($params[$field], $text);
+                }
+            } else {
+                $params[$field] = $texts;
+            }
+        }
 
         // Extract filter language
         if (isset($params['lang'])) {
