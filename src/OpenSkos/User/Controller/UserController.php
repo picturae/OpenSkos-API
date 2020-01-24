@@ -105,7 +105,7 @@ final class UserController
             // Administrators are allowed to see all users
             $users = $repository->all(
                 $apiRequest->getOffset(),
-                $apiRequest->getLimit(),
+                $apiRequest->getLimit()
             );
         } else {
             // We must have a user (likely, but still needs to be checked)
