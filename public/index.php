@@ -21,7 +21,7 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false
 }
 
 if (isset($_GET['phpinfo']) && '0xDEADBEEF' === $_GET['phpinfo']) {
-    phpinfo();
+    var_dump(phpversion());
     die();
 }
 
