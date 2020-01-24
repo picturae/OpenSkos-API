@@ -20,11 +20,6 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false
     Request::setTrustedHosts([$trustedHosts]);
 }
 
-if (isset($_GET['phpinfo']) && '0xDEADBEEF' === $_GET['phpinfo']) {
-    var_dump(phpversion());
-    die();
-}
-
 $kernel   = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $request  = Request::createFromGlobals();
 $response = $kernel->handle($request);
