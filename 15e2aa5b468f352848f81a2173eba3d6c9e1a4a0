@@ -1,0 +1,5 @@
+[ver:1,total:180]
+src/OpenSkos/User/Controller/UserController.php:80,1579874400:80,r
+public/index.php:60,1579874400:60,m
+src/Rdf/Sparql/SparqlQuery.php:20,1579874400:20,r
+src/EasyRdf/EasyRdfClient.php:20,1579874400:20,r
