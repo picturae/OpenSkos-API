@@ -22,6 +22,8 @@ RUN adduser  -u 1000 -S -G www-data -h /home/www www-data
 RUN apk add php7
 RUN apk add php7-fpm
 RUN apk add php7-json
+RUN apk add php7-dom
+RUN apk add php7-session
 
 # Setup composer
 RUN apk add php7-iconv
