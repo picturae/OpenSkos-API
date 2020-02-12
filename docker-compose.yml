@@ -9,11 +9,13 @@ services:
     container_name: openskos-api-fpm
     networks:
       - openskos
+    expose:
+      - "9000"
     volumes:
       - ./:/app
-      - ./data/docker/fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf
-      - ./data/docker/fpm/php-fpm.d:/usr/local/etc/php-fpm.d
-      - ./data/docker/fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+      - ./data/docker/fpm/php-fpm.conf:/etc/php7/php-fpm.conf
+      - ./data/docker/fpm/php-fpm.d:/etc/php7/php-fpm.d
+      - ./data/docker/fpm/php-ini-overrides.ini:/etc/php7/conf.d/99-overrides.ini
       - ./data/docker/fpm/symfony.env:/app/.env
 
   openskos-api-nginx:
