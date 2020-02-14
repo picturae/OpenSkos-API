@@ -1,0 +1,6 @@
+[ver:1,total:800]
+composer.json:310,1581674400:310,m
+docker-compose.yml:228,1581670800:30,1581674400:198,r
+data/docker/composer-ext-install.php:210,1581670800:210,r
+src/Exception/list.json:32,1581674400:32,r
+.env:20,1581674400:20,r
