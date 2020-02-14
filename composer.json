@@ -7,6 +7,8 @@
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-mysqli": "*",
+        "ext-pdo_mysql": "*",
         "ext-session": "*",
         "doctrine/common": "^2.11",
         "easyrdf/easyrdf": "^0.9.1",
