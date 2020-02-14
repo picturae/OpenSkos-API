@@ -1,0 +1,7 @@
+[ver:1,total:1260]
+data/docker/fpm/Dockerfile:599,1580313600:180,1581670800:419,m
+docker-compose.yml:212,1580396400:180,1581670800:32,r
+README.md:180,1581595200:180,r
+data/travis/mysql/user.sql:180,1581429600:180,r
+data/travis/jena/data.ttl:60,1581429600:60,r
+composer.json:29,1581670800:29,m
