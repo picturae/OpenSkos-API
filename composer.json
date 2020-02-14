@@ -5,7 +5,9 @@
     "require": {
         "php": "^7.3",
         "ext-ctype": "*",
+        "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-session": "*",
         "doctrine/common": "^2.11",
         "easyrdf/easyrdf": "^0.9.1",
         "gnugat/nomo-spaco": "~0.4",
