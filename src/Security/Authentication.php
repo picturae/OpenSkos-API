@@ -62,18 +62,20 @@ class Authentication
         $token               = preg_replace('/^(bearer|basic) /i', '', $token);
         $knownData['apikey'] = $token;
 
-        // Handle special prefixes
+        // Normalize prefix
         if (count($prefix)) {
             $prefix = strtolower($prefix[1]);
-            switch ($prefix) {
-                case 'basic':
-                    unset($knownData['apikey']);
-                    $decoded               = base64_decode($token, true);
-                    $parts                 = explode(':', $decoded);
-                    $knownData['email']    = trim(array_shift($parts));
-                    $knownData['password'] = md5(trim(implode(':', $parts)));
-                    break;
-            }
+        } else {
+            $prefix = 'bearer';
+        }
+
+        // Explode 'basic' authentication
+        if ('basic' == $prefix) {
+            unset($knownData['apikey']);
+            $decoded               = base64_decode($token, true);
+            $parts                 = explode(':', $decoded);
+            $knownData['email']    = trim(array_shift($parts));
+            $knownData['password'] = md5(trim(implode(':', $parts)));
         }
 
         // Fetch user
@@ -86,10 +88,12 @@ class Authentication
             return;
         }
 
-        // Only api users having an apikey are allowed
-        // No compare because it was already checked if given
-        if (!$user->getApikey()) {
-            return;
+        // Validate api key
+        if ('bearer' == $prefix) {
+            $apiKey = $user->getApiKey();
+            if ($apiKey !== $token) {
+                return;
+            }
         }
 
         // Fetch the user's roles
