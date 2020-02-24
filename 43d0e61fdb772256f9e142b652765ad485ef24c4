@@ -1,0 +1,7 @@
+[ver:1,total:1560]
+data/docker/fpm/Dockerfile:840,1581948000:360,1582549200:360,1582552800:120,r
+vendor/easyrdf/easyrdf/DEVELOPER.md:330,1581674400:330,r
+docker-compose.yml:150,1582552800:150,r
+data/docker/composer-ext-install.php:150,1582552800:150,r
+src/Entity/User.php:60,1582556400:60,m
+vendor/easyrdf/easyrdf/lib/EasyRdf/ParsedUri.php:30,1581674400:30,r
