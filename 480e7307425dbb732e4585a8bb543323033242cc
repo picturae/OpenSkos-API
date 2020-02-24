@@ -1,0 +1,9 @@
+[ver:1,total:780]
+src/Rest/ArgumentResolver/ApiRequestResolver.php:438,1582556400:438,m
+src/OpenSkos/Institution/Controller/InstitutionController.php:111,1582556400:111,r
+src/Rdf/Format/JsonLd.php:80,1582556400:80,r
+src/Entity/User.php:60,1582556400:60,r
+src/Exception/ApiException.php:33,1582556400:33,r
+src/Rdf/Format/RdfFormatFactory.php:28,1582556400:28,r
+src/OpenSkos/ApiRequest.php:15,1582556400:15,r
+src/Rest/ListResponse.php:15,1582556400:15,r
