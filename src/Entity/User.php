@@ -280,7 +280,7 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param mixed $searchOptions
+     * @param mixed|null $searchOptions
      *
      * @return self
      */
