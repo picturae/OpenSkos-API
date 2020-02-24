@@ -2,7 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude([
-        'data/docker/composer-ext-install.php',
+        'data/docker',
         'var',
         'vendor',
     ])
