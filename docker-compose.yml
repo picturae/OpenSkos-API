@@ -16,7 +16,6 @@ services:
       - ./data/docker/fpm/php-fpm.conf:/etc/php7/php-fpm.conf
       - ./data/docker/fpm/php-fpm.d:/etc/php7/php-fpm.d
       - ./data/docker/fpm/php-ini-overrides.ini:/etc/php7/conf.d/99-overrides.ini
-      - ./data/docker/fpm/symfony.env:/app/.env
 
   openskos-api-nginx:
     build: data/docker/nginx

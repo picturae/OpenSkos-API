@@ -10,6 +10,7 @@
         "ext-mysqli": "*",
         "ext-pdo_mysql": "*",
         "ext-session": "*",
+        "ext-curl": "*",
         "doctrine/common": "^2.11",
         "easyrdf/easyrdf": "^0.9.1",
         "gnugat/nomo-spaco": "~0.4",

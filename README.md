@@ -3,6 +3,11 @@ Restful API for OpenSkos
 
 ## Development
 
+### Docker environment
+
+* `docker-composer up -d`
+* copy the `data/docker/.env` file to the root folder, and adapt as necessary
+
 ### Installation:
 
 * `composer install`
