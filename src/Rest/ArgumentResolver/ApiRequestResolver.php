@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Rest\ArgumentResolver;
 
+use App\Annotation\Error;
 use App\Database\Doctrine;
+use App\Exception\ApiException;
 use App\OpenSkos\ApiRequest;
 use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
@@ -40,7 +42,13 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     /**
      * @param array|null $headers
      *
-     * @throws HttpException
+     * @Error(code="apirequest-format-invalid",
+     *        status=406,
+     *        description="The requested data format is invalid or not supported",
+     *        fields={"requested", "supported"}
+     * )
+     *
+     * @throws ApiException
      */
     private function resolveFormat(?string $formatName, $headers = null): ?RdfFormat
     {
@@ -74,7 +82,10 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         try {
             return $this->formatFactory->createFromName($formatName);
         } catch (UnknownFormatException $e) {
-            return $this->resolveFormat(null, $headers);
+            throw new ApiException('apirequest-format-invalid', [
+                'requested' => $formatName,
+                'supported' => array_keys($this->formatFactory->formats()),
+            ]);
         }
     }
 

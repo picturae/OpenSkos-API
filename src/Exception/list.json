@@ -1,11 +1,4 @@
 {
-    "internal-server-error" : {
-        "code": "internal-server-error",
-        "description": "An ApiException was thrown but no error code was given",
-        "status": 500,
-        "class": "App\\Exception\\ApiException",
-        "method": "__construct"
-    },
     "openskos-json-ld-serializer-serialise-invalid-format" : {
         "code": "openskos-json-ld-serializer-serialise-invalid-format",
         "fields": [
@@ -26,28 +19,11 @@
         "class": "App\\EasyRdf\\Serializer\\OpenSkosJsonLdSerializer",
         "method": "serialise"
     },
-    "sparqlrepository-construct-resource-class-null" : {
-        "code": "sparqlrepository-construct-resource-class-null",
-        "description": "SparqlRepository can not be initialized without resource class",
+    "internal-server-error" : {
+        "code": "internal-server-error",
+        "description": "An ApiException was thrown but no error code was given",
         "status": 500,
-        "class": "App\\Rdf\\Sparql\\SparqlRepository",
-        "method": "__construct"
-    },
-    "sparqlrepository-construct-resource-class-not-rdfresource" : {
-        "code": "sparqlrepository-construct-resource-class-not-rdfresource",
-        "fields": [
-            "receivedClass"
-        ],
-        "description": "SparqlRepository needs to be initialized for a class extending RdfResource",
-        "status": 500,
-        "class": "App\\Rdf\\Sparql\\SparqlRepository",
-        "method": "__construct"
-    },
-    "sparqlrepository-construct-resource-type-null" : {
-        "code": "sparqlrepository-construct-resource-type-null",
-        "description": "SparqlRepository can not be initialized without resource type",
-        "status": 500,
-        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "class": "App\\Exception\\ApiException",
         "method": "__construct"
     },
     "abstract-rdf-document-missing-predicate" : {
@@ -114,76 +90,6 @@
         "status": 500,
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "save"
-    },
-    "rdf-literal-datetime-unparsable-value" : {
-        "code": "rdf-literal-datetime-unparsable-value",
-        "fields": [
-            "value"
-        ],
-        "description": "The given value can not be parsed to a DateTimeLiteral",
-        "status": 500,
-        "class": "App\\Rdf\\Literal\\DatetimeLiteral",
-        "method": "fromString"
-    },
-    "iri-construct-invalid-value-type" : {
-        "code": "iri-construct-invalid-value-type",
-        "fields": [
-            "receivedType"
-        ],
-        "description": "Invalid type for $value, expected string|Iri",
-        "status": 500,
-        "class": "App\\Rdf\\Iri",
-        "method": "__construct"
-    },
-    "rdf-triple-construct-invalid-object-type" : {
-        "code": "rdf-triple-construct-invalid-object-type",
-        "fields": [
-            "received"
-        ],
-        "description": "Object must be either Iri or Literal",
-        "status": 500,
-        "class": "App\\Rdf\\Triple",
-        "method": "__construct"
-    },
-    "rdf-triple-tostring-invalid-object-type" : {
-        "code": "rdf-triple-tostring-invalid-object-type",
-        "fields": [
-            "received"
-        ],
-        "description": "Object must be either Iri or Literal",
-        "status": 500,
-        "class": "App\\Rdf\\Triple",
-        "method": "__toString"
-    },
-    "vocabularyawareresource-from-triples-mapping-not-array" : {
-        "code": "vocabularyawareresource-from-triples-mapping-not-array",
-        "fields": [
-            "receivedType"
-        ],
-        "description": "VocabularyAwareResource needs a (array)mapping.",
-        "status": 500,
-        "class": "App\\Rdf\\VocabularyAwareResource",
-        "method": "fromTriples"
-    },
-    "vocabularyawareresource-addproperty-unknown-property" : {
-        "code": "vocabularyawareresource-addproperty-unknown-property",
-        "fields": [
-            "property"
-        ],
-        "description": "Property is not expected",
-        "status": 500,
-        "class": "App\\Rdf\\VocabularyAwareResource",
-        "method": "addProperty"
-    },
-    "serializer-rdfencoder-encode-data-not-iterable" : {
-        "code": "serializer-rdfencoder-encode-data-not-iterable",
-        "fields": [
-            "received"
-        ],
-        "description": "Given data is not an iterable",
-        "status": 500,
-        "class": "App\\Serializer\\RdfEncoder",
-        "method": "encode"
     },
     "dcterms-validate-created-literal-type" : {
         "code": "dcterms-validate-created-literal-type",
@@ -295,93 +201,16 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateTitle"
     },
-    "skosxl-validate-altlabel-literal-type" : {
-        "code": "skosxl-validate-altlabel-literal-type",
+    "dc-validate-title-literal-type" : {
+        "code": "dc-validate-title-literal-type",
         "fields": [
             "expected",
             "actual"
         ],
-        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
         "status": 422,
-        "class": "App\\Ontology\\SkosXl",
-        "method": "validateAltLabel"
-    },
-    "skosxl-validate-hiddenlabel-literal-type" : {
-        "code": "skosxl-validate-hiddenlabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\SkosXl",
-        "method": "validateHiddenLabel"
-    },
-    "skosxl-validate-literalform-literal-type" : {
-        "code": "skosxl-validate-literalform-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the literalform predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\SkosXl",
-        "method": "validateLiteralForm"
-    },
-    "skosxl-validate-preflabel-literal-type" : {
-        "code": "skosxl-validate-preflabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\SkosXl",
-        "method": "validatePrefLabel"
-    },
-    "skos-validate-altlabel-literal-type" : {
-        "code": "skos-validate-altlabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateAltLabel"
-    },
-    "skos-validate-hiddenlabel-literal-type" : {
-        "code": "skos-validate-hiddenlabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateHiddenLabel"
-    },
-    "skos-validate-preflabel-literal-type" : {
-        "code": "skos-validate-preflabel-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validatePrefLabel"
-    },
-    "skos-validate-notation-literal-type" : {
-        "code": "skos-validate-notation-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateNotation"
+        "class": "App\\Ontology\\Dc",
+        "method": "validateTitle"
     },
     "openskos-validate-datatype-literal-type" : {
         "code": "openskos-validate-datatype-literal-type",
@@ -691,47 +520,93 @@
         "class": "App\\Ontology\\Foaf",
         "method": "validateMbox"
     },
-    "dc-validate-title-literal-type" : {
-        "code": "dc-validate-title-literal-type",
+    "skosxl-validate-altlabel-literal-type" : {
+        "code": "skosxl-validate-altlabel-literal-type",
         "fields": [
             "expected",
             "actual"
         ],
-        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
         "status": 422,
-        "class": "App\\Ontology\\Dc",
-        "method": "validateTitle"
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validateAltLabel"
     },
-    "authentication-permission-denied-invalid-credentials" : {
-        "code": "authentication-permission-denied-invalid-credentials",
-        "description": "Invalid credentials were given",
-        "status": 403,
-        "class": "App\\Security\\Authentication",
-        "method": "requireAuthenticated"
-    },
-    "authentication-permission-denied-missing-credentials" : {
-        "code": "authentication-permission-denied-missing-credentials",
-        "description": "No credentials were given",
-        "status": 401,
-        "class": "App\\Security\\Authentication",
-        "method": "requireAuthenticated"
-    },
-    "authentication-permission-denied-missing-role-administrator" : {
-        "code": "authentication-permission-denied-missing-role-administrator",
-        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
-        "status": 403,
-        "class": "App\\Security\\Authentication",
-        "method": "requireAdministrator"
-    },
-    "internal-resource-id-resolver-unresolvable" : {
-        "code": "internal-resource-id-resolver-unresolvable",
+    "skosxl-validate-hiddenlabel-literal-type" : {
+        "code": "skosxl-validate-hiddenlabel-literal-type",
         "fields": [
-            "value"
+            "expected",
+            "actual"
         ],
-        "description": "The given value can not be resolved into InternalResourceId",
-        "status": 500,
-        "class": "App\\Rest\\ArgumentResolver\\InternalResourceIdResolver",
-        "method": "resolve"
+        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validateHiddenLabel"
+    },
+    "skosxl-validate-literalform-literal-type" : {
+        "code": "skosxl-validate-literalform-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the literalform predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validateLiteralForm"
+    },
+    "skosxl-validate-preflabel-literal-type" : {
+        "code": "skosxl-validate-preflabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\SkosXl",
+        "method": "validatePrefLabel"
+    },
+    "skos-validate-altlabel-literal-type" : {
+        "code": "skos-validate-altlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateAltLabel"
+    },
+    "skos-validate-hiddenlabel-literal-type" : {
+        "code": "skos-validate-hiddenlabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateHiddenLabel"
+    },
+    "skos-validate-preflabel-literal-type" : {
+        "code": "skos-validate-preflabel-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validatePrefLabel"
+    },
+    "skos-validate-notation-literal-type" : {
+        "code": "skos-validate-notation-literal-type",
+        "fields": [
+            "expected",
+            "actual"
+        ],
+        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateNotation"
     },
     "conceptcontroller-process-date-stamps-from-request-invalid-date-type" : {
         "code": "conceptcontroller-process-date-stamps-from-request-invalid-date-type",
@@ -956,104 +831,90 @@
         "class": "App\\OpenSkos\\Concept\\Concept",
         "method": "errors"
     },
-    "apirequest-invalid-level" : {
-        "code": "apirequest-invalid-level",
+    "conceptscheme-getone-not-found" : {
+        "code": "conceptscheme-getone-not-found",
         "fields": [
-            "level"
+            "iri"
         ],
-        "description": "An invalid level was requested",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
-    },
-    "apirequest-invalid-limit" : {
-        "code": "apirequest-invalid-limit",
-        "fields": [
-            "limit"
-        ],
-        "description": "An invalid limit parameter was given, it needs to be >=0",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
-    },
-    "apirequest-invalid-offset" : {
-        "code": "apirequest-invalid-offset",
-        "fields": [
-            "offset"
-        ],
-        "description": "An invalid offset parameter was given, it needs to be >=0",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
-    },
-    "labelcontroller-getone-not-found" : {
-        "code": "labelcontroller-getone-not-found",
-        "fields": [
-            "id"
-        ],
-        "description": "The requested label could not be retreived",
+        "description": "The requested ConceptScheme could not be retreived",
         "status": 404,
-        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
-        "method": "getLabel"
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "getConceptScheme"
     },
-    "labelcontroller-getonebyuri-param-uri-missing" : {
-        "code": "labelcontroller-getonebyuri-param-uri-missing",
-        "description": "No uri was given",
+    "conceptscheme-create-empty-or-corrupt-body" : {
+        "code": "conceptscheme-create-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
         "status": 400,
-        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
-        "method": "getLabelByUri"
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
     },
-    "labelcontroller-getonebyuri-not-found" : {
-        "code": "labelcontroller-getonebyuri-not-found",
+    "conceptscheme-create-already-exists" : {
+        "code": "conceptscheme-create-already-exists",
         "fields": [
-            "uri"
+            "iri",
+            "uuid"
         ],
-        "description": "The requested label could not be retreived",
-        "status": 404,
-        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
-        "method": "getLabelByUri"
+        "description": "A ConceptScheme with the given iri or uuid already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
     },
-    "user-getall-permission-denied-missing-user" : {
-        "description": "The authenticated user could not be loaded",
-        "status": 403,
-        "code": "user-getall-permission-denied-missing-user",
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "geAllUsers"
+    "conceptscheme-create-tenant-does-not-exist" : {
+        "code": "conceptscheme-create-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to create a ConceptScheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
     },
-    "user-getall-permission-denied-missing-user-uri" : {
-        "description": "The uri for the authenticated user could not be loaded",
-        "status": 403,
-        "code": "user-getall-permission-denied-missing-user-uri",
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "geAllUsers"
+    "conceptscheme-create-set-does-not-exist" : {
+        "code": "conceptscheme-create-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to create a ConceptScheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "postConceptScheme"
     },
-    "user-getone-permission-denied-missing-user" : {
-        "code": "user-getone-permission-denied-missing-user",
-        "description": "The authenticated user could not be loaded",
-        "status": 403,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
+    "conceptscheme-update-empty-or-corrupt-body" : {
+        "code": "conceptscheme-update-empty-or-corrupt-body",
+        "description": "The body passed to this endpoint was either missing or corrupt",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
-    "user-getone-permission-denied-missing-user-uri" : {
-        "code": "user-getone-permission-denied-missing-user-uri",
-        "description": "The uri for the authenticated user could not be loaded",
-        "status": 403,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
+    "conceptscheme-update-does-not-exist" : {
+        "code": "conceptscheme-update-does-not-exist",
+        "fields": [
+            "iri"
+        ],
+        "description": "The set with the given iri does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
-    "user-getone-permission-denied-missing-role-administrator" : {
-        "code": "user-getone-permission-denied-missing-role-administrator",
-        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
-        "status": 403,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
+    "conceptscheme-update-tenant-does-not-exist" : {
+        "code": "conceptscheme-update-tenant-does-not-exist",
+        "fields": [
+            "tenant"
+        ],
+        "description": "The given tenant to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
-    "user-getone-not-found-user" : {
-        "code": "user-getone-not-found-user",
-        "description": "The requested user could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\User\\Controller\\UserController",
-        "method": "getOneUser"
+    "conceptscheme-update-set-does-not-exist" : {
+        "code": "conceptscheme-update-set-does-not-exist",
+        "fields": [
+            "set"
+        ],
+        "description": "The given set to update a conceptscheme for does not exist",
+        "status": 400,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "putConceptScheme"
     },
     "filterprocessor-build-institution-filters-uuid-not-supported" : {
         "code": "filterprocessor-build-institution-filters-uuid-not-supported",
@@ -1180,105 +1041,56 @@
         "class": "App\\OpenSkos\\Institution\\Controller\\InstitutionController",
         "method": "putInstitution"
     },
-    "setprefixcontroller-sets-filter-not-applicable" : {
-        "code": "setprefixcontroller-sets-filter-not-applicable",
-        "description": "Sets filter is not applicable here",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
-        "method": "getAllPrefixes"
-    },
-    "set-getall-sets-filter" : {
-        "code": "set-getall-sets-filter",
-        "description": "A 'sets' filter was given but is not applicable to this endpoint",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "getAllSets"
-    },
-    "set-getone-not-found" : {
-        "code": "set-getone-not-found",
+    "labelcontroller-getone-not-found" : {
+        "code": "labelcontroller-getone-not-found",
         "fields": [
-            "iri"
+            "id"
         ],
-        "description": "The requested set could not be found",
+        "description": "The requested label could not be retreived",
         "status": 404,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "getSet"
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabel"
     },
-    "set-create-empty-or-corrupt-body" : {
-        "code": "set-create-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
+    "labelcontroller-getonebyuri-param-uri-missing" : {
+        "code": "labelcontroller-getonebyuri-param-uri-missing",
+        "description": "No uri was given",
         "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabelByUri"
     },
-    "set-create-already-exists" : {
-        "code": "set-create-already-exists",
+    "labelcontroller-getonebyuri-not-found" : {
+        "code": "labelcontroller-getonebyuri-not-found",
         "fields": [
-            "iri",
-            "uuid"
+            "uri"
         ],
-        "description": "A set with the given iri or uuid already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
+        "description": "The requested label could not be retreived",
+        "status": 404,
+        "class": "App\\OpenSkos\\Label\\Controller\\LabelController",
+        "method": "getLabelByUri"
     },
-    "set-create-already-exists-duplicate-base-uri" : {
-        "code": "set-create-already-exists-duplicate-base-uri",
+    "sparqlrepository-construct-resource-class-null" : {
+        "code": "sparqlrepository-construct-resource-class-null",
+        "description": "SparqlRepository can not be initialized without resource class",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
+    },
+    "sparqlrepository-construct-resource-class-not-rdfresource" : {
+        "code": "sparqlrepository-construct-resource-class-not-rdfresource",
         "fields": [
-            "baseUri"
+            "receivedClass"
         ],
-        "description": "A set with the given baseUri already exists",
-        "status": 409,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
+        "description": "SparqlRepository needs to be initialized for a class extending RdfResource",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
     },
-    "set-create-tenant-does-not-exist" : {
-        "code": "set-create-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to create a set for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "postSet"
-    },
-    "set-update-empty-or-corrupt-body" : {
-        "code": "set-update-empty-or-corrupt-body",
-        "description": "The body passed to this endpoint was either missing or corrupt",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "putSet"
-    },
-    "set-update-does-not-exist" : {
-        "code": "set-update-does-not-exist",
-        "fields": [
-            "iri"
-        ],
-        "description": "The set with the given iri does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "putSet"
-    },
-    "set-update-tenant-does-not-exist" : {
-        "code": "set-update-tenant-does-not-exist",
-        "fields": [
-            "tenant"
-        ],
-        "description": "The given tenant to update a set for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "putSet"
-    },
-    "set-base-uri-does-not-match-code" : {
-        "code": "set-base-uri-does-not-match-code",
-        "fields": [
-            "code",
-            "base-uri"
-        ],
-        "description": "The given openskos:code does not match the end of the given openskos:conceptBaseUri",
-        "status": 422,
-        "class": "App\\OpenSkos\\Set\\Set",
-        "method": "errors"
+    "sparqlrepository-construct-resource-type-null" : {
+        "code": "sparqlrepository-construct-resource-type-null",
+        "description": "SparqlRepository can not be initialized without resource type",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlRepository",
+        "method": "__construct"
     },
     "relation-getall-missing-subject-and-object" : {
         "code": "relation-getall-missing-subject-and-object",
@@ -1416,90 +1228,289 @@
         "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
         "method": "deleteRelation"
     },
-    "conceptscheme-getone-not-found" : {
-        "code": "conceptscheme-getone-not-found",
+    "setprefixcontroller-sets-filter-not-applicable" : {
+        "code": "setprefixcontroller-sets-filter-not-applicable",
+        "description": "Sets filter is not applicable here",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
+        "method": "getAllPrefixes"
+    },
+    "set-getall-sets-filter" : {
+        "code": "set-getall-sets-filter",
+        "description": "A 'sets' filter was given but is not applicable to this endpoint",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getAllSets"
+    },
+    "set-getone-not-found" : {
+        "code": "set-getone-not-found",
         "fields": [
             "iri"
         ],
-        "description": "The requested ConceptScheme could not be retreived",
+        "description": "The requested set could not be found",
         "status": 404,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "getConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getSet"
     },
-    "conceptscheme-create-empty-or-corrupt-body" : {
-        "code": "conceptscheme-create-empty-or-corrupt-body",
+    "set-create-empty-or-corrupt-body" : {
+        "code": "set-create-empty-or-corrupt-body",
         "description": "The body passed to this endpoint was either missing or corrupt",
         "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
     },
-    "conceptscheme-create-already-exists" : {
-        "code": "conceptscheme-create-already-exists",
+    "set-create-already-exists" : {
+        "code": "set-create-already-exists",
         "fields": [
             "iri",
             "uuid"
         ],
-        "description": "A ConceptScheme with the given iri or uuid already exists",
+        "description": "A set with the given iri or uuid already exists",
         "status": 409,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
     },
-    "conceptscheme-create-tenant-does-not-exist" : {
-        "code": "conceptscheme-create-tenant-does-not-exist",
+    "set-create-already-exists-duplicate-base-uri" : {
+        "code": "set-create-already-exists-duplicate-base-uri",
+        "fields": [
+            "baseUri"
+        ],
+        "description": "A set with the given baseUri already exists",
+        "status": 409,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
+    },
+    "set-create-tenant-does-not-exist" : {
+        "code": "set-create-tenant-does-not-exist",
         "fields": [
             "tenant"
         ],
-        "description": "The given tenant to create a ConceptScheme for does not exist",
+        "description": "The given tenant to create a set for does not exist",
         "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "postSet"
     },
-    "conceptscheme-create-set-does-not-exist" : {
-        "code": "conceptscheme-create-set-does-not-exist",
-        "fields": [
-            "set"
-        ],
-        "description": "The given set to create a ConceptScheme for does not exist",
-        "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "postConceptScheme"
-    },
-    "conceptscheme-update-empty-or-corrupt-body" : {
-        "code": "conceptscheme-update-empty-or-corrupt-body",
+    "set-update-empty-or-corrupt-body" : {
+        "code": "set-update-empty-or-corrupt-body",
         "description": "The body passed to this endpoint was either missing or corrupt",
         "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
     },
-    "conceptscheme-update-does-not-exist" : {
-        "code": "conceptscheme-update-does-not-exist",
+    "set-update-does-not-exist" : {
+        "code": "set-update-does-not-exist",
         "fields": [
             "iri"
         ],
         "description": "The set with the given iri does not exist",
         "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
     },
-    "conceptscheme-update-tenant-does-not-exist" : {
-        "code": "conceptscheme-update-tenant-does-not-exist",
+    "set-update-tenant-does-not-exist" : {
+        "code": "set-update-tenant-does-not-exist",
         "fields": [
             "tenant"
         ],
-        "description": "The given tenant to update a conceptscheme for does not exist",
+        "description": "The given tenant to update a set for does not exist",
         "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "putSet"
     },
-    "conceptscheme-update-set-does-not-exist" : {
-        "code": "conceptscheme-update-set-does-not-exist",
+    "set-base-uri-does-not-match-code" : {
+        "code": "set-base-uri-does-not-match-code",
         "fields": [
-            "set"
+            "code",
+            "base-uri"
         ],
-        "description": "The given set to update a conceptscheme for does not exist",
+        "description": "The given openskos:code does not match the end of the given openskos:conceptBaseUri",
+        "status": 422,
+        "class": "App\\OpenSkos\\Set\\Set",
+        "method": "errors"
+    },
+    "user-getall-permission-denied-missing-user" : {
+        "description": "The authenticated user could not be loaded",
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getall-permission-denied-missing-user-uri" : {
+        "description": "The uri for the authenticated user could not be loaded",
+        "status": 403,
+        "code": "user-getall-permission-denied-missing-user-uri",
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "geAllUsers"
+    },
+    "user-getone-permission-denied-missing-user" : {
+        "code": "user-getone-permission-denied-missing-user",
+        "description": "The authenticated user could not be loaded",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-missing-user-uri" : {
+        "code": "user-getone-permission-denied-missing-user-uri",
+        "description": "The uri for the authenticated user could not be loaded",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-permission-denied-missing-role-administrator" : {
+        "code": "user-getone-permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
+        "status": 403,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "user-getone-not-found-user" : {
+        "code": "user-getone-not-found-user",
+        "description": "The requested user could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\User\\Controller\\UserController",
+        "method": "getOneUser"
+    },
+    "apirequest-invalid-level" : {
+        "code": "apirequest-invalid-level",
+        "fields": [
+            "level"
+        ],
+        "description": "An invalid level was requested",
         "status": 400,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "putConceptScheme"
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-limit" : {
+        "code": "apirequest-invalid-limit",
+        "fields": [
+            "limit"
+        ],
+        "description": "An invalid limit parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-offset" : {
+        "code": "apirequest-invalid-offset",
+        "fields": [
+            "offset"
+        ],
+        "description": "An invalid offset parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "rdf-literal-datetime-unparsable-value" : {
+        "code": "rdf-literal-datetime-unparsable-value",
+        "fields": [
+            "value"
+        ],
+        "description": "The given value can not be parsed to a DateTimeLiteral",
+        "status": 500,
+        "class": "App\\Rdf\\Literal\\DatetimeLiteral",
+        "method": "fromString"
+    },
+    "iri-construct-invalid-value-type" : {
+        "code": "iri-construct-invalid-value-type",
+        "fields": [
+            "receivedType"
+        ],
+        "description": "Invalid type for $value, expected string|Iri",
+        "status": 500,
+        "class": "App\\Rdf\\Iri",
+        "method": "__construct"
+    },
+    "rdf-triple-construct-invalid-object-type" : {
+        "code": "rdf-triple-construct-invalid-object-type",
+        "fields": [
+            "received"
+        ],
+        "description": "Object must be either Iri or Literal",
+        "status": 500,
+        "class": "App\\Rdf\\Triple",
+        "method": "__construct"
+    },
+    "rdf-triple-tostring-invalid-object-type" : {
+        "code": "rdf-triple-tostring-invalid-object-type",
+        "fields": [
+            "received"
+        ],
+        "description": "Object must be either Iri or Literal",
+        "status": 500,
+        "class": "App\\Rdf\\Triple",
+        "method": "__toString"
+    },
+    "vocabularyawareresource-from-triples-mapping-not-array" : {
+        "code": "vocabularyawareresource-from-triples-mapping-not-array",
+        "fields": [
+            "receivedType"
+        ],
+        "description": "VocabularyAwareResource needs a (array)mapping.",
+        "status": 500,
+        "class": "App\\Rdf\\VocabularyAwareResource",
+        "method": "fromTriples"
+    },
+    "vocabularyawareresource-addproperty-unknown-property" : {
+        "code": "vocabularyawareresource-addproperty-unknown-property",
+        "fields": [
+            "property"
+        ],
+        "description": "Property is not expected",
+        "status": 500,
+        "class": "App\\Rdf\\VocabularyAwareResource",
+        "method": "addProperty"
+    },
+    "internal-resource-id-resolver-unresolvable" : {
+        "code": "internal-resource-id-resolver-unresolvable",
+        "fields": [
+            "value"
+        ],
+        "description": "The given value can not be resolved into InternalResourceId",
+        "status": 500,
+        "class": "App\\Rest\\ArgumentResolver\\InternalResourceIdResolver",
+        "method": "resolve"
+    },
+    "apirequest-format-invalid" : {
+        "code": "apirequest-format-invalid",
+        "fields": [
+            "requested",
+            "supported"
+        ],
+        "description": "The requested data format is invalid or not supported",
+        "status": 406,
+        "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
+        "method": "resolveFormat"
+    },
+    "authentication-permission-denied-invalid-credentials" : {
+        "code": "authentication-permission-denied-invalid-credentials",
+        "description": "Invalid credentials were given",
+        "status": 403,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAuthenticated"
+    },
+    "authentication-permission-denied-missing-credentials" : {
+        "code": "authentication-permission-denied-missing-credentials",
+        "description": "No credentials were given",
+        "status": 401,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAuthenticated"
+    },
+    "authentication-permission-denied-missing-role-administrator" : {
+        "code": "authentication-permission-denied-missing-role-administrator",
+        "description": "The requested action requires the 'administrator' role while the authenticated user does not posses it",
+        "status": 403,
+        "class": "App\\Security\\Authentication",
+        "method": "requireAdministrator"
+    },
+    "serializer-rdfencoder-encode-data-not-iterable" : {
+        "code": "serializer-rdfencoder-encode-data-not-iterable",
+        "fields": [
+            "received"
+        ],
+        "description": "Given data is not an iterable",
+        "status": 500,
+        "class": "App\\Serializer\\RdfEncoder",
+        "method": "encode"
     },
     "EOF": null
 }
