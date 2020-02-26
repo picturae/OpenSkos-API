@@ -17,4 +17,4 @@ services:
 
     App\OpenSkos\Institution\InstitutionRepository:
       arguments:
-        $iriFactory: '@set.iri_factory'
+        $iriFactory: '@institution.iri_factory'

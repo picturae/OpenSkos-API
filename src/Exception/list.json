@@ -831,16 +831,6 @@
         "class": "App\\OpenSkos\\Concept\\Concept",
         "method": "errors"
     },
-    "conceptscheme-getall-institution-not-found" : {
-        "code": "conceptscheme-getall-institution-not-found",
-        "fields": [
-            "given"
-        ],
-        "description": "A 'institutions' filter was given but the given identifiers could not be found",
-        "status": 404,
-        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
-        "method": "getConceptschemes"
-    },
     "conceptscheme-getone-not-found" : {
         "code": "conceptscheme-getone-not-found",
         "fields": [
@@ -1238,27 +1228,10 @@
         "class": "App\\OpenSkos\\Relation\\Controller\\RelationController",
         "method": "deleteRelation"
     },
-    "setprefixcontroller-sets-filter-not-applicable" : {
-        "code": "setprefixcontroller-sets-filter-not-applicable",
-        "description": "Sets filter is not applicable here",
-        "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
-        "method": "getAllPrefixes"
-    },
     "set-getall-sets-filter" : {
         "code": "set-getall-sets-filter",
         "description": "A 'sets' filter was given but is not applicable to this endpoint",
         "status": 400,
-        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
-        "method": "getAllSets"
-    },
-    "set-getall-institution-not-found" : {
-        "code": "set-getall-institution-not-found",
-        "fields": [
-            "given"
-        ],
-        "description": "A 'institutions' filter was given but the given identifiers could not be found",
-        "status": 404,
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "getAllSets"
     },
@@ -1337,6 +1310,13 @@
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "putSet"
     },
+    "setprefixcontroller-sets-filter-not-applicable" : {
+        "code": "setprefixcontroller-sets-filter-not-applicable",
+        "description": "Sets filter is not applicable here",
+        "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\PrefixController",
+        "method": "getAllPrefixes"
+    },
     "set-base-uri-does-not-match-code" : {
         "code": "set-base-uri-does-not-match-code",
         "fields": [
@@ -1389,6 +1369,16 @@
         "status": 404,
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
+    },
+    "apifilter-addfilter-could-not-stringify-object" : {
+        "code": "apifilter-addfilter-could-not-stringify-object",
+        "fields": [
+            "class"
+        ],
+        "description": "Could not stringify given object",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiFilter",
+        "method": "addFilter"
     },
     "apirequest-invalid-level" : {
         "code": "apirequest-invalid-level",
@@ -1500,6 +1490,26 @@
         "status": 406,
         "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
         "method": "resolveFormat"
+    },
+    "apirequestresolver-institution-not-found" : {
+        "code": "apirequestresolver-institution-not-found",
+        "fields": [
+            "given"
+        ],
+        "description": "An institution filter was given but could not be found",
+        "status": 404,
+        "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
+        "method": "resolveInstitutions"
+    },
+    "apirequestresolver-set-not-found" : {
+        "code": "apirequestresolver-set-not-found",
+        "fields": [
+            "given"
+        ],
+        "description": "A set filter was given but could not be found",
+        "status": 404,
+        "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
+        "method": "resolveSets"
     },
     "authentication-permission-denied-invalid-credentials" : {
         "code": "authentication-permission-denied-invalid-credentials",

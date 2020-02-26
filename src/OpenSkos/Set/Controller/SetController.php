@@ -66,11 +66,6 @@ final class SetController
      *        status=400,
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
-     * @Error(code="set-getall-institution-not-found",
-     *        status=404,
-     *        description="A 'institutions' filter was given but the given identifiers could not be found",
-     *        fields={"given"},
-     * )
      *
      * @ErrorInherit(class=ApiRequest::class           , method="__construct"            )
      * @ErrorInherit(class=ApiRequest::class           , method="getFormat"              )
@@ -78,10 +73,10 @@ final class SetController
      * @ErrorInherit(class=ApiRequest::class           , method="getLimit"               )
      * @ErrorInherit(class=ApiRequest::class           , method="getOffset"              )
      * @ErrorInherit(class=ApiRequest::class           , method="getSets"                )
+     * @ErrorInherit(class=ApiRequestResolver::class     , method="__construct"    )
+     * @ErrorInherit(class=ApiRequestResolver::class     , method="resolve"        )
      * @ErrorInherit(class=FilterProcessor::class      , method="__construct"            )
      * @ErrorInherit(class=FilterProcessor::class      , method="buildInstitutionFilters")
-     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"            )
-     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"              )
      * @ErrorInherit(class=InternalResourceId::class   , method="__construct"            )
      * @ErrorInherit(class=Iri::class                  , method="__construct"            )
      * @ErrorInherit(class=ListResponse::class         , method="__construct"            )
@@ -91,24 +86,10 @@ final class SetController
     public function getAllSets(
         ApiRequest $apiRequest,
         SetRepository $setRepository,
-        InstitutionRepository $institutionRepository,
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions = $apiRequest->getInstitutions();
         $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
-
-        // Verify the given institution(s) exist
-        foreach ($param_institutions as $institutionCode) {
-            $institution = $institutionRepository->findOneBy(
-                new Iri(OpenSkos::CODE),
-                new InternalResourceId($institutionCode)
-            );
-            if (!$institution) {
-                throw new ApiException('set-getall-institution-not-found', [
-                    'given' => $institutionCode,
-                ]);
-            }
-        }
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
