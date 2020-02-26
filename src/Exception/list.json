@@ -831,6 +831,16 @@
         "class": "App\\OpenSkos\\Concept\\Concept",
         "method": "errors"
     },
+    "conceptscheme-getall-institution-not-found" : {
+        "code": "conceptscheme-getall-institution-not-found",
+        "fields": [
+            "given"
+        ],
+        "description": "A 'institutions' filter was given but the given identifiers could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\ConceptScheme\\Controller\\ConceptSchemeController",
+        "method": "getConceptschemes"
+    },
     "conceptscheme-getone-not-found" : {
         "code": "conceptscheme-getone-not-found",
         "fields": [
@@ -1239,6 +1249,16 @@
         "code": "set-getall-sets-filter",
         "description": "A 'sets' filter was given but is not applicable to this endpoint",
         "status": 400,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getAllSets"
+    },
+    "set-getall-institution-not-found" : {
+        "code": "set-getall-institution-not-found",
+        "fields": [
+            "given"
+        ],
+        "description": "A 'institutions' filter was given but the given identifiers could not be found",
+        "status": 404,
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "getAllSets"
     },
