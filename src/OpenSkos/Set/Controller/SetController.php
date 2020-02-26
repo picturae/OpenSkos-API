@@ -66,7 +66,7 @@ final class SetController
      *        status=400,
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
-     * @Error(code="set-getall-institution-filter-not-found",
+     * @Error(code="set-getall-institution-not-found",
      *        status=404,
      *        description="A 'institutions' filter was given but the given identifiers could not be found",
      *        fields={"given"},
@@ -104,7 +104,7 @@ final class SetController
                 new InternalResourceId($institutionCode)
             );
             if (!$institution) {
-                throw new ApiException('set-getall-institution-filter-not-found', [
+                throw new ApiException('set-getall-institution-not-found', [
                     'given' => $institutionCode,
                 ]);
             }

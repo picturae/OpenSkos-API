@@ -62,6 +62,12 @@ final class ConceptSchemeController
      *   }),
      * )
      *
+     * @Error(code="conceptscheme-getall-institution-not-found",
+     *        status=404,
+     *        description="A 'institutions' filter was given but the given identifiers could not be found",
+     *        fields={"given"},
+     * )
+     *
      * @ErrorInherit(class=ApiFilter::class              , method="__construct"    )
      * @ErrorInherit(class=ApiFilter::class              , method="buildFilters"   )
      * @ErrorInherit(class=ApiRequest::class             , method="__construct"    )
@@ -73,22 +79,50 @@ final class ConceptSchemeController
      * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"    )
      * @ErrorInherit(class=ConceptSchemeRepository::class, method="all"            )
      * @ErrorInherit(class=FilterProcessor::class        , method="__construct"    )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="__construct"    )
+     * @ErrorInherit(class=InstitutionRepository::class  , method="findOneBy"      )
+     * @ErrorInherit(class=InternalResourceId::class     , method="__construct"    )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"    )
      * @ErrorInherit(class=ListResponse::class           , method="__construct"    )
+     * @ErrorInherit(class=SetRepository::class          , method="__construct"    )
+     * @ErrorInherit(class=SetRepository::class          , method="findOneBy"      )
      */
     public function getConceptschemes(
         ApiFilter $apiFilter,
         ApiRequest $apiRequest,
-        ConceptSchemeRepository $repository,
+        ConceptSchemeRepository $conceptSchemeRepository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository,
         FilterProcessor $filterProcessor
     ): ListResponse {
-        $param_institutions  = $apiRequest->getInstitutions();
+        $param_institutions = $apiRequest->getInstitutions();
+        $param_sets         = $apiRequest->getSets();
 
         // TODO: Don't use non-default filters anymore
-        $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
-        $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
+        $apiFilter->addFilter('openskos:tenant', $param_institutions);
+        $apiFilter->addFilter('openskos:set', $param_sets);
         $full_filter = $apiFilter->buildFilters();
 
-        $conceptschemes = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
+        // Verify the given institution(s) exist
+        foreach ($param_institutions as $institutionCode) {
+            $institution = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($institutionCode)
+            );
+            if (!$institution) {
+                throw new ApiException('conceptscheme-getall-institution-not-found', [
+                    'given' => $institutionCode,
+                ]);
+            }
+        }
+
+        // TODO: Verify the given set(s) exist
+
+        $conceptschemes = $conceptSchemeRepository->all(
+            $apiRequest->getOffset(),
+            $apiRequest->getLimit(),
+            $full_filter
+        );
 
         return new ListResponse(
             $conceptschemes,
