@@ -844,4 +844,14 @@ abstract class AbstractRdfDocument implements RdfResource
 
         return null;
     }
+
+    public function __toString()
+    {
+        $uuid = $this->getValue(OpenSkos::UUID);
+        if (is_null($uuid)) {
+            return '';
+        }
+
+        return $uuid->__toString();
+    }
 }
