@@ -66,26 +66,49 @@ final class SetController
      *        status=400,
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
+     * @Error(code="set-getall-institution-filter-not-found",
+     *        status=404,
+     *        description="A 'institutions' filter was given but the given identifiers could not be found",
+     *        fields={"given"},
+     * )
      *
-     * @ErrorInherit(class=ApiRequest::class     , method="__construct"            )
-     * @ErrorInherit(class=ApiRequest::class     , method="getFormat"              )
-     * @ErrorInherit(class=ApiRequest::class     , method="getInstitutions"        )
-     * @ErrorInherit(class=ApiRequest::class     , method="getLimit"               )
-     * @ErrorInherit(class=ApiRequest::class     , method="getOffset"              )
-     * @ErrorInherit(class=ApiRequest::class     , method="getSets"                )
-     * @ErrorInherit(class=FilterProcessor::class, method="__construct"            )
-     * @ErrorInherit(class=FilterProcessor::class, method="buildInstitutionFilters")
-     * @ErrorInherit(class=ListResponse::class   , method="__construct"            )
-     * @ErrorInherit(class=SetRepository::class  , method="__construct"            )
-     * @ErrorInherit(class=SetRepository::class  , method="all"                    )
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class           , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class           , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class           , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class           , method="getSets"                )
+     * @ErrorInherit(class=FilterProcessor::class      , method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class      , method="buildInstitutionFilters")
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct"            )
+     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"              )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct"            )
+     * @ErrorInherit(class=Iri::class                  , method="__construct"            )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class        , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class        , method="all"                    )
      */
     public function getAllSets(
         ApiRequest $apiRequest,
-        SetRepository $repository,
+        SetRepository $setRepository,
+        InstitutionRepository $institutionRepository,
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions = $apiRequest->getInstitutions();
         $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
+
+        // Verify the given institution(s) exist
+        foreach ($param_institutions as $institutionCode) {
+            $institution = $institutionRepository->findOneBy(
+                new Iri(OpenSkos::CODE),
+                new InternalResourceId($institutionCode)
+            );
+            if (!$institution) {
+                throw new ApiException('set-getall-institution-filter-not-found', [
+                    'given' => $institutionCode,
+                ]);
+            }
+        }
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
@@ -93,7 +116,7 @@ final class SetController
             throw new ApiException('set-getall-sets-filter');
         }
 
-        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
+        $sets = $setRepository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
             $sets,

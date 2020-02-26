@@ -1242,6 +1242,16 @@
         "class": "App\\OpenSkos\\Set\\Controller\\SetController",
         "method": "getAllSets"
     },
+    "set-getall-institution-filter-not-found" : {
+        "code": "set-getall-institution-filter-not-found",
+        "fields": [
+            "given"
+        ],
+        "description": "A 'institutions' filter was given but the given identifiers could not be found",
+        "status": 404,
+        "class": "App\\OpenSkos\\Set\\Controller\\SetController",
+        "method": "getAllSets"
+    },
     "set-getone-not-found" : {
         "code": "set-getone-not-found",
         "fields": [
