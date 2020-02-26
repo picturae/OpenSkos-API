@@ -2,9 +2,12 @@
 
 namespace App\OpenSkos;
 
+use App\Annotation\Error;
 use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\Institution\Institution;
 use App\OpenSkos\Set\Set;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Iri;
@@ -59,6 +62,9 @@ final class ApiFilter
      */
     private $setRepository;
 
+    protected $normalize = [
+    ];
+
     /**
      * @ErrorInherit(class=ApiFilter::class, method="addFilter")
      */
@@ -67,6 +73,19 @@ final class ApiFilter
         SetRepository $setRepository
     ) {
         $this->setRepository = $setRepository;
+
+        // Initialize normalizers (can't load function in constants...)
+        $this->normalize[Institution::class] = function (Institution $institution) {
+            $code = $institution->getValue(OpenSkos::CODE);
+
+            return $code ? $code->__toString() : '';
+        };
+        $this->normalize[Iri::class] = function (Iri $iri) {
+            return $iri;
+        };
+        $this->normalize[InternalResourceId::class] = function (InternalResourceId $iri) {
+            return $iri;
+        };
 
         // Fetch filters
         $params = $request->query->get('filter', []);
@@ -116,6 +135,14 @@ final class ApiFilter
     /**
      * @param mixed $value
      *
+     * @throws ApiException
+     *
+     * @Error(code="apifilter-addfilter-could-not-stringify-object",
+     *        status=400,
+     *        description="Could not stringify given object",
+     *        fields={"class"}
+     * )
+     *
      * @ErrorInherit(class=ApiFilter::class         , method="fromFullUri")
      * @ErrorInherit(class=Context::class           , method="literaltype")
      * @ErrorInherit(class=InternalResourceId::class, method="__construct")
@@ -130,6 +157,19 @@ final class ApiFilter
     ): self {
         if (is_null($value)) {
             return $this;
+        }
+
+        if (is_object($value)) {
+            $class = get_class($value);
+            if (isset($this->normalize[$class])) {
+                $value = $this->normalize[$class]($value);
+            } elseif (method_exists($value, '__toString')) {
+                $value = $value->__toString();
+            } else {
+                throw new ApiException('apifilter-addfilter-could-not-stringify-object', [
+                    'class' => $class,
+                ]);
+            }
         }
 
         // Handle arrays

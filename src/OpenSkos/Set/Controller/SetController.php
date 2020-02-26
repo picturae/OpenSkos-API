@@ -67,21 +67,25 @@ final class SetController
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
      *
-     * @ErrorInherit(class=ApiRequest::class     , method="__construct"            )
-     * @ErrorInherit(class=ApiRequest::class     , method="getFormat"              )
-     * @ErrorInherit(class=ApiRequest::class     , method="getInstitutions"        )
-     * @ErrorInherit(class=ApiRequest::class     , method="getLimit"               )
-     * @ErrorInherit(class=ApiRequest::class     , method="getOffset"              )
-     * @ErrorInherit(class=ApiRequest::class     , method="getSets"                )
-     * @ErrorInherit(class=FilterProcessor::class, method="__construct"            )
-     * @ErrorInherit(class=FilterProcessor::class, method="buildInstitutionFilters")
-     * @ErrorInherit(class=ListResponse::class   , method="__construct"            )
-     * @ErrorInherit(class=SetRepository::class  , method="__construct"            )
-     * @ErrorInherit(class=SetRepository::class  , method="all"                    )
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class           , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class           , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class           , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class           , method="getSets"                )
+     * @ErrorInherit(class=ApiRequestResolver::class     , method="__construct"    )
+     * @ErrorInherit(class=ApiRequestResolver::class     , method="resolve"        )
+     * @ErrorInherit(class=FilterProcessor::class      , method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class      , method="buildInstitutionFilters")
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct"            )
+     * @ErrorInherit(class=Iri::class                  , method="__construct"            )
+     * @ErrorInherit(class=ListResponse::class         , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class        , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class        , method="all"                    )
      */
     public function getAllSets(
         ApiRequest $apiRequest,
-        SetRepository $repository,
+        SetRepository $setRepository,
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions = $apiRequest->getInstitutions();
@@ -93,7 +97,7 @@ final class SetController
             throw new ApiException('set-getall-sets-filter');
         }
 
-        $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
+        $sets = $setRepository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
         return new ListResponse(
             $sets,

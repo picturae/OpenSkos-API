@@ -1,7 +1,11 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude(['var', 'vendor'])
+    ->exclude([
+        'data/docker',
+        'var',
+        'vendor',
+    ])
     ->in(__DIR__)
 ;
 

@@ -70,6 +70,8 @@ final class ConceptSchemeController
      * @ErrorInherit(class=ApiRequest::class             , method="getLimit"       )
      * @ErrorInherit(class=ApiRequest::class             , method="getOffset"      )
      * @ErrorInherit(class=ApiRequest::class             , method="getSets"        )
+     * @ErrorInherit(class=ApiRequestResolver::class     , method="__construct"    )
+     * @ErrorInherit(class=ApiRequestResolver::class     , method="resolve"        )
      * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"    )
      * @ErrorInherit(class=ConceptSchemeRepository::class, method="all"            )
      * @ErrorInherit(class=FilterProcessor::class        , method="__construct"    )
@@ -78,17 +80,22 @@ final class ConceptSchemeController
     public function getConceptschemes(
         ApiFilter $apiFilter,
         ApiRequest $apiRequest,
-        ConceptSchemeRepository $repository,
+        ConceptSchemeRepository $conceptSchemeRepository,
         FilterProcessor $filterProcessor
     ): ListResponse {
-        $param_institutions  = $apiRequest->getInstitutions();
+        $param_institutions = $apiRequest->getInstitutions();
+        $param_sets         = $apiRequest->getSets();
 
         // TODO: Don't use non-default filters anymore
-        $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
-        $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
+        $apiFilter->addFilter('openskos:tenant', $param_institutions);
+        $apiFilter->addFilter('openskos:set', $param_sets);
         $full_filter = $apiFilter->buildFilters();
 
-        $conceptschemes = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
+        $conceptschemes = $conceptSchemeRepository->all(
+            $apiRequest->getOffset(),
+            $apiRequest->getLimit(),
+            $full_filter
+        );
 
         return new ListResponse(
             $conceptschemes,
