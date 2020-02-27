@@ -192,12 +192,21 @@ class SkosResourceRepository
         $sparql  = SparqlQuery::describeSubjectFromUuid((string) $subject);
         $triples = $this->rdfClient->describe($sparql);
 
-        // Fallback by filter
-        // TODO: add UUID field to all resources
-        if (!count($triples)) {
-            $sparql  = SparqlQuery::describeWithoutUuid((string) $subject);
-            $triples = $this->rdfClient->describe($sparql);
-        }
+        /*
+         * Commented out. It:
+         * 1) Caused ticket #47605
+         * 2) A string filter on every triple in Jena is a performance hit
+         * 3) No guarantee the objects described will be of the type being searched for.
+         * 4) It first appeared in a commit for relation types, but uuids are not even mentioned in the specs for relations
+         *
+         * I've left the code here now, in case something is broken we can see the history
+        */
+//       // Fallback by filter
+//       // TODO: add UUID field to all resources
+//       if (!count($triples)) {
+//           $sparql  = SparqlQuery::describeWithoutUuid((string) $subject);
+//           $triples = $this->rdfClient->describe($sparql);
+//       }
 
         // None found = done
         if (!count($triples)) {
