@@ -171,6 +171,68 @@ final class InstitutionController
 
         return new ScalarResponse($institution, $apiRequest->getFormat());
     }
+    /**
+     * @Route(path="/institution", methods={"GET"})
+     *
+     * @OA\Summary("Retreive an institution using it's identifier")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @throws ApiException
+     *
+     * @Error(code="institution-getone-not-found",
+     *        status=404,
+     *        description="The requested institution could not be retreived",
+     *        fields={"id"}
+     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"  )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct")
+     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"  )
+     * @ErrorInherit(class=InstitutionRepository::class, method="getByUuid"  )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class   , method="__toString" )
+     * @ErrorInherit(class=Iri::class                  , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class       , method="__construct")
+     */
+    public function getInstitutionByForeignId(
+        ApiRequest $apiRequest,
+        InstitutionRepository $repository
+    ): ScalarResponse {
+
+        $iri = $apiRequest->getForeignUri();
+        $institution = $repository->get( new Iri($iri) );
+
+        if (null === $institution) {
+            throw new ApiException('institution-getone-not-found', [
+                'uri' => $iri,
+            ]);
+        }
+
+        return new ScalarResponse($institution, $apiRequest->getFormat());
+    }
 
     /**
      * @Route(path="/institutions.{format?}", methods={"POST"})

@@ -217,7 +217,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function findByIri(Iri $iri)
     {
-        return $this->skosRepository->findByIri($iri);
+        return $this->skosRepository->findByIri(new Iri(static::DOCUMENT_TYPE),$iri);
     }
 
     /**
@@ -293,7 +293,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function get(Iri $object)
     {
-        $res = $this->skosRepository->findByIri($object);
+        $res = $this->skosRepository->findByIri(new Iri(static::DOCUMENT_TYPE), $object);
 
         // No resource = done
         if (is_null($res)) {

@@ -170,6 +170,68 @@ final class ConceptSchemeController
     }
 
     /**
+     * @Route(path="/conceptscheme", methods={"GET"})
+     *
+     * @OA\Summary("Retreive a conceptscheme using it's uri")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @throws ApiException
+     *
+     * @Error(code="institution-getone-not-found",
+     *        status=404,
+     *        description="The requested institution could not be retreived",
+     *        fields={"id"}
+     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"  )
+     * @ErrorInherit(class=InstitutionRepository::class, method="__construct")
+     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"  )
+     * @ErrorInherit(class=InstitutionRepository::class, method="getByUuid"  )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class   , method="__toString" )
+     * @ErrorInherit(class=Iri::class                  , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class       , method="__construct")
+     */
+    public function getConceptSchemeByForeignId(
+        ApiRequest $apiRequest,
+        ConceptSchemeRepository $repository
+    ): ScalarResponse {
+        $iri            = $apiRequest->getForeignUri();
+        $concept_scheme = $repository->get(new Iri($iri));
+
+        if (null === $concept_scheme) {
+            throw new ApiException('conceptscheme-getone-not-found', [
+                'uri' => $iri,
+            ]);
+        }
+
+        return new ScalarResponse($concept_scheme, $apiRequest->getFormat());
+    }
+
+    /**
      * @Route(path="/conceptschemes.{format?}", methods={"POST"})
      *
      * @OA\Summary("Create one or more new concept schemes")
