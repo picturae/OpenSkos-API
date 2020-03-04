@@ -1,0 +1,11 @@
+[ver:1,total:900]
+src/OpenSkos/Concept/Controller/ConceptController.php:280,1583330400:260,1583334000:20,m
+src/Rest/ArgumentResolver/ApiRequestResolver.php:130,1583330400:130,m
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:120,1583330400:120,r
+src/OpenSkos/User/Controller/UserController.php:80,1583330400:80,m
+src/OpenSkos/SkosResourceRepository.php:70,1583330400:70,m
+src/Annotation/ErrorInherit.php:60,1583330400:60,r
+src/Repository/AbstractRepository.php:40,1583330400:40,m
+config/packages/institution.yaml:40,1583330400:40,m
+src/Helper/xsdDateHelper.php:40,1583334000:40,r
+src/Rdf/AbstractRdfDocument.php:40,1583330400:40,r
