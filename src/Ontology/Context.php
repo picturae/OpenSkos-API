@@ -124,7 +124,8 @@ final class Context
             return null;
         }
 
-        return static::namespaces[$decoded[0]]::literaltypes[static::fullUri($uri) ?? ''] ?? null;
+        //return static::namespaces[$decoded[0]]::literaltypes[static::fullUri($uri) ?? ''] ?? null;
+        return static::namespaces[$decoded[0]];
     }
 
     /**

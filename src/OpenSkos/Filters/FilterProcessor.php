@@ -25,17 +25,32 @@ final class FilterProcessor
     const ENTITY_SET           = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
 
+    /**
+     * @var Connection
+     */
     private $connection;
 
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
     /**
-     * FilterProcessor constructor.
+     * @var FilterProcessorHelper
      */
-    public function __construct(Connection $connection, ContainerInterface $container)
+    private $filter_helper;
+
+    /**
+     * FilterProcessor constructor.
+     * @param Connection $connection
+     * @param ContainerInterface $container
+     * @param FilterProcessorHelper $filter_helper
+     */
+    public function __construct(Connection $connection, ContainerInterface $container, FilterProcessorHelper $filter_helper)
     {
         $this->connection = $connection;
         $this->container  = $container;
+        $this->filter_helper  = $filter_helper;
     }
 
     /**
