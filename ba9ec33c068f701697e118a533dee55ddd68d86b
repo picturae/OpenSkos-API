@@ -1,0 +1,8 @@
+[ver:1,total:82]
+src/Rdf/Sparql/SparqlQuery.php:30,1583337600:30,r
+src/Rest/ArgumentResolver/ApiRequestResolver.php:12,1583337600:12,r
+src/Repository/AbstractRepository.php:8,1583337600:8,r
+composer.json:8,1583337600:8,r
+src/OpenSkos/Filters/SolrFilterProcessor.php:8,1583337600:8,r
+src/OpenSkos/Institution/Controller/InstitutionController.php:8,1583337600:8,r
+grumphp.yml:8,1583337600:8,m
