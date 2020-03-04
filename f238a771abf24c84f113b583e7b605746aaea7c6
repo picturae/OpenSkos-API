@@ -1,0 +1,6 @@
+[ver:1,total:382]
+scripts/generate-documentation.sh:278,1583334000:278,m
+grumphp.yml:68,1583334000:68,r
+composer.json:17,1583334000:17,r
+src/Ontology/Context.php:11,1583334000:11,r
+src/Template/Ontology/Namespace.php:8,1583334000:8,r
