@@ -61,7 +61,7 @@ final class ConceptController
         $filter = [];
         $param  = $apiRequest->getParameter($key);
         if (isset($param)) {
-            $filter = preg_split('/\s*,\s*/', $param, -1, PREG_SPLIT_NO_EMPTY);
+            $filter = array_filter(str_getcsv($param));
         }
 
         return $filter;
@@ -129,21 +129,16 @@ final class ConceptController
      */
     private function buildConceptFilters(
         ApiRequest $apiRequest,
+        ApiFilter $apiFilter,
         SolrFilterProcessor $solrFilterProcessor
     ): array {
-        /* <<<<<<< HEAD */
-        // TODO:
-        // - collections
-        // - dateSubmitted
-        // - modified
-        // - dateAccepted
-        // - dateDeleted
+        // Map some filters the ApiFilter class doesn't do by default but were in the spec
+        $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
+        $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
+        $apiFilter->addFilter('skos:inScheme', $this->processFilterFromRequest($apiRequest, 'conceptSchemes'));
+        $apiFilter->addFilter('openskos:status', $this->processFilterFromRequest($apiRequest, 'statuses'));
 
-        /* // TODO: Don't use non-default filters anymore */
-        /* $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions()); */
-        /* $apiFilter->addFilter('openskos:set', $apiRequest->getSets()); */
-        /* $apiFilter->addFilter('skos:ConceptScheme', $this->processFilterFromRequest($apiRequest, 'conceptSchemes')); */
-        /* $apiFilter->addFilter('openskos:status', $this->processFilterFromRequest($apiRequest, 'statuses')); */
+        // TODO: Extra solr-mapping in ApiFilter is required for these
         /* $apiFilter->addFilter('dcterms:creator', $this->processFilterFromRequest($apiRequest, 'creator')); */
         /* $apiFilter->addFilter('openskos:modifiedBy', $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy')); */
         /* $apiFilter->addFilter('openskos:acceptedBy', $this->processFilterFromRequest($apiRequest, 'openskos:acceptedBy')); */
@@ -152,38 +147,18 @@ final class ConceptController
         /* $apiFilter->addFilter('openskos:acceptedBy', $this->processFilterFromRequest($apiRequest, 'acceptedBy')); */
         /* $apiFilter->addFilter('openskos:deletedBy', $this->processFilterFromRequest($apiRequest, 'deletedBy')); */
 
-        /* $full_filter = $apiFilter->buildFilters('solr'); */
-        /* ======= */
-        /* From Spec
-            searchProfile=id of a search profile. Stored in MySQL table 'search_profiles'.
-        */
-        /* >>>>>>> a1a7d1b */
+        $prefabFilters = $apiFilter->buildFilters('solr');
 
         /*
             No specification of this made available from Meertens. And not in Solr
             collections=comma separated list of collection URIs or IDs [On Hold: Predicate not known]
         */
 
-        /* Institutions (tenants) */
-        $param_institutions  = $apiRequest->getInstitutions();
-        $institutions_filter = $solrFilterProcessor->buildInstitutionFilters($param_institutions);
-
-        /* Sets */
-        $param_sets  = $apiRequest->getSets();
-        $sets_filter = $solrFilterProcessor->buildSetFilters($param_sets);
-
-        /* Concept Schemes */
-        $param_conceptschemes  = $this->processFilterFromRequest($apiRequest, 'conceptSchemes');
-        $conceptSchemes_filter = $solrFilterProcessor->buildConceptSchemeFilters($param_conceptschemes);
-
-        /* Statuses */
-        $param_statuses  = $this->processFilterFromRequest($apiRequest, 'statuses');
-        $statuses_filter = $solrFilterProcessor->buildStatusesFilters($param_statuses);
-
         /* Concept Schemes */
         $param_dates         = $this->processDateStampsFromRequest($apiRequest);
         $interactions_filter = $solrFilterProcessor->buildInteractionsFilters($param_dates);
 
+        /* User filters */
         $param_users                        = [];
         $param_users['creator']             = $this->processFilterFromRequest($apiRequest, 'creator');
         $param_users['openskos:modifiedBy'] = $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy');
@@ -192,16 +167,9 @@ final class ConceptController
 
         $users_filter = $solrFilterProcessor->buildUserFilters($param_users);
 
-        /*
-         Search profiles have been removed
-         Agreement between P.Woltjer and Beeld en Geluid that a search profile does not belong in the API
-        */
-
+        /* Merge all filters */
         $full_filter = array_merge(
-            $institutions_filter,
-            $sets_filter,
-            $conceptSchemes_filter,
-            $statuses_filter,
+            $prefabFilters,
             $interactions_filter,
             $users_filter
         );
@@ -530,7 +498,7 @@ final class ConceptController
         SolrFilterProcessor $solrFilterProcessor,
         LabelRepository $labelRepository
     ): ListResponse {
-        $full_filter = $this->buildConceptFilters($apiRequest, $solrFilterProcessor);
+        $full_filter = $this->buildConceptFilters($apiRequest, $apiFilter, $solrFilterProcessor);
 
         $full_selection  = $this->buildSelectionParameters($apiRequest, $repository);
         $full_projection = $this->buildProjectionParameters($apiRequest, $repository);
@@ -1056,7 +1024,7 @@ final class ConceptController
         ConceptRepository $repository,
         SolrFilterProcessor $solrFilterProcessor
     ): ListResponse {
-        $full_filter = $this->buildConceptFilters($apiRequest, $solrFilterProcessor);
+        $full_filter = $this->buildConceptFilters($apiRequest, $apiFilter, $solrFilterProcessor);
 
         $full_selection  = $this->buildSelectionParameters($apiRequest, $repository);
         $full_projection = $this->buildProjectionParameters($apiRequest, $repository);

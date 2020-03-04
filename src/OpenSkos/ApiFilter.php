@@ -62,6 +62,11 @@ final class ApiFilter
 
     /**
      * @ErrorInherit(class=ApiFilter::class, method="addFilter")
+     *
+     * TODO:
+     *   add support for direct/aliased params on the url (add, not replace)
+     *   example: ?institutions= instead of ?filter[institutions]=
+     *   why: will be closer to the spec by BEG
      */
     public function __construct(
         Request $request,
