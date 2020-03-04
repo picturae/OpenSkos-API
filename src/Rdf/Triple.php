@@ -152,16 +152,24 @@ final class Triple
 
             return $retVal;
         } elseif ($this->object instanceof Literal) {
-            $hasLang = method_exists($this->object, 'lang') && $this->object->lang();
-
-            return sprintf(
-                '<%s> <%s> "%s"%s%s',
-                $this->subject->getUri(),
-                $this->predicate->getUri(),
-                $this->object->__toString(),
-                $hasLang ? '@'.$this->object->lang() : '',
-                $hasLang ? '' : ('^^'.$this->object->typeIri()->ntripleString())
-            );
+            // Reason for full if instead of partial: psalm on travis
+            if (method_exists($this->object, 'lang') && $this->object->lang()) {
+                return sprintf(
+                    '<%s> <%s> "%s"%s',
+                    $this->subject->getUri(),
+                    $this->predicate->getUri(),
+                    $this->object->__toString(),
+                    '@'.$this->object->lang()
+                );
+            } else {
+                return sprintf(
+                    '<%s> <%s> "%s"%s',
+                    $this->subject->getUri(),
+                    $this->predicate->getUri(),
+                    $this->object->__toString(),
+                    ('^^'.$this->object->typeIri()->ntripleString())
+                );
+            }
         }
 
         $type = gettype($this->object);
