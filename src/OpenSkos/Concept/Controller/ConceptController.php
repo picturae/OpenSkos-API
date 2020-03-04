@@ -145,13 +145,13 @@ final class ConceptController
         $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
         $apiFilter->addFilter('skos:ConceptScheme', $this->processFilterFromRequest($apiRequest, 'conceptSchemes'));
         $apiFilter->addFilter('openskos:status', $this->processFilterFromRequest($apiRequest, 'statuses'));
-        $apiFilter->addFilter('dcterms:creator:', $this->processFilterFromRequest($apiRequest, 'creator'));
-        $apiFilter->addFilter('openskos:modifiedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy'));
-        $apiFilter->addFilter('openskos:acceptedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:acceptedBy'));
-        $apiFilter->addFilter('openskos:deletedBy:', $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy'));
-        $apiFilter->addFilter('openskos:modifiedBy:', $this->processFilterFromRequest($apiRequest, 'modifiedBy'));
-        $apiFilter->addFilter('openskos:acceptedBy:', $this->processFilterFromRequest($apiRequest, 'acceptedBy'));
-        $apiFilter->addFilter('openskos:deletedBy:', $this->processFilterFromRequest($apiRequest, 'deletedBy'));
+        $apiFilter->addFilter('dcterms:creator', $this->processFilterFromRequest($apiRequest, 'creator'));
+        $apiFilter->addFilter('openskos:modifiedBy', $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy'));
+        $apiFilter->addFilter('openskos:acceptedBy', $this->processFilterFromRequest($apiRequest, 'openskos:acceptedBy'));
+        $apiFilter->addFilter('openskos:deletedBy', $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy'));
+        $apiFilter->addFilter('openskos:modifiedBy', $this->processFilterFromRequest($apiRequest, 'modifiedBy'));
+        $apiFilter->addFilter('openskos:acceptedBy', $this->processFilterFromRequest($apiRequest, 'acceptedBy'));
+        $apiFilter->addFilter('openskos:deletedBy', $this->processFilterFromRequest($apiRequest, 'deletedBy'));
 
         $full_filter = $apiFilter->buildFilters('solr');
 
