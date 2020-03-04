@@ -200,6 +200,10 @@ final class UserController
         ApiRequest $apiRequest,
         LabelRepository $labelRepository
     ): ScalarResponse {
+        /*
+         * @TODO Why are we injecting unused parameters?
+         */
+
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
         $auth->requireAuthenticated();

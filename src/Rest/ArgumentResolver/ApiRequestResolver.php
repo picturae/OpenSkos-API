@@ -8,23 +8,18 @@ use App\Annotation\Error;
 use App\Annotation\ErrorInherit;
 use App\Database\Doctrine;
 use App\Exception\ApiException;
-use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Institution\Institution;
 use App\OpenSkos\Institution\InstitutionRepository;
-use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\UnknownFormatException;
-use App\Rdf\Iri;
 use App\Security\Authentication;
 use EasyRdf_Format as Format;
 use EasyRdf_Graph as Graph;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class ApiRequestResolver implements ArgumentValueResolverInterface
 {
@@ -116,118 +111,10 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @throws ApiException
-     *
-     * @Error(code="apirequestresolver-institution-not-found",
-     *        status=404,
-     *        description="An institution filter was given but could not be found",
-     *        fields={"given"}
-     * )
-     *
-     * @ErrorInherit(class=InstitutionRepository::class, method="__construct")
-     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"  )
-     * @ErrorInherit(class=InstitutionRepository::class, method="get"        )
-     * @ErrorInherit(class=InstitutionRepository::class, method="getByUuid"  )
-     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
-     * @ErrorInherit(class=Iri::class                  , method="__construct")
-     */
-    public function resolveInstitutions(array $institutions, bool $throw = true): array
-    {
-        /** @var InstitutionRepository $institutionRepository */
-        $institutionRepository = $this->institutionRepository;
-
-        return array_map(function ($institutionIdentifier) use ($institutionRepository) {
-            // Check if the identifier is a url
-            $institution = $institutionRepository->get(
-                new Iri($institutionIdentifier),
-            );
-            if ($institution) {
-                return $institution;
-            }
-
-            // Check if the identifier is a openskos:uuid
-            $institution = $institutionRepository->getByUuid(
-                new InternalResourceId($institutionIdentifier),
-            );
-            if ($institution) {
-                return $institution;
-            }
-
-            // Check if the identifier is a openskos:code
-            $institution = $institutionRepository->findOneBy(
-                new Iri(OpenSkos::CODE),
-                new InternalResourceId($institutionIdentifier),
-            );
-            if ($institution) {
-                return $institution;
-            }
-
-            // None of the available options was able to fetch the institution
-            throw new ApiException('apirequestresolver-institution-not-found', [
-                'given' => $institutionIdentifier,
-            ]);
-        }, $institutions);
-    }
-
-    /**
-     * @throws ApiException
-     *
-     * @Error(code="apirequestresolver-set-not-found",
-     *        status=404,
-     *        description="A set filter was given but could not be found",
-     *        fields={"given"}
-     * )
-     *
-     * @ErrorInherit(class=SetRepository::class     , method="__construct")
-     * @ErrorInherit(class=SetRepository::class     , method="findOneBy"  )
-     * @ErrorInherit(class=SetRepository::class     , method="get"        )
-     * @ErrorInherit(class=SetRepository::class     , method="getByUuid"  )
-     * @ErrorInherit(class=InternalResourceId::class, method="__construct")
-     * @ErrorInherit(class=Iri::class               , method="__construct")
-     */
-    public function resolveSets(array $sets): array
-    {
-        /** @var SetRepository $setRepository */
-        $setRepository = $this->setRepository;
-
-        return array_map(function ($setIdentifier) use ($setRepository) {
-            // Check if the identifier is a url
-            $institution = $setRepository->get(
-                new Iri($setIdentifier),
-            );
-            if ($institution) {
-                return $institution;
-            }
-
-            // Check if the identifier is a openskos:uuid
-            $institution = $setRepository->getByUuid(
-                new InternalResourceId($setIdentifier),
-            );
-            if ($institution) {
-                return $institution;
-            }
-
-            // Check if the identifier is a openskos:code
-            $institution = $setRepository->findOneBy(
-                new Iri(OpenSkos::CODE),
-                new InternalResourceId($setIdentifier),
-            );
-            if ($institution) {
-                return $institution;
-            }
-
-            // None of the available options was able to fetch the institution
-            throw new ApiException('apirequestresolver-set-not-found', [
-                'given' => $setIdentifier,
-            ]);
-        }, $sets);
-    }
-
-    /**
      * @return \Generator
      *
-     * @throws HttpException
-     *
+     * @throws ApiException
+     * @throws \EasyRdf_Exception
      * @ErrorInherit(class=ApiRequestResolver::class, method="resolveFormat"      )
      * @ErrorInherit(class=ApiRequestResolver::class, method="resolveInstitutions")
      * @ErrorInherit(class=ApiRequestResolver::class, method="resolveSets"        )
@@ -240,11 +127,10 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
 
         $institutions = $request->query->get('institutions', '');
         $institutions = preg_split('/\s*,\s*/', $institutions, -1, PREG_SPLIT_NO_EMPTY);
-        $institutions = $this->resolveInstitutions($institutions);
 
         $sets = $request->query->get('sets', '');
         $sets = preg_split('/\s*,\s*/', $sets, -1, PREG_SPLIT_NO_EMPTY);
-        $sets = $this->resolveSets($sets);
+        //$sets = $this->resolveSets($sets);
 
         //B.Hillier. The specs from Menzo ask for a 'foreign uri' as a parameter. I have no idea how this is stored
         // at Meertens. For now it just searches on the same field as the 'native' uri

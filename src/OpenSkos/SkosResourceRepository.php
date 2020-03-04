@@ -99,6 +99,23 @@ class SkosResourceRepository
      *
      * @ErrorInherit(class=SparqlQuery::class, method="describeResource")
      */
+    public function findTypeByIri(Iri $rdfType, Iri $iri)
+    {
+        $sparql  = SparqlQuery::describeResourceofType($rdfType, $iri);
+        $triples = $this->rdfClient->describe($sparql);
+        if (0 === count($triples)) {
+            return null;
+        }
+
+        return call_user_func($this->resourceFactory, $iri, $triples);
+    }
+
+    /**
+     * @return mixed
+     * @psalm-return T|null
+     *
+     * @ErrorInherit(class=SparqlQuery::class, method="describeResource")
+     */
     public function findByIri(Iri $iri)
     {
         $sparql  = SparqlQuery::describeResource($iri);

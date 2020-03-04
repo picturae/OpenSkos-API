@@ -129,7 +129,7 @@ abstract class AbstractRepository implements RepositoryInterface
              * @return AbstractRdfDocument
              */
             $this->tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
-                /**
+                /*
                  * @psalm-suppress InvalidArgument
                  */
                 return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
@@ -220,7 +220,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function findByIri(Iri $iri)
     {
-        return $this->skosRepository->findByIri(new Iri(static::DOCUMENT_TYPE),$iri);
+        return $this->skosRepository->findTypeByIri(new Iri(static::DOCUMENT_TYPE), $iri);
     }
 
     /**
@@ -288,15 +288,14 @@ abstract class AbstractRepository implements RepositoryInterface
         return $this->skosRepository->getByUuid($uuid);
     }
 
-    // TODO: Copy doctrine data fetch into other functions
-    // TODO: Delete this function
-
     /**
      * @ErrorInherit(class=AbstractRepository::class, method="getConnection")
+     *
+     * @return mixed|null
      */
     public function get(Iri $object)
     {
-        $res = $this->skosRepository->findByIri(new Iri(static::DOCUMENT_TYPE), $object);
+        $res = $this->skosRepository->findTypeByIri(new Iri(static::DOCUMENT_TYPE), $object);
 
         // No resource = done
         if (is_null($res)) {

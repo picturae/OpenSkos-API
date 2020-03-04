@@ -90,7 +90,7 @@ final class SetController
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions = $apiRequest->getInstitutions();
-        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
+        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions, true);
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
