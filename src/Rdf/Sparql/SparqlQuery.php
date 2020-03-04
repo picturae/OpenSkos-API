@@ -38,14 +38,8 @@ final class SparqlQuery
     }
 
     /**
-     *
      * @ErrorInherit(class=Iri::class        , method="getUri"     )
      * @ErrorInherit(class=SparqlQuery::class, method="__construct")
-     * @param Iri $type
-     * @param int $offset
-     * @param int $limit
-     * @param array $filters
-     * @return SparqlQuery
      */
     public static function describeAllOfType(
         Iri $type,
@@ -155,9 +149,6 @@ final class SparqlQuery
     /**
      * @ErrorInherit(class=Iri::class        , method="getUri"     )
      * @ErrorInherit(class=SparqlQuery::class, method="__construct")
-     * @param Iri $rdfType
-     * @param Iri $subject
-     * @return SparqlQuery
      */
     public static function describeResourceOfType(
         Iri $rdfType,
@@ -177,8 +168,6 @@ RETRIEVE_OF_TYPE;
 
     /**
      * @ErrorInherit(class=SparqlQuery::class, method="__construct")
-     * @param array $subjects
-     * @return SparqlQuery
      */
     public static function describeResources(
         array $subjects
@@ -190,8 +179,7 @@ RETRIEVE_OF_TYPE;
     }
 
     /**
-     * @param $object
-     * @return SparqlQuery
+     * @param Iri|Literal|InternalResourceId|string $object
      */
     public static function describeByTypeAndPredicate(
         Iri $rdfType,
@@ -217,7 +205,6 @@ QUERY_BY_TYPE_AND_PREDICATE;
      * @ErrorInherit(class=Iri::class        , method="ntripleString")
      * @ErrorInherit(class=Literal::class    , method="__toString"   )
      * @ErrorInherit(class=SparqlQuery::class, method="__construct"  )
-     * @return SparqlQuery
      */
     public static function selectSubjectFromPredicate(
         Iri $predicate,
@@ -248,7 +235,6 @@ QUERY_SELECT_SUBJECT_FROM_PREDICATE;
      * @ErrorInherit(class=Iri::class        , method="ntripleString")
      * @ErrorInherit(class=Literal::class    , method="__toString"   )
      * @ErrorInherit(class=SparqlQuery::class, method="__construct"  )
-     * @return SparqlQuery
      */
     public static function selectSubjectFromObject(
         $object
@@ -289,8 +275,6 @@ QUERY_SELECT_SUBJECT_FROM_PREDICATE;
 
     /**
      * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
-     * @param string $uuid
-     * @return SparqlQuery
      */
     public static function describeSubjectFromUuid(
         string $uuid
