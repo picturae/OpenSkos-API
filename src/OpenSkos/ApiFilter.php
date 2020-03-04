@@ -32,10 +32,6 @@ final class ApiFilter
         'tenant'        => 'openskos:tenant',
     ];
 
-    const enums = [
-        'openskos:status' => OpenSkos::STATUSES,
-    ];
-
     const entity = [
         'openskos:tenant' => 'institution',
     ];
@@ -62,8 +58,7 @@ final class ApiFilter
      */
     private $setRepository;
 
-    protected $normalize = [
-    ];
+    protected $normalize = [];
 
     /**
      * @ErrorInherit(class=ApiFilter::class, method="addFilter")
@@ -190,13 +185,6 @@ final class ApiFilter
         $predicate = static::fromFullUri($predicate);
         if (is_null($predicate)) {
             return $this;
-        }
-
-        // Disallow unknown enum
-        if (isset(static::enums[$predicate])) {
-            if (!in_array($value, static::enums[$predicate], true)) {
-                return $this;
-            }
         }
 
         // Detect field type
