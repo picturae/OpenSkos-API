@@ -1,0 +1,9 @@
+[ver:1,total:1490]
+src/OpenSkos/Set/Controller/SetController.php:540,1583326800:540,m
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:517,1583326800:517,m
+src/OpenSkos/Institution/Controller/InstitutionController.php:210,1583326800:210,m
+src/Repository/AbstractRepository.php:150,1583326800:150,r
+src/Rdf/Sparql/SparqlQuery.php:38,1583326800:38,r
+src/OpenSkos/ApiRequest.php:23,1583326800:23,r
+src/Rest/ArgumentResolver/ApiRequestResolver.php:8,1583326800:8,r
+src/OpenSkos/Institution/InstitutionRepository.php:4,1583326800:4,r
