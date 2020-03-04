@@ -1,0 +1,5 @@
+[ver:1,total:480]
+src/Ontology/Context.php:220,1583334000:220,r
+src/OpenSkos/Concept/Controller/ConceptController.php:180,1583334000:180,m
+src/Template/Exception/list.json.php:60,1583334000:60,r
+src/Ontology/Dc.php:20,1583334000:20,r
