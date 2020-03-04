@@ -129,6 +129,9 @@ abstract class AbstractRepository implements RepositoryInterface
              * @return AbstractRdfDocument
              */
             $this->tripleFactory = function (Iri $iri, array $triples) use ($repository): AbstractRdfDocument {
+                /**
+                 * @psalm-suppress InvalidArgument
+                 */
                 return call_user_func(static::DOCUMENT_CLASS.'::fromTriples', $iri, $triples, $repository);
             };
         }
