@@ -557,7 +557,7 @@ final class ConceptController
      * )
      * @Error(code="concept-create-already-exists",
      *        status=409,
-     *        description="A Concept with the given iri already exists",
+     *        description="A Concept with the given iri or uuid already exists",
      *        fields={"iri"}
      * )
      * @Error(code="concept-create-tenant-does-not-exist",

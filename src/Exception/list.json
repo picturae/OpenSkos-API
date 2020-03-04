@@ -724,7 +724,7 @@
         "fields": [
             "iri"
         ],
-        "description": "A Concept with the given iri already exists",
+        "description": "A Concept with the given iri or uuid already exists",
         "status": 409,
         "class": "App\\OpenSkos\\Concept\\Controller\\ConceptController",
         "method": "postConcept"
