@@ -1443,6 +1443,17 @@
         "class": "App\\Rdf\\Literal\\DatetimeLiteral",
         "method": "fromString"
     },
+    "sparql-describe-by-type-and-predicate-invalid-object" : {
+        "code": "sparql-describe-by-type-and-predicate-invalid-object",
+        "fields": [
+            "givenType",
+            "givenClass"
+        ],
+        "description": "Given object argument is not a string or an object providing the __toString method",
+        "status": 500,
+        "class": "App\\Rdf\\Sparql\\SparqlQuery",
+        "method": "describeByTypeAndPredicate"
+    },
     "iri-construct-invalid-value-type" : {
         "code": "iri-construct-invalid-value-type",
         "fields": [

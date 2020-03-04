@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Rdf\Sparql;
 
+use App\Annotation\Error;
 use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\OpenSkos\Filters\FilterProcessor;
@@ -181,6 +183,14 @@ RETRIEVE_OF_TYPE;
 
     /**
      * @param Iri|Literal|InternalResourceId|string $object
+     *
+     * @throws ApiException
+     *
+     * @Error(code="sparql-describe-by-type-and-predicate-invalid-object",
+     *        status=500,
+     *        description="Given object argument is not a string or an object providing the __toString method",
+     *        fields={"givenType", "givenClass"}
+     * )
      */
     public static function describeByTypeAndPredicate(
         Iri $rdfType,
@@ -194,6 +204,17 @@ DESCRIBE ?subject
         <%s> "%s"
     }
 QUERY_BY_TYPE_AND_PREDICATE;
+
+        if (is_object($object) && method_exists($object, '__toString')) {
+            $object = $object->__toString();
+        }
+        if (!is_string($object)) {
+            $type = gettype($object);
+            throw new ApiException('sparql-describe-by-type-and-predicate-invalid-object', [
+                'givenType'  => $type,
+                'givenClass' => 'object' === $type ? get_class($object) : 'n/a',
+            ]);
+        }
 
         $queryString = sprintf($queryString, Rdf::TYPE, (string) $rdfType, (string) $predicate, $object);
 
