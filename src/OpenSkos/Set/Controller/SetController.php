@@ -18,6 +18,7 @@ use App\OpenSkos\Set\Set;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
+use App\Rest\ArgumentResolver\ApiRequestResolver;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use App\Security\Authentication;
@@ -67,21 +68,21 @@ final class SetController
      *        description="A 'sets' filter was given but is not applicable to this endpoint"
      * )
      *
-     * @ErrorInherit(class=ApiRequest::class           , method="__construct"            )
-     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"              )
-     * @ErrorInherit(class=ApiRequest::class           , method="getInstitutions"        )
-     * @ErrorInherit(class=ApiRequest::class           , method="getLimit"               )
-     * @ErrorInherit(class=ApiRequest::class           , method="getOffset"              )
-     * @ErrorInherit(class=ApiRequest::class           , method="getSets"                )
-     * @ErrorInherit(class=ApiRequestResolver::class     , method="__construct"    )
-     * @ErrorInherit(class=ApiRequestResolver::class     , method="resolve"        )
-     * @ErrorInherit(class=FilterProcessor::class      , method="__construct"            )
-     * @ErrorInherit(class=FilterProcessor::class      , method="buildInstitutionFilters")
-     * @ErrorInherit(class=InternalResourceId::class   , method="__construct"            )
-     * @ErrorInherit(class=Iri::class                  , method="__construct"            )
-     * @ErrorInherit(class=ListResponse::class         , method="__construct"            )
-     * @ErrorInherit(class=SetRepository::class        , method="__construct"            )
-     * @ErrorInherit(class=SetRepository::class        , method="all"                    )
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class        , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class        , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class        , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class        , method="getSets"                )
+     * @ErrorInherit(class=ApiRequestResolver::class, method="__construct"            )
+     * @ErrorInherit(class=ApiRequestResolver::class, method="resolve"                )
+     * @ErrorInherit(class=FilterProcessor::class   , method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class   , method="buildInstitutionFilters")
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct"            )
+     * @ErrorInherit(class=Iri::class               , method="__construct"            )
+     * @ErrorInherit(class=ListResponse::class      , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class     , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class     , method="all"                    )
      */
     public function getAllSets(
         ApiRequest $apiRequest,
@@ -170,14 +171,14 @@ final class SetController
     }
 
     /**
-     * @Route(path="/set", methods={"GET"})
+     * @Route(path="/set.{format?}", methods={"GET"})
      *
      * @OA\Summary("Retreive a set using it's uri")
      * @OA\Request(parameters={
      *   @OA\Schema\StringLiteral(
-     *     name="id",
-     *     in="path",
-     *     example="1911",
+     *     name="uri",
+     *     in="query",
+     *     example="http://hostname/api/set/uuid",
      *   ),
      *   @OA\Schema\StringLiteral(
      *     name="format",
@@ -199,32 +200,31 @@ final class SetController
      *
      * @throws ApiException
      *
-     * @Error(code="set-getone-not-found",
+     * @Error(code="set-getone-furi-not-found",
      *        status=404,
-     *        description="The requested institution could not be retreived",
-     *        fields={"id"}
+     *        description="The requested set could not be retreived",
+     *        fields={"uri"}
      * )
      *
-     * @ErrorInherit(class=ApiRequest::class           , method="__construct")
-     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"  )
-     * @ErrorInherit(class=SetRepository::class, method="__construct")
-     * @ErrorInherit(class=SetRepository::class, method="findOneBy"  )
-     * @ErrorInherit(class=SetRepository::class, method="getByUuid"  )
-     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
-     * @ErrorInherit(class=InternalResourceId::class   , method="__toString" )
-     * @ErrorInherit(class=Iri::class                  , method="__construct")
-     * @ErrorInherit(class=ScalarResponse::class       , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class        , method="__construct"  )
+     * @ErrorInherit(class=ApiRequest::class        , method="getForeignUri")
+     * @ErrorInherit(class=ApiRequest::class        , method="getFormat"    )
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct"  )
+     * @ErrorInherit(class=InternalResourceId::class, method="__toString"   )
+     * @ErrorInherit(class=Iri::class               , method="__construct"  )
+     * @ErrorInherit(class=ScalarResponse::class    , method="__construct"  )
+     * @ErrorInherit(class=SetRepository::class     , method="__construct"  )
+     * @ErrorInherit(class=SetRepository::class     , method="get"          )
      */
     public function getSetByForeignId(
         ApiRequest $apiRequest,
         SetRepository $repository
     ): ScalarResponse {
-
         $iri = $apiRequest->getForeignUri();
-        $set = $repository->get( new Iri($iri) );
+        $set = $repository->get(new Iri($iri));
 
         if (null === $set) {
-            throw new ApiException('set-getone-not-found', [
+            throw new ApiException('set-getone-furi-not-found', [
                 'uri' => $iri,
             ]);
         }

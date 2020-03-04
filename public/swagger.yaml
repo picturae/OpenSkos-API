@@ -1135,6 +1135,8 @@ paths:
                     "type": "string"
                   "offset":
                     "type": "string"
+                  "class":
+                    "type": "string"
                   "field":
                     "type": "string"
         "'500'":
@@ -1411,6 +1413,8 @@ paths:
                   "set":
                     "type": "string"
                   "conceptscheme":
+                    "type": "string"
+                  "class":
                     "type": "string"
                   "level":
                     "type": "string"
@@ -2037,6 +2041,32 @@ paths:
                           "type": "boolean"
                           "name": "openskos:toBeChecked"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "class":
+                    "type": "string"
+                  "level":
+                    "type": "string"
+                  "limit":
+                    "type": "string"
+                  "offset":
+                    "type": "string"
+                  "field":
+                    "type": "string"
         "'500'":
           "content":
             "application/json":
@@ -2054,30 +2084,6 @@ paths:
                     "type": "string"
                     "description": "Human-readable explanation of the error"
                   "receivedType":
-                    "type": "string"
-        "'400'":
-          "content":
-            "application/json":
-              "schema":
-                "type": "object"
-                "properties":
-                  "status":
-                    "type": "integer"
-                    "format": "int16"
-                    "description": "Equivelent http status code"
-                  "code":
-                    "type": "string"
-                    "description": "Unique error code"
-                  "description":
-                    "type": "string"
-                    "description": "Human-readable explanation of the error"
-                  "level":
-                    "type": "string"
-                  "limit":
-                    "type": "string"
-                  "offset":
-                    "type": "string"
-                  "field":
                     "type": "string"
   /conceptschemes.{format}:
     get:
@@ -2200,6 +2206,30 @@ paths:
                           "type": "string"
                           "name": "openskos:status"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "class":
+                    "type": "string"
+                  "level":
+                    "type": "string"
+                  "limit":
+                    "type": "string"
+                  "offset":
+                    "type": "string"
         "'500'":
           "content":
             "application/json":
@@ -2218,7 +2248,7 @@ paths:
                     "description": "Human-readable explanation of the error"
                   "receivedType":
                     "type": "string"
-        "'400'":
+        "'406'":
           "content":
             "application/json":
               "schema":
@@ -2234,11 +2264,27 @@ paths:
                   "description":
                     "type": "string"
                     "description": "Human-readable explanation of the error"
-                  "level":
+                  "requested":
                     "type": "string"
-                  "limit":
+                  "supported":
                     "type": "string"
-                  "offset":
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "given":
                     "type": "string"
     post:
       "summary": "Create one or more new concept schemes"
@@ -3116,6 +3162,189 @@ paths:
                     "type": "string"
                     "description": "Human-readable explanation of the error"
                   "iri":
+                    "type": "string"
+  /conceptscheme.{format}:
+    get:
+      "summary": "Retreive a conceptscheme using it's uri"
+      "parameters":
+        - "type": "string"
+          "name": "uri"
+          "example": "http://hostname/bbb"
+          "in": "query"
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "skos:ConceptScheme"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                        "openskos:tenant":
+                          "type": "string"
+                          "name": "openskos:tenant"
+                        "dcterms:title":
+                          "type": "string"
+                          "name": "dcterms:title"
+                        "dcterms:description":
+                          "type": "string"
+                          "name": "dcterms:description"
+                        "openskos:status":
+                          "type": "string"
+                          "name": "openskos:status"
+                    "name": "@graph"
+            "application/n-triples":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "skos:ConceptScheme"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                        "openskos:tenant":
+                          "type": "string"
+                          "name": "openskos:tenant"
+                        "dcterms:title":
+                          "type": "string"
+                          "name": "dcterms:title"
+                        "dcterms:description":
+                          "type": "string"
+                          "name": "dcterms:description"
+                        "openskos:status":
+                          "type": "string"
+                          "name": "openskos:status"
+                    "name": "@graph"
+            "text/turtle":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "skos:ConceptScheme"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                        "openskos:tenant":
+                          "type": "string"
+                          "name": "openskos:tenant"
+                        "dcterms:title":
+                          "type": "string"
+                          "name": "dcterms:title"
+                        "dcterms:description":
+                          "type": "string"
+                          "name": "dcterms:description"
+                        "openskos:status":
+                          "type": "string"
+                          "name": "openskos:status"
+                    "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "uri":
+                    "type": "string"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "level":
+                    "type": "string"
+                  "limit":
+                    "type": "string"
+                  "offset":
+                    "type": "string"
+        "'500'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "receivedType":
                     "type": "string"
   /institutions.{format}:
     get:
@@ -4212,6 +4441,198 @@ paths:
                     "description": "Human-readable explanation of the error"
                   "id":
                     "type": "string"
+  /institution.{format}:
+    get:
+      "summary": "Retreive an institution using it's uri"
+      "parameters":
+        - "type": "string"
+          "name": "uri"
+          "example": "http://hostname/pic"
+          "in": "query"
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "org:FormalOrganization"
+                        "openskos:name":
+                          "type": "string"
+                          "name": "openskos:name"
+                        "openskos:disableSearchInOtherTenants":
+                          "type": "boolean"
+                          "name": "openskos:disableSearchInOtherTenants"
+                        "openskos:webpage":
+                          "type": "string"
+                          "name": "openskos:webpage"
+                        "openskos:enableStatussesSystem":
+                          "type": "boolean"
+                          "name": "openskos:enableStatussesSystem"
+                        "openskos:enableskosxl":
+                          "type": "boolean"
+                          "name": "openskos:enableskosxl"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                    "name": "@graph"
+            "application/n-triples":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "org:FormalOrganization"
+                        "openskos:name":
+                          "type": "string"
+                          "name": "openskos:name"
+                        "openskos:disableSearchInOtherTenants":
+                          "type": "boolean"
+                          "name": "openskos:disableSearchInOtherTenants"
+                        "openskos:webpage":
+                          "type": "string"
+                          "name": "openskos:webpage"
+                        "openskos:enableStatussesSystem":
+                          "type": "boolean"
+                          "name": "openskos:enableStatussesSystem"
+                        "openskos:enableskosxl":
+                          "type": "boolean"
+                          "name": "openskos:enableskosxl"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                    "name": "@graph"
+            "text/turtle":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "org:FormalOrganization"
+                        "openskos:name":
+                          "type": "string"
+                          "name": "openskos:name"
+                        "openskos:disableSearchInOtherTenants":
+                          "type": "boolean"
+                          "name": "openskos:disableSearchInOtherTenants"
+                        "openskos:webpage":
+                          "type": "string"
+                          "name": "openskos:webpage"
+                        "openskos:enableStatussesSystem":
+                          "type": "boolean"
+                          "name": "openskos:enableStatussesSystem"
+                        "openskos:enableskosxl":
+                          "type": "boolean"
+                          "name": "openskos:enableskosxl"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                    "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "uri":
+                    "type": "string"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "level":
+                    "type": "string"
+                  "limit":
+                    "type": "string"
+                  "offset":
+                    "type": "string"
+        "'500'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "receivedType":
+                    "type": "string"
   /labels.{format}:
     get:
       "summary": "Fetch a list of all (filtered) labels"
@@ -4306,6 +4727,30 @@ paths:
                           "type": "string"
                           "name": "skosxl:literalForm"
                     "name": "@graph"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "class":
+                    "type": "string"
+                  "level":
+                    "type": "string"
+                  "limit":
+                    "type": "string"
+                  "offset":
+                    "type": "string"
         "'500'":
           "content":
             "application/json":
@@ -4323,28 +4768,6 @@ paths:
                     "type": "string"
                     "description": "Human-readable explanation of the error"
                   "receivedType":
-                    "type": "string"
-        "'400'":
-          "content":
-            "application/json":
-              "schema":
-                "type": "object"
-                "properties":
-                  "status":
-                    "type": "integer"
-                    "format": "int16"
-                    "description": "Equivelent http status code"
-                  "code":
-                    "type": "string"
-                    "description": "Unique error code"
-                  "description":
-                    "type": "string"
-                    "description": "Human-readable explanation of the error"
-                  "level":
-                    "type": "string"
-                  "limit":
-                    "type": "string"
-                  "offset":
                     "type": "string"
   /label/{id}.{format}:
     get:
@@ -4849,6 +5272,8 @@ paths:
                     "type": "string"
                     "description": "Human-readable explanation of the error"
                   "uuid":
+                    "type": "string"
+                  "class":
                     "type": "string"
                   "level":
                     "type": "string"
@@ -6115,6 +6540,62 @@ paths:
                     "type": "string"
                   "offset":
                     "type": "string"
+        "'406'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "requested":
+                    "type": "string"
+                  "supported":
+                    "type": "string"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "given":
+                    "type": "string"
+        "'500'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "receivedType":
+                    "type": "string"
     post:
       "summary": "Create one or more new sets"
       "parameters":
@@ -7208,6 +7689,225 @@ paths:
                     "type": "string"
                     "description": "Human-readable explanation of the error"
                   "iri":
+                    "type": "string"
+  /set.{format}:
+    get:
+      "summary": "Retreive a set using it's uri"
+      "parameters":
+        - "type": "string"
+          "name": "uri"
+          "example": "http://hostname/api/set/uuid"
+          "in": "query"
+        - "type": "string"
+          "name": "format"
+          "example": "json"
+          "in": "path"
+          "schema":
+            "enum":
+              - "json"
+              - "ttl"
+              - "n-triples"
+      "responses":
+        "'200'":
+          "content":
+            "application/rdf+json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "openskos:set"
+                        "openskos:tenant":
+                          "type": "string"
+                          "name": "openskos:tenant"
+                        "openskos:allow_oai":
+                          "type": "boolean"
+                          "name": "openskos:allow_oai"
+                        "openskos:conceptBaseUri":
+                          "type": "string"
+                          "name": "openskos:conceptBaseUri"
+                        "openskos:oai_baseURL":
+                          "type": "string"
+                          "name": "openskos:oai_baseURL"
+                        "openskos:webpage":
+                          "type": "string"
+                          "name": "openskos:webpage"
+                        "dcterms:description":
+                          "type": "string"
+                          "name": "dcterms:description"
+                        "dcterms:license":
+                          "type": "string"
+                          "name": "dcterms:license"
+                        "dcterms:title":
+                          "type": "string"
+                          "name": "dcterms:title"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                    "name": "@graph"
+            "application/n-triples":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "openskos:set"
+                        "openskos:tenant":
+                          "type": "string"
+                          "name": "openskos:tenant"
+                        "openskos:allow_oai":
+                          "type": "boolean"
+                          "name": "openskos:allow_oai"
+                        "openskos:conceptBaseUri":
+                          "type": "string"
+                          "name": "openskos:conceptBaseUri"
+                        "openskos:oai_baseURL":
+                          "type": "string"
+                          "name": "openskos:oai_baseURL"
+                        "openskos:webpage":
+                          "type": "string"
+                          "name": "openskos:webpage"
+                        "dcterms:description":
+                          "type": "string"
+                          "name": "dcterms:description"
+                        "dcterms:license":
+                          "type": "string"
+                          "name": "dcterms:license"
+                        "dcterms:title":
+                          "type": "string"
+                          "name": "dcterms:title"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                    "name": "@graph"
+            "text/turtle":
+              "schema":
+                "type": "object"
+                "properties":
+                  "@context":
+                    "type": "object"
+                    "name": "@context"
+                  "@graph":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "@id":
+                          "type": "string"
+                          "name": "@id"
+                        "@type":
+                          "type": "string"
+                          "name": "@type"
+                          "example": "openskos:set"
+                        "openskos:tenant":
+                          "type": "string"
+                          "name": "openskos:tenant"
+                        "openskos:allow_oai":
+                          "type": "boolean"
+                          "name": "openskos:allow_oai"
+                        "openskos:conceptBaseUri":
+                          "type": "string"
+                          "name": "openskos:conceptBaseUri"
+                        "openskos:oai_baseURL":
+                          "type": "string"
+                          "name": "openskos:oai_baseURL"
+                        "openskos:webpage":
+                          "type": "string"
+                          "name": "openskos:webpage"
+                        "dcterms:description":
+                          "type": "string"
+                          "name": "dcterms:description"
+                        "dcterms:license":
+                          "type": "string"
+                          "name": "dcterms:license"
+                        "dcterms:title":
+                          "type": "string"
+                          "name": "dcterms:title"
+                        "openskos:uuid":
+                          "type": "string"
+                          "name": "openskos:uuid"
+                    "name": "@graph"
+        "'404'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "uri":
+                    "type": "string"
+        "'400'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "level":
+                    "type": "string"
+                  "limit":
+                    "type": "string"
+                  "offset":
+                    "type": "string"
+        "'500'":
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "status":
+                    "type": "integer"
+                    "format": "int16"
+                    "description": "Equivelent http status code"
+                  "code":
+                    "type": "string"
+                    "description": "Unique error code"
+                  "description":
+                    "type": "string"
+                    "description": "Human-readable explanation of the error"
+                  "receivedType":
                     "type": "string"
   /statuses.{format}:
     get:

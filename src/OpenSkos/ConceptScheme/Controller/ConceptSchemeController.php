@@ -20,6 +20,7 @@ use App\OpenSkos\InternalResourceId;
 use App\OpenSkos\Set\SetRepository;
 use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
+use App\Rest\ArgumentResolver\ApiRequestResolver;
 use App\Rest\ListResponse;
 use App\Rest\ScalarResponse;
 use App\Security\Authentication;
@@ -170,14 +171,14 @@ final class ConceptSchemeController
     }
 
     /**
-     * @Route(path="/conceptscheme", methods={"GET"})
+     * @Route(path="/conceptscheme.{format?}", methods={"GET"})
      *
      * @OA\Summary("Retreive a conceptscheme using it's uri")
      * @OA\Request(parameters={
      *   @OA\Schema\StringLiteral(
-     *     name="id",
-     *     in="path",
-     *     example="1911",
+     *     name="uri",
+     *     in="query",
+     *     example="http://hostname/bbb",
      *   ),
      *   @OA\Schema\StringLiteral(
      *     name="format",
@@ -192,28 +193,26 @@ final class ConceptSchemeController
      *     @OA\Schema\ObjectLiteral(name="@context"),
      *     @OA\Schema\ArrayLiteral(
      *       name="@graph",
-     *       items=@OA\Schema\ObjectLiteral(class=Institution::class),
+     *       items=@OA\Schema\ObjectLiteral(class=ConceptScheme::class),
      *     ),
      *   }),
      * )
      *
      * @throws ApiException
      *
-     * @Error(code="institution-getone-not-found",
+     * @Error(code="conceptscheme-getone-furi-not-found",
      *        status=404,
-     *        description="The requested institution could not be retreived",
-     *        fields={"id"}
+     *        description="The requested conceptscheme could not be retreived",
+     *        fields={"uri"}
      * )
      *
-     * @ErrorInherit(class=ApiRequest::class           , method="__construct")
-     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"  )
-     * @ErrorInherit(class=InstitutionRepository::class, method="__construct")
-     * @ErrorInherit(class=InstitutionRepository::class, method="findOneBy"  )
-     * @ErrorInherit(class=InstitutionRepository::class, method="getByUuid"  )
-     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
-     * @ErrorInherit(class=InternalResourceId::class   , method="__toString" )
-     * @ErrorInherit(class=Iri::class                  , method="__construct")
-     * @ErrorInherit(class=ScalarResponse::class       , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class             , method="__construct"  )
+     * @ErrorInherit(class=ApiRequest::class             , method="getFormat"    )
+     * @ErrorInherit(class=ApiRequest::class             , method="getForeignUri")
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="__construct"  )
+     * @ErrorInherit(class=ConceptSchemeRepository::class, method="get"          )
+     * @ErrorInherit(class=Iri::class                    , method="__construct"  )
+     * @ErrorInherit(class=ScalarResponse::class         , method="__construct"  )
      */
     public function getConceptSchemeByForeignId(
         ApiRequest $apiRequest,
@@ -223,7 +222,7 @@ final class ConceptSchemeController
         $concept_scheme = $repository->get(new Iri($iri));
 
         if (null === $concept_scheme) {
-            throw new ApiException('conceptscheme-getone-not-found', [
+            throw new ApiException('conceptscheme-getone-furi-not-found', [
                 'uri' => $iri,
             ]);
         }
