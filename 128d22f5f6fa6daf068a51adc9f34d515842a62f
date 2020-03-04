@@ -1,0 +1,6 @@
+[ver:1,total:998]
+src/Rdf/Sparql/SparqlQuery.php:426,1583334000:426,m
+grumphp.yml:210,1583334000:210,r
+scripts/generate-documentation.sh:210,1583334000:210,r
+src/OpenSkos/Concept/Controller/ConceptController.php:140,1583334000:140,r
+src/OpenSkos/SkosResourceRepository.php:12,1583334000:12,r
