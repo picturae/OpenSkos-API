@@ -93,7 +93,11 @@ class ApiException extends \Exception
             }
             foreach ($this->fields as $field) {
                 if (isset($data[$field])) {
-                    $this->data[$field] = $data[$field];
+                    if (is_object($data[$field]) && method_exists($data[$field], '__toString')) {
+                        $this->data[$field] = $data[$field]->__toString();
+                    } else {
+                        $this->data[$field] = $data[$field];
+                    }
                 }
             }
         }
