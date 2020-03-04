@@ -1,0 +1,6 @@
+[ver:1,total:470]
+src/Rdf/Sparql/SparqlQuery.php:375,1583326800:375,m
+src/OpenSkos/SkosResourceRepository.php:45,1583326800:45,r
+src/Exception/ApiException.php:20,1583326800:20,r
+src/OpenSkos/Institution/InstitutionRepository.php:15,1583326800:15,r
+src/Repository/AbstractRepository.php:15,1583326800:15,r
