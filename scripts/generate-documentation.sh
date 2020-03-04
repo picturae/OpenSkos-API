@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Ensure bash
+[ -z "${BASH}" ] && exec bash "$0" "$@"
+
 # Fail hard
 set -e
 

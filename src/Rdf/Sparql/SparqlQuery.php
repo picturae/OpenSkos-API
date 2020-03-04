@@ -161,6 +161,7 @@ DESCRIBE ?subject
     }
 VALUES (?subject) {(<%s>)}
 RETRIEVE_OF_TYPE;
+
         return new SparqlQuery(
             sprintf($query, $rdfType->getUri(), $subject->getUri())
         );
