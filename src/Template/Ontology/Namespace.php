@@ -28,6 +28,10 @@ foreach ($properties as $property) {
 }
 ?>
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 /**
  * OpenSKOS.
  *

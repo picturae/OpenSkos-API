@@ -5,6 +5,10 @@ namespace App\Template\Ontology;
 ?>
 <?= "<?php\n"; ?>
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 namespace App\Ontology;
 
 use App\Annotation\ErrorInherit;

@@ -1,5 +1,9 @@
 <?php
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 namespace App\Ontology;
 
 use App\Annotation\ErrorInherit;
