@@ -82,6 +82,9 @@ final class Institution extends AbstractRdfDocument
         VCard::PCODE,
     ];
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $code = $this->getValue(OpenSkos::CODE);
