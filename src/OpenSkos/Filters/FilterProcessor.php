@@ -8,7 +8,10 @@ use App\Annotation\Error;
 use App\Exception\ApiException;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\InternalResourceId;
+use App\Rdf\Iri;
 use Doctrine\DBAL\Connection;
+use Psr\Container\ContainerInterface;
 
 final class FilterProcessor
 {
@@ -24,12 +27,15 @@ final class FilterProcessor
 
     private $connection;
 
+    private $container;
+
     /**
      * FilterProcessor constructor.
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, ContainerInterface $container)
     {
         $this->connection = $connection;
+        $this->container  = $container;
     }
 
     /**
@@ -66,15 +72,50 @@ final class FilterProcessor
         return $has_publisher;
     }
 
+    public function resolveInstitutionsToCode(Iri $institution): ?string
+    {
+        $ret_val = null;
+
+        $institution_repository = $this->container->get('App\OpenSkos\Institution\InstitutionRepository');
+
+        $institution = $institution_repository->get($institution);
+
+        if ($institution) {
+            $code_literal = $institution->getProperty(OpenSkos::CODE);
+            if (isset($code_literal[0])) {
+                $ret_val = $code_literal[0]->value();
+            }
+        }
+
+        return $ret_val;
+    }
+
+    public function resolveSetToUriLiteral(string $code): ?string
+    {
+        $ret_val = null;
+
+        $set_repository = $this->container->get('App\OpenSkos\Set\SetRepository');
+        $set            = $set_repository->findBy(new Iri(Openskos::CODE), new InternalResourceId($code));
+        if (isset($set[0])) {
+            $uri_literal = $set[0]->getProperty(OpenSkos::CONCEPT_BASE_URI);
+            $ret_val     = $uri_literal[0]->value();
+        }
+
+        return $ret_val;
+    }
+
     /**
+     * @param bool $resolve_publisher if true, resolve a publisher uri to a tenant code. (This involves an extra Jena query)
+     *
      * @return array
      *
+     * @throws ApiException
      * @Error(code="filterprocessor-build-institution-filters-uuid-not-supported",
      *        status=400,
      *        description="The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store)."
      * )
      */
-    public function buildInstitutionFilters(array $filterList)
+    public function buildInstitutionFilters(array $filterList, bool $resolve_publisher = false)
     {
         $dataOut = [];
 
@@ -82,7 +123,12 @@ final class FilterProcessor
             if (self::isUuid($filter)) {
                 throw new ApiException('filterprocessor-build-institution-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_INSTITUTION];
+                if (true === $resolve_publisher) {
+                    $code      = $this->resolveInstitutionsToCode(new Iri($filter));
+                    $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $code, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_INSTITUTION];
+                } else {
+                    $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_INSTITUTION];
+                }
             } else {
                 $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $filter, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_INSTITUTION];
             }
@@ -94,16 +140,14 @@ final class FilterProcessor
     /**
      * @return array
      *
+     * @throws ApiException
+     *
      * @Error(code="filterprocessor-build-set-filters-uuid-not-supported",
      *        status=400,
      *        description="The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store)."
      * )
-     * @Error(code="filterprocessor-build-set-filters-search-by-string",
-     *        status=400,
-     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
-     * )
      */
-    public function buildSetFilters(array $filterList)
+    public function buildSetFilters(array $filterList, bool $resolve_code = false)
     {
         $dataOut = [];
 
@@ -113,7 +157,12 @@ final class FilterProcessor
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
             } else {
-                throw new ApiException('filterprocessor-build-set-filters-search-by-string');
+                if (true === $resolve_code) {
+                    $code      = $this->resolveSetToUriLiteral($filter);
+                    $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $code, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
+                } else {
+                    $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_SET];
+                }
             }
         }
 

@@ -82,18 +82,16 @@ final class SolrQueryBuilder
                 }
 
                 if (!empty($label['lang'])) {
-                    if($label['type'] === 'LexicalLabels') {
-                        $searchTextQueries[] = $label['type'] . '_' . $label['lang'] . ':' . $searchText . $boost;
-                    }
-                    else{
-                        $searchTextQueries[] = $prefix . $label['type'] . '_' . $label['lang'] . ':' . $searchText . $boost;
+                    if ('LexicalLabels' === $label['type']) {
+                        $searchTextQueries[] = $label['type'].'_'.$label['lang'].':'.$searchText.$boost;
+                    } else {
+                        $searchTextQueries[] = $prefix.$label['type'].'_'.$label['lang'].':'.$searchText.$boost;
                     }
                 } else {
-                    if($label['type'] === 'LexicalLabels') {
-                        $searchTextQueries[] = $label['type'] . ':' . $searchText . $boost;
-                    }
-                    else {
-                        $searchTextQueries[] = $prefix . $label['type'] . ':' . $searchText . $boost;
+                    if ('LexicalLabels' === $label['type']) {
+                        $searchTextQueries[] = $label['type'].':'.$searchText.$boost;
+                    } else {
+                        $searchTextQueries[] = $prefix.$label['type'].':'.$searchText.$boost;
                     }
                 }
             }

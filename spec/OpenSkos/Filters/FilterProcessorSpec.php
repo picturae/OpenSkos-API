@@ -8,18 +8,19 @@ use App\Ontology\OpenSkos;
 use App\OpenSkos\Filters\FilterProcessor;
 use Doctrine\DBAL\Connection;
 use PhpSpec\ObjectBehavior;
+use Psr\Container\ContainerInterface;
 
 class FilterProcessorSpec extends ObjectBehavior
 {
-    public function it_is_initializable(Connection $connection)
+    public function it_is_initializable(Connection $connection, ContainerInterface $container)
     {
-        $this->beConstructedWith($connection);
+        $this->beConstructedWith($connection, $container);
         $this->shouldHaveType(FilterProcessor::class);
     }
 
-    public function it_recognises_valid_set_filter_types(Connection $connection)
+    public function it_recognises_valid_set_filter_types(Connection $connection, ContainerInterface $container)
     {
-        $this->beConstructedWith($connection);
+        $this->beConstructedWith($connection, $container);
         //Only tenant codes accepted for sets
         $filter_list = [
             'code',
@@ -28,7 +29,7 @@ class FilterProcessorSpec extends ObjectBehavior
 
         $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true];
 
-        $this->buildInstitutionFilters($filter_list, $to_apply)->shouldBe(
+        $this->buildInstitutionFilters($filter_list, false, $to_apply)->shouldBe(
             [
                 ['predicate' => OpenSkos::TENANT, 'value' => 'code', 'type' => FilterProcessor::TYPE_STRING, 'entity' => FilterProcessor::ENTITY_INSTITUTION],
                 ['predicate' => DcTerms::PUBLISHER, 'value' => 'http://tenant/a', 'type' => FilterProcessor::TYPE_URI, 'entity' => FilterProcessor::ENTITY_INSTITUTION],
@@ -36,15 +37,15 @@ class FilterProcessorSpec extends ObjectBehavior
         );
     }
 
-    public function it_rejects_invalid_set_filter_types(Connection $connection)
+    public function it_rejects_invalid_set_filter_types(Connection $connection, ContainerInterface $container)
     {
-        $this->beConstructedWith($connection);
+        $this->beConstructedWith($connection, $container);
         //Sets can't filter uuids
         $filter_list = [
             '92d6e19e-c424-4bdb-8cac-0738ae9fe88e',
         ];
         $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true];
         $this->shouldThrow(ApiException::class)
-            ->during('buildInstitutionFilters', ['filter_list' => $filter_list, 'to_apply' => $to_apply]);
+            ->during('buildInstitutionFilters', ['filter_list' => $filter_list, 'resolve_publisher' => false, 'to_apply' => $to_apply]);
     }
 }

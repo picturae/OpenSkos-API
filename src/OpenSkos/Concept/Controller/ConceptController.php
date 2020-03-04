@@ -132,6 +132,7 @@ final class ConceptController
         SolrFilterProcessor $solrFilterProcessor
     ): array {
         /* From Spec
+            IMplementation of search profiles stopped on request of Pieter Woltjer
             searchProfile=id of a search profile. Stored in MySQL table 'search_profiles'.
         */
 
@@ -141,30 +142,30 @@ final class ConceptController
         */
 
         /* Institutions (tenants) */
-        $param_institutions = $apiRequest->getInstitutions();
+        $param_institutions  = $apiRequest->getInstitutions();
         $institutions_filter = $solrFilterProcessor->buildInstitutionFilters($param_institutions);
 
         /* Sets */
-        $param_sets = $apiRequest->getSets();
+        $param_sets  = $apiRequest->getSets();
         $sets_filter = $solrFilterProcessor->buildSetFilters($param_sets);
 
         /* Concept Schemes */
-        $param_conceptschemes = $this->processFilterFromRequest($apiRequest, 'conceptSchemes');
+        $param_conceptschemes  = $this->processFilterFromRequest($apiRequest, 'conceptSchemes');
         $conceptSchemes_filter = $solrFilterProcessor->buildConceptSchemeFilters($param_conceptschemes);
 
         /* Statuses */
-        $param_statuses = $this->processFilterFromRequest($apiRequest, 'statuses');
+        $param_statuses  = $this->processFilterFromRequest($apiRequest, 'statuses');
         $statuses_filter = $solrFilterProcessor->buildStatusesFilters($param_statuses);
 
         /* Concept Schemes */
-        $param_dates = $this->processDateStampsFromRequest($apiRequest);
+        $param_dates         = $this->processDateStampsFromRequest($apiRequest);
         $interactions_filter = $solrFilterProcessor->buildInteractionsFilters($param_dates);
 
-        $param_users = [];
-        $param_users['creator'] = $this->processFilterFromRequest($apiRequest, 'creator');
+        $param_users                        = [];
+        $param_users['creator']             = $this->processFilterFromRequest($apiRequest, 'creator');
         $param_users['openskos:modifiedBy'] = $this->processFilterFromRequest($apiRequest, 'openskos:modifiedBy');
         $param_users['openskos:acceptedBy'] = $this->processFilterFromRequest($apiRequest, 'openskos:acceptedBy');
-        $param_users['openskos:deletedBy'] = $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy');
+        $param_users['openskos:deletedBy']  = $this->processFilterFromRequest($apiRequest, 'openskos:deletedBy');
 
         $users_filter = $solrFilterProcessor->buildUserFilters($param_users);
 
@@ -205,10 +206,9 @@ final class ConceptController
         if (isset($sel) && is_iterable($sel)) {
             foreach ($sel as $param) {
                 if (preg_match('/^(label)\(*(\w{0,3})\)*$/i', $param, $capture)) {
-                    $lang  = $capture[2];
+                    $lang                                       = $capture[2];
                     $selectionParameters['labels'][$capture[0]] = ['type' => 'LexicalLabels', 'lang' => $lang];
-                }
-                elseif (preg_match('/^(pref|alt|hidden)(label)\(*(\w{0,3})\)*$/i', $param, $capture)) {
+                } elseif (preg_match('/^(pref|alt|hidden)(label)\(*(\w{0,3})\)*$/i', $param, $capture)) {
                     $label = sprintf('%sLabel', $capture[1]);
                     $lang  = $capture[3];
 
@@ -515,8 +515,6 @@ final class ConceptController
         $searchText = $apiRequest->getParameter('text', '*');
 
         $concepts = $repository->fullSolrSearch($searchText, $apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter, $full_selection, $full_projection);
-
-
 
         if (2 === $apiRequest->getLevel()) {
             $levelProcessor = new Level2Processor();

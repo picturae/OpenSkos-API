@@ -16,5 +16,6 @@ services:
       $namespace: 'http://tenant'
 
   App\OpenSkos\Set\SetRepository:
+    public: true
     arguments:
       $iriFactory: '@set.iri_factory'

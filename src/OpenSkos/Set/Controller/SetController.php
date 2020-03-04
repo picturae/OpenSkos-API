@@ -89,7 +89,7 @@ final class SetController
         FilterProcessor $filterProcessor
     ): ListResponse {
         $param_institutions = $apiRequest->getInstitutions();
-        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
+        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions, true);
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
@@ -219,9 +219,8 @@ final class SetController
         ApiRequest $apiRequest,
         SetRepository $repository
     ): ScalarResponse {
-
         $iri = $apiRequest->getForeignUri();
-        $set = $repository->get( new Iri($iri) );
+        $set = $repository->get(new Iri($iri));
 
         if (null === $set) {
             throw new ApiException('set-getone-not-found', [
