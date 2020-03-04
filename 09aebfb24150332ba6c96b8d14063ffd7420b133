@@ -1,0 +1,5 @@
+[ver:1,total:120]
+src/Template/Ontology/Context.php:45,1583334000:45,m
+src/Template/Ontology/Namespace.php:30,1583334000:30,m
+scripts/generate-documentation.sh:30,1583334000:30,r
+src/Template/Exception/list.json.php:15,1583334000:15,r
