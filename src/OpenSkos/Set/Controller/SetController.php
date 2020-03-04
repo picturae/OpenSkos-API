@@ -170,6 +170,69 @@ final class SetController
     }
 
     /**
+     * @Route(path="/set", methods={"GET"})
+     *
+     * @OA\Summary("Retreive a set using it's uri")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="id",
+     *     in="path",
+     *     example="1911",
+     *   ),
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(class=Set::class),
+     *     ),
+     *   }),
+     * )
+     *
+     * @throws ApiException
+     *
+     * @Error(code="set-getone-not-found",
+     *        status=404,
+     *        description="The requested institution could not be retreived",
+     *        fields={"id"}
+     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class           , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class           , method="getFormat"  )
+     * @ErrorInherit(class=SetRepository::class, method="__construct")
+     * @ErrorInherit(class=SetRepository::class, method="findOneBy"  )
+     * @ErrorInherit(class=SetRepository::class, method="getByUuid"  )
+     * @ErrorInherit(class=InternalResourceId::class   , method="__construct")
+     * @ErrorInherit(class=InternalResourceId::class   , method="__toString" )
+     * @ErrorInherit(class=Iri::class                  , method="__construct")
+     * @ErrorInherit(class=ScalarResponse::class       , method="__construct")
+     */
+    public function getSetByForeignId(
+        ApiRequest $apiRequest,
+        SetRepository $repository
+    ): ScalarResponse {
+
+        $iri = $apiRequest->getForeignUri();
+        $set = $repository->get( new Iri($iri) );
+
+        if (null === $set) {
+            throw new ApiException('set-getone-not-found', [
+                'uri' => $iri,
+            ]);
+        }
+
+        return new ScalarResponse($set, $apiRequest->getFormat());
+    }
+
+    /**
      * @Route(path="/sets.{format?}", methods={"POST"})
      *
      * @OA\Summary("Create one or more new sets")
