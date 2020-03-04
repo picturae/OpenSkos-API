@@ -1,0 +1,9 @@
+[ver:1,total:1860]
+src/OpenSkos/Concept/Controller/ConceptController.php:1157,1583326800:340,1583330400:817,m
+src/OpenSkos/ApiFilter.php:462,1583326800:30,1583330400:432,m
+src/OpenSkos/Set/Controller/SetController.php:74,1583326800:30,1583330400:44,r
+src/OpenSkos/Filters/SolrFilterProcessor.php:62,1583330400:62,r
+src/OpenSkos/ConceptScheme/Controller/ConceptSchemeController.php:35,1583330400:35,r
+src/OpenSkos/SkosResourceRepository.php:35,1583326800:20,1583330400:15,r
+src/OpenSkos/Institution/Controller/InstitutionController.php:25,1583330400:25,r
+config/ontology/skos.yaml:10,1583330400:10,r
