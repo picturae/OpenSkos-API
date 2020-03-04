@@ -292,6 +292,8 @@ abstract class AbstractRepository implements RepositoryInterface
      * @ErrorInherit(class=AbstractRepository::class, method="getConnection")
      *
      * @return mixed|null
+     *
+     * TODO: delete this function
      */
     public function get(Iri $object)
     {

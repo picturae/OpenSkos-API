@@ -77,7 +77,6 @@ final class ConceptController
      * )
      *
      * @ErrorInherit(class=ApiRequest::class   , method="getParameter"      )
-     * @ErrorInherit(class=xsdDateHelper::class, method="__construct"       )
      * @ErrorInherit(class=xsdDateHelper::class, method="isValidXsdDateTime")
      */
     private function processDateStampsFromRequest(
@@ -122,10 +121,13 @@ final class ConceptController
      *
      * @param ConceptRepository $repository
      *
-     * @ErrorInherit(class=ApiFilter::class        , method="buildFilters"            )
-     * @ErrorInherit(class=ApiRequest::class       , method="getInstitutions"         )
-     * @ErrorInherit(class=ApiRequest::class       , method="getSets"                 )
-     * @ErrorInherit(class=ConceptController::class, method="processFilterFromRequest")
+     * @ErrorInherit(class=ApiFilter::class          , method="buildFilters"                )
+     * @ErrorInherit(class=ApiRequest::class         , method="getInstitutions"             )
+     * @ErrorInherit(class=ApiRequest::class         , method="getSets"                     )
+     * @ErrorInherit(class=ConceptController::class  , method="processDateStampsFromRequest")
+     * @ErrorInherit(class=ConceptController::class  , method="processFilterFromRequest"    )
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="buildInteractionsFilters"    )
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="buildUserFilters"            )
      */
     private function buildConceptFilters(
         ApiRequest $apiRequest,

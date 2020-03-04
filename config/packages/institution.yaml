@@ -4,10 +4,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    #App\OpenSkos\Institution\Controller\:
-    #    resource: '../../src/OpenSkos/Institution/Controller/*'
-    #    tags: ['controller.service_arguments']
-
     # To cover all our needs
     institution.iri_factory:
         class: App\OpenSkos\OpenSkosIriFactory

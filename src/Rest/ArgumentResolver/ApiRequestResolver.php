@@ -116,8 +116,6 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
      * @throws ApiException
      * @throws \EasyRdf_Exception
      * @ErrorInherit(class=ApiRequestResolver::class, method="resolveFormat"      )
-     * @ErrorInherit(class=ApiRequestResolver::class, method="resolveInstitutions")
-     * @ErrorInherit(class=ApiRequestResolver::class, method="resolveSets"        )
      * @ErrorInherit(class=Graph::class             , method="__construct"        )
      * @ErrorInherit(class=Graph::class             , method="parse"              )
      */
@@ -130,7 +128,6 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
 
         $sets = $request->query->get('sets', '');
         $sets = preg_split('/\s*,\s*/', $sets, -1, PREG_SPLIT_NO_EMPTY);
-        //$sets = $this->resolveSets($sets);
 
         //B.Hillier. The specs from Menzo ask for a 'foreign uri' as a parameter. I have no idea how this is stored
         // at Meertens. For now it just searches on the same field as the 'native' uri

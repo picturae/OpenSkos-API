@@ -10,7 +10,6 @@ use App\Annotation\OA;
 use App\Entity\User as AuthUser;
 use App\Exception\ApiException;
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Label\LabelRepository;
 use App\OpenSkos\SkosResourceRepository;
 use App\OpenSkos\User\User;
 use App\OpenSkos\User\UserRepository;
@@ -197,13 +196,8 @@ final class UserController
         string $id,
         UserRepository $repository,
         Connection $connection,
-        ApiRequest $apiRequest,
-        LabelRepository $labelRepository
+        ApiRequest $apiRequest
     ): ScalarResponse {
-        /*
-         * @TODO Why are we injecting unused parameters?
-         */
-
         // Not authenticated = no data
         $auth = $apiRequest->getAuthentication();
         $auth->requireAuthenticated();

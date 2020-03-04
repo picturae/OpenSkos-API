@@ -2268,24 +2268,6 @@ paths:
                     "type": "string"
                   "supported":
                     "type": "string"
-        "'404'":
-          "content":
-            "application/json":
-              "schema":
-                "type": "object"
-                "properties":
-                  "status":
-                    "type": "integer"
-                    "format": "int16"
-                    "description": "Equivelent http status code"
-                  "code":
-                    "type": "string"
-                    "description": "Unique error code"
-                  "description":
-                    "type": "string"
-                    "description": "Human-readable explanation of the error"
-                  "given":
-                    "type": "string"
     post:
       "summary": "Create one or more new concept schemes"
       "parameters":
@@ -6559,24 +6541,6 @@ paths:
                   "requested":
                     "type": "string"
                   "supported":
-                    "type": "string"
-        "'404'":
-          "content":
-            "application/json":
-              "schema":
-                "type": "object"
-                "properties":
-                  "status":
-                    "type": "integer"
-                    "format": "int16"
-                    "description": "Equivelent http status code"
-                  "code":
-                    "type": "string"
-                    "description": "Unique error code"
-                  "description":
-                    "type": "string"
-                    "description": "Human-readable explanation of the error"
-                  "given":
                     "type": "string"
         "'500'":
           "content":

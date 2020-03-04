@@ -940,13 +940,6 @@
         "class": "App\\OpenSkos\\Filters\\FilterProcessor",
         "method": "buildSetFilters"
     },
-    "filterprocessor-build-set-filters-search-by-string" : {
-        "code": "filterprocessor-build-set-filters-search-by-string",
-        "description": "The search by string for sets could not be retrieved (Predicate is not used in Jena Store).",
-        "status": 400,
-        "class": "App\\OpenSkos\\Filters\\FilterProcessor",
-        "method": "buildSetFilters"
-    },
     "solrfilterprocessor-build-institutions-filters-uuid-not-supported" : {
         "code": "solrfilterprocessor-build-institutions-filters-uuid-not-supported",
         "description": "The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).",
@@ -1520,26 +1513,6 @@
         "status": 406,
         "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
         "method": "resolveFormat"
-    },
-    "apirequestresolver-institution-not-found" : {
-        "code": "apirequestresolver-institution-not-found",
-        "fields": [
-            "given"
-        ],
-        "description": "An institution filter was given but could not be found",
-        "status": 404,
-        "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
-        "method": "resolveInstitutions"
-    },
-    "apirequestresolver-set-not-found" : {
-        "code": "apirequestresolver-set-not-found",
-        "fields": [
-            "given"
-        ],
-        "description": "A set filter was given but could not be found",
-        "status": 404,
-        "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
-        "method": "resolveSets"
     },
     "authentication-permission-denied-invalid-credentials" : {
         "code": "authentication-permission-denied-invalid-credentials",

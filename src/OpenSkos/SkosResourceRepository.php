@@ -97,7 +97,7 @@ class SkosResourceRepository
      * @return mixed
      * @psalm-return T|null
      *
-     * @ErrorInherit(class=SparqlQuery::class, method="describeResource")
+     * @ErrorInherit(class=SparqlQuery::class, method="describeResourceOfType")
      */
     public function findTypeByIri(Iri $rdfType, Iri $iri)
     {
