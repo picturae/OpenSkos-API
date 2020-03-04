@@ -1,0 +1,5 @@
+[ver:1,total:600]
+grumphp.yml:252,1583334000:252,m
+scripts/generate-documentation.sh:228,1583334000:228,m
+composer.json:90,1583334000:90,r
+src/OpenSkos/Concept/Controller/ConceptController.php:30,1583334000:30,r
