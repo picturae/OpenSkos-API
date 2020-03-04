@@ -10,4 +10,6 @@ parameters:
             ignore_patterns:
                 - '/spec/' #Ignore PHPSpec
         phpspec: ~
-
+        shell:
+          scripts:
+            - scripts/generate-documentation.sh
