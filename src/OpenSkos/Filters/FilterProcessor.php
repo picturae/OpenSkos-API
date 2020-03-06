@@ -25,17 +25,32 @@ final class FilterProcessor
     const ENTITY_SET           = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
 
+    /**
+     * @var Connection
+     */
     private $connection;
 
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
     /**
-     * FilterProcessor constructor.
+     * @var FilterProcessorHelper
      */
-    public function __construct(Connection $connection, ContainerInterface $container)
+    private $filter_helper;
+
+    /**
+     * FilterProcessor constructor.
+     * @param Connection $connection
+     * @param ContainerInterface $container
+     * @param FilterProcessorHelper $filter_helper
+     */
+    public function __construct(Connection $connection, ContainerInterface $container, FilterProcessorHelper $filter_helper)
     {
         $this->connection = $connection;
         $this->container  = $container;
+        $this->filter_helper  = $filter_helper;
     }
 
     /**
@@ -72,37 +87,6 @@ final class FilterProcessor
         return $has_publisher;
     }
 
-    public function resolveInstitutionsToCode(Iri $institution): ?string
-    {
-        $ret_val = null;
-
-        $institution_repository = $this->container->get('App\OpenSkos\Institution\InstitutionRepository');
-
-        $institution = $institution_repository->get($institution);
-
-        if ($institution) {
-            $code_literal = $institution->getProperty(OpenSkos::CODE);
-            if (isset($code_literal[0])) {
-                $ret_val = $code_literal[0]->value();
-            }
-        }
-
-        return $ret_val;
-    }
-
-    public function resolveSetToUriLiteral(string $code): ?string
-    {
-        $ret_val = null;
-
-        $set_repository = $this->container->get('App\OpenSkos\Set\SetRepository');
-        $set            = $set_repository->findBy(new Iri(Openskos::CODE), new InternalResourceId($code));
-        if (isset($set[0])) {
-            $uri_literal = $set[0]->getProperty(OpenSkos::CONCEPT_BASE_URI);
-            $ret_val     = $uri_literal[0]->value();
-        }
-
-        return $ret_val;
-    }
 
     /**
      * @param bool $resolve_publisher if true, resolve a publisher uri to a tenant code. (This involves an extra Jena query)
@@ -124,7 +108,7 @@ final class FilterProcessor
                 throw new ApiException('filterprocessor-build-institution-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 if (true === $resolve_publisher) {
-                    $code      = $this->resolveInstitutionsToCode(new Iri($filter));
+                    $code      = $this->filter_helper->resolveInstitutionsToCode(new Iri($filter));
                     $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $code, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_INSTITUTION];
                 } else {
                     $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_INSTITUTION];
@@ -158,7 +142,7 @@ final class FilterProcessor
                 $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
             } else {
                 if (true === $resolve_code) {
-                    $code      = $this->resolveSetToUriLiteral($filter);
+                    $code      = $this->filter_helper->resolveSetToUriLiteral($filter);
                     $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $code, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
                 } else {
                     $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_SET];

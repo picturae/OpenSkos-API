@@ -119,8 +119,11 @@ final class ConceptController
      * Builds the filters for a concept. Should follow
      * https://github.com/picturae/API/blob/develop/doc/OpenSKOS-API.md#concepts.
      *
-     * @param ConceptRepository $repository
-     *
+     * @param ApiRequest $apiRequest
+     * @param ApiFilter $apiFilter
+     * @param SolrFilterProcessor $solrFilterProcessor
+     * @return array
+     * @throws ApiException
      * @ErrorInherit(class=ApiFilter::class          , method="buildFilters"                )
      * @ErrorInherit(class=ApiRequest::class         , method="getInstitutions"             )
      * @ErrorInherit(class=ApiRequest::class         , method="getSets"                     )
@@ -134,9 +137,18 @@ final class ConceptController
         ApiFilter $apiFilter,
         SolrFilterProcessor $solrFilterProcessor
     ): array {
+
+        /* Institutions (tenants) */
+        $param_institutions  = $apiRequest->getInstitutions();
+        $institutions_filter = $solrFilterProcessor->buildInstitutionFilters($param_institutions, true);
+
+        /* Sets */
+        $param_sets  = $apiRequest->getSets();
+        $sets_filter = $solrFilterProcessor->buildSetFilters($param_sets, true);
+
         // Map some filters the ApiFilter class doesn't do by default but were in the spec
-        $apiFilter->addFilter('openskos:tenant', $apiRequest->getInstitutions());
-        $apiFilter->addFilter('openskos:set', $apiRequest->getSets());
+        $apiFilter->addFilter('openskos:tenant', $institutions_filter);
+        $apiFilter->addFilter('openskos:set', $sets_filter);
         $apiFilter->addFilter('skos:inScheme', $this->processFilterFromRequest($apiRequest, 'conceptSchemes'));
         $apiFilter->addFilter('openskos:status', $this->processFilterFromRequest($apiRequest, 'statuses'));
 
