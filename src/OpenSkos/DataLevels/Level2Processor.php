@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\DataLevels;
 
+use App\Annotation\Error;
 use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
@@ -87,6 +89,15 @@ final class Level2Processor
         $this->populateData($entities, $crossLinks, $enrichmentTriples);
     }
 
+    /**
+     * @throws ApiException
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getResource")
+     *
+     * @Error(code="data-inconsistency-detected",
+     *        status=500,
+     *        description="An internal data inconsistency has been detected. Please contact the administrator with details of the request and this message.")
+     */
     private function populateData(array $entities, array $crossLinks, array $enrichmentTriples): void
     {
         foreach ($crossLinks as $object => $co_ordinates_groups) {
@@ -103,16 +114,20 @@ final class Level2Processor
                  */
                 $currentRecordSubject = $currentRecord->getResource()->iri();
 
-                $replacementRecord = $enrichmentTriples[$object];
-                $replacementRecord->setType(new Iri($predicate));
-                $replacementRecord->setSubject($currentRecordSubject);
+                if (isset($enrichmentTriples[$object])) {
+                    $replacementRecord = $enrichmentTriples[$object];
+                    $replacementRecord->setType(new Iri($predicate));
+                    $replacementRecord->setSubject($currentRecordSubject);
 
-                $currentRecordResources = $currentRecord->getResource();
-                $currentRecordResources->replaceTriple($inner, $replacementRecord);
+                    $currentRecordResources = $currentRecord->getResource();
+                    $currentRecordResources->replaceTriple($inner, $replacementRecord);
 
-                //I think in 99% of usage cases, while we're just replacing labels, it's less work to index in this loop
-                // than process it all and then loop $entities again. We dont cross-link many XL labels
-                $currentRecordResources->reIndexTripleStore();
+                    //I think in 99% of usage cases, while we're just replacing labels, it's less work to index in this loop
+                    // than process it all and then loop $entities again. We dont cross-link many XL labels
+                    $currentRecordResources->reIndexTripleStore();
+                } else {
+                    throw new ApiException('data-inconsistency-detected');
+                }
             }
         }
     }

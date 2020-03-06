@@ -12,7 +12,7 @@ use App\Rdf\Iri;
 use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
 
-final class FilterProcessorHelper
+class FilterProcessorHelper
 {
 
     /**

@@ -8,7 +8,6 @@ use App\Annotation\Error;
 use App\Annotation\ErrorInherit;
 use App\EasyRdf\EasyRdfClient;
 use App\Exception\ApiException;
-use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Rdf\Iri;
 use App\Rdf\Sparql\SparqlQuery;
@@ -38,7 +37,6 @@ final class SolrFilterProcessor
      */
     private $rdfClient;
 
-
     /**
      * @var FilterProcessorHelper
      */
@@ -46,17 +44,13 @@ final class SolrFilterProcessor
 
     /**
      * SolrFilterProcessor constructor.
-     * @param Connection $connection
-     * @param EasyRdfClient $rdfClient
-     * @param FilterProcessorHelper $filter_helper
      */
     public function __construct(Connection $connection, EasyRdfClient $rdfClient, FilterProcessorHelper $filter_helper)
     {
-        $this->connection = $connection;
-        $this->rdfClient = $rdfClient;
+        $this->connection    = $connection;
+        $this->rdfClient     = $rdfClient;
         $this->filter_helper = $filter_helper;
     }
-
 
     /**
      * @param $uuid
@@ -112,12 +106,8 @@ final class SolrFilterProcessor
         return $has_publisher;
     }
 
-
     /**
-     * @param array $filterList
      * @param bool $resolve_publisher if true, resolve a publisher uri to a tenant code. (This involves an extra Jena query)
-     *
-     * @return array
      *
      * @throws ApiException
      * @Error(code="solrfilterprocessor-build-institutions-filters-uuid-not-supported",
@@ -128,7 +118,7 @@ final class SolrFilterProcessor
      *        status=400,
      *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
      */
-    public function buildInstitutionFilters(array $filterList, bool $resolve_publisher = false):array
+    public function buildInstitutionFilters(array $filterList, bool $resolve_publisher = false): array
     {
         $dataOut = [];
 
@@ -151,10 +141,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     * @param bool $resolve_code
-     * @return array
-     *
      * @throws ApiException
      * @Error(code="solrfilterprocessor-build-set-filters-uuid-not-supported",
      *        status=400,
@@ -165,14 +151,9 @@ final class SolrFilterProcessor
      *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
      * )
      *
-     * @Error(code="solrfilterprocessor-build-set-filters-search-by-string",
-     *        status=400,
-     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
-     * )
-     *
      * @ErrorInherit(class=SolrFilterProcessor::class, method="isUuid")
      */
-    public function buildSetFilters(array $filterList, bool $resolve_code = false):array
+    public function buildSetFilters(array $filterList, bool $resolve_code = false): array
     {
         $dataOut = [];
 
@@ -193,6 +174,7 @@ final class SolrFilterProcessor
 
         return $dataOut;
     }
+
     /**
      * @return array
      *

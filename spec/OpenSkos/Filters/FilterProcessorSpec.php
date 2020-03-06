@@ -6,21 +6,22 @@ use App\Exception\ApiException;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\Filters\FilterProcessorHelper;
 use Doctrine\DBAL\Connection;
 use PhpSpec\ObjectBehavior;
 use Psr\Container\ContainerInterface;
 
 class FilterProcessorSpec extends ObjectBehavior
 {
-    public function it_is_initializable(Connection $connection, ContainerInterface $container)
+    public function it_is_initializable(Connection $connection, ContainerInterface $container, FilterProcessorHelper $filter_helper)
     {
-        $this->beConstructedWith($connection, $container);
+        $this->beConstructedWith($connection, $container, $filter_helper);
         $this->shouldHaveType(FilterProcessor::class);
     }
 
-    public function it_recognises_valid_set_filter_types(Connection $connection, ContainerInterface $container)
+    public function it_recognises_valid_set_filter_types(Connection $connection, ContainerInterface $container, FilterProcessorHelper $filter_helper)
     {
-        $this->beConstructedWith($connection, $container);
+        $this->beConstructedWith($connection, $container, $filter_helper);
         //Only tenant codes accepted for sets
         $filter_list = [
             'code',
@@ -37,9 +38,9 @@ class FilterProcessorSpec extends ObjectBehavior
         );
     }
 
-    public function it_rejects_invalid_set_filter_types(Connection $connection, ContainerInterface $container)
+    public function it_rejects_invalid_set_filter_types(Connection $connection, ContainerInterface $container, FilterProcessorHelper $filter_helper)
     {
-        $this->beConstructedWith($connection, $container);
+        $this->beConstructedWith($connection, $container, $filter_helper);
         //Sets can't filter uuids
         $filter_list = [
             '92d6e19e-c424-4bdb-8cac-0738ae9fe88e',
