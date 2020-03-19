@@ -1,0 +1,6 @@
+[ver:1,total:570]
+scripts/generate-documentation.sh:222,1584619200:222,m
+src/Annotation/ErrorInherit.php:165,1584619200:165,r
+src/Rdf/AbstractRdfDocument.php:147,1584619200:147,r
+src/Documentation/Swagger/Command/GenerateSwaggerCommand.php:24,1584619200:24,r
+composer.json:12,1584619200:12,r
