@@ -10,6 +10,7 @@ use App\Exception\ApiException;
 use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
 use App\Rdf\Triple;
 use App\Rdf\VocabularyAwareResource;

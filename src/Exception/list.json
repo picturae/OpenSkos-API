@@ -91,17 +91,6 @@
         "class": "App\\Rdf\\AbstractRdfDocument",
         "method": "save"
     },
-    "dc-validate-title-literal-type" : {
-        "code": "dc-validate-title-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Dc",
-        "method": "validateTitle"
-    },
     "dcterms-validate-created-literal-type" : {
         "code": "dcterms-validate-created-literal-type",
         "fields": [
@@ -212,38 +201,16 @@
         "class": "App\\Ontology\\DcTerms",
         "method": "validateTitle"
     },
-    "foaf-validate-name-literal-type" : {
-        "code": "foaf-validate-name-literal-type",
+    "dc-validate-title-literal-type" : {
+        "code": "dc-validate-title-literal-type",
         "fields": [
             "expected",
             "actual"
         ],
-        "description": "The object for the name predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the title predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
         "status": 422,
-        "class": "App\\Ontology\\Foaf",
-        "method": "validateName"
-    },
-    "foaf-validate-mbox-literal-type" : {
-        "code": "foaf-validate-mbox-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the mbox predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Foaf",
-        "method": "validateMbox"
-    },
-    "foaf-validate-mbox-regex" : {
-        "code": "foaf-validate-mbox-regex",
-        "fields": [
-            "regex",
-            "value"
-        ],
-        "description": "The object for the mbox predicate did not match the configured regex",
-        "status": 422,
-        "class": "App\\Ontology\\Foaf",
-        "method": "validateMbox"
+        "class": "App\\Ontology\\Dc",
+        "method": "validateTitle"
     },
     "openskos-validate-datatype-literal-type" : {
         "code": "openskos-validate-datatype-literal-type",
@@ -520,49 +487,38 @@
         "class": "App\\Ontology\\OpenSkos",
         "method": "validateErrorCode"
     },
-    "skos-validate-altlabel-literal-type" : {
-        "code": "skos-validate-altlabel-literal-type",
+    "foaf-validate-name-literal-type" : {
+        "code": "foaf-validate-name-literal-type",
         "fields": [
             "expected",
             "actual"
         ],
-        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the name predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
         "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateAltLabel"
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateName"
     },
-    "skos-validate-hiddenlabel-literal-type" : {
-        "code": "skos-validate-hiddenlabel-literal-type",
+    "foaf-validate-mbox-literal-type" : {
+        "code": "foaf-validate-mbox-literal-type",
         "fields": [
             "expected",
             "actual"
         ],
-        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the mbox predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
         "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateHiddenLabel"
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateMbox"
     },
-    "skos-validate-preflabel-literal-type" : {
-        "code": "skos-validate-preflabel-literal-type",
+    "foaf-validate-mbox-regex" : {
+        "code": "foaf-validate-mbox-regex",
         "fields": [
-            "expected",
-            "actual"
+            "regex",
+            "value"
         ],
-        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "description": "The object for the mbox predicate did not match the configured regex",
         "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validatePrefLabel"
-    },
-    "skos-validate-notation-literal-type" : {
-        "code": "skos-validate-notation-literal-type",
-        "fields": [
-            "expected",
-            "actual"
-        ],
-        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
-        "status": 422,
-        "class": "App\\Ontology\\Skos",
-        "method": "validateNotation"
+        "class": "App\\Ontology\\Foaf",
+        "method": "validateMbox"
     },
     "skosxl-validate-altlabel-literal-type" : {
         "code": "skosxl-validate-altlabel-literal-type",
@@ -608,45 +564,49 @@
         "class": "App\\Ontology\\SkosXl",
         "method": "validatePrefLabel"
     },
-    "apifilter-addfilter-could-not-stringify-object" : {
-        "code": "apifilter-addfilter-could-not-stringify-object",
+    "skos-validate-altlabel-literal-type" : {
+        "code": "skos-validate-altlabel-literal-type",
         "fields": [
-            "class"
+            "expected",
+            "actual"
         ],
-        "description": "Could not stringify given object",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiFilter",
-        "method": "addFilter"
+        "description": "The object for the altlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateAltLabel"
     },
-    "apirequest-invalid-level" : {
-        "code": "apirequest-invalid-level",
+    "skos-validate-hiddenlabel-literal-type" : {
+        "code": "skos-validate-hiddenlabel-literal-type",
         "fields": [
-            "level"
+            "expected",
+            "actual"
         ],
-        "description": "An invalid level was requested",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
+        "description": "The object for the hiddenlabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateHiddenLabel"
     },
-    "apirequest-invalid-limit" : {
-        "code": "apirequest-invalid-limit",
+    "skos-validate-preflabel-literal-type" : {
+        "code": "skos-validate-preflabel-literal-type",
         "fields": [
-            "limit"
+            "expected",
+            "actual"
         ],
-        "description": "An invalid limit parameter was given, it needs to be >=0",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
+        "description": "The object for the preflabel predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validatePrefLabel"
     },
-    "apirequest-invalid-offset" : {
-        "code": "apirequest-invalid-offset",
+    "skos-validate-notation-literal-type" : {
+        "code": "skos-validate-notation-literal-type",
         "fields": [
-            "offset"
+            "expected",
+            "actual"
         ],
-        "description": "An invalid offset parameter was given, it needs to be >=0",
-        "status": 400,
-        "class": "App\\OpenSkos\\ApiRequest",
-        "method": "__construct"
+        "description": "The object for the notation predicate has a different type than 'http:\/\/www.w3.org\/2001\/XMLSchema#string'",
+        "status": 422,
+        "class": "App\\Ontology\\Skos",
+        "method": "validateNotation"
     },
     "concept-related-concept-not-found" : {
         "code": "concept-related-concept-not-found",
@@ -1426,14 +1386,44 @@
         "class": "App\\OpenSkos\\User\\Controller\\UserController",
         "method": "getOneUser"
     },
-    "iri-construct-invalid-value-type" : {
-        "code": "iri-construct-invalid-value-type",
+    "apifilter-addfilter-could-not-stringify-object" : {
+        "code": "apifilter-addfilter-could-not-stringify-object",
         "fields": [
-            "receivedType"
+            "class"
         ],
-        "description": "Invalid type for $value, expected string|Iri",
-        "status": 500,
-        "class": "App\\Rdf\\Iri",
+        "description": "Could not stringify given object",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiFilter",
+        "method": "addFilter"
+    },
+    "apirequest-invalid-level" : {
+        "code": "apirequest-invalid-level",
+        "fields": [
+            "level"
+        ],
+        "description": "An invalid level was requested",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-limit" : {
+        "code": "apirequest-invalid-limit",
+        "fields": [
+            "limit"
+        ],
+        "description": "An invalid limit parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
+        "method": "__construct"
+    },
+    "apirequest-invalid-offset" : {
+        "code": "apirequest-invalid-offset",
+        "fields": [
+            "offset"
+        ],
+        "description": "An invalid offset parameter was given, it needs to be >=0",
+        "status": 400,
+        "class": "App\\OpenSkos\\ApiRequest",
         "method": "__construct"
     },
     "rdf-literal-datetime-unparsable-value" : {
@@ -1456,6 +1446,16 @@
         "status": 500,
         "class": "App\\Rdf\\Sparql\\SparqlQuery",
         "method": "describeByTypeAndPredicate"
+    },
+    "iri-construct-invalid-value-type" : {
+        "code": "iri-construct-invalid-value-type",
+        "fields": [
+            "receivedType"
+        ],
+        "description": "Invalid type for $value, expected string|Iri",
+        "status": 500,
+        "class": "App\\Rdf\\Iri",
+        "method": "__construct"
     },
     "rdf-triple-construct-invalid-object-type" : {
         "code": "rdf-triple-construct-invalid-object-type",
@@ -1497,6 +1497,16 @@
         "class": "App\\Rdf\\VocabularyAwareResource",
         "method": "addProperty"
     },
+    "internal-resource-id-resolver-unresolvable" : {
+        "code": "internal-resource-id-resolver-unresolvable",
+        "fields": [
+            "value"
+        ],
+        "description": "The given value can not be resolved into InternalResourceId",
+        "status": 500,
+        "class": "App\\Rest\\ArgumentResolver\\InternalResourceIdResolver",
+        "method": "resolve"
+    },
     "apirequest-format-invalid" : {
         "code": "apirequest-format-invalid",
         "fields": [
@@ -1507,16 +1517,6 @@
         "status": 406,
         "class": "App\\Rest\\ArgumentResolver\\ApiRequestResolver",
         "method": "resolveFormat"
-    },
-    "internal-resource-id-resolver-unresolvable" : {
-        "code": "internal-resource-id-resolver-unresolvable",
-        "fields": [
-            "value"
-        ],
-        "description": "The given value can not be resolved into InternalResourceId",
-        "status": 500,
-        "class": "App\\Rest\\ArgumentResolver\\InternalResourceIdResolver",
-        "method": "resolve"
     },
     "authentication-permission-denied-invalid-credentials" : {
         "code": "authentication-permission-denied-invalid-credentials",
