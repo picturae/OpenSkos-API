@@ -3,7 +3,6 @@
 namespace spec\App\Rest\ArgumentResolver;
 
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Exception\InvalidApiRequest;
 use App\Rdf\Format\JsonLd;
 use App\Rdf\Format\RdfFormatFactory;
 use PhpSpec\ObjectBehavior;
@@ -33,9 +32,9 @@ class ApiRequestResolverSpec extends ObjectBehavior
         $request = new Request(
             [
                 'format' => 'json-ld',
-                'limit' => '123',
+                'limit'  => '123',
                 'offset' => '12',
-                'level' => '1',
+                'level'  => '1',
             ]
         );
 
@@ -46,22 +45,5 @@ class ApiRequestResolverSpec extends ObjectBehavior
         $apiRequest->getLevel()->shouldBe(1);
         $apiRequest->getLimit()->shouldBe(123);
         $apiRequest->getOffset()->shouldBe(12);
-    }
-
-    public function it_throws_an_exception_when_cant_resolve_format(
-        ArgumentMetadata $argumentMetadata
-    ) {
-        $request = new Request(
-            [
-                'format' => 'unknown-format',
-                'limit' => '123',
-                'offset' => '12',
-                'level' => '1',
-            ]
-        );
-
-        $this->resolve($request, $argumentMetadata)
-            ->shouldThrow(InvalidApiRequest::class)
-            ->during('current');
     }
 }

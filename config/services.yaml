@@ -33,6 +33,10 @@ services:
     tags:
       - { name: controller.argument_value_resolver, priority: 100 }
 
+
+  App\OpenSkos\Filters\FilterProcessorHelper:
+    autowire: true
+
   App\OpenSkos\Filters\FilterProcessor:
     autowire: true
 
@@ -53,3 +57,20 @@ services:
     autowire: true
     tags:
       - 'console.command'
+
+  App\Exception\Command\GenerateErrorListCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  App\Exception\Controller\:
+      autowire: true
+      resource: '../src/Exception/Controller/*'
+      tags:
+        - controller.service_arguments
+
+  App\Exception\Listener\:
+      autowire: true
+      resource: '../src/Exception/Listener/*'
+      tags:
+        - { name: kernel.event_listener, event: kernel.exception }

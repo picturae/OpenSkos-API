@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Healthcheck;
 
+use App\Annotation\Document;
 use App\Ontology\Foaf;
+use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Rdf\AbstractRdfDocument;
-use App\Annotation\Document;
 
 /**
  * @Document\Type(Foaf::PERSON)
@@ -17,13 +18,15 @@ final class Person extends AbstractRdfDocument
 {
     const type = 'type';
     const name = 'name';
-    const uri = 'uri';
+    const uri  = 'uri';
+    const uuid = 'uuid';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
-        self::type => Rdf::TYPE,
         self::name => Foaf::NAME,
+        self::type => Rdf::TYPE,
+        self::uuid => OpenSkos::UUID,
     ];
 }

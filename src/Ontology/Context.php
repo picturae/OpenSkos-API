@@ -1,31 +1,62 @@
 <?php
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 namespace App\Ontology;
+
+use App\Annotation\ErrorInherit;
 
 final class Context
 {
     const prefixes = [
-        'dc' => Dc::NAME_SPACE,
-        'dcmi' => Dcmi::NAME_SPACE,
-        'dcterms' => DcTerms::NAME_SPACE,
-        'foaf' => Foaf::NAME_SPACE,
+        'dc'       => Dc::NAME_SPACE,
+        'dcmi'     => Dcmi::NAME_SPACE,
+        'dcterms'  => DcTerms::NAME_SPACE,
+        'foaf'     => Foaf::NAME_SPACE,
+        'http'     => Http::NAME_SPACE,
         'openskos' => OpenSkos::NAME_SPACE,
-        'org' => Org::NAME_SPACE,
-        'owl' => Owl::NAME_SPACE,
-        'rdf' => Rdf::NAME_SPACE,
-        'rdfs' => Rdfs::NAME_SPACE,
-        'skos' => Skos::NAME_SPACE,
-        'skosxl' => SkosXl::NAME_SPACE,
-        'vcard' => VCard::NAME_SPACE,
-        'xsd' => Xsd::NAME_SPACE,
+        'org'      => Org::NAME_SPACE,
+        'owl'      => Owl::NAME_SPACE,
+        'rdf'      => Rdf::NAME_SPACE,
+        'rdfs'     => Rdfs::NAME_SPACE,
+        'skos'     => Skos::NAME_SPACE,
+        'skosxl'   => SkosXl::NAME_SPACE,
+        'vcard'    => VCard::NAME_SPACE,
+        'xsd'      => Xsd::NAME_SPACE,
+    ];
+
+    const dataclass = [
+        'foaf:Person'            => '\App\OpenSkos\User\User',
+        'openskos:set'           => '\App\OpenSkos\Set\Set',
+        'org:FormalOrganization' => '\App\OpenSkos\Institution\Institution',
+        'skos:Concept'           => '\App\OpenSkos\Concept\Concept',
+        'skos:ConceptScheme'     => '\App\OpenSkos\ConceptScheme\ConceptScheme',
+        'skosxl:Label'           => '\App\OpenSkos\Label\Label',
+    ];
+
+    const namespaces = [
+        'dc'       => Dc::class,
+        'dcmi'     => Dcmi::class,
+        'dcterms'  => DcTerms::class,
+        'foaf'     => Foaf::class,
+        'http'     => Http::class,
+        'openskos' => OpenSkos::class,
+        'org'      => Org::class,
+        'owl'      => Owl::class,
+        'rdf'      => Rdf::class,
+        'rdfs'     => Rdfs::class,
+        'skos'     => Skos::class,
+        'skosxl'   => SkosXl::class,
+        'vcard'    => VCard::class,
+        'xsd'      => Xsd::class,
     ];
 
     /**
      * Build a context based on short names.
      *
      * @param array $names
-     *
-     * @return array
      */
     public static function build($names = []): array
     {
@@ -43,7 +74,6 @@ final class Context
     /**
      * array_walk_recursive, including branch nodes.
      *
-     * @param array    $arr
      * @param callable $callback Arguments: <item, key>
      */
     private static function walk(array $arr, callable $callback): void
@@ -54,6 +84,66 @@ final class Context
                 self::walk($value, $callback);
             }
         }
+    }
+
+    /**
+     * Detect prefix AND field from uri.
+     *
+     * @ErrorInherit(class=Context::class, method="detectNamespaceFromUri")
+     */
+    public static function decodeUri(?string $uri): ?array
+    {
+        if (is_null($uri)) {
+            return null;
+        }
+
+        $tokens = explode(':', $uri);
+        if (2 === (count($tokens)) && (isset(static::prefixes[$tokens[0]])) && ('http' !== $tokens[0])) {
+            return $tokens;
+        }
+
+        $prefix = self::detectNamespaceFromUri($uri);
+        if (false === $prefix) {
+            return null;
+        }
+        $field = substr($uri, strlen(static::prefixes[$prefix]));
+
+        return [$prefix, $field];
+    }
+
+    /**
+     * Returns the literal type for a field (or null).
+     *
+     * @ErrorInherit(class=Context::class, method="decodeUri")
+     */
+    public static function literaltype(?string $uri): ?string
+    {
+        $decoded = static::decodeUri($uri);
+        if (is_null($decoded)) {
+            return null;
+        }
+
+        // Namespace not known = done
+        if (!isset(static::namespaces[$decoded[0]])) {
+            return null;
+        }
+
+        return static::namespaces[$decoded[0]]::literaltypes[static::fullUri($uri) ?? ''] ?? null;
+    }
+
+    /**
+     * Turn a uri or short notation into full uri.
+     *
+     * @ErrorInherit(class=Context::class, method="decodeUri")
+     */
+    public static function fullUri(?string $uri): ?string
+    {
+        $decoded = static::decodeUri($uri);
+        if (is_null($decoded)) {
+            return null;
+        }
+
+        return static::prefixes[$decoded[0]].$decoded[1];
     }
 
     /**
@@ -80,14 +170,12 @@ final class Context
     /**
      * Automatically detect namespaces from a given graph.
      *
-     * @param \EasyRdf_Graph $graph
-     *
-     * @return array
+     * @ErrorInherit(class=Context::class, method="detectNamespaceFromUri")
      */
     public static function detect(\EasyRdf_Graph $graph): array
     {
         $result = [];
-        $known = self::prefixes;
+        $known  = self::prefixes;
 
         // Walk through the whole graph
         // CAUTION: this may result in a performance hit

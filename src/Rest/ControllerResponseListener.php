@@ -23,8 +23,6 @@ final class ControllerResponseListener
 
     /**
      * Catch controller responses if they not native Response type.
-     *
-     * @param GetResponseForControllerResultEvent $event
      */
     public function onKernelView(GetResponseForControllerResultEvent $event): void
     {
@@ -46,7 +44,7 @@ final class ControllerResponseListener
             return;
         }
 
-        $content = $this->serializer->serialize($triples, $res->format()->name());
+        $content      = $this->serializer->serialize($triples, $res->format()->name());
         $httpResponse = new Response(
             $content,
             Response::HTTP_OK,

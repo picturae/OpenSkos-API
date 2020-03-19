@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Filters;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\EasyRdf\EasyRdfClient;
-use App\OpenSkos\Concept\Solr\ParserText;
+use App\Exception\ApiException;
+use App\Ontology\OpenSkos;
+use App\Rdf\Iri;
 use App\Rdf\Sparql\SparqlQuery;
+use App\Solr\ParserText;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class SolrFilterProcessor
 {
     //Filter Types
-    const TYPE_URI = 'uri';
-    const TYPE_UUID = 'uuid';
+    const TYPE_URI    = 'uri';
+    const TYPE_UUID   = 'uuid';
     const TYPE_STRING = 'string';
 
     //Group for filter
-    const ENTITY_INSTITUTION = 'institution';
-    const ENTITY_SET = 'set';
+    const ENTITY_INSTITUTION   = 'institution';
+    const ENTITY_SET           = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
-    const VALUE_STATUS = 'status';
+    const VALUE_STATUS         = 'status';
 
     /**
      * @var Connection
@@ -35,25 +38,26 @@ final class SolrFilterProcessor
     private $rdfClient;
 
     /**
-     * FilterProcessor constructor.
-     *
-     * @param Connection    $connection
-     * @param EasyRdfClient $rdfClient
+     * @var FilterProcessorHelper
      */
-    public function __construct(
-        Connection $connection,
-        EasyRdfClient $rdfClient
-    ) {
-        $this->connection = $connection;
-        $this->rdfClient = $rdfClient;
+    private $filter_helper;
+
+    /**
+     * SolrFilterProcessor constructor.
+     */
+    public function __construct(Connection $connection, EasyRdfClient $rdfClient, FilterProcessorHelper $filter_helper)
+    {
+        $this->connection    = $connection;
+        $this->rdfClient     = $rdfClient;
+        $this->filter_helper = $filter_helper;
     }
 
     /**
      * @param $uuid
      *
-     * @return string|null
-     *
      * @psalm-suppress UndefinedInterfaceMethod
+     *
+     * @ErrorInherit(class=SparqlQuery::class, method="SelectSubjectFromUuid")
      */
     private function retrieveUriFromUuid($uuid): ?string
     {
@@ -93,8 +97,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filters
-     *
      * @return bool
      */
     public function hasPublisher(array $filters)
@@ -105,23 +107,33 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
+     * @param bool $resolve_publisher if true, resolve a publisher uri to a tenant code. (This involves an extra Jena query)
      *
-     * @return array
+     * @throws ApiException
+     * @Error(code="solrfilterprocessor-build-institutions-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store)."
+     * )
+     * @Error(code="solrfilterprocessor-build-institutions-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
      */
-    public function buildInstitutionFilters(array $filterList)
+    public function buildInstitutionFilters(array $filterList, bool $resolve_publisher = false): array
     {
         $dataOut = [];
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-institutions-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
+                if (true === $resolve_publisher) {
+                    $code      = $this->filter_helper->resolveInstitutionsToCode(new Iri($filter));
+                    $dataOut[] = $code;
+                } else {
+                    throw new ApiException('solrfilterprocessor-build-institutions-filters-search-by-string');
+                }
             } else {
-                $dataOut = [
-                    'tenantFilter' => sprintf('s_tenant:"%s"', $filter),
-                ];
+                $dataOut[] = $filter;
             }
         }
 
@@ -129,23 +141,34 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
+     * @throws ApiException
+     * @Error(code="solrfilterprocessor-build-set-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
+     * @Error(code="solrfilterprocessor-build-set-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      *
-     * @return array
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="isUuid")
      */
-    public function buildSetFilters(array $filterList)
+    public function buildSetFilters(array $filterList, bool $resolve_code = false): array
     {
         $dataOut = [];
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-set-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                $dataOut = [
-                    'setFilter' => sprintf('s_set:"%s"', $filter),
-                ];
+                $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
             } else {
-                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
+                if (true === $resolve_code) {
+                    $code      = $this->filter_helper->resolveSetToUriLiteral($filter);
+                    $dataOut[] = $code;
+                } else {
+                    throw new ApiException('solrfilterprocessor-build-set-filters-search-by-string');
+                }
             }
         }
 
@@ -153,15 +176,20 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
+     *
+     * @Error(code="solrfilterprocessor-build-conceptscheme-filters-search-by-string",
+     *        status=400,
+     *        description="The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store)."
+     * )
+     *
+     * @ErrorInherit(class=SolrFilterProcessor::class, method="retrieveUriFromUuid")
      */
     public function buildConceptSchemeFilters(array $filterList)
     {
         $dataOut = [];
 
-        $nIdx = 0;
+        $nIdx             = 0;
         $filtersAsStrings = [];
 
         foreach ($filterList as $filter) {
@@ -176,7 +204,7 @@ final class SolrFilterProcessor
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $filtersAsStrings[] = sprintf('s_inScheme:"%s"', $filter);
             } else {
-                throw new BadRequestHttpException('The search by string for concept schemes could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('solrfilterprocessor-build-conceptscheme-filters-search-by-string');
             }
         }
 
@@ -188,21 +216,28 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
+     *
+     * @Error(code="solrfilterprocessor-build-statuses-filters-unrecognised-status",
+     *        status=400,
+     *        description="Unrecognised status in filters.",
+     *        fields={"received","accepted"}
+     * )
      */
     public function buildStatusesFilters(array $filterList)
     {
         $acceptableStatuses = ['none', 'candidate', 'approved', 'redirected', 'not_compliant', 'rejected', 'obsolete', 'deleted'];
-        $dataOut = [];
+        $dataOut            = [];
 
-        $nIdx = 0;
+        $nIdx             = 0;
         $filtersAsStrings = [];
 
         foreach ($filterList as $filter) {
             if (!in_array($filter, $acceptableStatuses, true)) {
-                throw new BadRequestHttpException(sprintf("Unrecognised status '%s' in filters. Accepted values are: %s", $filter, join(', ', $acceptableStatuses)));
+                throw new ApiException('solrfilterprocessor-build-statuses-filters-unrecognised-status', [
+                    'received' => $filter,
+                    'accepted' => $acceptableStatuses,
+                ]);
             }
             if ('none' === $filter) {
                 //'none' turns up in some search profiles. I have no idea how it got there.
@@ -220,18 +255,16 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildUserFilters(array $filterList)
     {
         $userParams = [
-            'creator' => 's_creator',
+            'creator'             => 's_creator',
             'openskos:acceptedBy' => 's_acceptedBy',
             /* The following fields are copied from OpenSkos 2.2, but do not seem to work in solr! */
             'openskos:modifiedBy' => 's_contributor',
-            'openskos:deletedBy' => 's_deletedBy',
+            'openskos:deletedBy'  => 's_deletedBy',
         ];
 
         $dataOut = [];
@@ -257,8 +290,6 @@ final class SolrFilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
      */
     public function buildInteractionsFilters(array $filterList)
@@ -270,15 +301,15 @@ final class SolrFilterProcessor
         $parser = new ParserText();
 
         $dateParams = [
-            'dateSubmitted' => 'd_dateSubmitted',
-            'modified' => 'd_modified',
-            'dateAccepted' => 'd_dateAccepted',
+            'dateSubmitted'    => 'd_dateSubmitted',
+            'modified'         => 'd_modified',
+            'dateAccepted'     => 'd_dateAccepted',
             'openskos:deleted' => 'd_dateDeleted',
         ];
 
         $dataOut = [];
 
-        $nIdx = 0;
+        $nIdx             = 0;
         $filtersAsStrings = [];
 
         foreach ($dateParams as $param => $solrField) {
@@ -297,59 +328,5 @@ final class SolrFilterProcessor
         }
 
         return $dataOut;
-    }
-
-    /**
-     * @param int   $profile_id
-     * @param array $to_apply
-     *
-     * @return array
-     */
-    public function retrieveSearchProfile(int $profile_id, array $to_apply)
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('searchOptions')
-            ->from('search_profiles')
-            ->where('id = :id')
-            ->setParameter('id', $profile_id);
-
-        $filters = [];
-
-        $res = $qb->execute();
-
-        if ($res instanceof Statement) {
-            $profile = $res->fetchAll();
-            if (0 === count($profile)) {
-                throw new BadRequestHttpException('The searchProfile id does not exist');
-            }
-            $searchOptions = unserialize($profile[0]['searchOptions']);
-
-            if (isset($to_apply[self::ENTITY_INSTITUTION]) && true === $to_apply[self::ENTITY_INSTITUTION]) {
-                if (isset($searchOptions['tenants']) && 0 !== count($searchOptions['tenants'])) {
-                    $read_filters = $this->buildInstitutionFilters($searchOptions['tenants']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::ENTITY_SET]) && true === $to_apply[self::ENTITY_SET]) {
-                if (isset($searchOptions['collections']) && 0 !== count($searchOptions['collections'])) {
-                    $read_filters = $this->buildSetFilters($searchOptions['collections']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::ENTITY_CONCEPTSCHEME]) && true === $to_apply[self::ENTITY_CONCEPTSCHEME]) {
-                if (isset($searchOptions['conceptScheme']) && 0 !== count($searchOptions['conceptScheme'])) {
-                    $read_filters = $this->buildConceptSchemeFilters($searchOptions['conceptScheme']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::VALUE_STATUS]) && true === $to_apply[self::VALUE_STATUS]) {
-                if (isset($searchOptions['status']) && 0 !== count($searchOptions['status'])) {
-                    $read_filters = $this->buildStatusesFilters($searchOptions['status']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-        }
-
-        return $filters;
     }
 }

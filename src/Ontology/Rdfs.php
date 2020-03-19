@@ -1,5 +1,9 @@
 <?php
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 /**
  * OpenSKOS.
  *
@@ -21,9 +25,12 @@ namespace App\Ontology;
 
 final class Rdfs
 {
-    const NAME_SPACE = 'http://www.w3.org/2000/01/rdf-schema#';
-    const COMMENT = 'http://www.w3.org/2000/01/rdf-schema#comment';
+    const NAME_SPACE      = 'http://www.w3.org/2000/01/rdf-schema#';
+    const COMMENT         = 'http://www.w3.org/2000/01/rdf-schema#comment';
     const SUB_PROPERTY_OF = 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
-    const DOMAIN = 'http://www.w3.org/2000/01/rdf-schema#domain';
-    const RANGE = 'http://www.w3.org/2000/01/rdf-schema#range';
+    const DOMAIN          = 'http://www.w3.org/2000/01/rdf-schema#domain';
+    const RANGE           = 'http://www.w3.org/2000/01/rdf-schema#range';
+
+    const literaltypes = [
+    ];
 }

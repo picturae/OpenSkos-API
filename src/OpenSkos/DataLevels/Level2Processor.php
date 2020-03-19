@@ -4,14 +4,24 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\DataLevels;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\OpenSkos\Concept\Concept;
 use App\OpenSkos\Label\Label;
 use App\OpenSkos\Label\LabelRepository;
+use App\Rdf\AbstractRdfDocument;
 use App\Rdf\Iri;
+use App\Rdf\Triple;
 use App\Rdf\VocabularyAwareResource;
 
 final class Level2Processor
 {
+    /**
+     * @ErrorInherit(class=Iri::class   , method="getUri"      )
+     * @ErrorInherit(class=Triple::class, method="getObject"   )
+     * @ErrorInherit(class=Triple::class, method="getPredicate")
+     */
     private function crossLinkEntities(array $entities, array $to_process): array
     {
         $crosslink = [];
@@ -26,7 +36,7 @@ final class Level2Processor
                     if ($triple->getPredicate()->getUri() == $predicate) {
                         //Cross-link the object id's, so we can subsitute later
 
-                        $objectUri = $triple->getObject()->getUri();
+                        $objectUri   = $triple->getObject()->getUri();
                         $co_ordinate = sprintf('%d,%d,%s', $position, $triplesKey, $predicate);
                         if (!isset($crosslink[$objectUri])) {
                             $crosslink[$objectUri] = [];
@@ -40,6 +50,11 @@ final class Level2Processor
         return $crosslink;
     }
 
+    /**
+     * @ErrorInherit(class=Concept::class        , method="getXlPredicates"  )
+     * @ErrorInherit(class=Level2Processor::class, method="crossLinkEntities")
+     * @ErrorInherit(class=Level2Processor::class, method="populateData"     )
+     */
     public function AddLevel2Data(LabelRepository $repository, array &$entities): void
     {
         /*
@@ -69,16 +84,20 @@ final class Level2Processor
 
         $crossLinks = $this->crossLinkEntities($entities, $to_enrich);
 
-        $iris = array_keys($crossLinks);
+        $iris              = array_keys($crossLinks);
         $enrichmentTriples = $repository->findManyByIriList($iris);
 
         $this->populateData($entities, $crossLinks, $enrichmentTriples);
     }
 
     /**
-     * @param array $entities
-     * @param array $crossLinks
-     * @param array $enrichmentTriples
+     * @throws ApiException
+     *
+     * @ErrorInherit(class=AbstractRdfDocument::class    , method="getResource")
+     *
+     * @Error(code="data-inconsistency-detected",
+     *        status=500,
+     *        description="An internal data inconsistency has been detected. Please contact the administrator with details of the request and this message.")
      */
     private function populateData(array $entities, array $crossLinks, array $enrichmentTriples): void
     {
@@ -96,16 +115,20 @@ final class Level2Processor
                  */
                 $currentRecordSubject = $currentRecord->getResource()->iri();
 
-                $replacementRecord = $enrichmentTriples[$object];
-                $replacementRecord->setType(new Iri($predicate));
-                $replacementRecord->setSubject($currentRecordSubject);
+                if (isset($enrichmentTriples[$object])) {
+                    $replacementRecord = $enrichmentTriples[$object];
+                    $replacementRecord->setType(new Iri($predicate));
+                    $replacementRecord->setSubject($currentRecordSubject);
 
-                $currentRecordResources = $currentRecord->getResource();
-                $currentRecordResources->replaceTriple($inner, $replacementRecord);
+                    $currentRecordResources = $currentRecord->getResource();
+                    $currentRecordResources->replaceTriple($inner, $replacementRecord);
 
-                //I think in 99% of usage cases, while we're just replacing labels, it's less work to index in this loop
-                // than process it all and then loop $entities again. We dont cross-link many XL labels
-                $currentRecordResources->reIndexTripleStore();
+                    //I think in 99% of usage cases, while we're just replacing labels, it's less work to index in this loop
+                    // than process it all and then loop $entities again. We dont cross-link many XL labels
+                    $currentRecordResources->reIndexTripleStore();
+                } else {
+                    throw new ApiException('data-inconsistency-detected');
+                }
             }
         }
     }

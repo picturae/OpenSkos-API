@@ -15,17 +15,17 @@ services:
     arguments:
       $namespace: 'http://tenant'
 
-
-  App\OpenSkos\Concept\Solr\SolrQueryBuilder:
-
-  App\OpenSkos\Concept\Sparql\SparqlConceptRepository:
+  App\OpenSkos\Concept\ConceptRepository:
     arguments:
       $iriFactory: '@concept.iri_factory'
 
-  App\OpenSkos\Concept\Solr\SolrJenaConceptRepository:
+  # TODO: Instead of building OpenSkosIriFactory we can create dedicate InstitutionIriFactory
+  # To cover all our needs
+  concept_scheme.iri_factory:
+    class: App\OpenSkos\OpenSkosIriFactory
     arguments:
-      $rdfClient: '@App\Rdf\Sparql\Client'
-      $solrClient: '@App\Solr\SolrClient'
-      $iriFactory: '@concept.iri_factory'
+      $namespace: 'http://tenant'
 
-  App\OpenSkos\Concept\ConceptRepository: '@App\OpenSkos\Concept\Solr\SolrJenaConceptRepository'
+  App\OpenSkos\ConceptScheme\ConceptSchemeRepository:
+    arguments:
+      $iriFactory: '@concept_scheme.iri_factory'

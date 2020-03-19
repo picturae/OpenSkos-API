@@ -4,5 +4,11 @@ parameters:
     prefix: owl
     namespace: 'http://www.w3.org/2002/07/owl#'
     properties:
-      objectProperty:
-        dataType: resource
+      ObjectProperty:
+        datatype: resource
+      Ontology:
+        datatype: class
+      SymmetricProperty:
+        datatype: class
+      TransitiveProperty:
+        datatype: class

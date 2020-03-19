@@ -22,21 +22,15 @@ final class DirectGraphResponse implements SkosResponse
         \EasyRdf_Graph $graph,
         RdfFormat $format
     ) {
-        $this->graph = $graph;
+        $this->graph  = $graph;
         $this->format = $format;
     }
 
-    /**
-     * @return \EasyRdf_Graph
-     */
     public function getGraph(): \EasyRdf_Graph
     {
         return $this->graph;
     }
 
-    /**
-     * @return RdfFormat
-     */
     public function format(): RdfFormat
     {
         return $this->format;

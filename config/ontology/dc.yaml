@@ -5,8 +5,11 @@ parameters:
     namespace: 'http://purl.org/dc/elements/1.1/'
     properties:
       creator:
-        dataType: resource
+        datatype: resource
+        resourcetype: "foaf:Person"
       contributor:
-        dataType: resource
+        datatype: resource
+        resourcetype: "foaf:Person"
       title:
-        dataType: literal
+        datatype: literal
+        literaltype: 'xsd:string'

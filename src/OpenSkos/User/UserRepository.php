@@ -10,5 +10,5 @@ use App\Repository\AbstractRepository;
 final class UserRepository extends AbstractRepository
 {
     const DOCUMENT_CLASS = User::class;
-    const DOCUMENT_TYPE = Foaf::PERSON;
+    const DOCUMENT_TYPE  = Foaf::PERSON;
 }

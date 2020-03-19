@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="openskos2" version="1.6">
+  <uniqueKey>uri</uniqueKey>
+  <fieldType name="autocomplete" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.EdgeNGramFilterFactory" maxGramSize="60" minGramSize="1"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="boolean" class="solr.BoolField" omitNorms="true" sortMissingLast="true"/>
+  <fieldType name="date" class="solr.DatePointField" omitNorms="true" sortMissingLast="true"/>
+  <fieldType name="integer" class="solr.IntPointField" omitNorms="true"/>
+  <fieldType name="long" class="solr.LongPointField" omitNorms="true"/>
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+  <fieldType name="string_lowercase" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" generateWordParts="1" catenateAll="0" catenateWords="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="1" generateWordParts="1" catenateAll="0" catenateWords="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="textSort" class="solr.TextField" omitNorms="true" sortMissingLast="true">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.TrimFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <field name="DocumentationProperties" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="LexicalLabels" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="_version_" type="long" multiValued="false" indexed="true" stored="true"/>
+  <field name="altLabel" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="autocomplete" type="autocomplete" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="broadMatch" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="broader" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="broaderTransitive" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="changeNote" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="closeMatch" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="definition" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="editorialNote" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="exactMatch" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="example" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="hiddenLabel" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="historyNote" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="inScheme" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
+  <field name="mappingRelation" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="max_numeric_notation" type="long" multiValued="false" indexed="true" stored="true"/>
+  <field name="narrowMatch" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="narrower" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="narrowerTransitive" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="notation" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="note" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="prefLabel" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="true"/>
+  <field name="related" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="relatedMatch" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="scopeNote" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="true"/>
+  <field name="search" type="text" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="search_lower" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="set" type="string" indexed="true" required="false" stored="false"/>
+  <field name="skosXlAltLabel" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="skosXlHiddenLabel" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="skosXlPrefLabel" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="status" type="string" indexed="true" required="false" stored="true"/>
+  <field name="tenant" type="string" indexed="true" required="false" stored="false"/>
+  <field name="toBeChecked" type="boolean" indexed="true" required="false" stored="false"/>
+  <field name="topConceptOf" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <field name="uri" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="uuid" type="string" indexed="true" required="false" stored="false"/>
+  <dynamicField name="DocumentationProperties_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="LexicalLabels_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="editorialNote_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="hiddenLabel_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="historyNote_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="changeNote_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="definition_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="prefLabel_*" type="string_lowercase" multiValued="false" indexed="true" required="false" stored="false"/>
+  <dynamicField name="noteLabel_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="scopeNote_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="altLabel_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="dcterms_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="example_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="sort_s_*" type="textSort" multiValued="false" indexed="true" required="false" stored="false"/>
+  <dynamicField name="sort_i_*" type="integer" multiValued="false" indexed="true" required="false" stored="false"/>
+  <dynamicField name="sort_d_*" type="date" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
+  <dynamicField name="dc_*" type="string_lowercase" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="d_*" type="date" docValues="true" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="s_*" type="string" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="t_*" type="text" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="a_*" type="autocomplete" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="i_*" type="integer" multiValued="true" indexed="true" required="false" stored="false"/>
+  <dynamicField name="b_*" type="boolean" multiValued="true" indexed="true" required="false" stored="false"/>
+  <copyField source="altLabel" dest="search"/>
+  <copyField source="hiddenLabel" dest="search"/>
+  <copyField source="prefLabel" dest="search"/>
+  <copyField source="a_*" dest="autocomplete"/>
+</schema>

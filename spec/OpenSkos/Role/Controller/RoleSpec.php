@@ -2,10 +2,10 @@
 
 namespace spec\App\OpenSkos\Role\Controller;
 
-use EasyRdf_Graph as Graph;
 use App\OpenSkos\ApiRequest;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rest\DirectGraphResponse;
+use EasyRdf_Graph as Graph;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -15,15 +15,14 @@ class RoleSpec extends ObjectBehavior
     {
         // Define request parameters
         $formatFactory = RdfFormatFactory::loadDefault();
-        $format = $formatFactory->createFromName('rdf');
+        $format        = $formatFactory->createFromName('rdf');
         $allParameters = [];
-        $level = 1;
-        $limit = 100;
-        $offset = 0;
-        $institutions = [];
-        $sets = [];
-        $searchProfile = 0;
-        $foreignUri = null;
+        $level         = 1;
+        $limit         = 100;
+        $offset        = 0;
+        $institutions  = [];
+        $sets          = [];
+        $foreignUri    = null;
 
         // Build the apiRequest
         return new ApiRequest(
@@ -34,7 +33,6 @@ class RoleSpec extends ObjectBehavior
             $offset,
             $institutions,
             $sets,
-            $searchProfile,
             $foreignUri,
         );
     }

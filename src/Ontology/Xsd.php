@@ -1,5 +1,9 @@
 <?php
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 /**
  * OpenSKOS.
  *
@@ -21,6 +25,14 @@ namespace App\Ontology;
 
 final class Xsd
 {
-    const NAME_SPACE = 'http://www.w3.org/2001/XMLSchema#';
+    const NAME_SPACE           = 'http://www.w3.org/2001/XMLSchema#';
     const NON_NEGATIVE_INTEGER = 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger';
+    const BOOLEAN              = 'http://www.w3.org/2001/XMLSchema#boolean';
+    const STRING               = 'http://www.w3.org/2001/XMLSchema#string';
+    const DATE_TIME            = 'http://www.w3.org/2001/XMLSchema#dateTime';
+    const INTEGER              = 'http://www.w3.org/2001/XMLSchema#integer';
+    const DECIMAL              = 'http://www.w3.org/2001/XMLSchema#decimal';
+
+    const literaltypes = [
+    ];
 }

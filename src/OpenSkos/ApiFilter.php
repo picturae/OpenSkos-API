@@ -2,35 +2,34 @@
 
 namespace App\OpenSkos;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\Institution\Institution;
+use App\OpenSkos\Set\Set;
+use App\OpenSkos\Set\SetRepository;
+use App\Rdf\Iri;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ApiFilter
 {
     const aliases = [
-        'acceptedBy' => 'openskos:acceptedBy',
-        'creator' => 'dcterms:creator',
-        'dateAccepted' => 'dcterms:dateAccepted',
+        'acceptedBy'    => 'openskos:acceptedBy',
+        'creator'       => 'dcterms:creator',
+        'dateAccepted'  => 'dcterms:dateAccepted',
         'dateSubmitted' => 'dcterms:dateSubmitted',
-        'deleted' => 'openskos:deleted',
-        'deletedBy' => 'openskos:deletedBy',
-        'institutions' => 'openskos:tenant',
-        'literalForm' => 'skosxl:literalForm',
-        'modified' => 'dcterms:modified',
-        'modifiedBy' => 'openskos:modifiedBy',
-        'sets' => 'openskos:set',
-        'status' => 'openskos:status',
-        'tenant' => 'openskos:tenant',
-    ];
-
-    const types = [
-        'default' => 'csv',
-        'dcterms:dateAccepted' => 'xsd:duration',
-        'dcterms:dateSubmitted' => 'xsd:duration',
-        'dcterms:modified' => 'xsd:duration',
-        'openskos:deleted' => 'xsd:duration',
-        'openskos:status' => OpenSkos::STATUSES,
+        'deleted'       => 'openskos:deleted',
+        'deletedBy'     => 'openskos:deletedBy',
+        'institutions'  => 'openskos:tenant',
+        'literalForm'   => 'skosxl:literalForm',
+        'modified'      => 'dcterms:modified',
+        'modifiedBy'    => 'openskos:modifiedBy',
+        'prefLabel'     => 'skos:prefLabel',
+        'sets'          => 'openskos:set',
+        'status'        => 'openskos:status',
+        'tenant'        => 'openskos:tenant',
     ];
 
     const entity = [
@@ -42,7 +41,7 @@ final class ApiFilter
     ];
 
     const TYPE_STRING = 'string';
-    const TYPE_URI = 'uri';
+    const TYPE_URI    = 'uri';
 
     /**
      * @var array
@@ -54,10 +53,58 @@ final class ApiFilter
      */
     private $lang = null;
 
+    /**
+     * @var SetRepository
+     */
+    private $setRepository;
+
+    protected $normalize = [];
+
+    /**
+     * @ErrorInherit(class=ApiFilter::class, method="addFilter")
+     *
+     * TODO:
+     *   add support for direct/aliased params on the url (add, not replace)
+     *   example: ?institutions= instead of ?filter[institutions]=
+     *   why: will be closer to the spec by BEG
+     */
     public function __construct(
-        Request $request
+        Request $request,
+        SetRepository $setRepository
     ) {
+        $this->setRepository = $setRepository;
+
+        // Initialize normalizers (can't load function in constants...)
+        $this->normalize[Institution::class] = function (Institution $institution) {
+            $code = $institution->getValue(OpenSkos::CODE);
+
+            return $code ? $code->__toString() : '';
+        };
+        $this->normalize[Iri::class] = function (Iri $iri) {
+            return $iri;
+        };
+        $this->normalize[InternalResourceId::class] = function (InternalResourceId $iri) {
+            return $iri;
+        };
+
+        // Fetch filters
         $params = $request->query->get('filter', []);
+
+        // Add text[n]=N&fields=predicate,predicate support
+        $texts  = $request->query->get('text', []);
+        $fields = str_getcsv($request->query->get('fields', ''));
+        foreach ($fields as $field) {
+            if (isset($params[$field]) && (!is_array($params[$field]))) {
+                $params[$field] = [$params[$field]];
+            }
+            if (isset($params[$field])) {
+                foreach ($texts as $text) {
+                    array_push($params[$field], $text);
+                }
+            } else {
+                $params[$field] = $texts;
+            }
+        }
 
         // Extract filter language
         if (isset($params['lang'])) {
@@ -66,37 +113,43 @@ final class ApiFilter
         }
 
         // Add all filters
-        foreach ($params as $preficate => $value) {
-            $this->addFilter($preficate, $value);
+        foreach ($params as $predicate => $value) {
+            $this->addFilter($predicate, $value);
         }
-    }
-
-    public static function fullUri(string $predicate): string
-    {
-        $tokens = explode(':', $predicate);
-        $prefix = array_shift($tokens);
-        $field = implode(':', $tokens);
-
-        return Context::prefixes[$prefix].$field;
-    }
-
-    public static function fromFullUri(string $predicate): string
-    {
-        // Transform URL into prefix
-        foreach (Context::prefixes as $prefix => $namespace) {
-            if (substr($predicate, 0, strlen($namespace)) === $namespace) {
-                return $prefix.':'.(substr($predicate, strlen($namespace)));
-            }
-        }
-
-        return $predicate;
     }
 
     /**
-     * @param string $predicate
-     * @param mixed  $value
+     * @ErrorInherit(class=Context::class, method="decodeUri")
+     * @ErrorInherit(class=Context::class, method="fullUri"  )
+     */
+    public static function fromFullUri(string $predicate): ?string
+    {
+        $parts = Context::decodeUri(Context::fullUri($predicate));
+        if (is_null($parts)) {
+            return null;
+        }
+
+        return implode(':', $parts);
+    }
+
+    /**
+     * @param mixed $value
      *
-     * @return self
+     * @throws ApiException
+     *
+     * @Error(code="apifilter-addfilter-could-not-stringify-object",
+     *        status=400,
+     *        description="Could not stringify given object",
+     *        fields={"class"}
+     * )
+     *
+     * @ErrorInherit(class=ApiFilter::class         , method="fromFullUri")
+     * @ErrorInherit(class=Context::class           , method="literaltype")
+     * @ErrorInherit(class=InternalResourceId::class, method="__construct")
+     * @ErrorInherit(class=Iri::class               , method="__construct")
+     * @ErrorInherit(class=Iri::class               , method="getUri"     )
+     * @ErrorInherit(class=Set::class               , method="iri"        )
+     * @ErrorInherit(class=SetRepository::class     , method="findOneBy"  )
      */
     public function addFilter(
         string $predicate,
@@ -104,6 +157,19 @@ final class ApiFilter
     ): self {
         if (is_null($value)) {
             return $this;
+        }
+
+        if (is_object($value)) {
+            $class = get_class($value);
+            if (isset($this->normalize[$class])) {
+                $value = $this->normalize[$class]($value);
+            } elseif (method_exists($value, '__toString')) {
+                $value = $value->__toString();
+            } else {
+                throw new ApiException('apifilter-addfilter-could-not-stringify-object', [
+                    'class' => $class,
+                ]);
+            }
         }
 
         // Handle arrays
@@ -122,39 +188,34 @@ final class ApiFilter
 
         // Transform URL into prefix
         $predicate = static::fromFullUri($predicate);
-
-        // Disallow unknown prefixes
-        $tokens = explode(':', $predicate);
-        $prefix = $tokens[0];
-        if (!isset(Context::prefixes[$prefix])) {
+        if (is_null($predicate)) {
             return $this;
         }
 
         // Detect field type
-        $type = static::types[$predicate] ?? 'csv';
+        $type = Context::literaltype($predicate) ?? 'csv';
 
-        // Disallow unknown enum
-        if (is_array($type)) {
-            if (!in_array($value, $type, true)) {
-                return $this;
-            }
-        }
-
-        // Handle csv
-        if ('csv' === $type && is_string($value)) {
-            $value = str_getcsv($value);
+        switch ($type) {
+            case 'openskos:set':
+                // TODO: fetch sets & use the found iri
+                $set = $this->setRepository->findOneBy(
+                    new Iri(OpenSkos::CODE),
+                    new InternalResourceId($value)
+                );
+                if (!is_null($set)) {
+                    $value = $set->iri()->getUri();
+                }
+                break;
         }
 
         // Register the filter
-        $this->filters[$predicate] = $value;
+        $this->filters[$predicate][] = $value;
 
         return $this;
     }
 
     /**
      * @param mixed $value
-     *
-     * @return bool
      */
     public static function isUuid($value): bool
     {
@@ -174,7 +235,7 @@ final class ApiFilter
      * @param array|string $value
      * @param string|null  $lang
      *
-     * @return array
+     * @ErrorInherit(class=Context::class, method="fullUri")
      */
     private static function buildFilter($predicate, $value, $lang = null): array
     {
@@ -197,24 +258,24 @@ final class ApiFilter
         }
 
         // Build the right predicate
-        $entity = static::entity[$predicate] ?? 'subject';
-        $predicate = static::fullUri($predicate);
+        $entity    = static::entity[$predicate] ?? 'subject';
+        $predicate = Context::fullUri($predicate);
 
         // Add url or string to the output
         if (filter_var($value, FILTER_VALIDATE_URL)) {
             $output[] = [
                 'predicate' => $predicate,
-                'value' => $value,
-                'type' => static::TYPE_URI,
-                'entity' => $entity,
+                'value'     => $value,
+                'type'      => static::TYPE_URI,
+                'entity'    => $entity,
             ];
         } else {
             $output[] = [
                 'predicate' => $predicate,
-                'value' => $value,
-                'type' => static::TYPE_STRING,
-                'entity' => $entity,
-                'lang' => $lang,
+                'value'     => $value,
+                'type'      => static::TYPE_STRING,
+                'entity'    => $entity,
+                'lang'      => $lang,
             ];
         }
 
@@ -224,16 +285,18 @@ final class ApiFilter
     /**
      * @param string $type
      *
-     * @return array
+     * @ErrorInherit(class=ApiFilter::class, method="buildFilter")
+     * @ErrorInherit(class=ApiFilter::class, method="fromFullUri")
+     * @ErrorInherit(class=Context::class  , method="literaltype")
      */
     public function buildFilters($type = 'jena'): array
     {
         $output = [];
 
         // Build jena filters
-        foreach ($this->filters as $preficate => $value) {
-            $filters = $this->buildFilter($preficate, $value, $this->lang);
-            $output = array_merge($output, $filters);
+        foreach ($this->filters as $predicate => $value) {
+            $filters = $this->buildFilter($predicate, $value, $this->lang);
+            $output  = array_merge($output, $filters);
         }
 
         switch ($type) {
@@ -241,23 +304,28 @@ final class ApiFilter
             // That's why we build in jena-mode
             case 'solr':
                 $solrFilters = [];
-                $ucfirstfn = create_function('$c', 'return ucfirst($c);');
+                $ucfirstfn   = create_function('$c', 'return ucfirst($c);');
 
                 foreach ($output as $jenaFilter) {
                     // Fetch short predicate and data type
                     $predicate = static::fromFullUri($jenaFilter['predicate']);
-                    $datatype = static::types[$predicate] ?? 'csv';
+                    $datatype  = Context::literaltype($predicate) ?? 'csv';
+                    if (is_null($predicate)) {
+                        continue;
+                    }
 
                     // Build solr field
                     $filterField = null;
-                    $tokens = explode(':', $predicate);
-                    $prefix = array_shift($tokens);
-                    $shortfield = implode(':', $tokens);
+                    $tokens      = explode(':', $predicate);
+                    $prefix      = array_shift($tokens);
+                    $shortfield  = implode(':', $tokens);
                     switch ($datatype) {
                         case 'xsd:duration':
+                        case 'xsd:dateTime':
                             $filterField = 'd_'.$shortfield;
                             break;
                         case 'csv':
+                        case 'xsd:string':
                             $filterField = 's_'.$shortfield;
                             break;
                         default:
@@ -265,9 +333,9 @@ final class ApiFilter
                     }
 
                     // Register the filters
-                    $filterValue = $jenaFilter['value'];
-                    $filterName = lcfirst(str_replace(' ', '', ucwords(str_replace(':', ' ', $predicate.':filter'))));
-                    $solrFilters[$filterName][] = "${filterField}:\"${filterValue}\"";
+                    $filterValue                = trim($jenaFilter['value']);
+                    $filterName                 = lcfirst(str_replace(' ', '', ucwords(str_replace(':', ' ', $predicate.':filter'))));
+                    $solrFilters[$filterName][] = "${filterField}:\"".(strpos($filterValue, ' ') ? "\"${filterValue}\"" : $filterValue)."\"";
                 }
 
                 // OR all lists together
@@ -288,7 +356,7 @@ final class ApiFilter
     /**
      * @param string $type
      *
-     * @return array
+     * @ErrorInherit(class=ApiFilter::class, method="buildFilters")
      */
     public function __toArray($type = 'jena'): array
     {

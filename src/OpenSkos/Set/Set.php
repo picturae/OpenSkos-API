@@ -4,92 +4,110 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set;
 
+use App\Annotation\Document;
+use App\Annotation\Error;
 use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
-use App\Rdf\Iri;
-use App\Rdf\RdfResource;
-use App\Rdf\Triple;
-use App\Rdf\VocabularyAwareResource;
+use App\Ontology\Rdf;
+use App\Rdf\AbstractRdfDocument;
+use App\Rdf\Literal\Literal;
 
-final class Set implements RdfResource
+/**
+ * @Document\Type(OpenSkos::SET)
+ */
+final class Set extends AbstractRdfDocument
 {
-    const allow_oai = 'allow_oai';
-    const code = 'code';
+    const allow_oai      = 'allow_oai';
+    const code           = 'code';
     const conceptBaseUri = 'conceptBaseUri';
-    const oai_baseURL = 'oai_baseURL';
-    const tenant = 'tenant';
-    const webpage = 'webpage';
-    const description = 'description';
-    const license = 'license';
-    const publisher = 'publisher';
-    const title = 'title';
+    const oai_baseURL    = 'oai_baseURL';
+    const tenant         = 'tenant';
+    const webpage        = 'webpage';
+    const description    = 'description';
+    const license        = 'license';
+    const publisher      = 'publisher';
+    const title          = 'title';
+    const type           = 'type';
+    const uuid           = 'uuid';
+    const modifiedBy     = 'modifiedBy';
+    const datesubmitted  = 'datesubmitted';
+    const creator        = 'creator';
+    const modified       = 'modified';
 
     /**
      * @var string[]
      */
-    private static $mapping = [
-        self::tenant => OpenSkos::TENANT,
-        self::code => OpenSkos::CODE,
-        self::allow_oai => OpenSkos::ALLOW_OAI,
+    protected static $mapping = [
+        self::tenant         => OpenSkos::TENANT,
+        self::datesubmitted  => DcTerms::DATE_SUBMITTED,
+        self::creator        => Dc::CREATOR,
+        self::modifiedBy     => OpenSkos::MODIFIED_BY,
+        self::modified       => DcTerms::MODIFIED,
+        self::code           => OpenSkos::CODE,
+        self::allow_oai      => OpenSkos::ALLOW_OAI,
         self::conceptBaseUri => OpenSkos::CONCEPT_BASE_URI,
-        self::oai_baseURL => OpenSkos::OAI_BASE_URL,
-        self::webpage => OpenSkos::WEBPAGE,
-        self::description => DcTerms::DESCRIPTION,
-        self::license => DcTerms::LICENSE,
-        self::publisher => DcTerms::PUBLISHER,
-        self::title => DC::TITLE,
+        self::oai_baseURL    => OpenSkos::OAI_BASE_URL,
+        self::webpage        => OpenSkos::WEBPAGE,
+        self::description    => DcTerms::DESCRIPTION,
+        self::license        => DcTerms::LICENSE,
+        self::publisher      => DcTerms::PUBLISHER,
+        self::title          => DcTerms::TITLE,
+        self::type           => Rdf::TYPE,
+        self::uuid           => OpenSkos::UUID,
+    ];
+
+    protected static $required = [
+        OpenSkos::CODE,
+        OpenSkos::CONCEPT_BASE_URI,
+        OpenSkos::TENANT,
+    ];
+
+    protected static $updateFields = [
+        DcTerms::TITLE,
+        OpenSkos::MODIFIED_BY,
     ];
 
     /**
-     * @var VocabularyAwareResource
+     * Extends the regular error checking.
+     *
+     * @Error(code="set-base-uri-does-not-match-code",
+     *        status=422,
+     *        description="The given openskos:code does not match the end of the given openskos:conceptBaseUri",
+     *        fields={"code","base-uri"}
+     * )
      */
-    private $resource;
+    public function errors(string $errorPrefix = null): array
+    {
+        $errorPrefix = $errorPrefix ?? 'set';
 
-    private function __construct(
-        Iri $subject,
-        ?VocabularyAwareResource $resource = null
-    ) {
-        if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
-        } else {
-            $this->resource = $resource;
+        // Regular checking
+        $errors = parent::errors($errorPrefix);
+        if (count($errors)) {
+            return $errors;
         }
-    }
 
-    public function iri(): Iri
-    {
-        return $this->resource->iri();
-    }
+        // Fetch baseUri & code
+        /** @var Literal $baseUri */
+        $baseUri = $this->getValue(OpenSkos::CONCEPT_BASE_URI);
+        $baseUri = $baseUri->value();
+        /** @var Literal $code */
+        $code = $this->getValue(OpenSkos::CODE);
+        $code = $code->value();
 
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->resource->triples();
-    }
+        // The last part of the iri and the code must match
+        $id = explode('/', $baseUri);
+        $id = array_pop($id);
+        if ($id !== $code) {
+            return [[
+                'code' => $errorPrefix.'-base-uri-does-not-match-code',
+                'data' => [
+                    'code'     => $code,
+                    'base-uri' => $id,
+                ],
+            ]];
+        }
 
-    /**
-     * @param Iri $subject
-     *
-     * @return self
-     */
-    public static function createEmpty(Iri $subject): self
-    {
-        return new self($subject);
-    }
-
-    /**
-     * @param Iri      $subject
-     * @param Triple[] $triples
-     *
-     * @return self
-     */
-    public static function fromTriples(Iri $subject, array $triples): self
-    {
-        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
-
-        return new self($subject, $resource);
+        return [];
     }
 }

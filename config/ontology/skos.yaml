@@ -6,83 +6,106 @@ parameters:
     properties:
 
       Concept:
-        dataType: resource
+        datatype: resource
+        dataclass: App\OpenSkos\Concept\Concept
       ConceptScheme:
-        dataType: resource
+        datatype: resource
+        dataclass: App\OpenSkos\ConceptScheme\ConceptScheme
       inScheme:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:ConceptScheme"
       hasTopConcept:
-        dataType: literal
+        datatype: literal
       topConceptOf:
-        dataType: resource
+        datatype: resource
 
 
       # Labels
       altLabel:
+        datatype: literal
+        literaltype: 'xsd:string'
       hiddenLabel:
+        datatype: literal
+        literaltype: 'xsd:string'
       prefLabel:
+        datatype: literal
+        literaltype: 'xsd:string'
 
 
       # Notations
       notation:
-        dataType: literal
+        datatype: literal
+        literaltype: 'xsd:string'
 
 
       # Documentation properties
       changeNote:
-        dataType: literal
+        datatype: literal
       definition:
-        dataType: literal
+        datatype: literal
       editorialNote:
-        dataType: literal
+        datatype: literal
       example:
-        dataType: literal
+        datatype: literal
       historyNote:
-        dataType: literal
+        datatype: literal
       note:
-        dataType: literal
+        datatype: literal
       scopeNote:
-        dataType: literal
+        datatype: literal
 
 
       # Semantic relations
       broader:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       broaderTransitive:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       narrower:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       narrowerTransitive:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       related:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       semanticRelation:
-        dataType: resource
+        datatype: resource
 
       # Concept collections
       Collection:
-        dataType: resource
+        datatype: resource
       OrderedCollection:
-        dataType: resource
+        datatype: resource
       member:
-        dataType: resource
+        datatype: resource
       memberList:
-        dataType: resource
+        datatype: resource
 
       # Mapping properties
       broadMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       broaderMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       closeMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       exactMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       mappingRelation:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       narrowMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       narrowerMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"
       relatedMatch:
-        dataType: resource
+        datatype: resource
+        resourcetype: "skos:Concept"

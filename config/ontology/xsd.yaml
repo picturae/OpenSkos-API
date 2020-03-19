@@ -5,4 +5,14 @@ parameters:
     namespace: 'http://www.w3.org/2001/XMLSchema#'
     properties:
       nonNegativeInteger:
-        dataType: class
+        datatype: class
+      boolean:
+        datatype: class
+      string:
+        datatype: class
+      dateTime:
+        datatype: class
+      integer:
+        datatype: class
+      decimal:
+        datatype: class

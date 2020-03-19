@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rdf\Literal;
 
+use App\Annotation\ErrorInherit;
 use App\Rdf\Iri;
 
 final class BooleanLiteral implements Literal
@@ -23,9 +24,12 @@ final class BooleanLiteral implements Literal
         return $this->value;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     */
     public static function typeIri(): Iri
     {
-        return new Iri('http://www.w3.org/2001/XMLSchema#bool');
+        return new Iri('http://www.w3.org/2001/XMLSchema#boolean');
     }
 
     /**
@@ -39,14 +43,14 @@ final class BooleanLiteral implements Literal
     }
 
     /**
-     * @param string $value
-     *
      * @return BooleanLiteral
+     *
+     * @ErrorInherit(class=BooleanLiteral::class , method="__construct")
      */
     public static function fromString(string $value): self
     {
         $retval = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 
-        return new BooleanLiteral($retval);
+        return new self($retval);
     }
 }

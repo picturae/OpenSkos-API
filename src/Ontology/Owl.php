@@ -1,5 +1,9 @@
 <?php
 
+/* * * * * * * * * * * * * * *\
+ * CAUTION: GENERATED CLASS  *
+\* * * * * * * * * * * * * * */
+
 /**
  * OpenSKOS.
  *
@@ -21,6 +25,12 @@ namespace App\Ontology;
 
 final class Owl
 {
-    const NAME_SPACE = 'http://www.w3.org/2002/07/owl#';
-    const OBJECT_PROPERTY = 'http://www.w3.org/2002/07/owl#objectProperty';
+    const NAME_SPACE          = 'http://www.w3.org/2002/07/owl#';
+    const OBJECT_PROPERTY     = 'http://www.w3.org/2002/07/owl#ObjectProperty';
+    const ONTOLOGY            = 'http://www.w3.org/2002/07/owl#Ontology';
+    const SYMMETRIC_PROPERTY  = 'http://www.w3.org/2002/07/owl#SymmetricProperty';
+    const TRANSITIVE_PROPERTY = 'http://www.w3.org/2002/07/owl#TransitiveProperty';
+
+    const literaltypes = [
+    ];
 }

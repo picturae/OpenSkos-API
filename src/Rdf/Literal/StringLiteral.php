@@ -19,14 +19,11 @@ final class StringLiteral implements Literal
 
     /**
      * StringLiteral constructor.
-     *
-     * @param string      $value
-     * @param string|null $lang
      */
     public function __construct(string $value, ?string $lang = null)
     {
         $this->value = $value;
-        $this->lang = $lang;
+        $this->lang  = $lang;
     }
 
     public function value(): string
@@ -34,14 +31,14 @@ final class StringLiteral implements Literal
         return $this->value;
     }
 
-    /**
-     * @return string|null
-     */
     public function lang(): ?string
     {
         return $this->lang;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     */
     public static function typeIri(): Iri
     {
         return new Iri('http://www.w3.org/2001/XMLSchema#string');

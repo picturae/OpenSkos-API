@@ -11,13 +11,13 @@ services:
           $queryUri: '%env(SPARQL_QUERY_URI)%'
           $updateUri: '%env(SPARQL_UPDATE_URI)%'
 
-
-
     App\EasyRdf\EasyRdfClient:
         arguments: ['@EasyRdf_Sparql_Client']
 
 
     App\Rdf\Sparql\Client: '@App\EasyRdf\EasyRdfClient'
+
+    App\Solr\SolrQueryBuilder:
 
     Solarium_Client:
       class: Solarium\Client
@@ -39,4 +39,5 @@ services:
 
     App\OpenSkos\Vocabulary\Controller\:
         resource: '../../src/OpenSkos/Vocabulary/Controller/*'
-        tags: ['controller.service_arguments']
+        tags: 
+          - controller.service_arguments

@@ -5,8 +5,12 @@ parameters:
     namespace: 'http://xmlns.com/foaf/0.1/'
     properties:
       Person:
-        dataType: class
+        datatype: class
+        dataclass: App\OpenSkos\User\User
       name:
-        dataType: literal
+        datatype: literal
+        literaltype: 'xsd:string'
       mbox:
-        dataType: literal
+        datatype: literal
+        literaltype: 'xsd:string'
+        regex: '^/[A-Z0-9._%+-]++@[A-Z0-9.-]++\.[A-Z]{2,}+$/i'

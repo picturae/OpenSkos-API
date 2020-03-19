@@ -5,4 +5,4 @@ parameters:
     namespace: 'http://purl.org/dc/dcmitype/'
     properties:
       Dataset:
-        dataType: class
+        datatype: class

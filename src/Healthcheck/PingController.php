@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Healthcheck;
 
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 final class PingController extends AbstractController
 {
@@ -30,16 +32,31 @@ final class PingController extends AbstractController
     /**
      * @Route(path="/ping", methods={"GET"})
      *
-     * @param JenaRepository $jenaRepository
+     * @OA\Summary("Healthcheck and basic information")
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Json(properties={
+     *     @OA\Schema\StringLiteral(name="name"     , description="Name of the whole api being called", example="openskos-api"),
+     *     @OA\Schema\StringLiteral(name="status"   , description="Status of the api"                 , example="ok"          ),
+     *     @OA\Schema\StringLiteral(name="version"  , description="Version of the api"                , example="2.3"         ),
+     *     @OA\Schema\StringLiteral(name="license"  , description="License the api operates under"    , example="proprietary" ),
+     *     @OA\Schema\ObjectLiteral(name="copyright", description="Copyright information"             , properties={
+     *       @OA\Schema\StringLiteral(name="holder"    , description="Holder of the copyright"             , example="Picturae"),
+     *       @OA\Schema\IntegerLiteral(name="published", description="The year the copyright was published", example=2007),
+     *       @OA\Schema\IntegerLiteral(name="revised"  , description="The year the copyright was revised"  , example=2020),
+     *     }),
+     *   }),
+     * )
      *
-     * @return Response
+     * @ErrorInherit(class=JenaRepository::class, method="__construct")
+     * @ErrorInherit(class=JenaRepository::class, method="all"        )
      */
     public function ping(
         JenaRepository $jenaRepository
     ): Response {
         // Fetch composer data for the version
         $projectDir = $this->appKernel->getProjectDir();
-        $composer = json_decode(file_get_contents(
+        $composer   = json_decode(file_get_contents(
             $projectDir.DIRECTORY_SEPARATOR.'composer.json'
         ));
 
@@ -91,16 +108,16 @@ final class PingController extends AbstractController
         }
 
         return new Response(json_encode([
-            'name' => 'openskos-api',
-            'status' => $status,
-            'version' => $composer->version ?? 'n/a',
-            'license' => $composer->license ?? 'proprietary',
+            'name'      => 'openskos-api',
+            'status'    => $status,
+            'version'   => $composer->version ?? 'n/a',
+            'license'   => $composer->license ?? 'proprietary',
             'copyright' => [
-                'holder' => 'Picturae',
-                'published' => 2019,
-                'revised' => 2019,
+                'holder'    => 'Picturae',
+                'published' => 2007,
+                'revised'   => 2020,
             ],
-        ]), 200, [
+        ], JSON_PRETTY_PRINT), 200, [
             'Content-Type' => 'application/json',
         ]);
     }

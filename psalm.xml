@@ -8,6 +8,9 @@
     <projectFiles>
         <directory name="src" />
         <ignoreFiles>
+            <directory name="config/ontology" />
+            <directory name="src/Template/Exception" />
+            <directory name="src/Template/Ontology" />
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>

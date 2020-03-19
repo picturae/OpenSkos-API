@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Rdf\Literal;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\Rdf\Iri;
 
 final class DatetimeLiteral implements Literal
@@ -24,6 +27,9 @@ final class DatetimeLiteral implements Literal
         return $this->dateTime;
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     */
     public static function typeIri(): Iri
     {
         return new Iri('http://www.w3.org/2001/XMLSchema#dateTime');
@@ -40,20 +46,24 @@ final class DatetimeLiteral implements Literal
     }
 
     /**
-     * @param string $value
-     *
      * @return DatetimeLiteral
+     *
+     * @Error(code="rdf-literal-datetime-unparsable-value",
+     *        status=500,
+     *        description="The given value can not be parsed to a DateTimeLiteral",
+     *        fields={"value"}
+     * )
+     *
+     * @ErrorInherit(class=DatetimeLiteral::class , method="__construct")
      */
     public static function fromString(string $value): self
     {
         try {
             return new self(new \DateTime($value));
         } catch (\Exception $e) {
-            throw new \InvalidArgumentException(
-                "Value '$value' can be parsed to DateTimeLiteral",
-                0,
-                $e
-            );
+            throw new ApiException('rdf-literal-datetime-unparsable-value', [
+                'value' => $value,
+            ]);
         }
     }
 }

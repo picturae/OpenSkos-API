@@ -6,59 +6,45 @@ namespace App\OpenSkos\Label;
 
 use App\OpenSkos\InternalResourceId;
 use App\Rdf\Iri;
+use App\Rdf\RdfResource;
 
 interface LabelRepository
 {
-    /**
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filter
-     *
-     * @return array
-     */
     public function all(int $offset = 0, int $limit = 100, array $filter = []): array;
 
     /**
-     * @param Iri $iri
+     * TODO: add returntype ?Label once PHP7.4 is stable
+     *      in 7.0 through 7.3, there's a bug where extends aren't honoured by return types.
      *
-     * @return Label|null
+     * @return RdfResource|null
      */
-    public function findByIri(Iri $iri): ?Label;
+    public function findByIri(Iri $iri);
 
     /**
-     * @param InternalResourceId $id
+     * TODO: add returntype ?Label once PHP7.4 is stable
+     *      in 7.0 through 7.3, there's a bug where extends aren't honoured by return types.
      *
-     * @return Label|null
+     * @return RdfResource|null
      */
-    public function find(InternalResourceId $id): ?Label;
+    public function find(InternalResourceId $id);
 
-    /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
-     *
-     * @return array|null
-     */
     public function findBy(Iri $predicate, InternalResourceId $object): ?array;
 
     /**
-     * @param Iri                $predicate
-     * @param InternalResourceId $object
+     * TODO: add returntype ?Label once PHP7.4 is stable
+     *      in 7.0 through 7.3, there's a bug where extends aren't honoured by return types.
      *
-     * @return Label|null
+     * @return RdfResource|null
      */
-    public function findOneBy(Iri $predicate, InternalResourceId $object): ?Label;
+    public function findOneBy(Iri $predicate, InternalResourceId $object);
 
-    /**
-     * @param array $iris
-     *
-     * @return array
-     */
     public function findManyByIriList(array $iris): array;
 
     /**
-     * @param InternalResourceId $subject
+     * TODO: add returntype ?Label once PHP7.4 is stable
+     *      in 7.0 through 7.3, there's a bug where extends aren't honoured by return types.
      *
-     * @return Label|null
+     * @return RdfResource|null
      */
-    public function getOneWithoutUuid(InternalResourceId $subject): ?Label;
+    public function getOneWithoutUuid(InternalResourceId $subject);
 }

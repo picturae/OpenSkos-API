@@ -5,4 +5,5 @@ parameters:
     namespace: 'http://www.w3.org/ns/org#'
     properties:
       FormalOrganization:
-        dataType: class
+        datatype: class
+        dataclass: App\OpenSkos\Institution\Institution

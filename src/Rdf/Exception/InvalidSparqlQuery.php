@@ -15,7 +15,7 @@ class InvalidSparqlQuery extends ClientException
 
     public static function causedBy(SparqlQuery $query, string $message): self
     {
-        $obj = new self($message);
+        $obj        = new self($message);
         $obj->query = $query;
 
         return $obj;

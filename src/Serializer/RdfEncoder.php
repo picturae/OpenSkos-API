@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
+use App\Annotation\Error;
 use App\EasyRdf\Serializer\OpenSkosJsonLdSerializer;
+use App\Exception\ApiException;
 use App\Ontology\Context;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\Label\Label;
@@ -13,15 +15,14 @@ use App\Rdf\Format\Ntriples;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\RdfXml;
 use App\Rdf\Format\Turtle;
+use App\Rdf\Iri;
 use App\Rdf\Literal\BooleanLiteral;
 use App\Rdf\Literal\DatetimeLiteral;
+use App\Rdf\Literal\Literal;
 use App\Rdf\Literal\StringLiteral;
 use EasyRdf_Graph;
-use App\Rdf\Literal\Literal;
-use App\Rdf\Iri;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\NormalizationAwareInterface;
-use Symfony\Component\Serializer\Exception\UnsupportedException;
 
 class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
 {
@@ -43,10 +44,10 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
         $this->formatFactory = $formatFactory;
 
         $this->formatMap = [
-            JsonLd::instance()->name() => 'jsonld',
-            RdfXml::instance()->name() => 'rdfxml',
+            JsonLd::instance()->name()   => 'jsonld',
+            RdfXml::instance()->name()   => 'rdfxml',
             Ntriples::instance()->name() => 'ntriples',
-            Turtle::instance()->name() => 'turtle',
+            Turtle::instance()->name()   => 'turtle',
         ];
     }
 
@@ -65,14 +66,25 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
      *
      * @param mixed  $data
      * @param string $format
-     * @param array  $context
      *
      * @return string
+     *
+     * @Error(code="serializer-rdfencoder-encode-data-not-iterable",
+     *        status=500,
+     *        description="Given data is not an iterable",
+     *        fields={"received"}
+     * )
      */
     public function encode($data, $format, array $context = [])
     {
         if ((!is_iterable($data)) && (!($data instanceof EasyRdf_Graph))) {
-            throw new UnsupportedException('data is not an iterable');
+            $type = gettype($data);
+            if ('object' == $type) {
+                $type .= '('.get_class($data).')';
+            }
+            throw new ApiException('serializer-rdfencoder-encode-data-not-iterable', [
+                'received' => $type,
+            ]);
         }
 
         if ($data instanceof EasyRdf_Graph) {
@@ -102,8 +114,8 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
             $processed_data = $serialiser->serialise($graph, 'jsonld', [
                 'compact' => true,
                 'context' => $context,
-                'pretty' => $pretty,
-                'syntax' => $syntax,
+                'pretty'  => $pretty,
+                'syntax'  => $syntax,
             ]);
 
             $serialised_data = $processed_data;
@@ -139,7 +151,6 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
     /**
      * @param $triples
      *
-     * @return EasyRdf_Graph
      * @psalm-suppress InvalidMethodCall
      */
     private function tripleSetToEasyRdfGraph($triples): EasyRdf_Graph
@@ -159,7 +170,7 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
         foreach ($triples as $triple) {
             if ($triple instanceof Label) {
                 $tripleSubject = $triple->getSubject();
-                $labelSubject = $triple->getChildSubject();
+                $labelSubject  = $triple->getChildSubject();
 
                 $this->serializeLevelOfTriples($graph, $triple->triples(), $recursionLevel + 1);
 
@@ -175,9 +186,9 @@ class RdfEncoder implements EncoderInterface, NormalizationAwareInterface
                 }
                 continue;
             }
-            $subject = $triple->getSubject();
+            $subject   = $triple->getSubject();
             $predicate = $triple->getPredicate();
-            $object = $triple->getObject();
+            $object    = $triple->getObject();
 
             if ($object instanceof Literal) {
                 $graph->addLiteral(

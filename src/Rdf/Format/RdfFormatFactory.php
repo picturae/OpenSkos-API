@@ -25,16 +25,12 @@ final class RdfFormatFactory
         array $formats
     ) {
         foreach ($formats as $format) {
-            $this->formats[$format->name()] = $format;
+            $this->formats[$format->name()]            = $format;
             $this->mimes[$format->contentTypeString()] = $format;
         }
     }
 
     /**
-     * @param string $name
-     *
-     * @return RdfFormat
-     *
      * @throws UnknownFormatException
      */
     public function createFromName(string $name): RdfFormat
@@ -46,11 +42,6 @@ final class RdfFormatFactory
         return $this->formats[$name];
     }
 
-    /**
-     * @param string $mime
-     *
-     * @return RdfFormat|null
-     */
     public function createFromMime(string $mime): ?RdfFormat
     {
         if (!isset($this->mimes[$mime])) {
@@ -60,11 +51,6 @@ final class RdfFormatFactory
         return $this->mimes[$mime];
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     public function exists(string $name): bool
     {
         return isset($this->formats[$name]);

@@ -9,9 +9,16 @@ use App\Rdf\Triple;
 interface Client
 {
     /**
-     * @param SparqlQuery $query
-     *
      * @return Triple[]
      */
     public function describe(SparqlQuery $query): array;
+
+    /**
+     * @param Triple[] $triples
+     */
+    public function insertTriples(array $triples): \EasyRdf_Http_Response;
+
+    public function delete(SparqlQuery $query): bool;
+
+    public function fetch(SparqlQuery $query): object;
 }

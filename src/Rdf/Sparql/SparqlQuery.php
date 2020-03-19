@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\Rdf\Sparql;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
-use App\Rdf\Iri;
 use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\InternalResourceId;
+use App\Rdf\Iri;
+use App\Rdf\Literal\Literal;
 
 final class SparqlQuery
 {
@@ -24,7 +29,7 @@ final class SparqlQuery
         string $sparql,
         array $variables = []
     ) {
-        $this->sparql = $sparql;
+        $this->sparql    = $sparql;
         $this->variables = $variables;
     }
 
@@ -35,14 +40,8 @@ final class SparqlQuery
     }
 
     /**
-     * FIXME: Make it not static.
-     *
-     * @param Iri   $type
-     * @param int   $offset
-     * @param int   $limit
-     * @param array $filters
-     *
-     * @return SparqlQuery
+     * @ErrorInherit(class=Iri::class        , method="getUri"     )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
      */
     public static function describeAllOfType(
         Iri $type,
@@ -77,7 +76,7 @@ final class SparqlQuery
             $groupedFilters = [];
 
             foreach ($filters as $f_key => $f_val) {
-                $entity = $f_val['entity'];
+                $entity    = $f_val['entity'];
                 $predicate = $f_val['predicate'];
 
                 if (!isset($groupedFilters[$entity])) {
@@ -90,9 +89,9 @@ final class SparqlQuery
                 $groupedFilters[$entity][$predicate][] = $f_val;
             }
 
-            $nIdx = 0;
+            $nIdx             = 0;
             $filterPredicates = [];
-            $filterValues = [];
+            $filterValues     = [];
 
             foreach ($groupedFilters as $entity_key => $entity_val) {
                 $entityValues = [];
@@ -101,7 +100,7 @@ final class SparqlQuery
                     $filterPredicates[] = sprintf('<%s> $f%d ', $pred_key, $nIdx);
                     foreach ($pred_val as $obj_key => $obj_val) {
                         if (FilterProcessor::TYPE_URI == $obj_val['type']) {
-                            $delimOpen = '<';
+                            $delimOpen  = '<';
                             $delimClose = '>';
                         } else {
                             $delimOpen = $delimClose = '"';
@@ -135,6 +134,10 @@ final class SparqlQuery
         );
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class        , method="getUri"     )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
+     */
     public static function describeResource(
         Iri $subject
     ): SparqlQuery {
@@ -145,21 +148,49 @@ final class SparqlQuery
         );
     }
 
+    /**
+     * @ErrorInherit(class=Iri::class        , method="getUri"     )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
+     */
+    public static function describeResourceOfType(
+        Iri $rdfType,
+        Iri $subject
+    ): SparqlQuery {
+        $query = <<<RETRIEVE_OF_TYPE
+DESCRIBE ?subject
+    WHERE {
+       ?subject a <%s>
+    }
+VALUES (?subject) {(<%s>)}
+RETRIEVE_OF_TYPE;
+
+        return new SparqlQuery(
+            sprintf($query, $rdfType->getUri(), $subject->getUri())
+        );
+    }
+
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct")
+     */
     public static function describeResources(
         array $subjects
     ): SparqlQuery {
-        $uris = array_map(function ($v) { return sprintf('?subject = <%s> ', $v); }, $subjects);
+        $uris  = array_map(function ($v) { return sprintf('?subject = <%s> ', $v); }, $subjects);
         $query = sprintf('DESCRIBE ?subject WHERE {?subject ?predicate ?object . FILTER ( %s ) }', join(' || ', $uris));
 
         return new SparqlQuery($query);
     }
 
     /**
-     * @param Iri $rdfType
-     * @param Iri $predicate
-     * @param $object
+     * @param Iri|Literal|InternalResourceId|string $object
      *
-     * @return SparqlQuery
+     * @throws ApiException
+     *
+     * @Error(code="sparql-describe-by-type-and-predicate-invalid-object",
+     *        status=500,
+     *        description="Given object argument is not a string or an object providing the __toString method",
+     *        fields={"givenType", "givenClass"}
+     * )
      */
     public static function describeByTypeAndPredicate(
         Iri $rdfType,
@@ -174,19 +205,105 @@ DESCRIBE ?subject
     }
 QUERY_BY_TYPE_AND_PREDICATE;
 
+        if (is_object($object) && method_exists($object, '__toString')) {
+            $object = $object->__toString();
+        }
+        if (!is_string($object)) {
+            $type = gettype($object);
+            throw new ApiException('sparql-describe-by-type-and-predicate-invalid-object', [
+                'givenType'  => $type,
+                'givenClass' => 'object' === $type ? get_class($object) : 'n/a',
+            ]);
+        }
+
         $queryString = sprintf($queryString, Rdf::TYPE, (string) $rdfType, (string) $predicate, $object);
 
-        $retVal = new SparqlQuery($queryString);
-
-        return $retVal;
+        return new SparqlQuery($queryString);
     }
 
+    /**
+     * @param Iri|Literal|InternalResourceId|string $object
+     *
+     * @ErrorInherit(class=Iri::class        , method="ntripleString")
+     * @ErrorInherit(class=Literal::class    , method="__toString"   )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"  )
+     */
+    public static function selectSubjectFromPredicate(
+        Iri $predicate,
+        $object
+    ): SparqlQuery {
+        $queryString = <<<QUERY_SELECT_SUBJECT_FROM_PREDICATE
+SELECT ?subject
+WHERE {
+    ?subject <%s> %s .
+}
+QUERY_SELECT_SUBJECT_FROM_PREDICATE;
+
+        if ($object instanceof Iri) {
+            $object = $object->ntripleString();
+        }
+        if ($object instanceof Literal) {
+            $object = '"'.$object->__toString().'"';
+        }
+
+        $queryString = sprintf($queryString, (string) $predicate, (string) $object);
+
+        return new SparqlQuery($queryString);
+    }
+
+    /**
+     * @param Iri|Literal|InternalResourceId|string $object
+     *
+     * @ErrorInherit(class=Iri::class        , method="ntripleString")
+     * @ErrorInherit(class=Literal::class    , method="__toString"   )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"  )
+     */
+    public static function selectSubjectFromObject(
+        $object
+    ): SparqlQuery {
+        $queryString = <<<QUERY_SELECT_SUBJECT_FROM_PREDICATE
+SELECT ?subject ?predicate ?type
+WHERE {
+    ?subject ?predicate %s .
+    ?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?type .
+}
+QUERY_SELECT_SUBJECT_FROM_PREDICATE;
+
+        if ($object instanceof Iri) {
+            $object = $object->ntripleString();
+        }
+        if ($object instanceof Literal) {
+            $object = '"'.$object->__toString().'"';
+        }
+
+        $queryString = sprintf($queryString, (string) $object);
+
+        return new SparqlQuery($queryString);
+    }
+
+    /**
+     * @ErrorInherit(class=Iri::class        , method="__construct"               )
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     * @ErrorInherit(class=SparqlQuery::class, method="selectSubjectFromPredicate")
+     */
     public static function selectSubjectFromUuid(
+        string $uuid
+    ): SparqlQuery {
+        return static::selectSubjectFromPredicate(
+            new Iri(OpenSkos::UUID),
+            $uuid
+        );
+    }
+
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
+    public static function describeSubjectFromUuid(
         string $uuid
     ): SparqlQuery {
         return new SparqlQuery(
             sprintf(
-               'SELECT ?subject
+               'DESCRIBE ?subject
                             WHERE { 
                               ?subject <%s> "%s"
                             }',
@@ -196,6 +313,31 @@ QUERY_BY_TYPE_AND_PREDICATE;
         );
     }
 
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
+    public static function describeWithoutUUID(
+        string $uuid
+    ): SparqlQuery {
+        /* * * * * * * * * * * * * * * * * * * * * * * * * *
+         * CAUTION: SLOW ON TYPES WITH A LOT OF RESOURCES  *
+        \* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+        $queryString = <<<QUERY_WITHOUT_UUID
+DESCRIBE ?subject
+WHERE {
+  ?subject ?predicate ?object .
+  FILTER(regex(str(?subject), ".*\\\\/%s\$" ) )
+}
+QUERY_WITHOUT_UUID;
+        $queryString = sprintf($queryString, $uuid);
+
+        return new SparqlQuery($queryString);
+    }
+
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
     public static function describeByTypeWithoutUUID(
         string $rdfType,
         string $uuid
@@ -212,6 +354,22 @@ WHERE {
 }
 QUERY_BY_TYPE_WITHOUT_UUID;
         $queryString = sprintf($queryString, Rdf::TYPE, $rdfType, $uuid);
+
+        return new SparqlQuery($queryString);
+    }
+
+    /**
+     * @ErrorInherit(class=SparqlQuery::class, method="__construct"               )
+     */
+    public static function deleteSubject(
+        string $subject
+    ): SparqlQuery {
+        $queryString = <<<QUERY_DELETE_SUBJECT_WITH_TYPE
+DELETE WHERE {
+    <%s> ?predicate ?object .
+}
+QUERY_DELETE_SUBJECT_WITH_TYPE;
+        $queryString = sprintf($queryString, $subject);
 
         return new SparqlQuery($queryString);
     }

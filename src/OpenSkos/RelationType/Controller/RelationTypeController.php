@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\RelationType\Controller;
 
-use App\Rest\DirectGraphResponse;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
 use App\OpenSkos\ApiRequest;
 use App\OpenSkos\RelationType\RelationType;
+use App\Rdf\Iri;
+use App\Rest\DirectGraphResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -19,8 +22,6 @@ final class RelationTypeController
 
     /**
      * Role constructor.
-     *
-     * @param SerializerInterface $serializer
      */
     public function __construct(
         SerializerInterface $serializer
@@ -31,9 +32,34 @@ final class RelationTypeController
     /**
      * @Route(path="/relationtypes.{format?}", methods={"GET"})
      *
-     * @param ApiRequest $apiRequest
+     * @OA\Summary("Retreive all available relation types")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="rdfs:subPropertyOf", description="What this relation type is a sub-version of"),
+     *         @OA\Schema\StringLiteral(name="rdfs:domain"                                                                  ),
+     *         @OA\Schema\StringLiteral(name="rdfs:range"                                                                   ),
+     *       }),
+     *     ),
+     *   }),
+     * )
      *
-     * @return DirectGraphResponse
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
+     * @ErrorInherit(class=RelationType::class       , method="vocabulary" )
      */
     public function getRelationTypes(
         ApiRequest $apiRequest
@@ -47,19 +73,44 @@ final class RelationTypeController
     /**
      * @Route(path="/relationtype/{id}.{format?}", methods={"GET"})
      *
-     * @param string     $id
-     * @param ApiRequest $apiRequest
+     * @OA\Summary("Retreive a single relation type")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="rdfs:subPropertyOf", description="What this relation type is a sub-version of"),
+     *         @OA\Schema\StringLiteral(name="rdfs:domain"                                                                  ),
+     *         @OA\Schema\StringLiteral(name="rdfs:range"                                                                   ),
+     *       }),
+     *     ),
+     *   }),
+     * )
      *
-     * @return DirectGraphResponse
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct")
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"  )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct")
+     * @ErrorInherit(class=Iri::class                , method="getUri"     )
+     * @ErrorInherit(class=RelationType::class       , method="vocabulary" )
      */
     public function getRelationType(
         string $id,
         ApiRequest $apiRequest
     ): DirectGraphResponse {
         // Build source data
-        $graph = RelationType::vocabulary();
+        $graph        = RelationType::vocabulary();
         $relationtype = null;
-        $options = [
+        $options      = [
             $graph->resource($id),
             $graph->resource('openskos:'.$id),
         ];

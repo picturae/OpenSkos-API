@@ -24,20 +24,14 @@ final class ScalarResponse implements SkosResponse
 
     /**
      * ScalarResponse constructor.
-     *
-     * @param RdfResource $doc
-     * @param RdfFormat   $format
      */
     public function __construct(
         RdfResource $doc, RdfFormat $format
     ) {
-        $this->doc = $doc;
+        $this->doc    = $doc;
         $this->format = $format;
     }
 
-    /**
-     * @return RdfResource
-     */
     public function doc(): RdfResource
     {
         return $this->doc;

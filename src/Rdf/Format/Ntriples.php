@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rdf\Format;
 
-use App\Utils\SingletonTrait;
-
-final class Ntriples implements RdfFormat
+final class Ntriples extends AbstractRdfFormat
 {
-    use SingletonTrait;
-
     public function name(): string
     {
         return 'n-triples';

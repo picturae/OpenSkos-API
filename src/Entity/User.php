@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Annotation\Document;
+use App\Annotation\ErrorInherit;
+use App\Rdf\Iri;
 
 /**
  * @Document\Table("user")
@@ -67,22 +69,21 @@ class User extends AbstractEntity
     /**
      * @var string|null
      */
-    protected $defaultSearchProfileIds;
-
-    /**
-     * @var bool
-     */
-    protected $disableSearchProfileChanging;
-
-    /**
-     * @var string|null
-     */
     protected $uri;
 
     /**
      * @var bool
      */
     protected $enableSkosXl;
+
+    /**
+     * @ErrorInherit(class=Iri::class , method="__construct")
+     * @ErrorInherit(class=User::class, method="getUri"     )
+     */
+    public function iri(): Iri
+    {
+        return new Iri($this->getUri() ?? '');
+    }
 
     /**
      * @param int $id
@@ -189,7 +190,7 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param string $apikey
+     * @param string|null $apikey
      *
      * @return self
      */
@@ -279,7 +280,7 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param mixed $searchOptions
+     * @param mixed|null $searchOptions
      *
      * @return self
      */
@@ -320,49 +321,6 @@ class User extends AbstractEntity
     public function getConceptSelection()
     {
         return $this->conceptSelection;
-    }
-
-    /**
-     * @param string|null $defaultSearchProfileIds
-     *
-     * @return self
-     */
-    public function setDefaultSearchProfileIds($defaultSearchProfileIds)
-    {
-        $this->defaultSearchProfileIds = $defaultSearchProfileIds;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDefaultSearchProfileIds()
-    {
-        return $this->defaultSearchProfileIds;
-    }
-
-    /**
-     * @param mixed $disableSearchProfileChanging
-     *
-     * @return self
-     */
-    public function setDisableSearchProfileChanging($disableSearchProfileChanging)
-    {
-        if ('Y' === $disableSearchProfileChanging) {
-            $disableSearchProfileChanging = true;
-        }
-        $this->disableSearchProfileChanging = (bool) $disableSearchProfileChanging;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisableSearchProfileChaning()
-    {
-        return $this->disableSearchProfileChanging;
     }
 
     /**

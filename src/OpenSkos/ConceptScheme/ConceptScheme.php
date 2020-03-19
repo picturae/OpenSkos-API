@@ -4,102 +4,62 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\ConceptScheme;
 
+use App\Annotation\Document;
 use App\Ontology\Dc;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\Skos;
-use App\Rdf\VocabularyAwareResource;
-use App\Rdf\Iri;
-use App\Rdf\RdfResource;
-use App\Rdf\Triple;
+use App\Rdf\AbstractRdfDocument;
 
-final class ConceptScheme implements RdfResource
+/**
+ * @Document\Type(Skos::CONCEPT_SCHEME)
+ */
+final class ConceptScheme extends AbstractRdfDocument
 {
-    const type = 'type';
+    const type          = 'type';
     const datesubmitted = 'datesubmitted';
-    const set = 'set';
-    const uuid = 'uuid';
-    const creator = 'creator';
-    const tenant = 'tenant';
-    const modified = 'modified';
-    const title = 'title';
-    const description = 'description';
+    const set           = 'set';
+    const uuid          = 'uuid';
+    const creator       = 'creator';
+    const tenant        = 'tenant';
+    const modified      = 'modified';
+    const title         = 'title';
+    const description   = 'description';
     const hasTopConcept = 'hasTopConcept';
-    const status = 'status';
-    const dateDeleted = 'dateDeleted';
-    const deletedBy = 'deletedBy';
-    const modifiedBy = 'modifiedBy';
+    const status        = 'status';
+    const dateDeleted   = 'dateDeleted';
+    const deletedBy     = 'deletedBy';
+    const modifiedBy    = 'modifiedBy';
 
     /**
      * @var string[]
      */
-    private static $mapping = [
-        self::type => Rdf::TYPE,
+    protected static $mapping = [
+        self::type          => Rdf::TYPE,
         self::datesubmitted => DcTerms::DATE_SUBMITTED,
-        self::set => OpenSkos::SET,
-        self::uuid => OpenSkos::UUID,
-        self::creator => Dc::CREATOR,
-        self::tenant => OpenSkos::TENANT,
-        self::modified => DcTerms::MODIFIED,
-        self::title => DcTerms::TITLE,
-        self::description => DcTerms::DESCRIPTION,
+        self::set           => OpenSkos::SET,
+        self::uuid          => OpenSkos::UUID,
+        self::creator       => Dc::CREATOR,
+        self::tenant        => OpenSkos::TENANT,
+        self::modified      => DcTerms::MODIFIED,
+        self::title         => DcTerms::TITLE,
+        self::description   => DcTerms::DESCRIPTION,
         self::hasTopConcept => Skos::HAS_TOP_CONCEPT,
-        self::status => OpenSkos::STATUS,
-        self::dateDeleted => OpenSkos::DATE_DELETED,
-        self::deletedBy => OpenSkos::DELETED_BY,
-        self::modifiedBy => OpenSkos::MODIFIED_BY,
+        self::status        => OpenSkos::STATUS,
+        self::dateDeleted   => OpenSkos::DATE_DELETED,
+        self::deletedBy     => OpenSkos::DELETED_BY,
+        self::modifiedBy    => OpenSkos::MODIFIED_BY,
     ];
 
-    /**
-     * @var VocabularyAwareResource
-     */
-    private $resource;
+    protected static $required = [
+        DcTerms::TITLE,
+        OpenSkos::SET,
+        OpenSkos::TENANT,
+    ];
 
-    private function __construct(
-        Iri $subject,
-        ?VocabularyAwareResource $resource = null
-    ) {
-        if (null === $resource) {
-            $this->resource = new VocabularyAwareResource($subject, array_flip(self::$mapping));
-        } else {
-            $this->resource = $resource;
-        }
-    }
-
-    public function iri(): Iri
-    {
-        return $this->resource->iri();
-    }
-
-    /**
-     * @return Triple[]
-     */
-    public function triples(): array
-    {
-        return $this->resource->triples();
-    }
-
-    /**
-     * @param Iri $subject
-     *
-     * @return ConceptScheme
-     */
-    public static function createEmpty(Iri $subject): self
-    {
-        return new self($subject);
-    }
-
-    /**
-     * @param Iri      $subject
-     * @param Triple[] $triples
-     *
-     * @return ConceptScheme
-     */
-    public static function fromTriples(Iri $subject, array $triples): self
-    {
-        $resource = VocabularyAwareResource::fromTriples($subject, $triples, self::$mapping);
-
-        return new self($subject, $resource);
-    }
+    protected static $updateFields = [
+        DcTerms::TITLE,
+        OpenSkos::MODIFIED_BY,
+    ];
 }

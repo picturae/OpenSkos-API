@@ -5,11 +5,19 @@
     "require": {
         "php": "^7.3",
         "ext-ctype": "*",
+        "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-mysqli": "*",
+        "ext-pdo_mysql": "*",
+        "ext-session": "*",
+        "ext-curl": "*",
+        "ext-simplexml": "*",
         "doctrine/common": "^2.11",
         "easyrdf/easyrdf": "^0.9.1",
+        "gnugat/nomo-spaco": "~0.4",
         "ml/json-ld": "^1.1",
         "netresearch/jsonmapper": "^1.6",
+        "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.3",
         "solarium/solarium": "^5.0",
         "symfony/console": "4.2.*",
@@ -51,9 +59,11 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
+            "HarmBandstra\\SwaggerUiBundle\\Composer\\ScriptHandler::linkAssets",
             "@auto-scripts"
         ],
         "post-update-cmd": [
+            "HarmBandstra\\SwaggerUiBundle\\Composer\\ScriptHandler::linkAssets",
             "@auto-scripts"
         ]
     },
@@ -68,6 +78,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.15",
+        "harmbandstra/swagger-ui-bundle": "^4.2",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "jan-swiecki/simple-annotations": "^0.3.1",
         "phpro/grumphp": "^0.15.0",
         "phpspec/phpspec": "^5.1",
         "phpstan/phpstan": "^0.11.6",

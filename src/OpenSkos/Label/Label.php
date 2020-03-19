@@ -4,28 +4,34 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Label;
 
+use App\Annotation\Document;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
 use App\Ontology\Rdf;
 use App\Ontology\SkosXl;
 use App\Rdf\AbstractRdfDocument;
-use App\Rdf\VocabularyAwareResource;
 use App\Rdf\Iri;
 use App\Rdf\RdfResource;
 use App\Rdf\Triple;
+use App\Rdf\VocabularyAwareResource;
 
+/**
+ * @Document\Type(SkosXl::LABEL)
+ */
 final class Label extends AbstractRdfDocument implements RdfResource
 {
-    const type = 'type';
-    const modified = 'modified';
+    const type        = 'type';
+    const modified    = 'modified';
     const literalForm = 'literalForm';
+    const uuid        = 'uuid';
 
     /**
      * @var string[]
      */
     protected static $mapping = [
-        self::type => Rdf::TYPE,
-        self::modified => DcTerms::MODIFIED,
+        self::uuid        => OpenSkos::UUID,
+        self::type        => Rdf::TYPE,
+        self::modified    => DcTerms::MODIFIED,
         self::literalForm => SkosXl::LITERAL_FORM,
     ];
 
@@ -51,13 +57,13 @@ final class Label extends AbstractRdfDocument implements RdfResource
      * @var array
      */
     private static $acceptable_fields = [
-        'uri' => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
+        'uri'         => '',        //IN the specs, but it's actually the Triple subject, and has to be sent
         'literalForm' => SkosXl::LITERAL_FORM,
         /* 'isPrefLabelOf' => */
         /* 'isAltLabelOf' => */
         /* 'isHiddenLabelOf' => */
         'labelRelation' => SkosXl::LABEL_RELATION,
-        'set' => OpenSkos::SET,
+        'set'           => OpenSkos::SET,
         /* 'institution' => OpenSkos::INSTITUTION, */
         'tenant' => OpenSkos::TENANT,
         'status' => OpenSkos::STATUS,
@@ -80,8 +86,8 @@ final class Label extends AbstractRdfDocument implements RdfResource
      * @var array
      */
     public static $meta_groups = [
-        'all' => [],
-        'skosxl' => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
+        'all'     => [],
+        'skosxl'  => [], //@todo. We're also doing this in levels for everything. Why project here too? What do we want to do with this?
         'default' => ['uri' => ['lang' => ''], 'literalForm' => ['lang' => '']],
     ];
 
@@ -95,11 +101,6 @@ final class Label extends AbstractRdfDocument implements RdfResource
      *      it's fetching for. Indeed: it can be fetched for several parents
      *
      * Label constructor.
-     *
-     * @param Iri                          $childSubject
-     * @param VocabularyAwareResource|null $resource
-     * @param Iri|null                     $parentPredicate
-     * @param Iri|null                     $parentSubject
      */
     public function __construct(
         Iri $childSubject,
@@ -108,30 +109,21 @@ final class Label extends AbstractRdfDocument implements RdfResource
         ?Iri $parentSubject = null
     ) {
         $this->childSubject = $childSubject;
-        $this->type = $parentPredicate;
-        $this->subject = $parentSubject;
+        $this->type         = $parentPredicate;
+        $this->subject      = $parentSubject;
         parent::__construct($childSubject, $resource);
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getType(): ?Iri
     {
         return $this->type;
     }
 
-    /**
-     * @param Iri|null $type
-     */
     public function setType(?Iri $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getSubject(): ?Iri
     {
         return $this->subject;
@@ -145,33 +137,21 @@ final class Label extends AbstractRdfDocument implements RdfResource
         $this->subject = $subject;
     }
 
-    /**
-     * @return Iri
-     */
     public function getChildSubject(): Iri
     {
         return $this->childSubject;
     }
 
-    /**
-     * @param Iri $childSubject
-     */
     public function setChildSubject(Iri $childSubject): void
     {
         $this->childSubject = $childSubject;
     }
 
-    /**
-     * @return array
-     */
     public static function getAcceptableFields(): array
     {
         return self::$acceptable_fields;
     }
 
-    /**
-     * @return array
-     */
     public static function getMetaGroups(): array
     {
         return self::$meta_groups;

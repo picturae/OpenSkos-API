@@ -2,8 +2,8 @@
 
 namespace App\EasyRdf;
 
-use App\Rdf\Sparql\Client;
 use App\Rdf\Exception\InvalidSparqlQuery;
+use App\Rdf\Sparql\Client;
 use App\Rdf\Sparql\SparqlQuery;
 use App\Rdf\Triple;
 use EasyRdf_Graph;
@@ -23,8 +23,6 @@ class EasyRdfClient implements Client
     }
 
     /**
-     * @param SparqlQuery $query
-     *
      * @return Triple[]
      */
     public function describe(SparqlQuery $query): array
@@ -39,13 +37,38 @@ class EasyRdfClient implements Client
         return TripleFactory::triplesFromGraph($graph);
     }
 
-    /**
-     * @param SparqlQuery $query
-     */
     public function fetch(SparqlQuery $query): object
     {
         $graph = $this->easyRdfClient->query($query->rawSparql());
 
         return $graph;
+    }
+
+    /**
+     * @param Triple[] $triples
+     */
+    public function insertTriples(array $triples): \EasyRdf_Http_Response
+    {
+        $tripleString = implode("\n", array_map(function (Triple $triple) {
+            return $triple.' .';
+        }, $triples))."\n";
+
+        return $this->easyRdfClient->insert($tripleString);
+    }
+
+    public function delete(SparqlQuery $query): bool
+    {
+        $result = $this->easyRdfClient->update($query->rawSparql());
+        $status = $result->getStatus();
+
+        if ($status < 200) {
+            return false;
+        }
+
+        if ($status >= 300) {
+            return false;
+        }
+
+        return true;
     }
 }

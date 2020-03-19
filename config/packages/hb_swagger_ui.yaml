@@ -1,0 +1,17 @@
+hb_swagger_ui:
+  directory: "%kernel.root_dir%/../public/"
+  files:
+    - "/swagger.yaml"
+
+services:
+  App\Documentation\Swagger\Command\GenerateSwaggerCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+    arguments:
+      $swaggerfile: '/public/swagger.yaml'
+      $title      : 'OpenSkos API'
+      $description: 'TODO: DESCRIPTION'
+      $servers    :
+        - url: http://api.openskos.localhost
+          description: Default local development server

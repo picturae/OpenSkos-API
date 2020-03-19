@@ -2,6 +2,7 @@ parameters:
     git_dir: .
     bin_dir: vendor/bin
     tasks:
+        phplint: ~
         phpcsfixer2:
             allow_risky: true
             config: .php_cs
@@ -9,5 +10,3 @@ parameters:
             ignore_patterns:
                 - '/spec/' #Ignore PHPSpec
         phpspec: ~
-
-

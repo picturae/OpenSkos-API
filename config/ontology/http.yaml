@@ -1,0 +1,8 @@
+parameters:
+  ontology.http:
+    name: Http
+    prefix: http
+    namespace: 'http://www.w3.org/2011/http#'
+    properties:
+      sc:
+        datatype: literal

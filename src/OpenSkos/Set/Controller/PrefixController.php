@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Set\Controller;
 
-use App\OpenSkos\Filters\FilterProcessor;
-use App\OpenSkos\Set\SetRepository;
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
+use App\Annotation\OA;
+use App\Exception\ApiException;
 use App\Ontology\OpenSkos;
 use App\OpenSkos\ApiRequest;
+use App\OpenSkos\Filters\FilterProcessor;
+use App\OpenSkos\Set\SetRepository;
 use App\Rest\DirectGraphResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -29,13 +32,46 @@ final class PrefixController
     /**
      * @Route(path="/prefixes.{format?}", methods={"GET"})
      *
-     * @param ApiRequest      $apiRequest
-     * @param SetRepository   $repository
-     * @param FilterProcessor $filterProcessor
+     * @OA\Summary("Retreive all available prefixes")
+     * @OA\Request(parameters={
+     *   @OA\Schema\StringLiteral(
+     *     name="format",
+     *     in="path",
+     *     example="json",
+     *     enum={"json", "ttl", "n-triples"},
+     *   ),
+     * })
+     * @OA\Response(
+     *   code="200",
+     *   content=@OA\Content\Rdf(properties={
+     *     @OA\Schema\ObjectLiteral(name="@context"),
+     *     @OA\Schema\ArrayLiteral(
+     *       name="@graph",
+     *       items=@OA\Schema\ObjectLiteral(properties={
+     *         @OA\Schema\StringLiteral(name="openskos:prefix", description="The available prefix url"),
+     *       }),
+     *     ),
+     *   }),
+     * )
      *
-     * @return DirectGraphResponse
+     * @Error(code="setprefixcontroller-sets-filter-not-applicable",
+     *        status=400,
+     *        description="Sets filter is not applicable here"
+     * )
+     *
+     * @ErrorInherit(class=ApiRequest::class         , method="__construct"            )
+     * @ErrorInherit(class=ApiRequest::class         , method="getFormat"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getInstitutions"        )
+     * @ErrorInherit(class=ApiRequest::class         , method="getOffset"              )
+     * @ErrorInherit(class=ApiRequest::class         , method="getLimit"               )
+     * @ErrorInherit(class=ApiRequest::class         , method="getSets"                )
+     * @ErrorInherit(class=DirectGraphResponse::class, method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class    , method="__construct"            )
+     * @ErrorInherit(class=FilterProcessor::class    , method="buildInstitutionFilters")
+     * @ErrorInherit(class=SetRepository::class      , method="__construct"            )
+     * @ErrorInherit(class=SetRepository::class      , method="all"                    )
      */
-    public function sets(
+    public function getAllPrefixes(
         ApiRequest $apiRequest,
         SetRepository $repository,
         FilterProcessor $filterProcessor
@@ -43,26 +79,17 @@ final class PrefixController
         \EasyRdf_Namespace::set('openskos', OpenSkos::NAME_SPACE);
 
         $param_institutions = $apiRequest->getInstitutions();
-        $full_filter = $filterProcessor->buildInstitutionFilters($param_institutions);
+        $full_filter        = $filterProcessor->buildInstitutionFilters($param_institutions);
 
         /* According to the specs, throw a 400 when asked for sets */
         $param_sets = $apiRequest->getSets();
         if (isset($param_sets) && 0 !== count($param_sets)) {
-            throw new BadRequestHttpException('Sets filter is not applicable here.');
+            throw new ApiException('setprefixcontroller-sets-filter-not-applicable');
         }
 
-        $param_profile = $apiRequest->getSearchProfile();
-
-        if ($param_profile) {
-            if (0 !== count($full_filter)) {
-                throw new BadRequestHttpException('Search profile filters cannot be combined with other filters (possible conflicts).');
-            }
-            $to_apply = [FilterProcessor::ENTITY_INSTITUTION => true];
-            $full_filter = $filterProcessor->retrieveSearchProfile($param_profile, $to_apply);
-        }
         $sets = $repository->all($apiRequest->getOffset(), $apiRequest->getLimit(), $full_filter);
 
-        $graph = new \EasyRdf_Graph();
+        $graph     = new \EasyRdf_Graph();
         $resources = $graph->resource('prefixes');
 
         foreach ($sets as $set) {

@@ -13,7 +13,7 @@
 
     #Boolean
     <http://openskos.org/xmlns#disableSearchInOtherTenants>
-            "false"^^<http://www.w3.org/2001/XMLSchema#bool> ;
+            "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 
 
     #DateTime

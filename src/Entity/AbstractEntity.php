@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Annotation\Document;
+use App\Annotation\ErrorInherit;
 use App\Database\Doctrine;
 use Doctrine\Common\Annotations\AnnotationReader;
 use JsonMapper;
@@ -27,14 +28,12 @@ abstract class AbstractEntity
     /**
      * Checks the annotations of our class for App\Annotation\Document\Table
      * Returns it's value if it's present, null otherwise.
-     *
-     * @return string|null
      */
     public static function getTable(): ?string
     {
         // Fetch all annotations
-        $annotationReader = new AnnotationReader();
-        $documentReflection = new \ReflectionClass(static::class);
+        $annotationReader    = new AnnotationReader();
+        $documentReflection  = new \ReflectionClass(static::class);
         $documentAnnotations = $annotationReader->getClassAnnotations($documentReflection);
 
         // Loop through annotations and return the table
@@ -53,7 +52,8 @@ abstract class AbstractEntity
      *
      * @param mixed $data
      *
-     * @return self
+     * @ErrorInherit(class=AbstractEntity::class, method="__toArray")
+     * @ErrorInherit(class=AbstractEntity::class, method="getTable" )
      */
     public function populate($data = null): self
     {
@@ -88,6 +88,13 @@ abstract class AbstractEntity
             }
 
             $data = $res->fetch();
+
+            // Extra checking, the database may be case-insensitive
+            foreach ($searchData as $key => $value) {
+                if ($searchData[$key] !== $data[$key]) {
+                    return $this;
+                }
+            }
         }
 
         // Normalize data
@@ -108,8 +115,6 @@ abstract class AbstractEntity
 
     /**
      * Turns the entity into an array, containing data only.
-     *
-     * @return array
      */
     public function __toArray(): array
     {

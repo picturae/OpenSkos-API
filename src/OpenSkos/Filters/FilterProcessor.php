@@ -4,34 +4,53 @@ declare(strict_types=1);
 
 namespace App\OpenSkos\Filters;
 
+use App\Annotation\Error;
+use App\Exception\ApiException;
 use App\Ontology\DcTerms;
 use App\Ontology\OpenSkos;
+use App\OpenSkos\InternalResourceId;
+use App\Rdf\Iri;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Psr\Container\ContainerInterface;
 
 final class FilterProcessor
 {
     //Filter Types
-    const TYPE_URI = 'uri';
-    const TYPE_UUID = 'uuid';
+    const TYPE_URI    = 'uri';
+    const TYPE_UUID   = 'uuid';
     const TYPE_STRING = 'string';
 
     //Group for filter
-    const ENTITY_INSTITUTION = 'institution';
-    const ENTITY_SET = 'set';
+    const ENTITY_INSTITUTION   = 'institution';
+    const ENTITY_SET           = 'set';
     const ENTITY_CONCEPTSCHEME = 'conceptscheme';
 
+    /**
+     * @var Connection
+     */
     private $connection;
 
     /**
-     * FilterProcessor constructor.
-     *
-     * @param Connection $connection
+     * @var ContainerInterface
      */
-    public function __construct(Connection $connection)
+    private $container;
+
+    /**
+     * @var FilterProcessorHelper
+     */
+    private $filter_helper;
+
+    /**
+     * FilterProcessor constructor.
+     * @param Connection $connection
+     * @param ContainerInterface $container
+     * @param FilterProcessorHelper $filter_helper
+     */
+    public function __construct(Connection $connection, ContainerInterface $container, FilterProcessorHelper $filter_helper)
     {
         $this->connection = $connection;
+        $this->container  = $container;
+        $this->filter_helper  = $filter_helper;
     }
 
     /**
@@ -53,8 +72,6 @@ final class FilterProcessor
     }
 
     /**
-     * @param array $filters
-     *
      * @return bool
      */
     public function hasPublisher(array $filters)
@@ -70,20 +87,32 @@ final class FilterProcessor
         return $has_publisher;
     }
 
+
     /**
-     * @param array $filterList
+     * @param bool $resolve_publisher if true, resolve a publisher uri to a tenant code. (This involves an extra Jena query)
      *
      * @return array
+     *
+     * @throws ApiException
+     * @Error(code="filterprocessor-build-institution-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
-    public function buildInstitutionFilters(array $filterList)
+    public function buildInstitutionFilters(array $filterList, bool $resolve_publisher = false)
     {
         $dataOut = [];
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for institutions could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('filterprocessor-build-institution-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
-                $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_INSTITUTION];
+                if (true === $resolve_publisher) {
+                    $code      = $this->filter_helper->resolveInstitutionsToCode(new Iri($filter));
+                    $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $code, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_INSTITUTION];
+                } else {
+                    $dataOut[] = ['predicate' => DcTerms::PUBLISHER, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_INSTITUTION];
+                }
             } else {
                 $dataOut[] = ['predicate' => OpenSkos::TENANT, 'value' => $filter, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_INSTITUTION];
             }
@@ -93,66 +122,34 @@ final class FilterProcessor
     }
 
     /**
-     * @param array $filterList
-     *
      * @return array
+     *
+     * @throws ApiException
+     *
+     * @Error(code="filterprocessor-build-set-filters-uuid-not-supported",
+     *        status=400,
+     *        description="The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store)."
+     * )
      */
-    public function buildSetFilters(array $filterList)
+    public function buildSetFilters(array $filterList, bool $resolve_code = false)
     {
         $dataOut = [];
 
         foreach ($filterList as $filter) {
             if (self::isUuid($filter)) {
-                throw new BadRequestHttpException('The search by UUID for sets could not be retrieved (Predicate is not used in Jena Store).');
+                throw new ApiException('filterprocessor-build-set-filters-uuid-not-supported');
             } elseif (filter_var($filter, FILTER_VALIDATE_URL)) {
                 $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
             } else {
-                throw new BadRequestHttpException('The search by string for sets could not be retrieved (Predicate is not used in Jena Store).');
+                if (true === $resolve_code) {
+                    $code      = $this->filter_helper->resolveSetToUriLiteral($filter);
+                    $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $code, 'type' => self::TYPE_URI, 'entity' => self::ENTITY_SET];
+                } else {
+                    $dataOut[] = ['predicate' => OpenSkos::SET, 'value' => $filter, 'type' => self::TYPE_STRING, 'entity' => self::ENTITY_SET];
+                }
             }
         }
 
         return $dataOut;
-    }
-
-    /**
-     * @param int   $profile_id
-     * @param array $to_apply
-     *
-     * @return array
-     */
-    public function retrieveSearchProfile(int $profile_id, array $to_apply)
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('searchOptions')
-            ->from('search_profiles')
-            ->where('id = :id')
-            ->setParameter('id', $profile_id);
-
-        $filters = [];
-
-        $res = $qb->execute();
-
-        if ($res instanceof Statement) {
-            $profile = $res->fetchAll();
-            if (0 === count($profile)) {
-                throw new BadRequestHttpException('The searchProfile id does not exist');
-            }
-            $searchOptions = unserialize($profile[0]['searchOptions']);
-
-            if (isset($to_apply[self::ENTITY_INSTITUTION]) && true === $to_apply[self::ENTITY_INSTITUTION]) {
-                if (isset($searchOptions['tenants']) && 0 !== count($searchOptions['tenants'])) {
-                    $read_filters = $this->buildInstitutionFilters($searchOptions['tenants']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-            if (isset($to_apply[self::ENTITY_SET]) && true === $to_apply[self::ENTITY_SET]) {
-                if (isset($searchOptions['collections']) && 0 !== count($searchOptions['collections'])) {
-                    $read_filters = $this->buildSetFilters($searchOptions['collections']);
-                    $filters = array_merge($filters, $read_filters);
-                }
-            }
-        }
-
-        return $filters;
     }
 }

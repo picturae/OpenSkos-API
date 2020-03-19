@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace App\Rest\ArgumentResolver;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Database\Doctrine;
+use App\Exception\ApiException;
 use App\OpenSkos\ApiRequest;
-use App\OpenSkos\Exception\InvalidApiRequest;
+use App\OpenSkos\Institution\InstitutionRepository;
+use App\OpenSkos\Set\SetRepository;
 use App\Rdf\Format\RdfFormat;
 use App\Rdf\Format\RdfFormatFactory;
 use App\Rdf\Format\UnknownFormatException;
 use App\Security\Authentication;
+use EasyRdf_Format as Format;
+use EasyRdf_Graph as Graph;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -27,30 +33,47 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
      */
     private $connection;
 
+    /**
+     * @var InstitutionRepository|null
+     */
+    private $institutionRepository;
+
+    /**
+     * @var SetRepository|null
+     */
+    private $setRepository;
+
     public function __construct(
         RdfFormatFactory $formatFactory,
-        ?Doctrine $connection
+        ?Doctrine $connection,
+        InstitutionRepository $institutionRepository = null,
+        SetRepository $setRepository = null
     ) {
-        $this->formatFactory = $formatFactory;
-        $this->connection = $connection;
+        $this->formatFactory         = $formatFactory;
+        $this->connection            = $connection;
+        $this->institutionRepository = $institutionRepository;
+        $this->setRepository         = $setRepository;
     }
 
     /**
-     * @param string|null $formatName
-     * @param array|null  $headers
+     * @param array|null $headers
      *
-     * @return RdfFormat|null
+     * @Error(code="apirequest-format-invalid",
+     *        status=406,
+     *        description="The requested data format is invalid or not supported",
+     *        fields={"requested", "supported"}
+     * )
      *
-     * @throws InvalidApiRequest
+     * @throws ApiException
      */
     private function resolveFormat(?string $formatName, $headers = null): ?RdfFormat
     {
         if (null === $formatName) {
             // Attempt using the accept header
-            if (isset($headers['accept'])) {
+            if (!is_null($headers)) {
                 // Build accept list
                 $accepts = [];
-                foreach ($headers['accept'] as $list) {
+                foreach ($headers as $list) {
                     $list = str_getcsv($list);
                     foreach ($list as $entry) {
                         if (false !== strpos($entry, ';')) {
@@ -75,7 +98,10 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         try {
             return $this->formatFactory->createFromName($formatName);
         } catch (UnknownFormatException $e) {
-            throw new InvalidApiRequest('Invalid Format', 0, $e);
+            throw new ApiException('apirequest-format-invalid', [
+                'requested' => $formatName,
+                'supported' => array_keys($this->formatFactory->formats()),
+            ]);
         }
     }
 
@@ -85,12 +111,13 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
     }
 
     /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
      * @return \Generator
      *
-     * @throws InvalidApiRequest
+     * @throws ApiException
+     * @throws \EasyRdf_Exception
+     * @ErrorInherit(class=ApiRequestResolver::class, method="resolveFormat"      )
+     * @ErrorInherit(class=Graph::class             , method="__construct"        )
+     * @ErrorInherit(class=Graph::class             , method="parse"              )
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
@@ -106,8 +133,6 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
         // at Meertens. For now it just searches on the same field as the 'native' uri
         $foreignUri = $request->query->get('uri', null);
 
-        $searchProfile = $request->query->getInt('searchProfile');
-
         $formatName = $request->query->get('format');
         if (is_null($formatName)) {
             $formatName = $request->attributes->get('format');
@@ -116,17 +141,39 @@ final class ApiRequestResolver implements ArgumentValueResolverInterface
             }
         }
 
+        // Detect format of request body
+        $graph = new Graph();
+        $types = $request->headers->get('content-type', null, false);
+        if (is_string($types)) {
+            $types = [$types];
+        }
+        if (is_null($types)) {
+            $types = [];
+        }
+        if (is_array($types)) {
+            array_push($types, 'application/rdf+json');
+        }
+
+        $givenFormat = $this->resolveFormat(null, [implode(',', $types)]);
+
+        // Parse body into graph
+        // No error needs to be thrown here: empty data will throw a BadRequest later
+        $content = $request->getContent();
+        if (!is_null($givenFormat) && is_string($content) && strlen($content)) {
+            $graph->parse($content, $givenFormat->easyRdfName());
+        }
+
         yield new ApiRequest(
             $allParameters,
-            $this->resolveFormat($formatName, $request->headers->all()),
+            $this->resolveFormat($formatName, $request->headers->all()['accept'] ?? null),
             $request->query->getInt('level', 1),
             $request->query->getInt('limit', 100),
             $request->query->getInt('offset', 0),
             $institutions,
             $sets,
-            $searchProfile,
             $foreignUri,
-            new Authentication($request)
+            new Authentication($request),
+            $graph
         );
     }
 }

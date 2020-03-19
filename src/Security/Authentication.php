@@ -2,7 +2,10 @@
 
 namespace App\Security;
 
+use App\Annotation\Error;
+use App\Annotation\ErrorInherit;
 use App\Entity\User;
+use App\Exception\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 
 class Authentication
@@ -11,6 +14,11 @@ class Authentication
      * @var bool
      */
     protected $authenticated = false;
+
+    /**
+     * @var bool
+     */
+    protected $hasAuthenticationData = false;
 
     /**
      * @var string[]
@@ -22,36 +30,52 @@ class Authentication
      */
     protected $user = null;
 
+    /**
+     * @ErrorInherit(class=User::class, method="__construct")
+     * @ErrorInherit(class=User::class, method="getApikey"  )
+     * @ErrorInherit(class=User::class, method="getRole"    )
+     * @ErrorInherit(class=User::class, method="getType"    )
+     * @ErrorInherit(class=User::class, method="populate"   )
+     * @ErrorInherit(class=User::class, method="setPassword")
+     */
     public function __construct(
-        Request $request
+        Request $request = null
     ) {
+        if (is_null($request)) {
+            return;
+        }
+
         // Fetch bare token
         $token = null;
         $token = $token ?? $request->query->get('token');
         $token = $token ?? $request->headers->get('authorization');
-        if (is_null($token)) {
+        if (!is_string($token)) {
             return;
         }
 
         // The data we'll insert into the user
-        $knownData = [];
+        $this->hasAuthenticationData = true;
+        $knownData                   = [];
 
         // Detect & remove prefix
         preg_match('/^(bearer|basic) /i', $token, $prefix);
-        $token = preg_replace('/^(bearer|basic) /i', '', $token);
+        $token               = preg_replace('/^(bearer|basic) /i', '', $token);
         $knownData['apikey'] = $token;
 
-        // Handle special prefixes
+        // Normalize prefix
         if (count($prefix)) {
             $prefix = strtolower($prefix[1]);
-            switch ($prefix) {
-                case 'basic':
-                    $decoded = base64_decode($token, true);
-                    $parts = explode(':', $decoded);
-                    $knownData['email'] = trim(array_shift($parts));
-                    $knownData['apikey'] = trim(implode(':', $parts));
-                    break;
-            }
+        } else {
+            $prefix = 'bearer';
+        }
+
+        // Explode 'basic' authentication
+        if ('basic' == $prefix) {
+            unset($knownData['apikey']);
+            $decoded               = base64_decode($token, true);
+            $parts                 = explode(':', $decoded);
+            $knownData['email']    = trim(array_shift($parts));
+            $knownData['password'] = md5(trim(implode(':', $parts)));
         }
 
         // Fetch user
@@ -64,6 +88,14 @@ class Authentication
             return;
         }
 
+        // Validate api key
+        if ('bearer' == $prefix) {
+            $apiKey = $user->getApiKey();
+            if ($apiKey !== $token) {
+                return;
+            }
+        }
+
         // Fetch the user's roles
         // Verifies if the client is logged in as well
         $roles = $user->getRole();
@@ -73,19 +105,21 @@ class Authentication
 
         // This code running means the client is verified
         $this->authenticated = true;
-        $this->roles = $roles;
+        $this->roles         = $roles;
 
         // Remove the password from the user
         $user->setPassword(null);
         $this->user = $user;
     }
 
-    /**
-     * @return bool
-     */
     public function isAuthenticated(): bool
     {
         return $this->authenticated;
+    }
+
+    public function hasAuthenticationData(): bool
+    {
+        return $this->hasAuthenticationData;
     }
 
     /**
@@ -95,6 +129,8 @@ class Authentication
      *   - editor
      *   - user
      *   - guest.
+     *
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated")
      *
      * @return string[]
      */
@@ -108,7 +144,8 @@ class Authentication
     }
 
     /**
-     * @return bool
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated")
+     * @ErrorInherit(class=Authentication::class, method="getRoles"       )
      */
     public function isAdministrator(): bool
     {
@@ -120,7 +157,7 @@ class Authentication
     }
 
     /**
-     * @return User|null
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated")
      */
     public function getUser(): ?User
     {
@@ -129,6 +166,50 @@ class Authentication
         }
 
         return $this->user;
+    }
+
+    /**
+     * @throws ApiException
+     *
+     * @Error(code="authentication-permission-denied-invalid-credentials",
+     *        status=403,
+     *        description="Invalid credentials were given"
+     * )
+     * @Error(code="authentication-permission-denied-missing-credentials",
+     *        status=401,
+     *        description="No credentials were given"
+     * )
+     *
+     * @ErrorInherit(class=Authentication::class, method="hasAuthenticationData")
+     * @ErrorInherit(class=Authentication::class, method="isAuthenticated"      )
+     */
+    public function requireAuthenticated(string $errorCodePrefix = null): void
+    {
+        if (!$this->hasAuthenticationData()) {
+            throw new ApiException(($errorCodePrefix ?? 'authentication').'-permission-denied-missing-credentials');
+        }
+        if (!$this->isAuthenticated()) {
+            throw new ApiException(($errorCodePrefix ?? 'authentication').'-permission-denied-invalid-credentials');
+        }
+    }
+
+    /**
+     * @throws ApiException
+     *
+     * @Error(code="authentication-permission-denied-missing-role-administrator",
+     *        status=403,
+     *        description="The requested action requires the 'administrator' role while the authenticated user does not posses it"
+     * )
+     *
+     * @ErrorInherit(class=Authentication::class, method="isAdministrator"     )
+     * @ErrorInherit(class=Authentication::class, method="requireAuthenticated")
+     */
+    public function requireAdministrator(string $errorCodePrefix = null): void
+    {
+        $this->requireAuthenticated($errorCodePrefix ?? 'authentication');
+        if (!$this->isAdministrator()) {
+            throw new ApiException(($errorCodePrefix ?? 'authentication').'-permission-denied-missing-role-administrator');
+        }
     }
 
     /*

@@ -14,21 +14,15 @@ trait SingletonTrait
     }
 
     /**
-     * @var self|null
-     */
-    private static $obj;
-
-    /**
      * @psalm-suppress InvalidNullableReturnType
-     *
-     * @return self
      */
-    public static function instance(): self
+    public static function instance()
     {
-        if (null === self::$obj) {
-            self::$obj = new self();
+        static $cache = [];
+        if (!isset($cache[static::class])) {
+            $cache[static::class] = new static();
         }
 
-        return self::$obj;
+        return $cache[static::class];
     }
 }
