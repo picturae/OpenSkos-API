@@ -1,0 +1,8 @@
+[ver:1,total:2280]
+src/Rdf/AbstractRdfDocument.php:776,1583406000:776,r
+src/OpenSkos/Concept/Controller/ConceptController.php:712,1583406000:712,r
+src/OpenSkos/DataLevels/Level2Processor.php:480,1583488800:60,1583492400:420,r
+docker/nginx/conf/www.tpl.nginx:180,1583942400:180,d
+src/Ontology/Skos.php:90,1584439200:90,r
+config/ontology/skos.yaml:30,1584439200:30,r
+src/OpenSkos/Concept/Concept.php:12,1583406000:12,r
