@@ -606,9 +606,17 @@ final class RelationController
             throw new ApiException('semantic-relation-delete-corrupt-param-predicate');
         }
 
-        // Resolve concepts
+        // Resolve concepts by iri or uuid
         $object  = $conceptRepository->findByIri(new Iri($objectIri));
         $subject = $conceptRepository->findByIri(new Iri($subjectIri));
+        if (is_null($object)) {
+            $object = $conceptRepository->getByUuid(new InternalResourceId($objectIri));
+        }
+        if (is_null($subject)) {
+            $subject = $conceptRepository->getByUuid(new InternalResourceId($subjectIri));
+        }
+
+        // Catch non-found concepts
         if (is_null($object)) {
             throw new ApiException('semantic-relation-delete-object-not-found', [
                 'object' => $objectIri,
@@ -625,7 +633,7 @@ final class RelationController
             return $relation->getUri() == $objectIri;
         });
 
-        // Remove all relevenat relations
+        // Remove all relevant relations
         foreach ($relations as $relation) {
             $subject->getResource()->removeTriple($predicate, $relation);
         }
