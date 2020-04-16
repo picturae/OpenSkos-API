@@ -1,0 +1,5 @@
+[ver:1,total:660]
+src/OpenSkos/Relation/Controller/RelationController.php:555,1587024000:435,1587027600:120,m
+src/Repository/AbstractRepository.php:52,1587024000:52,r
+src/Repository/AbstractSolrRepository.php:45,1587024000:45,r
+src/OpenSkos/Concept/ConceptRepository.php:8,1587024000:8,r
